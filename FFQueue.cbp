@@ -1,0 +1,416 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="FFQueue" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug_Win">
+				<Option output="bin/Debug/FFQueue" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Option projectLinkerOptionsRelation="2" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-g" />
+					<Add option="-DDEBUG" />
+					<Add directory="$(#wx)/lib/gcc_lib/mswu" />
+					<Add option="-pipe" />
+					<Add option="-mthreads" />
+					<Add option="-D__GNUWIN32__" />
+					<Add option="-D__WXMSW__" />
+					<Add option="-DwxUSE_UNICODE" />
+					<Add directory="$(#wx)/include" />
+					<Add directory="$(#wx)/src/zlib" />
+				</Compiler>
+				<ResourceCompiler>
+					<Add directory="$(#wx)/lib/gcc_lib/mswu" />
+					<Add directory="$(#wx)/include" />
+				</ResourceCompiler>
+				<Linker>
+					<Add option="-mthreads" />
+					<Add library="libwxmsw30u_richtext.a" />
+					<Add library="libwxmsw30u_xrc.a" />
+					<Add library="libwxmsw30u_media.a" />
+					<Add library="libwxmsw30u_html.a" />
+					<Add library="libwxbase30u_net.a" />
+					<Add library="libwxmsw30u_gl.a" />
+					<Add library="libwxbase30u_xml.a" />
+					<Add library="libwxmsw30u_adv.a" />
+					<Add library="libwxmsw30u_core.a" />
+					<Add library="libwxbase30u.a" />
+					<Add library="libwxpng.a" />
+					<Add library="libwxjpeg.a" />
+					<Add library="libwxtiff.a" />
+					<Add library="libwxzlib.a" />
+					<Add library="libwxregexu.a" />
+					<Add library="libwxexpat.a" />
+					<Add library="libkernel32.a" />
+					<Add library="libuser32.a" />
+					<Add library="libgdi32.a" />
+					<Add library="libwinspool.a" />
+					<Add library="libcomdlg32.a" />
+					<Add library="libadvapi32.a" />
+					<Add library="libshell32.a" />
+					<Add library="libole32.a" />
+					<Add library="liboleaut32.a" />
+					<Add library="libuuid.a" />
+					<Add library="libcomctl32.a" />
+					<Add library="libwsock32.a" />
+					<Add library="libodbc32.a" />
+					<Add directory="$(#wx)/lib/gcc_lib" />
+				</Linker>
+			</Target>
+			<Target title="Release_Win">
+				<Option output="bin/Release/FFQueue" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Option projectLinkerOptionsRelation="2" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add option="-Wfatal-errors" />
+					<Add option="-DNDEBUG" />
+					<Add directory="$(#wx)/lib/gcc_lib/mswu" />
+					<Add option="-pipe" />
+					<Add option="-mthreads" />
+					<Add option="-D__GNUWIN32__" />
+					<Add option="-D__WXMSW__" />
+					<Add option="-DwxUSE_UNICODE" />
+					<Add directory="$(#wx)/include" />
+					<Add directory="$(#wx)/src/zlib" />
+				</Compiler>
+				<ResourceCompiler>
+					<Add directory="$(#wx)/lib/gcc_lib/mswu" />
+					<Add directory="$(#wx)/include" />
+				</ResourceCompiler>
+				<Linker>
+					<Add option="-s" />
+					<Add option="-static" />
+					<Add option="-static-libgcc" />
+					<Add option="-mthreads" />
+					<Add library="libwxmsw30u_richtext.a" />
+					<Add library="libwxmsw30u_xrc.a" />
+					<Add library="libwxmsw30u_media.a" />
+					<Add library="libwxbase30u_net.a" />
+					<Add library="libwxmsw30u_gl.a" />
+					<Add library="libwxbase30u_xml.a" />
+					<Add library="libwxmsw30u_adv.a" />
+					<Add library="libwxmsw30u_html.a" />
+					<Add library="libwxmsw30u_core.a" />
+					<Add library="libwxbase30u.a" />
+					<Add library="libwxpng.a" />
+					<Add library="libwxjpeg.a" />
+					<Add library="libwxtiff.a" />
+					<Add library="libwxzlib.a" />
+					<Add library="libwxregexu.a" />
+					<Add library="libwxexpat.a" />
+					<Add library="libkernel32.a" />
+					<Add library="libuser32.a" />
+					<Add library="libgdi32.a" />
+					<Add library="libwinspool.a" />
+					<Add library="libcomdlg32.a" />
+					<Add library="libadvapi32.a" />
+					<Add library="libshell32.a" />
+					<Add library="libole32.a" />
+					<Add library="liboleaut32.a" />
+					<Add library="libuuid.a" />
+					<Add library="libcomctl32.a" />
+					<Add library="libwsock32.a" />
+					<Add library="libodbc32.a" />
+					<Add directory="$(#wx)/lib/gcc_lib" />
+				</Linker>
+			</Target>
+			<Target title="Debug_Lin">
+				<Option output="bin/Debug/FFQueue" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Option projectLinkerOptionsRelation="2" />
+				<Compiler>
+					<Add option="`$(#wx)/gtk-build/wx-config --version=3.0 --static=yes --unicode=yes --debug=yes --cflags`" />
+					<Add option="-g" />
+					<Add option="-DDEBUG" />
+				</Compiler>
+				<Linker>
+					<Add option="`$(#wx)/gtk-build/wx-config --version=3.0 --static=yes --debug=yes --libs`" />
+					<Add directory="$(#wx)/gtk-build/lib" />
+				</Linker>
+			</Target>
+			<Target title="Release_Lin">
+				<Option output="bin/Release/FFQueue" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Option projectLinkerOptionsRelation="2" />
+				<Compiler>
+					<Add option="`$(#wx)/gtk-build/wx-config --version=3.0 --static=yes --unicode=yes --debug=no --cflags`" />
+					<Add option="-O2" />
+					<Add option="-DNDEBUG" />
+				</Compiler>
+				<Linker>
+					<Add directory="$(#wx)/gtk-build/lib" />
+					<Add option="`$(#wx)/gtk-build/wx-config --version=3.0 --static=yes --debug=no --libs`" />
+					<Add option="-s" />
+					<Add option="-static-libgcc" />
+					<Add option="-static-libstdc++" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-std=gnu++11" />
+			<Add option="-Winvalid-pch" />
+			<Add option="-include wx_pch.h" />
+			<Add option="-DWX_PRECOMP" />
+		</Compiler>
+		<Unit filename="src/FFQAbout.cpp" />
+		<Unit filename="src/FFQAbout.h" />
+		<Unit filename="src/FFQApp.cpp" />
+		<Unit filename="src/FFQApp.h" />
+		<Unit filename="src/FFQBatchMake.cpp" />
+		<Unit filename="src/FFQBatchMake.h" />
+		<Unit filename="src/FFQBitRatePanel.cpp" />
+		<Unit filename="src/FFQBitRatePanel.h" />
+		<Unit filename="src/FFQConfigEdit.cpp" />
+		<Unit filename="src/FFQConfigEdit.h" />
+		<Unit filename="src/FFQFilterEdit.cpp" />
+		<Unit filename="src/FFQFilterEdit.h" />
+		<Unit filename="src/FFQJobEditAdv.cpp" />
+		<Unit filename="src/FFQJobEditAdv.h" />
+		<Unit filename="src/FFQJobEditAdvCuts.cpp" />
+		<Unit filename="src/FFQJobEditAdvCuts.h" />
+		<Unit filename="src/FFQJobEditAdvPopup.cpp" />
+		<Unit filename="src/FFQJobEditAdvPopup.h" />
+		<Unit filename="src/FFQLangEdit.cpp" />
+		<Unit filename="src/FFQLangEdit.h" />
+		<Unit filename="src/FFQMain.cpp" />
+		<Unit filename="src/FFQMain.h" />
+		<Unit filename="src/FFQPresetEdit.cpp" />
+		<Unit filename="src/FFQPresetEdit.h" />
+		<Unit filename="src/FFQPresetMgr.cpp" />
+		<Unit filename="src/FFQPresetMgr.h" />
+		<Unit filename="src/FFQPresetPanel.cpp" />
+		<Unit filename="src/FFQPresetPanel.h" />
+		<Unit filename="src/FFQShowText.cpp" />
+		<Unit filename="src/FFQShowText.h" />
+		<Unit filename="src/FFQTimeEdit.cpp" />
+		<Unit filename="src/FFQTimeEdit.h" />
+		<Unit filename="src/bin_res.cpp" />
+		<Unit filename="src/bin_res.h" />
+		<Unit filename="src/filter/AudioDelay.cpp" />
+		<Unit filename="src/filter/AudioDelay.h" />
+		<Unit filename="src/filter/AudioTempo.cpp" />
+		<Unit filename="src/filter/AudioTempo.h" />
+		<Unit filename="src/filter/BoxBlur.cpp" />
+		<Unit filename="src/filter/BoxBlur.h" />
+		<Unit filename="src/filter/ChannelMap.cpp" />
+		<Unit filename="src/filter/ChannelMap.h" />
+		<Unit filename="src/filter/ColorBalance.cpp" />
+		<Unit filename="src/filter/ColorBalance.h" />
+		<Unit filename="src/filter/ColorMatrix.cpp" />
+		<Unit filename="src/filter/ColorMatrix.h" />
+		<Unit filename="src/filter/ColorOverlay.cpp" />
+		<Unit filename="src/filter/ColorOverlay.h" />
+		<Unit filename="src/filter/Crop.cpp" />
+		<Unit filename="src/filter/Crop.h" />
+		<Unit filename="src/filter/Curves.cpp" />
+		<Unit filename="src/filter/Curves.h" />
+		<Unit filename="src/filter/Custom.cpp" />
+		<Unit filename="src/filter/Custom.h" />
+		<Unit filename="src/filter/Decimate.cpp" />
+		<Unit filename="src/filter/Decimate.h" />
+		<Unit filename="src/filter/Deinterlace.cpp" />
+		<Unit filename="src/filter/Deinterlace.h" />
+		<Unit filename="src/filter/Dejudder.cpp" />
+		<Unit filename="src/filter/Dejudder.h" />
+		<Unit filename="src/filter/Delogo.cpp" />
+		<Unit filename="src/filter/Delogo.h" />
+		<Unit filename="src/filter/Deshake.cpp" />
+		<Unit filename="src/filter/Deshake.h" />
+		<Unit filename="src/filter/DynAudNorm.cpp" />
+		<Unit filename="src/filter/DynAudNorm.h" />
+		<Unit filename="src/filter/Echo.cpp" />
+		<Unit filename="src/filter/Echo.h" />
+		<Unit filename="src/filter/Elbg.cpp" />
+		<Unit filename="src/filter/Elbg.h" />
+		<Unit filename="src/filter/Equalizer.cpp" />
+		<Unit filename="src/filter/Equalizer.h" />
+		<Unit filename="src/filter/FilterBasePanel.cpp" />
+		<Unit filename="src/filter/FilterBasePanel.h" />
+		<Unit filename="src/filter/Flanger.cpp" />
+		<Unit filename="src/filter/Flanger.h" />
+		<Unit filename="src/filter/Flip.cpp" />
+		<Unit filename="src/filter/Flip.h" />
+		<Unit filename="src/filter/FrameStep.cpp" />
+		<Unit filename="src/filter/FrameStep.h" />
+		<Unit filename="src/filter/HighLowBandPass.cpp" />
+		<Unit filename="src/filter/HighLowBandPass.h" />
+		<Unit filename="src/filter/Hqdn3d.cpp" />
+		<Unit filename="src/filter/Hqdn3d.h" />
+		<Unit filename="src/filter/Hue.cpp" />
+		<Unit filename="src/filter/Hue.h" />
+		<Unit filename="src/filter/Interlace.cpp" />
+		<Unit filename="src/filter/Interlace.h" />
+		<Unit filename="src/filter/LensCorrection.cpp" />
+		<Unit filename="src/filter/LensCorrection.h" />
+		<Unit filename="src/filter/Negate.cpp" />
+		<Unit filename="src/filter/Negate.h" />
+		<Unit filename="src/filter/Noise.cpp" />
+		<Unit filename="src/filter/Noise.h" />
+		<Unit filename="src/filter/Pad.cpp" />
+		<Unit filename="src/filter/Pad.h" />
+		<Unit filename="src/filter/Perspective.cpp" />
+		<Unit filename="src/filter/Perspective.h" />
+		<Unit filename="src/filter/Phaser.cpp" />
+		<Unit filename="src/filter/Phaser.h" />
+		<Unit filename="src/filter/Resample.cpp" />
+		<Unit filename="src/filter/Resample.h" />
+		<Unit filename="src/filter/Rotate.cpp" />
+		<Unit filename="src/filter/Rotate.h" />
+		<Unit filename="src/filter/Scale.cpp" />
+		<Unit filename="src/filter/Scale.h" />
+		<Unit filename="src/filter/Transpose.cpp" />
+		<Unit filename="src/filter/Transpose.h" />
+		<Unit filename="src/filter/Unsharp.cpp" />
+		<Unit filename="src/filter/Unsharp.h" />
+		<Unit filename="src/filter/Vignette.cpp" />
+		<Unit filename="src/filter/Vignette.h" />
+		<Unit filename="src/filter/VolumeAndTone.cpp" />
+		<Unit filename="src/filter/VolumeAndTone.h" />
+		<Unit filename="src/filter/Watermark.cpp" />
+		<Unit filename="src/filter/Watermark.h" />
+		<Unit filename="src/resource.rc">
+			<Option target="Debug_Win" />
+			<Option target="Release_Win" />
+			<Option compilerVar="WINDRES" />
+		</Unit>
+		<Unit filename="src/tools/FFQConcat.cpp" />
+		<Unit filename="src/tools/FFQConcat.h" />
+		<Unit filename="src/tools/FFQThumbMake.cpp" />
+		<Unit filename="src/tools/FFQThumbMake.h" />
+		<Unit filename="src/tools/FFQThumbMake.h.save" />
+		<Unit filename="src/tools/FFQThumbMake.save" />
+		<Unit filename="src/tools/FFQThumbPanel.cpp" />
+		<Unit filename="src/tools/FFQThumbPanel.h" />
+		<Unit filename="src/tools/FFQVidStab.cpp" />
+		<Unit filename="src/tools/FFQVidStab.h" />
+		<Unit filename="src/utils/FFQBuildCmd.cpp" />
+		<Unit filename="src/utils/FFQBuildCmd.h" />
+		<Unit filename="src/utils/FFQCodecInfo.cpp" />
+		<Unit filename="src/utils/FFQCodecInfo.h" />
+		<Unit filename="src/utils/FFQCompress.cpp" />
+		<Unit filename="src/utils/FFQCompress.h" />
+		<Unit filename="src/utils/FFQConfig.cpp" />
+		<Unit filename="src/utils/FFQConfig.h" />
+		<Unit filename="src/utils/FFQConsole.cpp" />
+		<Unit filename="src/utils/FFQConsole.h" />
+		<Unit filename="src/utils/FFQConst.cpp" />
+		<Unit filename="src/utils/FFQConst.h" />
+		<Unit filename="src/utils/FFQDebugUtils.cpp">
+			<Option target="Debug_Win" />
+			<Option target="Debug_Lin" />
+		</Unit>
+		<Unit filename="src/utils/FFQDebugUtils.h">
+			<Option target="Debug_Win" />
+			<Option target="Debug_Lin" />
+		</Unit>
+		<Unit filename="src/utils/FFQFilter.cpp" />
+		<Unit filename="src/utils/FFQFilter.h" />
+		<Unit filename="src/utils/FFQHash.cpp" />
+		<Unit filename="src/utils/FFQHash.h" />
+		<Unit filename="src/utils/FFQJob.cpp" />
+		<Unit filename="src/utils/FFQJob.h" />
+		<Unit filename="src/utils/FFQLang.cpp" />
+		<Unit filename="src/utils/FFQLang.h" />
+		<Unit filename="src/utils/FFQMisc.cpp" />
+		<Unit filename="src/utils/FFQMisc.h" />
+		<Unit filename="src/utils/FFQNvpList.cpp" />
+		<Unit filename="src/utils/FFQNvpList.h" />
+		<Unit filename="src/utils/FFQPixFmt.cpp" />
+		<Unit filename="src/utils/FFQPixFmt.h" />
+		<Unit filename="src/utils/FFQPreset.cpp" />
+		<Unit filename="src/utils/FFQPreset.h" />
+		<Unit filename="src/utils/FFQProbing.cpp" />
+		<Unit filename="src/utils/FFQProbing.h" />
+		<Unit filename="src/utils/FFQProcess.cpp" />
+		<Unit filename="src/utils/FFQProcess.h" />
+		<Unit filename="src/utils/FFQQueueItem.cpp" />
+		<Unit filename="src/utils/FFQQueueItem.h" />
+		<Unit filename="src/utils/FFQStaticJob.cpp" />
+		<Unit filename="src/utils/FFQStaticJob.h" />
+		<Unit filename="src/utils/FFQStreamMapping.cpp" />
+		<Unit filename="src/utils/FFQStreamMapping.h" />
+		<Unit filename="src/utils/FFQTaskBar.cpp" />
+		<Unit filename="src/utils/FFQTaskBar.h" />
+		<Unit filename="src/utils/FFQThumbs.cpp" />
+		<Unit filename="src/utils/FFQThumbs.h" />
+		<Unit filename="src/utils/FFQTimeValue.cpp" />
+		<Unit filename="src/utils/FFQTimeValue.h" />
+		<Unit filename="src/utils/FFQToolJobs.cpp" />
+		<Unit filename="src/utils/FFQToolJobs.h" />
+		<Unit filename="src/utils/FFQUniqueID.h" />
+		<Unit filename="version.h" />
+		<Unit filename="wx_pch.h">
+			<Option compile="1" />
+			<Option weight="0" />
+		</Unit>
+		<Unit filename="wxsmith/FFQAbout.wxs" />
+		<Unit filename="wxsmith/FFQBatchMake.wxs" />
+		<Unit filename="wxsmith/FFQBitRatePanel.wxs" />
+		<Unit filename="wxsmith/FFQConcat.wxs" />
+		<Unit filename="wxsmith/FFQConfigEdit.wxs" />
+		<Unit filename="wxsmith/FFQFilterEdit.wxs" />
+		<Unit filename="wxsmith/FFQJobEditAdv.wxs" />
+		<Unit filename="wxsmith/FFQJobEditAdvCuts.wxs" />
+		<Unit filename="wxsmith/FFQJobEditAdvPopup.wxs" />
+		<Unit filename="wxsmith/FFQLangEdit.wxs" />
+		<Unit filename="wxsmith/FFQMain.wxs" />
+		<Unit filename="wxsmith/FFQPresetEdit.wxs" />
+		<Unit filename="wxsmith/FFQPresetMgr.wxs" />
+		<Unit filename="wxsmith/FFQPresetPanel.wxs" />
+		<Unit filename="wxsmith/FFQShowText.wxs" />
+		<Unit filename="wxsmith/FFQThumbMake.wxs" />
+		<Unit filename="wxsmith/FFQThumbPanel.wxs" />
+		<Unit filename="wxsmith/FFQTimeEdit.wxs" />
+		<Unit filename="wxsmith/FFQVidStab.wxs" />
+		<Extensions>
+			<AutoVersioning>
+				<Scheme minor_max="10" build_max="0" rev_max="0" rev_rand_max="10" build_times_to_increment_minor="100" />
+				<Settings autoincrement="0" date_declarations="1" use_define="0" update_manifest="0" do_auto_increment="0" ask_to_increment="0" language="C++" svn="0" svn_directory="" header_path="version.h" />
+				<Changes_Log show_changes_editor="0" app_title="released version %M.%m.%b of %p" changeslog_path="ChangesLog.txt" />
+				<Code header_guard="VERSION_H" namespace="AutoVersion" prefix="" />
+			</AutoVersioning>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+			<wxsmith version="1">
+				<gui name="wxWidgets" src="src/FFQAbout.cpp" main="FFQAbout" init_handlers="necessary" language="CPP" />
+				<resources>
+					<wxFrame wxs="wxsmith/FFQMain.wxs" src="src/FFQMain.cpp" hdr="src/FFQMain.h" fwddecl="0" i18n="1" name="FFQMain" language="CPP" />
+					<wxDialog wxs="wxsmith/FFQAbout.wxs" src="src/FFQAbout.cpp" hdr="src/FFQAbout.h" fwddecl="0" i18n="1" name="FFQAbout" language="CPP" />
+					<wxDialog wxs="wxsmith/FFQConfigEdit.wxs" src="src/FFQConfigEdit.cpp" hdr="src/FFQConfigEdit.h" fwddecl="0" i18n="1" name="FFQConfigEdit" language="CPP" />
+					<wxDialog wxs="wxsmith/FFQueueJobEdit.wxs" src="src/FFQueueJobEdit.cpp" hdr="src/FFQueueJobEdit.h" fwddecl="0" i18n="1" name="FFQueueJobEdit" language="CPP" />
+					<wxDialog wxs="wxsmith/FFQTimeEdit.wxs" src="src/FFQTimeEdit.cpp" hdr="src/FFQTimeEdit.h" fwddecl="0" i18n="0" name="FFQTimeEdit" language="CPP" />
+					<wxDialog wxs="wxsmith/FFQShowText.wxs" src="src/FFQShowText.cpp" hdr="src/FFQShowText.h" fwddecl="0" i18n="0" name="FFQShowText" language="CPP" />
+					<wxDialog wxs="wxsmith/FFQPresetEdit.wxs" src="src/FFQPresetEdit.cpp" hdr="src/FFQPresetEdit.h" fwddecl="0" i18n="0" name="FFQPresetEdit" language="CPP" />
+					<wxDialog wxs="wxsmith/FFQFilterEdit.wxs" src="src/FFQFilterEdit.cpp" hdr="src/FFQFilterEdit.h" fwddecl="0" i18n="0" name="FFQFilterEdit" language="CPP" />
+					<wxDialog wxs="wxsmith/FFQBatchMake.wxs" src="src/FFQBatchMake.cpp" hdr="src/FFQBatchMake.h" fwddecl="0" i18n="0" name="FFQBatchMake" language="CPP" />
+					<wxDialog wxs="wxsmith/FFQPresetMgr.wxs" src="src/FFQPresetMgr.cpp" hdr="src/FFQPresetMgr.h" fwddecl="0" i18n="0" name="FFQPresetMgr" language="CPP" />
+					<wxPanel wxs="wxsmith/FFQThumbPanel.wxs" src="src/tools/FFQThumbPanel.cpp" hdr="src/tools/FFQThumbPanel.h" fwddecl="0" i18n="0" name="FFQThumbPanel" language="CPP" />
+					<wxDialog wxs="wxsmith/FFQThumbMake.wxs" src="src/tools/FFQThumbMake.cpp" hdr="src/tools/FFQThumbMake.h" fwddecl="0" i18n="0" name="FFQThumbMake" language="CPP" />
+					<wxDialog wxs="wxsmith/FFQConcat.wxs" src="src/tools/FFQConcat.cpp" hdr="src/tools/FFQConcat.h" fwddecl="0" i18n="0" name="FFQConcat" language="CPP" />
+					<wxPanel wxs="wxsmith/FFQPresetPanel.wxs" src="src/FFQPresetPanel.cpp" hdr="src/FFQPresetPanel.h" fwddecl="0" i18n="0" name="FFQPresetPanel" language="CPP" />
+					<wxFrame wxs="wxsmith/FFQLangEdit.wxs" src="src/FFQLangEdit.cpp" hdr="src/FFQLangEdit.h" fwddecl="0" i18n="0" name="FFQLangEdit" language="CPP" />
+					<wxPanel wxs="wxsmith/FFQBitRatePanel.wxs" src="src/FFQBitRatePanel.cpp" hdr="src/FFQBitRatePanel.h" fwddecl="0" i18n="0" name="FFQBitRatePanel" language="CPP" />
+					<wxDialog wxs="wxsmith/FFQVidStab.wxs" src="src/tools/FFQVidStab.cpp" hdr="src/tools/FFQVidStab.h" fwddecl="0" i18n="0" name="FFQVidStab" language="CPP" />
+					<wxDialog wxs="wxsmith/FFQJobEditAdv.wxs" src="src/FFQJobEditAdv.cpp" hdr="src/FFQJobEditAdv.h" fwddecl="0" i18n="0" name="FFQJobEditAdv" language="CPP" />
+					<wxDialog wxs="wxsmith/FFQJobEditAdvPopup.wxs" src="src/FFQJobEditAdvPopup.cpp" hdr="src/FFQJobEditAdvPopup.h" fwddecl="0" i18n="0" name="FFQJobEditAdvPopup" language="CPP" />
+					<wxDialog wxs="wxsmith/FFQJobEditAdvCuts.wxs" src="src/FFQJobEditAdvCuts.cpp" hdr="src/FFQJobEditAdvCuts.h" fwddecl="0" i18n="0" name="FFQJobEditAdvCuts" language="CPP" />
+				</resources>
+			</wxsmith>
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

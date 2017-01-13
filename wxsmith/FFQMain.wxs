@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<wxsmith>
+	<object class="wxFrame" name="FFQMain">
+		<centered>1</centered>
+		<size>800,500</size>
+		<handler function="OnClose" entry="EVT_CLOSE" />
+		<handler function="OnFrameResize" entry="EVT_SIZE" />
+		<object class="wxSplitterWindow" name="ID_SPLITTERWINDOW" variable="SplitterWindow" member="yes">
+			<minsize>100</minsize>
+			<pos>184,256</pos>
+			<minsize>100,100</minsize>
+			<style>wxSP_3D|wxALWAYS_SHOW_SB</style>
+			<object class="wxListView" name="ID_LISTVIEW" variable="ListView" member="yes">
+				<minsize>800,200</minsize>
+				<style>wxLC_REPORT|wxLC_NO_SORT_HEADER|wxNO_BORDER</style>
+				<handler function="OnListViewItemSelection" entry="EVT_LIST_ITEM_SELECTED" />
+				<handler function="OnListViewItemSelection" entry="EVT_LIST_ITEM_DESELECTED" />
+				<handler function="OnListViewItemActivated" entry="EVT_LIST_ITEM_ACTIVATED" />
+				<handler function="OnListViewItemRightClick" entry="EVT_LIST_ITEM_RIGHT_CLICK" />
+				<handler function="OnListViewColumnBeginDrag" entry="EVT_LIST_COL_BEGIN_DRAG" />
+			</object>
+			<object class="wxPanel" name="ID_BOTTOMPAN" variable="BottomPan" member="yes">
+				<style>wxNO_BORDER|wxTAB_TRAVERSAL</style>
+				<object class="wxFlexGridSizer" variable="FlexGridSizer1" member="no">
+					<cols>1</cols>
+					<rows>2</rows>
+					<growablecols>0</growablecols>
+					<growablerows>0</growablerows>
+					<object class="sizeritem">
+						<object class="wxTextCtrl" name="ID_TEXTCTRL" variable="TextCtrl" member="yes">
+							<font>
+								<family>modern</family>
+							</font>
+							<minsize>800,100</minsize>
+							<style>wxTE_MULTILINE|wxTE_READONLY|wxTE_RICH|wxTE_DONTWRAP|wxNO_BORDER</style>
+						</object>
+						<flag>wxEXPAND|wxALIGN_LEFT|wxALIGN_TOP</flag>
+						<border>5</border>
+					</object>
+					<object class="sizeritem">
+						<object class="wxGauge" name="ID_GAUGE" variable="Gauge" member="yes">
+							<size>673,15</size>
+						</object>
+						<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<option>1</option>
+					</object>
+				</object>
+			</object>
+		</object>
+		<object class="wxStatusBar" name="ID_STATUSBAR" variable="StatusBar" member="yes">
+			<fields>3</fields>
+			<widths>1,250,-300</widths>
+			<styles>wxSB_FLAT,wxSB_NORMAL,wxSB_NORMAL</styles>
+			<style>wxST_SIZEGRIP|wxNO_BORDER</style>
+		</object>
+		<object class="wxToolBar" name="ID_TOOLBAR" variable="ToolBar" member="yes">
+			<style>wxTB_FLAT|wxTB_HORIZONTAL|wxTB_TEXT|wxTB_NODIVIDER|wxTB_TOP</style>
+			<object class="tool" name="ID_TOOLBARADD" variable="ToolBarAdd" member="yes">
+				<label>FFQS(SID__COMMON__ADD)</label>
+				<bitmap code="TOOL_BMP[0]" />
+				<handler function="OnToolBarButtonClick" entry="EVT_TOOL" />
+			</object>
+			<object class="tool" name="ID_TOOLBARBATCH" variable="ToolBarBatch" member="yes">
+				<label>FFQS(SID__MAINFRAME__TB__BATCH)</label>
+				<bitmap code="TOOL_BMP[7]" />
+				<handler function="OnToolBarButtonClick" entry="EVT_TOOL" />
+			</object>
+			<object class="tool" name="ID_TOOLBARREMOVE" variable="ToolBarRemove" member="yes">
+				<label>FFQS(SID__COMMON__REMOVE)</label>
+				<bitmap code="TOOL_BMP[1]" />
+				<handler function="OnToolBarButtonClick" entry="EVT_TOOL" />
+			</object>
+			<object class="tool" name="ID_TOOLBAREDIT" variable="ToolBarEdit" member="yes">
+				<label>FFQS(SID__COMMON__EDIT)</label>
+				<bitmap code="TOOL_BMP[2]" />
+				<handler function="OnToolBarButtonClick" entry="EVT_TOOL" />
+			</object>
+			<object class="separator" />
+			<object class="tool" name="ID_TOOLBARPREVIEW" variable="ToolBarPreview" member="yes">
+				<label>FFQS(SID__COMMON__PREVIEW)</label>
+				<bitmap code="TOOL_BMP[9]" />
+				<handler function="OnToolBarButtonClick" entry="EVT_TOOL" />
+			</object>
+			<object class="separator" />
+			<object class="tool" name="ID_TOOLBARSTART" variable="ToolBarStart" member="yes">
+				<label>FFQS(SID__MAINFRAME__TB__START)</label>
+				<bitmap code="TOOL_BMP[3]" />
+				<handler function="OnToolBarButtonClick" entry="EVT_TOOL" />
+			</object>
+			<object class="tool" name="ID_TOOLBARSTOP" variable="ToolBarStop" member="yes">
+				<label>FFQS(SID__MAINFRAME__TB__STOP)</label>
+				<bitmap code="TOOL_BMP[4]" />
+				<handler function="OnToolBarButtonClick" entry="EVT_TOOL" />
+			</object>
+			<object class="separator" />
+			<object class="tool" name="ID_TOOLBARTOOLS" variable="ToolBarTools" member="yes">
+				<label>FFQS(SID__MAINFRAME__TB__TOOLS)</label>
+				<bitmap code="TOOL_BMP[8]" />
+				<handler function="OnToolBarButtonClick" entry="EVT_TOOL" />
+			</object>
+			<object class="separator" />
+			<object class="tool" name="ID_TOOLBARPRESETS" variable="ToolBarPresets" member="yes">
+				<label>FFQS(SID__MAINFRAME__TB__PRESETS)</label>
+				<bitmap code="TOOL_BMP[10]" />
+				<handler function="OnToolBarButtonClick" entry="EVT_TOOL" />
+			</object>
+			<object class="tool" name="ID_TOOLBAROPTIONS" variable="ToolBarOptions" member="yes">
+				<label>FFQS(SID__MAINFRAME__TB__OPTIONS)</label>
+				<bitmap code="TOOL_BMP[5]" />
+				<handler function="OnToolBarButtonClick" entry="EVT_TOOL" />
+			</object>
+			<object class="separator" />
+			<object class="tool" name="ID_TOOLBARABOUT" variable="ToolBarAbout" member="yes">
+				<label>FFQS(SID__MAINFRAME__TB__ABOUT)</label>
+				<bitmap code="TOOL_BMP[6]" />
+				<handler function="OnToolBarButtonClick" entry="EVT_TOOL" />
+			</object>
+		</object>
+		<object class="wxTimer" name="ID_TIMER" variable="Timer" member="yes">
+			<interval>10</interval>
+			<handler function="OnTimerTrigger" entry="EVT_TIMER" />
+		</object>
+		<object class="wxMenu" variable="ListMenu" member="yes">
+			<object class="wxMenuItem" name="ID_MENU_MOVEUP" variable="MenuMoveUp" member="yes">
+				<label>1</label>
+				<handler function="OnToolBarButtonClick" entry="EVT_MENU" />
+			</object>
+			<object class="wxMenuItem" name="ID_MENU_MOVEDOWN" variable="MenuMoveDown" member="yes">
+				<label>2</label>
+				<handler function="OnToolBarButtonClick" entry="EVT_MENU" />
+			</object>
+			<object class="separator" />
+			<object class="wxMenuItem" name="ID_MENU_EDIT" variable="MenuEdit" member="yes">
+				<label>3</label>
+				<handler function="OnToolBarButtonClick" entry="EVT_MENU" />
+			</object>
+			<object class="wxMenuItem" name="ID_MENU_CLONE" variable="MenuClone" member="yes">
+				<label>4</label>
+				<handler function="OnToolBarButtonClick" entry="EVT_MENU" />
+			</object>
+			<object class="wxMenuItem" name="ID_MENU_PRESET" variable="MenuPreset" member="yes">
+				<label>5</label>
+				<handler function="OnToolBarButtonClick" entry="EVT_MENU" />
+			</object>
+			<object class="wxMenuItem" name="ID_MENU_REMOVE" variable="MenuRemove" member="yes">
+				<label>6</label>
+				<handler function="OnToolBarButtonClick" entry="EVT_MENU" />
+			</object>
+			<object class="separator" />
+			<object class="wxMenuItem" name="ID_MENU_FFPROBE" variable="MenuFFProbe" member="yes">
+				<label>7</label>
+				<handler function="OnToolBarButtonClick" entry="EVT_MENU" />
+			</object>
+			<object class="wxMenuItem" name="ID_MENU_FFCMD" variable="MenuFFCmd" member="yes">
+				<label>8</label>
+				<handler function="OnToolBarButtonClick" entry="EVT_MENU" />
+			</object>
+			<object class="separator" />
+			<object class="wxMenuItem" name="ID_MENU_STARTALL" variable="MenuStartAll" member="yes">
+				<label>9</label>
+				<handler function="OnToolBarButtonClick" entry="EVT_MENU" />
+			</object>
+			<object class="wxMenuItem" name="ID_MENU_STARTSEL" variable="MenuStartSel" member="yes">
+				<label>10</label>
+				<handler function="OnToolBarButtonClick" entry="EVT_MENU" />
+			</object>
+		</object>
+		<object class="wxFileDialog" variable="OpenFilesDlg" member="yes">
+			<style>wxFD_OPEN|wxFD_FILE_MUST_EXIST|wxFD_MULTIPLE</style>
+		</object>
+		<object class="wxMenu" variable="ToolsMenu" member="yes">
+			<object class="wxMenuItem" name="ID_TOOLTHUMBS" variable="ThumbsItem" member="yes">
+				<label>1</label>
+				<handler function="OnToolBarButtonClick" entry="EVT_MENU" />
+			</object>
+			<object class="wxMenuItem" name="ID_TOOLSLIDESHOW" variable="SlideshowItem" member="yes">
+				<label>2</label>
+				<handler function="OnToolBarButtonClick" entry="EVT_MENU" />
+			</object>
+			<object class="wxMenuItem" name="ID_TOOLCONCAT" variable="ConcatItem" member="yes">
+				<label>3</label>
+				<handler function="OnToolBarButtonClick" entry="EVT_MENU" />
+			</object>
+			<object class="wxMenuItem" name="ID_TOOLVIDSTAB" variable="VidStabItem" member="yes">
+				<label>4</label>
+				<handler function="OnToolBarButtonClick" entry="EVT_MENU" />
+			</object>
+		</object>
+	</object>
+</wxsmith>

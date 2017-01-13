@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<wxsmith>
+	<object class="wxDialog" name="FFQPresetMgr">
+		<centered>1</centered>
+		<object class="wxFlexGridSizer" variable="FlexGridSizer1" member="no">
+			<cols>1</cols>
+			<rows>2</rows>
+			<object class="sizeritem">
+				<object class="wxFlexGridSizer" variable="FlexGridSizer3" member="no">
+					<cols>2</cols>
+					<rows>1</rows>
+					<growablecols>0</growablecols>
+					<growablerows>0</growablerows>
+					<object class="sizeritem">
+						<object class="wxListBox" name="ID_PRESETS" variable="Presets" member="yes">
+							<default>-1</default>
+							<minsize>500,300</minsize>
+							<style>wxLB_EXTENDED|wxLB_HSCROLL|wxHSCROLL</style>
+							<handler function="OnPresetsSelect" entry="EVT_LISTBOX" />
+							<handler function="OnButtonClick" entry="EVT_LISTBOX_DCLICK" />
+						</object>
+						<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<border>5</border>
+						<option>1</option>
+					</object>
+					<object class="sizeritem">
+						<object class="wxBoxSizer" variable="BoxSizer1" member="no">
+							<orient>wxVERTICAL</orient>
+							<object class="sizeritem">
+								<object class="wxButton" name="ID_NEWBUTTON" variable="NewButton" member="yes">
+									<label>+</label>
+									<extra_code>NewButton-&gt;SetLabel(FFQS(SID__COMMON__NEW));</extra_code>
+									<handler function="OnButtonClick" entry="EVT_BUTTON" />
+								</object>
+								<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<border>2</border>
+								<option>1</option>
+							</object>
+							<object class="sizeritem">
+								<object class="wxButton" name="ID_EDITBUTTON" variable="EditButton" member="yes">
+									<label>?</label>
+									<extra_code>EditButton-&gt;SetLabel(FFQS(SID__COMMON__EDIT));</extra_code>
+									<handler function="OnButtonClick" entry="EVT_BUTTON" />
+								</object>
+								<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<border>2</border>
+								<option>1</option>
+							</object>
+							<object class="sizeritem">
+								<object class="wxButton" name="ID_DELETEBUTTON" variable="DeleteButton" member="yes">
+									<label>-</label>
+									<extra_code>DeleteButton-&gt;SetLabel(FFQS(SID__COMMON__DELETE));</extra_code>
+									<handler function="OnButtonClick" entry="EVT_BUTTON" />
+								</object>
+								<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<border>2</border>
+								<option>1</option>
+							</object>
+							<object class="spacer">
+								<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<border>2</border>
+								<option>1</option>
+							</object>
+							<object class="sizeritem">
+								<object class="wxButton" name="ID_UPBUTTON" variable="UpButton" member="yes">
+									<label>^</label>
+									<extra_code>UpButton-&gt;SetLabel(FFQS(SID__COMMON__MOVE__UP));</extra_code>
+									<handler function="OnButtonClick" entry="EVT_BUTTON" />
+								</object>
+								<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<border>2</border>
+								<option>1</option>
+							</object>
+							<object class="sizeritem">
+								<object class="wxButton" name="ID_DOWNBUTTON" variable="DownButton" member="yes">
+									<label>v</label>
+									<extra_code>DownButton-&gt;SetLabel(FFQS(SID__COMMON__MOVE__DOWN));</extra_code>
+									<handler function="OnButtonClick" entry="EVT_BUTTON" />
+								</object>
+								<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<border>2</border>
+								<option>1</option>
+							</object>
+							<object class="sizeritem">
+								<object class="wxButton" name="ID_SORTBUTTON" variable="SortButton" member="yes">
+									<label>S</label>
+									<extra_code>SortButton-&gt;SetLabel(FFQS(SID__COMMON__SORT));</extra_code>
+									<handler function="OnButtonClick" entry="EVT_BUTTON" />
+								</object>
+								<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<border>2</border>
+								<option>1</option>
+							</object>
+							<object class="spacer">
+								<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<border>2</border>
+								<option>1</option>
+							</object>
+							<object class="sizeritem">
+								<object class="wxButton" name="ID_COPYBUTTON" variable="CopyButton" member="yes">
+									<label>C</label>
+									<extra_code>CopyButton-&gt;SetLabel(FFQS(SID__COMMON__COPY));</extra_code>
+									<handler function="OnButtonClick" entry="EVT_BUTTON" />
+								</object>
+								<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<border>2</border>
+								<option>1</option>
+							</object>
+							<object class="sizeritem">
+								<object class="wxButton" name="ID_PASTEBUTTON" variable="PasteButton" member="yes">
+									<label>P</label>
+									<extra_code>PasteButton-&gt;SetLabel(FFQS(SID__COMMON__PASTE));</extra_code>
+									<handler function="OnButtonClick" entry="EVT_BUTTON" />
+								</object>
+								<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<border>2</border>
+								<option>1</option>
+							</object>
+						</object>
+						<flag>wxALL|wxALIGN_TOP|wxALIGN_CENTER_HORIZONTAL</flag>
+						<border>5</border>
+						<option>1</option>
+					</object>
+				</object>
+				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<border>5</border>
+				<option>1</option>
+			</object>
+			<object class="sizeritem">
+				<object class="wxBoxSizer" variable="BoxSizer2" member="no">
+					<object class="spacer">
+						<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<border>5</border>
+						<option>1</option>
+					</object>
+					<object class="sizeritem">
+						<object class="wxButton" name="ID_CLOSEBUTTON" variable="CloseButton" member="yes">
+							<label>X</label>
+							<default>1</default>
+							<minsize>200,-1</minsize>
+							<extra_code>CloseButton-&gt;SetLabel(FFQS(SID__COMMON__CLOSE));</extra_code>
+							<handler function="OnButtonClick" entry="EVT_BUTTON" />
+						</object>
+						<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<border>5</border>
+						<option>1</option>
+					</object>
+					<object class="spacer">
+						<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<border>5</border>
+						<option>1</option>
+					</object>
+				</object>
+				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<border>5</border>
+				<option>1</option>
+			</object>
+		</object>
+	</object>
+</wxsmith>

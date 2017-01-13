@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<wxsmith>
+	<object class="wxFrame" name="FFQLangEdit">
+		<title>FFQueue language editor</title>
+		<size>800,600</size>
+		<id_arg>0</id_arg>
+		<style>wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL</style>
+		<handler function="OnClose" entry="EVT_CLOSE" />
+		<object class="wxPanel" name="ID_TABPANEL" variable="TabPanel" member="yes">
+			<object class="wxFlexGridSizer" variable="FlexGridSizer1" member="no">
+				<cols>1</cols>
+				<rows>3</rows>
+				<growablecols>0</growablecols>
+				<growablerows>1</growablerows>
+				<object class="sizeritem">
+					<object class="wxStaticBoxSizer" variable="SBS1" member="no">
+						<label>Language information</label>
+						<orient>wxVERTICAL</orient>
+						<object class="sizeritem">
+							<object class="wxFlexGridSizer" variable="FlexGridSizer2" member="no">
+								<cols>2</cols>
+								<rows>2</rows>
+								<growablecols>1</growablecols>
+								<object class="sizeritem">
+									<object class="wxStaticText" name="ID_ST2" variable="ST2" member="yes">
+										<label>Description:</label>
+									</object>
+									<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+									<border>3</border>
+									<option>1</option>
+								</object>
+								<object class="sizeritem">
+									<object class="wxTextCtrl" name="ID_DESCRIPTION" variable="Description" member="yes">
+										<maxlength>100</maxlength>
+									</object>
+									<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+									<border>3</border>
+									<option>1</option>
+								</object>
+								<object class="sizeritem">
+									<object class="wxStaticText" name="ID_ST3" variable="ST3" member="yes">
+										<label>Password:</label>
+									</object>
+									<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+									<border>3</border>
+									<option>1</option>
+								</object>
+								<object class="sizeritem">
+									<object class="wxFlexGridSizer" variable="FlexGridSizer3" member="no">
+										<cols>3</cols>
+										<rows>1</rows>
+										<growablecols>0,2</growablecols>
+										<object class="sizeritem">
+											<object class="wxTextCtrl" name="ID_PASSWORD1" variable="Password1" member="yes">
+												<maxlength>50</maxlength>
+												<style>wxTE_PASSWORD</style>
+											</object>
+											<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<option>1</option>
+										</object>
+										<object class="sizeritem">
+											<object class="wxStaticText" name="ID_ST4" variable="ST4" member="yes">
+												<label>Re-type password:</label>
+											</object>
+											<flag>wxLEFT|wxRIGHT|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<border>5</border>
+											<option>1</option>
+										</object>
+										<object class="sizeritem">
+											<object class="wxTextCtrl" name="ID_PASSWORD2" variable="Password2" member="yes">
+												<style>wxTE_PASSWORD</style>
+											</object>
+											<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<option>1</option>
+										</object>
+									</object>
+									<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+									<border>3</border>
+									<option>1</option>
+								</object>
+							</object>
+							<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+							<border>3</border>
+							<option>1</option>
+						</object>
+					</object>
+					<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+					<border>5</border>
+					<option>1</option>
+				</object>
+				<object class="sizeritem">
+					<object class="wxListView" name="ID_LISTVIEW" variable="ListView" member="yes">
+						<style>wxLC_REPORT|wxLC_SINGLE_SEL|wxLC_NO_SORT_HEADER</style>
+						<handler function="OnListViewItemSelect" entry="EVT_LIST_ITEM_SELECTED" />
+					</object>
+					<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+					<border>5</border>
+					<option>1</option>
+				</object>
+				<object class="sizeritem">
+					<object class="wxStaticBoxSizer" variable="SBS2" member="no">
+						<label>Edit selected string</label>
+						<object class="sizeritem">
+							<object class="wxFlexGridSizer" variable="FlexGridSizer4" member="no">
+								<cols>1</cols>
+								<rows>2</rows>
+								<growablecols>0</growablecols>
+								<growablerows>0</growablerows>
+								<object class="sizeritem">
+									<object class="wxTextCtrl" name="ID_STREDIT" variable="StrEdit" member="yes">
+										<size>-1,200</size>
+										<style>wxTE_AUTO_SCROLL|wxTE_PROCESS_ENTER|wxTE_MULTILINE|wxTE_DONTWRAP</style>
+									</object>
+									<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+									<border>3</border>
+									<option>1</option>
+								</object>
+								<object class="sizeritem">
+									<object class="wxStaticText" name="ID_INFO" variable="Info" member="yes">
+										<label>Use [Ctrl]+[Enter] to store &amp;&amp; next, [Ctrl]+[Up/Down] to navigate list (skipping changes), [Ctrl]+[S] to store changes, [Ctrl]+[I] to load integrated string.</label>
+										<enabled>0</enabled>
+									</object>
+									<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+									<border>5</border>
+									<option>1</option>
+								</object>
+							</object>
+							<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+							<border>3</border>
+							<option>1</option>
+						</object>
+					</object>
+					<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+					<border>5</border>
+					<option>1</option>
+				</object>
+			</object>
+		</object>
+		<object class="wxStatusBar" name="ID_SB" variable="SB" member="yes">
+			<fields>3</fields>
+			<widths>1,200,200</widths>
+			<styles>wxSB_NORMAL,wxSB_NORMAL,wxSB_NORMAL</styles>
+			<style>wxST_SIZEGRIP</style>
+		</object>
+	</object>
+</wxsmith>

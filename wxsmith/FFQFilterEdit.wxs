@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<wxsmith>
+	<object class="wxDialog" name="FFQFilterEdit">
+		<title>Video filter</title>
+		<id_arg>0</id_arg>
+		<object class="wxFlexGridSizer" variable="GridSizer" member="yes">
+			<cols>1</cols>
+			<rows>4</rows>
+			<object class="sizeritem">
+				<object class="wxStaticBoxSizer" variable="FilterContainer" member="yes">
+					<label>Fc</label>
+					<orient>wxVERTICAL</orient>
+				</object>
+				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<border>5</border>
+				<option>1</option>
+			</object>
+			<object class="sizeritem">
+				<object class="wxBoxSizer" variable="BoxSizer1" member="no">
+					<object class="spacer">
+						<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<border>5</border>
+						<option>1</option>
+					</object>
+					<object class="spacer">
+						<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<border>5</border>
+						<option>1</option>
+					</object>
+					<object class="sizeritem">
+						<object class="wxButton" name="ID_OKBUTTON" variable="OKButton" member="yes">
+							<label>O</label>
+							<default>1</default>
+							<extra_code>OKButton-&gt;SetLabel(FFQS(SID__COMMON__OK));</extra_code>
+							<handler function="OnButtonClick" entry="EVT_BUTTON" />
+						</object>
+						<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<border>5</border>
+						<option>1</option>
+					</object>
+					<object class="sizeritem">
+						<object class="wxButton" name="ID_CANCELBUTTON" variable="CancelButton" member="yes">
+							<label>C</label>
+							<extra_code>CancelButton-&gt;SetLabel(FFQS(SID__COMMON__CANCEL));&#x0A;FilterContainer-&gt;GetStaticBox()-&gt;SetLabel(FFQS(SID__FILTER__DEFINE__PROPERTIES));</extra_code>
+							<handler function="OnButtonClick" entry="EVT_BUTTON" />
+						</object>
+						<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<border>5</border>
+						<option>1</option>
+					</object>
+				</object>
+				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<border>5</border>
+				<option>1</option>
+			</object>
+		</object>
+	</object>
+</wxsmith>

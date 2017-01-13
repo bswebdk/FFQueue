@@ -1,0 +1,1574 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<wxsmith>
+	<object class="wxDialog" name="FFQPresetEdit">
+		<id_arg>0</id_arg>
+		<handler function="OnClose" entry="EVT_CLOSE" />
+		<object class="wxFlexGridSizer" variable="FlexGridSizer1" member="no">
+			<cols>1</cols>
+			<rows>3</rows>
+			<growablecols>0</growablecols>
+			<growablerows>1</growablerows>
+			<object class="sizeritem">
+				<object class="wxStaticBoxSizer" variable="SBS1" member="no">
+					<label>PstN</label>
+					<orient>wxVERTICAL</orient>
+					<object class="sizeritem">
+						<object class="wxTextCtrl" name="ID_PRESETNAME" variable="PresetName" member="yes">
+							<size>550,-1</size>
+						</object>
+						<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<border>2</border>
+						<option>1</option>
+					</object>
+					<object class="sizeritem">
+						<object class="wxCheckBox" name="ID_PRESETTEMP" variable="PresetTemp" member="yes">
+							<label>Temp</label>
+							<extra_code>PresetTemp-&gt;SetLabel(FFQS(SID__PRESET__TEMPORARY__PRESET));&#x0A;SBS1-&gt;GetStaticBox()-&gt;SetLabel(FFQS(SID__PRESET__PRESET__NAME));</extra_code>
+						</object>
+						<flag>wxLEFT|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+						<border>2</border>
+						<option>1</option>
+					</object>
+				</object>
+				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<border>5</border>
+				<option>1</option>
+			</object>
+			<object class="sizeritem">
+				<object class="wxNotebook" name="ID_PAGES" variable="Pages" member="yes">
+					<handler function="OnNotebookPageChanged" entry="EVT_NOTEBOOK_PAGE_CHANGED" />
+					<object class="notebookpage">
+						<object class="wxPanel" name="ID_VIDEOPAGE" variable="VideoPage" member="yes">
+							<object class="wxFlexGridSizer" variable="FlexGridSizer13" member="no">
+								<cols>1</cols>
+								<rows>2</rows>
+								<growablecols>0</growablecols>
+								<object class="sizeritem">
+									<object class="wxStaticBoxSizer" variable="VSBS1" member="no">
+										<label>Cd</label>
+										<object class="sizeritem">
+											<object class="wxFlexGridSizer" variable="FlexGridSizer18" member="no">
+												<cols>1</cols>
+												<rows>2</rows>
+												<growablecols>0</growablecols>
+												<object class="sizeritem">
+													<object class="wxChoice" name="ID_VIDEOCODEC" variable="VideoCodec" member="yes">
+														<extra_code>VSBS1-&gt;GetStaticBox()-&gt;SetLabel(FFQS(SID__PRESET__CODEC));</extra_code>
+														<handler function="OnChoiceChange" entry="EVT_CHOICE" />
+													</object>
+													<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<border>3</border>
+													<option>1</option>
+												</object>
+												<object class="sizeritem">
+													<object class="wxFlexGridSizer" variable="VidSizer1" member="yes">
+														<cols>2</cols>
+														<rows>1</rows>
+														<growablerows>0</growablerows>
+														<object class="sizeritem">
+															<object class="wxCheckBox" name="ID_TWOPASS" variable="TwoPass" member="yes">
+																<label>2pass</label>
+																<extra_code>TwoPass-&gt;SetLabel(FFQS(SID__PRESET__TWO__PASS__ENCODING));</extra_code>
+																<handler function="OnButtonClick" entry="EVT_CHECKBOX" />
+															</object>
+															<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+															<border>3</border>
+															<option>1</option>
+														</object>
+														<object class="sizeritem">
+															<object class="wxCheckBox" name="ID_TWOPASSNULL" variable="TwoPassNull" member="yes">
+																<label>2p null</label>
+																<extra_code>TwoPassNull-&gt;SetLabel(FFQS(SID__PRESET__FIRST__PASS__NULL__TARGET));</extra_code>
+															</object>
+															<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+															<border>3</border>
+															<option>1</option>
+														</object>
+													</object>
+													<flag>wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+													<border>3</border>
+													<option>1</option>
+												</object>
+											</object>
+											<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<option>1</option>
+										</object>
+									</object>
+									<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+									<border>5</border>
+									<option>1</option>
+								</object>
+								<object class="sizeritem">
+									<object class="wxNotebook" name="ID_VIDEOPAGES" variable="VideoPages" member="yes">
+										<object class="notebookpage">
+											<object class="wxPanel" name="ID_BITRATEPAGE" variable="BitRatePage" member="yes">
+												<object class="wxFlexGridSizer" variable="VideoBitRateSizer" member="yes">
+													<cols>1</cols>
+													<rows>1</rows>
+													<growablecols>0</growablecols>
+													<object class="sizeritem">
+														<object class="Custom" name="ID_VIDEOBITRATE" subclass="FFQBitRatePanel" variable="VideoBitRate" member="yes">
+															<creating_code>$(THIS) = new $(CLASS)($(PARENT));</creating_code>
+															<include_file>FFQBitRatePanel.h</include_file>
+															<local_include>1</local_include>
+															<style></style>
+														</object>
+														<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+														<border>3</border>
+														<option>1</option>
+													</object>
+												</object>
+											</object>
+											<label>Br</label>
+										</object>
+										<object class="notebookpage">
+											<object class="wxPanel" name="ID_QUALITYPAGE" variable="QualityPage" member="yes">
+												<object class="wxFlexGridSizer" variable="VideoQualitySizer" member="yes">
+													<cols>3</cols>
+													<rows>7</rows>
+													<growablecols>1</growablecols>
+													<object class="spacer">
+														<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+														<option>1</option>
+													</object>
+													<object class="sizeritem">
+														<object class="wxFlexGridSizer" variable="FlexGridSizer23" member="no">
+															<cols>2</cols>
+															<rows>1</rows>
+															<growablecols>0,1</growablecols>
+															<object class="sizeritem">
+																<object class="wxStaticText" name="ID_QST1" variable="QST1" member="yes">
+																	<label>L</label>
+																	<extra_code>QST1-&gt;SetLabel(FFQS(SID__PRESET__LOW));</extra_code>
+																</object>
+																<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+																<border>3</border>
+																<option>1</option>
+															</object>
+															<object class="sizeritem">
+																<object class="wxStaticText" name="ID_QST2" variable="QST2" member="yes">
+																	<label>H</label>
+																	<extra_code>QST2-&gt;SetLabel(FFQS(SID__PRESET__HIGH));</extra_code>
+																</object>
+																<flag>wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL</flag>
+																<border>5</border>
+																<option>1</option>
+															</object>
+														</object>
+														<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+														<border>3</border>
+														<option>1</option>
+													</object>
+													<object class="spacer">
+														<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+														<option>1</option>
+														<size>50,-1</size>
+													</object>
+													<object class="sizeritem">
+														<object class="wxCheckBox" name="ID_USEVIDEOQSCALE" variable="UseVideoQScale" member="yes">
+															<label>Qs</label>
+															<extra_code>UseVideoQScale-&gt;SetLabel(FFQS(SID__PRESET__QUALITY__SCALE));</extra_code>
+															<handler function="OnChoiceChange" entry="EVT_CHECKBOX" />
+														</object>
+														<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+														<border>3</border>
+														<option>1</option>
+													</object>
+													<object class="sizeritem">
+														<object class="wxSlider" name="ID_VIDEOQSCALE" variable="VideoQScale" member="yes">
+															<size>-1,20</size>
+															<handler function="OnSubsScaleChange" entry="EVT_COMMAND_SLIDER_UPDATED" />
+														</object>
+														<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+														<border>3</border>
+														<option>1</option>
+													</object>
+													<object class="sizeritem">
+														<object class="wxStaticText" name="ID_VIDEOQSCALEVAL" variable="VideoQScaleVal" member="yes">
+															<label>X</label>
+														</object>
+														<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+														<border>3</border>
+														<option>1</option>
+													</object>
+													<object class="sizeritem">
+														<object class="wxCheckBox" name="ID_USECONSTRATE" variable="UseConstRate" member="yes">
+															<label>Crf</label>
+															<extra_code>UseConstRate-&gt;SetLabel(FFQS(SID__PRESET__CONSTANT__RATE));</extra_code>
+															<handler function="OnChoiceChange" entry="EVT_CHECKBOX" />
+														</object>
+														<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+														<border>3</border>
+														<option>1</option>
+													</object>
+													<object class="sizeritem">
+														<object class="wxSlider" name="ID_CONSTRATE" variable="ConstRate" member="yes">
+															<size>-1,20</size>
+															<handler function="OnSubsScaleChange" entry="EVT_COMMAND_SLIDER_UPDATED" />
+														</object>
+														<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+														<border>3</border>
+														<option>1</option>
+													</object>
+													<object class="sizeritem">
+														<object class="wxStaticText" name="ID_CONSTRATEVAL" variable="ConstRateVal" member="yes">
+															<label>X</label>
+														</object>
+														<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+														<border>3</border>
+														<option>1</option>
+													</object>
+													<object class="sizeritem">
+														<object class="wxCheckBox" name="ID_USEMINCONSTRATE" variable="UseMinConstRate" member="yes">
+															<label>MinCrf</label>
+															<extra_code>UseMinConstRate-&gt;SetLabel(FFQS(SID__PRESET__MIN__CONSTANT__RATE));</extra_code>
+															<handler function="OnChoiceChange" entry="EVT_CHECKBOX" />
+														</object>
+														<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+														<border>3</border>
+														<option>1</option>
+													</object>
+													<object class="sizeritem">
+														<object class="wxSlider" name="ID_MINCONSTRATE" variable="MinConstRate" member="yes">
+															<size>-1,20</size>
+															<handler function="OnSubsScaleChange" entry="EVT_COMMAND_SLIDER_UPDATED" />
+														</object>
+														<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+														<border>3</border>
+														<option>1</option>
+													</object>
+													<object class="sizeritem">
+														<object class="wxStaticText" name="ID_MINCONSTRATEVAL" variable="MinConstRateVal" member="yes">
+															<label>X</label>
+														</object>
+														<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+														<border>3</border>
+														<option>1</option>
+													</object>
+													<object class="sizeritem">
+														<object class="wxCheckBox" name="ID_USEQMIN" variable="UseQMin" member="yes">
+															<label>Qmin</label>
+															<extra_code>UseQMin-&gt;SetLabel(FFQS(SID__PRESET__QUANTIZER__MIN));</extra_code>
+															<handler function="OnChoiceChange" entry="EVT_CHECKBOX" />
+														</object>
+														<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+														<border>3</border>
+														<option>1</option>
+													</object>
+													<object class="sizeritem">
+														<object class="wxSlider" name="ID_QMIN" variable="QMin" member="yes">
+															<size>-1,20</size>
+															<handler function="OnSubsScaleChange" entry="EVT_COMMAND_SLIDER_UPDATED" />
+														</object>
+														<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+														<border>3</border>
+														<option>1</option>
+													</object>
+													<object class="sizeritem">
+														<object class="wxStaticText" name="ID_QMINVAL" variable="QMinVal" member="yes">
+															<label>X</label>
+														</object>
+														<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+														<border>3</border>
+														<option>1</option>
+													</object>
+													<object class="sizeritem">
+														<object class="wxCheckBox" name="ID_USEQMAX" variable="UseQMax" member="yes">
+															<label>QMax</label>
+															<extra_code>UseQMax-&gt;SetLabel(FFQS(SID__PRESET__QUANTIZER__MAX));</extra_code>
+															<handler function="OnChoiceChange" entry="EVT_CHECKBOX" />
+														</object>
+														<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+														<border>3</border>
+														<option>1</option>
+													</object>
+													<object class="sizeritem">
+														<object class="wxSlider" name="ID_QMAX" variable="QMax" member="yes">
+															<size>-1,20</size>
+															<handler function="OnSubsScaleChange" entry="EVT_COMMAND_SLIDER_UPDATED" />
+														</object>
+														<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+														<border>3</border>
+														<option>1</option>
+													</object>
+													<object class="sizeritem">
+														<object class="wxStaticText" name="ID_QMAXVAL" variable="QMaxVal" member="yes">
+															<label>X</label>
+														</object>
+														<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+														<border>3</border>
+														<option>1</option>
+													</object>
+													<object class="sizeritem">
+														<object class="wxCheckBox" name="ID_USEQDIFF" variable="UseQDiff" member="yes">
+															<label>QDiff</label>
+															<extra_code>UseQDiff-&gt;SetLabel(FFQS(SID__PRESET__QUANTIZER__MAX__DIFF));</extra_code>
+															<handler function="OnChoiceChange" entry="EVT_CHECKBOX" />
+														</object>
+														<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+														<border>3</border>
+														<option>1</option>
+													</object>
+													<object class="sizeritem">
+														<object class="wxSlider" name="ID_QDIFF" variable="QDiff" member="yes">
+															<size>-1,20</size>
+															<handler function="OnSubsScaleChange" entry="EVT_COMMAND_SLIDER_UPDATED" />
+														</object>
+														<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+														<border>3</border>
+														<option>1</option>
+													</object>
+													<object class="sizeritem">
+														<object class="wxStaticText" name="ID_QDIFFVAL" variable="QDiffVal" member="yes">
+															<label>X</label>
+														</object>
+														<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+														<border>3</border>
+														<option>1</option>
+													</object>
+												</object>
+											</object>
+											<label>Q</label>
+										</object>
+										<object class="notebookpage">
+											<object class="wxPanel" name="ID_KEYFRAMESPAGE" variable="KeyFramesPage" member="yes">
+												<object class="wxFlexGridSizer" variable="KeyFrameSizer" member="yes">
+													<cols>1</cols>
+													<rows>3</rows>
+													<growablecols>0</growablecols>
+													<object class="sizeritem">
+														<object class="wxFlexGridSizer" variable="FlexGridSizer4" member="no">
+															<cols>3</cols>
+															<rows>4</rows>
+															<object class="sizeritem">
+																<object class="wxStaticText" name="wxID_ANY" variable="KST1" member="yes">
+																	<label>KfMin</label>
+																	<extra_code>KST1-&gt;SetLabel(FFQS(SID__PRESET__KEYFRAME__MINIMUM));</extra_code>
+																</object>
+																<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+																<border>3</border>
+																<option>1</option>
+															</object>
+															<object class="sizeritem">
+																<object class="wxTextCtrl" name="ID_KEYFRAMEMIN" variable="KeyFrameMin" member="yes">
+																	<size>100,21</size>
+																</object>
+																<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+																<border>3</border>
+																<option>1</option>
+															</object>
+															<object class="sizeritem">
+																<object class="wxStaticText" name="wxID_ANY" variable="KST2" member="yes">
+																	<label>KfInf</label>
+																	<extra_code>KST2-&gt;SetLabel(FFQS(SID__PRESET__KEYFRAME__INFO));</extra_code>
+																</object>
+																<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+																<border>3</border>
+																<option>1</option>
+															</object>
+															<object class="sizeritem">
+																<object class="wxStaticText" name="wxID_ANY" variable="KST3" member="yes">
+																	<label>KfMax</label>
+																	<extra_code>KST3-&gt;SetLabel(FFQS(SID__PRESET__KEYFRAME__MAXIMUM));</extra_code>
+																</object>
+																<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+																<border>3</border>
+																<option>1</option>
+															</object>
+															<object class="sizeritem">
+																<object class="wxTextCtrl" name="ID_KEYFRAMEMAX" variable="KeyFrameMax" member="yes">
+																	<size>100,21</size>
+																</object>
+																<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+																<border>3</border>
+																<option>1</option>
+															</object>
+															<object class="sizeritem">
+																<object class="wxStaticText" name="wxID_ANY" variable="KST4" member="yes">
+																	<label>KfInf</label>
+																	<extra_code>KST4-&gt;SetLabel(FFQS(SID__PRESET__KEYFRAME__INFO));</extra_code>
+																</object>
+																<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+																<border>3</border>
+																<option>1</option>
+															</object>
+															<object class="sizeritem">
+																<object class="wxStaticText" name="wxID_ANY" variable="KST8" member="yes">
+																	<label>MaxB</label>
+																	<extra_code>KST8-&gt;SetLabel(FFQS(SID__PRESET__KEYFRAME__MAX__B__FRAMES));</extra_code>
+																</object>
+																<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+																<border>3</border>
+																<option>1</option>
+															</object>
+															<object class="sizeritem">
+																<object class="wxChoice" name="ID_KEYFRAMEMAXB" variable="KeyFrameMaxB" member="yes">
+																	<size>100,-1</size>
+																</object>
+																<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+																<border>3</border>
+																<option>1</option>
+															</object>
+															<object class="spacer">
+																<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+																<option>1</option>
+															</object>
+															<object class="sizeritem">
+																<object class="wxStaticText" name="wxID_ANY" variable="KST9" member="yes">
+																	<label>MaxP</label>
+																	<extra_code>KST9-&gt;SetLabel(FFQS(SID__PRESET__KEYFRAME__MAX__P__REFS));</extra_code>
+																</object>
+																<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+																<border>3</border>
+																<option>1</option>
+															</object>
+															<object class="sizeritem">
+																<object class="wxChoice" name="ID_KEYFRAMEMAXP" variable="KeyFrameMaxP" member="yes">
+																	<size>100,-1</size>
+																</object>
+																<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+																<border>3</border>
+																<option>1</option>
+															</object>
+															<object class="spacer">
+																<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+																<option>1</option>
+															</object>
+														</object>
+														<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+														<border>3</border>
+														<option>1</option>
+													</object>
+													<object class="sizeritem">
+														<object class="wxFlexGridSizer" variable="FlexGridSizer21" member="no">
+															<cols>2</cols>
+															<rows>1</rows>
+															<object class="sizeritem">
+																<object class="wxStaticText" name="wxID_ANY" variable="KST5" member="yes">
+																	<label>M-est</label>
+																	<extra_code>KST5-&gt;SetLabel(FFQS(SID__PRESET__MOTION__EST__METHOD));</extra_code>
+																</object>
+																<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+																<border>3</border>
+																<option>1</option>
+															</object>
+															<object class="sizeritem">
+																<object class="wxComboBox" name="ID_MOTIONESTIMATION" variable="MotionEstimation" member="yes">
+																	<content>
+																		<item>zero</item>
+																		<item>full</item>
+																		<item>epzs</item>
+																		<item>esa</item>
+																		<item>tesa</item>
+																		<item>dia</item>
+																		<item>log</item>
+																		<item>phods</item>
+																		<item>x1</item>
+																		<item>hex</item>
+																		<item>umh</item>
+																		<item>iter</item>
+																	</content>
+																	<size>100,21</size>
+																</object>
+																<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+																<border>3</border>
+																<option>1</option>
+															</object>
+														</object>
+														<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+														<border>3</border>
+														<option>1</option>
+													</object>
+													<object class="sizeritem">
+														<object class="wxFlexGridSizer" variable="FlexGridSizer19" member="no">
+															<cols>3</cols>
+															<rows>1</rows>
+															<object class="sizeritem">
+																<object class="wxCheckBox" name="ID_USESCENECHANGESENSITIVITY" variable="UseSceneChangeSens" member="yes">
+																	<label>ScSens</label>
+																	<extra_code>UseSceneChangeSens-&gt;SetLabel(FFQS(SID__PRESET__SCENE__CHANGE__SENSITIVITY));</extra_code>
+																	<handler function="OnChoiceChange" entry="EVT_CHECKBOX" />
+																</object>
+																<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+																<border>3</border>
+																<option>1</option>
+															</object>
+															<object class="sizeritem">
+																<object class="wxFlexGridSizer" variable="SceneChangeSizer" member="yes">
+																	<cols>3</cols>
+																	<rows>1</rows>
+																	<growablecols>1</growablecols>
+																	<growablerows>0</growablerows>
+																	<object class="sizeritem">
+																		<object class="wxStaticText" name="wxID_ANY" variable="KST6" member="yes">
+																			<label>L</label>
+																			<extra_code>KST6-&gt;SetLabel(FFQS(SID__PRESET__LOW));</extra_code>
+																		</object>
+																		<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+																		<border>3</border>
+																		<option>1</option>
+																	</object>
+																	<object class="sizeritem">
+																		<object class="wxSlider" name="ID_SCENECHANGESENS" variable="SceneChangeSens" member="yes">
+																			<max>99</max>
+																			<size>200,20</size>
+																			<handler function="OnSubsScaleChange" entry="EVT_COMMAND_SLIDER_UPDATED" />
+																		</object>
+																		<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+																		<option>1</option>
+																	</object>
+																	<object class="sizeritem">
+																		<object class="wxStaticText" name="wxID_ANY" variable="KST7" member="yes">
+																			<label>H</label>
+																			<extra_code>KST7-&gt;SetLabel(FFQS(SID__PRESET__HIGH));</extra_code>
+																		</object>
+																		<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+																		<border>3</border>
+																		<option>1</option>
+																	</object>
+																</object>
+																<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+																<option>1</option>
+															</object>
+															<object class="sizeritem">
+																<object class="wxStaticText" name="wxID_ANY" variable="ScSensInfo" member="yes">
+																	<label>ScsI</label>
+																</object>
+																<flag>wxLEFT|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+																<border>10</border>
+																<option>1</option>
+															</object>
+														</object>
+														<flag>wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_TOP</flag>
+														<border>3</border>
+													</object>
+												</object>
+											</object>
+											<label>Kf</label>
+										</object>
+										<object class="notebookpage">
+											<object class="wxPanel" name="ID_OTHERPAGE" variable="OtherPage" member="yes">
+												<object class="wxFlexGridSizer" variable="VideoOtherSizer" member="yes">
+													<cols>2</cols>
+													<rows>6</rows>
+													<growablecols>1</growablecols>
+													<object class="sizeritem">
+														<object class="wxStaticText" name="ID_OST3" variable="OST3" member="yes">
+															<label>VSync</label>
+															<extra_code>OST3-&gt;SetLabel(FFQS(SID__PRESET__VIDEO__SYNC));</extra_code>
+														</object>
+														<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+														<border>5</border>
+														<option>1</option>
+													</object>
+													<object class="sizeritem">
+														<object class="wxChoice" name="ID_VIDEOSYNC" variable="VideoSync" member="yes">
+															<selection>0</selection>
+															<extra_code>VideoSync-&gt;SetSelection( VideoSync-&gt;Append( wxString::Format(VSYNC__FORMAT,  &quot;AUTO&quot;, FFQS(SID__PRESET__VIDEO__SYNC__AUTO)) ) );&#x0A;VideoSync-&gt;Append( wxString::Format(VSYNC__FORMAT,  &quot;PASSTHROUGH&quot;, FFQS(SID__PRESET__VIDEO__SYNC__PASSTHROUGH))  );&#x0A;VideoSync-&gt;Append( wxString::Format(VSYNC__FORMAT,  &quot;CFR&quot;, FFQS(SID__PRESET__VIDEO__SYNC__CFR)) );&#x0A;VideoSync-&gt;Append( wxString::Format(VSYNC__FORMAT,  &quot;VFR&quot;, FFQS(SID__PRESET__VIDEO__SYNC__VFR)) );&#x0A;VideoSync-&gt;Append( wxString::Format(VSYNC__FORMAT,  &quot;DROP&quot;, FFQS(SID__PRESET__VIDEO__SYNC__DROP)) );&#x0A;</extra_code>
+														</object>
+														<flag>wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+														<border>3</border>
+														<option>1</option>
+													</object>
+													<object class="sizeritem">
+														<object class="wxStaticText" name="ID_OST1" variable="OST1" member="yes">
+															<label>Fr</label>
+															<extra_code>OST1-&gt;SetLabel(FFQS(SID__PRESET__FRAMERATE));</extra_code>
+														</object>
+														<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+														<border>5</border>
+														<option>1</option>
+													</object>
+													<object class="sizeritem">
+														<object class="wxFlexGridSizer" variable="FlexGridSizer22" member="no">
+															<cols>2</cols>
+															<rows>1</rows>
+															<growablecols>1</growablecols>
+															<growablerows>0</growablerows>
+															<object class="sizeritem">
+																<object class="wxTextCtrl" name="ID_FRAMERATE" variable="FrameRate" member="yes">
+																	<size>80,21</size>
+																</object>
+																<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+																<border>3</border>
+																<option>1</option>
+															</object>
+															<object class="sizeritem">
+																<object class="wxStaticText" name="ID_OST2" variable="OST2" member="yes">
+																	<label>FPS</label>
+																	<extra_code>OST2-&gt;SetLabel(FFQS(SID__PRESET__FPS));</extra_code>
+																</object>
+																<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+																<border>5</border>
+																<option>1</option>
+															</object>
+														</object>
+														<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+														<border>3</border>
+														<option>1</option>
+													</object>
+													<object class="sizeritem">
+														<object class="wxStaticText" name="ID_OST4" variable="OST4" member="yes">
+															<label>Pf</label>
+															<extra_code>OST4-&gt;SetLabel(FFQS(SID__PRESET__PIXEL__FORMAT));</extra_code>
+														</object>
+														<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+														<border>5</border>
+														<option>1</option>
+													</object>
+													<object class="sizeritem">
+														<object class="wxComboBox" name="ID_PIXFMT" variable="PixFmt" member="yes">
+															<size>150,-1</size>
+															<handler function="OnChoiceChange" entry="EVT_COMBOBOX" />
+															<handler function="OnChoiceChange" entry="EVT_TEXT" />
+														</object>
+														<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+														<border>3</border>
+														<option>1</option>
+													</object>
+													<object class="sizeritem">
+														<object class="wxStaticText" name="ID_OST6" variable="OST6" member="yes">
+															<label>Tr</label>
+															<extra_code>OST6-&gt;SetLabel(FFQS(SID__PRESET__TRELLIS));</extra_code>
+														</object>
+														<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+														<border>3</border>
+														<option>1</option>
+													</object>
+													<object class="sizeritem">
+														<object class="wxChoice" name="ID_TRELLIS" variable="Trellis" member="yes">
+															<size>150,-1</size>
+															<extra_code>wxString *trl = FFQL()-&gt;GetStringArray(SID__PRESET__TRELLIS__LIST, 4);&#x0A;Trellis-&gt;Append(4, trl);&#x0A;Trellis-&gt;SetSelection(0);</extra_code>
+														</object>
+														<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+														<border>3</border>
+														<option>1</option>
+													</object>
+													<object class="sizeritem">
+														<object class="wxStaticText" name="ID_OST7" variable="OST7" member="yes">
+															<label>Pst</label>
+															<extra_code>OST7-&gt;SetLabel(FFQS(SID__PRESET__SPEED__PRESET));</extra_code>
+														</object>
+														<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+														<border>3</border>
+														<option>1</option>
+													</object>
+													<object class="sizeritem">
+														<object class="wxComboBox" name="ID_SPEEDPRESET" variable="SpeedPreset" member="yes">
+															<size>150,-1</size>
+															<extra_code>SpeedPreset-&gt;Append(ENCODER__PRESET__COUNT, ENCODER__PRESETS);</extra_code>
+														</object>
+														<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+														<border>3</border>
+														<option>1</option>
+													</object>
+													<object class="sizeritem">
+														<object class="wxStaticText" name="ID_OST5" variable="OST5" member="yes">
+															<label>Td</label>
+															<extra_code>OST5-&gt;SetLabel(FFQS(SID__PRESET__THREADS));</extra_code>
+														</object>
+														<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+														<border>3</border>
+														<option>1</option>
+													</object>
+													<object class="sizeritem">
+														<object class="wxComboBox" name="ID_VIDEOTHREADS" variable="VideoThreads" member="yes">
+															<content>
+																<item>auto</item>
+																<item>1</item>
+																<item>2</item>
+																<item>4</item>
+																<item>8</item>
+																<item>16</item>
+															</content>
+														</object>
+														<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+														<border>3</border>
+														<option>1</option>
+													</object>
+												</object>
+											</object>
+											<label>Ot</label>
+										</object>
+									</object>
+									<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+									<border>3</border>
+									<option>1</option>
+								</object>
+							</object>
+						</object>
+						<label>Vid</label>
+					</object>
+					<object class="notebookpage">
+						<object class="wxPanel" name="ID_AUDIOPAGE" variable="AudioPage" member="yes">
+							<style>wxNO_BORDER|wxTAB_TRAVERSAL</style>
+							<object class="wxFlexGridSizer" variable="FlexGridSizer3" member="no">
+								<cols>1</cols>
+								<rows>4</rows>
+								<growablecols>0</growablecols>
+								<object class="sizeritem">
+									<object class="wxStaticBoxSizer" variable="ASBS1" member="no">
+										<label>Cd</label>
+										<orient>wxVERTICAL</orient>
+										<object class="sizeritem">
+											<object class="wxFlexGridSizer" variable="FlexGridSizer12" member="no">
+												<cols>1</cols>
+												<rows>1</rows>
+												<growablecols>0</growablecols>
+												<object class="sizeritem">
+													<object class="wxChoice" name="ID_AUDIOCODEC" variable="AudioCodec" member="yes">
+														<extra_code>ASBS1-&gt;GetStaticBox()-&gt;SetLabel(FFQS(SID__PRESET__CODEC));</extra_code>
+														<handler function="OnChoiceChange" entry="EVT_CHOICE" />
+													</object>
+													<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<border>3</border>
+													<option>1</option>
+												</object>
+											</object>
+											<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<option>1</option>
+										</object>
+									</object>
+									<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+									<border>5</border>
+									<option>1</option>
+								</object>
+								<object class="sizeritem">
+									<object class="wxStaticBoxSizer" variable="ASBS2" member="yes">
+										<label>Br</label>
+										<object class="sizeritem">
+											<object class="Custom" name="ID_AUDIOBITRATE" subclass="FFQBitRatePanel" variable="AudioBitRate" member="yes">
+												<creating_code>$(THIS) = new $(CLASS)($(PARENT));</creating_code>
+												<include_file>FFQBitRatePanel.h</include_file>
+												<local_include>1</local_include>
+												<style></style>
+												<extra_code>ASBS2-&gt;GetStaticBox()-&gt;SetLabel(FFQS(SID__PRESET__BITRATE));</extra_code>
+											</object>
+											<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<option>1</option>
+										</object>
+									</object>
+									<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+									<border>5</border>
+									<option>1</option>
+								</object>
+								<object class="sizeritem">
+									<object class="wxStaticBoxSizer" variable="ASBS3" member="yes">
+										<label>Q</label>
+										<orient>wxVERTICAL</orient>
+										<object class="sizeritem">
+											<object class="wxFlexGridSizer" variable="FlexGridSizer27" member="no">
+												<cols>2</cols>
+												<rows>1</rows>
+												<growablecols>1</growablecols>
+												<object class="sizeritem">
+													<object class="wxCheckBox" name="ID_USEAUDIOQSCALE" variable="UseAudioQScale" member="yes">
+														<label>Qs</label>
+														<extra_code>ASBS2-&gt;GetStaticBox()-&gt;SetLabel(FFQS(SID__PRESET__BITRATE));&#x0A;ASBS3-&gt;GetStaticBox()-&gt;SetLabel(FFQS(SID__PRESET__QUALITY));&#x0A;UseAudioQScale-&gt;SetLabel(FFQS(SID__PRESET__QUALITY__SCALE));</extra_code>
+														<handler function="OnChoiceChange" entry="EVT_CHECKBOX" />
+													</object>
+													<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+													<border>3</border>
+													<option>1</option>
+												</object>
+												<object class="sizeritem">
+													<object class="wxFlexGridSizer" variable="AudioQScaleSizer" member="yes">
+														<cols>4</cols>
+														<rows>1</rows>
+														<growablecols>1</growablecols>
+														<object class="sizeritem">
+															<object class="wxStaticText" name="ID_AST1" variable="AST1" member="yes">
+																<label>L</label>
+																<extra_code>AST1-&gt;SetLabel(FFQS(SID__PRESET__LOW));</extra_code>
+															</object>
+															<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+															<border>3</border>
+															<option>1</option>
+														</object>
+														<object class="sizeritem">
+															<object class="wxSlider" name="ID_AUDIOQSCALE" variable="AudioQScale" member="yes">
+																<size>-1,20</size>
+																<handler function="OnSubsScaleChange" entry="EVT_COMMAND_SLIDER_UPDATED" />
+															</object>
+															<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+															<border>3</border>
+															<option>1</option>
+														</object>
+														<object class="sizeritem">
+															<object class="wxStaticText" name="ID_AST2" variable="AST2" member="yes">
+																<label>H</label>
+																<extra_code>AST2-&gt;SetLabel(FFQS(SID__PRESET__HIGH));</extra_code>
+															</object>
+															<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+															<border>3</border>
+															<option>1</option>
+														</object>
+														<object class="sizeritem">
+															<object class="wxStaticText" name="ID_AUDIOQSCALEVAL" variable="AudioQScaleVal" member="yes">
+																<label>XXXXXX</label>
+															</object>
+															<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+															<border>3</border>
+															<option>1</option>
+														</object>
+													</object>
+													<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<option>1</option>
+												</object>
+											</object>
+											<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<option>1</option>
+										</object>
+									</object>
+									<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+									<border>5</border>
+									<option>1</option>
+								</object>
+								<object class="sizeritem">
+									<object class="wxStaticBoxSizer" variable="ASBS4" member="yes">
+										<label>Ot</label>
+										<object class="sizeritem">
+											<object class="wxFlexGridSizer" variable="FlexGridSizer25" member="no">
+												<cols>2</cols>
+												<rows>2</rows>
+												<object class="sizeritem">
+													<object class="wxStaticText" name="ID_AST4" variable="AST4" member="yes">
+														<label>AC</label>
+														<extra_code>ASBS4-&gt;GetStaticBox()-&gt;SetLabel(FFQS(SID__PRESET__OTHER));&#x0A;AST4-&gt;SetLabel(FFQS(SID__PRESET__NUM__AUDIO__CHANNELS));</extra_code>
+													</object>
+													<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+													<border>3</border>
+													<option>1</option>
+												</object>
+												<object class="sizeritem">
+													<object class="wxTextCtrl" name="ID_AUDIOCHANNELS" variable="AudioChannels" member="yes">
+														<size>45,21</size>
+													</object>
+													<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+													<border>3</border>
+													<option>1</option>
+												</object>
+												<object class="sizeritem">
+													<object class="wxStaticText" name="ID_AST5" variable="AST5" member="yes">
+														<label>Ap</label>
+														<extra_code>AST5-&gt;SetLabel(FFQS(SID__PRESET__AUDIO__PROFILE));</extra_code>
+													</object>
+													<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+													<border>3</border>
+													<option>1</option>
+												</object>
+												<object class="sizeritem">
+													<object class="wxComboBox" name="ID_AUDIOPROFILE" variable="AudioProfile" member="yes">
+														<content>
+															<item>unknown</item>
+															<item>aac_main</item>
+															<item>aac_low</item>
+															<item>aac_ssr</item>
+															<item>aac_ltp</item>
+															<item>aac_he</item>
+															<item>aac_he_v2</item>
+															<item>aac_ld</item>
+															<item>aac_eld</item>
+															<item>mpeg2_aac_low</item>
+															<item>mpeg2_aac_he</item>
+															<item>dts</item>
+															<item>dts_es</item>
+															<item>dts_96_24</item>
+															<item>dts_hd_hra</item>
+															<item>dts_hd_ma</item>
+														</content>
+													</object>
+													<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+													<border>3</border>
+													<option>1</option>
+												</object>
+											</object>
+											<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<option>1</option>
+										</object>
+									</object>
+									<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+									<border>5</border>
+									<option>1</option>
+								</object>
+							</object>
+						</object>
+						<label>Aud</label>
+					</object>
+					<object class="notebookpage">
+						<object class="wxPanel" name="ID_SUBTITLESPAGE" variable="SubtitlesPage" member="yes">
+							<object class="wxFlexGridSizer" variable="FlexGridSizer24" member="no">
+								<cols>1</cols>
+								<rows>2</rows>
+								<growablecols>0</growablecols>
+								<object class="sizeritem">
+									<object class="wxStaticBoxSizer" variable="SSBS1" member="no">
+										<label>Cd</label>
+										<orient>wxVERTICAL</orient>
+										<object class="sizeritem">
+											<object class="wxFlexGridSizer" variable="FlexGridSizer6" member="no">
+												<cols>1</cols>
+												<rows>1</rows>
+												<growablecols>0</growablecols>
+												<object class="sizeritem">
+													<object class="wxChoice" name="ID_SUBSCODEC" variable="SubsCodec" member="yes">
+														<extra_code>SSBS1-&gt;GetStaticBox()-&gt;SetLabel(FFQS(SID__PRESET__CODEC));</extra_code>
+														<handler function="OnChoiceChange" entry="EVT_CHOICE" />
+													</object>
+													<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<border>3</border>
+													<option>1</option>
+												</object>
+											</object>
+											<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<option>1</option>
+										</object>
+									</object>
+									<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+									<border>5</border>
+									<option>1</option>
+								</object>
+								<object class="sizeritem">
+									<object class="wxStaticBoxSizer" variable="SSBS2" member="yes">
+										<label>Burn</label>
+										<orient>wxVERTICAL</orient>
+										<object class="sizeritem">
+											<object class="wxFlexGridSizer" variable="FlexGridSizer8" member="no">
+												<cols>2</cols>
+												<rows>3</rows>
+												<growablecols>1</growablecols>
+												<object class="sizeritem">
+													<object class="wxStaticText" name="ID_ST53" variable="ST53" member="yes">
+														<label>St</label>
+														<extra_code>ST53-&gt;SetLabel(FFQS(SID__PRESET__SUBTITLE__TYPE));&#x0A;SSBS2-&gt;GetStaticBox()-&gt;SetLabel(FFQS(SID__PRESET__BURN__IN__SUBTITLES));</extra_code>
+													</object>
+													<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+													<border>3</border>
+													<option>1</option>
+												</object>
+												<object class="sizeritem">
+													<object class="wxFlexGridSizer" variable="FlexGridSizer16" member="no">
+														<cols>2</cols>
+														<rows>1</rows>
+														<growablecols>1</growablecols>
+														<growablerows>0</growablerows>
+														<object class="sizeritem">
+															<object class="wxRadioButton" name="ID_SUBSTEXT" variable="SubsText" member="yes">
+																<label>Txt</label>
+																<selected>1</selected>
+																<extra_code>SubsText-&gt;SetLabel(FFQS(SID__PRESET__SUBTITLE__TYPE__TEXT));</extra_code>
+																<handler function="OnChoiceChange" entry="EVT_RADIOBUTTON" />
+															</object>
+															<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+															<border>3</border>
+															<option>1</option>
+														</object>
+														<object class="sizeritem">
+															<object class="wxRadioButton" name="ID_SUBSBITMAP" variable="SubsBitmap" member="yes">
+																<label>Bmp</label>
+																<extra_code>SubsBitmap-&gt;SetLabel(FFQS(SID__PRESET__SUBTITLE__TYPE__BITMAP));</extra_code>
+																<handler function="OnChoiceChange" entry="EVT_RADIOBUTTON" />
+															</object>
+															<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+															<border>3</border>
+															<option>1</option>
+														</object>
+													</object>
+													<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<border>3</border>
+													<option>1</option>
+												</object>
+												<object class="sizeritem">
+													<object class="wxStaticText" name="ID_SUBSLAB2" variable="SubsLab2" member="yes">
+														<label>Ss</label>
+														<extra_code>SubsLab2-&gt;SetLabel(FFQS(SID__PRESET__SUBTITLE__SIZE));</extra_code>
+													</object>
+													<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+													<border>3</border>
+													<option>1</option>
+												</object>
+												<object class="sizeritem">
+													<object class="wxPanel" name="ID_SUBSSIZEPAN" variable="SubsSizePan" member="yes">
+														<object class="wxFlexGridSizer" variable="SubsSizer3" member="yes">
+															<cols>6</cols>
+															<rows>1</rows>
+															<growablecols>5</growablecols>
+															<growablerows>0</growablerows>
+															<object class="sizeritem">
+																<object class="wxRadioButton" name="ID_SUBSSIZEDEF" variable="SubsSizeDef" member="yes">
+																	<label>Def</label>
+																	<extra_code>SubsSizeDef-&gt;SetLabel(FFQS(SID__PRESET__SUBTITLE__SIZE__DEFAULT));</extra_code>
+																	<handler function="OnChoiceChange" entry="EVT_RADIOBUTTON" />
+																</object>
+																<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+																<border>3</border>
+																<option>1</option>
+															</object>
+															<object class="sizeritem">
+																<object class="wxRadioButton" name="ID_SUBSSIZEPAL" variable="SubsSizePAL" member="yes">
+																	<label>PAL</label>
+																	<extra_code>SubsSizePAL-&gt;SetLabel(FFQS(SID__PRESET__SUBTITLE__SIZE__PAL));</extra_code>
+																	<handler function="OnChoiceChange" entry="EVT_RADIOBUTTON" />
+																</object>
+																<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+																<border>3</border>
+																<option>1</option>
+															</object>
+															<object class="sizeritem">
+																<object class="wxRadioButton" name="ID_SUBSSIZECUST" variable="SubsSizeCust" member="yes">
+																	<label>Cust</label>
+																	<extra_code>SubsSizeCust-&gt;SetLabel(FFQS(SID__PRESET__SUBTITLE__SIZE__CUSTOM));</extra_code>
+																	<handler function="OnChoiceChange" entry="EVT_RADIOBUTTON" />
+																</object>
+																<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+																<border>3</border>
+																<option>1</option>
+															</object>
+															<object class="sizeritem">
+																<object class="wxTextCtrl" name="ID_SUBSWIDTH" variable="SubsWidth" member="yes">
+																	<size>50,-1</size>
+																</object>
+																<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+																<option>1</option>
+															</object>
+															<object class="sizeritem">
+																<object class="wxStaticText" name="ID_STATICTEXT11" variable="SubsLab3" member="yes">
+																	<label>X</label>
+																</object>
+																<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+																<border>2</border>
+																<option>1</option>
+															</object>
+															<object class="sizeritem">
+																<object class="wxTextCtrl" name="ID_SUBSHEIGHT" variable="SubsHeight" member="yes">
+																	<size>50,-1</size>
+																</object>
+																<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+																<option>1</option>
+															</object>
+														</object>
+													</object>
+													<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<border>3</border>
+													<option>1</option>
+												</object>
+												<object class="sizeritem">
+													<object class="wxStaticText" name="ID_SUBSLAB1" variable="SubsLab1" member="yes">
+														<label>Sc</label>
+														<extra_code>SubsLab1-&gt;SetLabel(FFQS(SID__PRESET__SUBTITLE__SCALE));</extra_code>
+													</object>
+													<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+													<border>3</border>
+													<option>1</option>
+												</object>
+												<object class="sizeritem">
+													<object class="wxFlexGridSizer" variable="SubsSizer2" member="yes">
+														<cols>2</cols>
+														<rows>1</rows>
+														<growablecols>0</growablecols>
+														<object class="sizeritem">
+															<object class="wxSlider" name="ID_SUBSSCALE" variable="SubsScale" member="yes">
+																<value>100</value>
+																<min>25</min>
+																<size>-1,23</size>
+																<handler function="OnSubsScaleChange" entry="EVT_COMMAND_SLIDER_UPDATED" />
+															</object>
+															<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+															<border>1</border>
+															<option>1</option>
+														</object>
+														<object class="sizeritem">
+															<object class="wxStaticText" name="ID_STATICTEXT8" variable="SubsScaleLab" member="yes">
+																<label>100%</label>
+															</object>
+															<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+															<border>3</border>
+															<option>1</option>
+														</object>
+													</object>
+													<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<border>3</border>
+													<option>1</option>
+												</object>
+											</object>
+											<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<option>1</option>
+										</object>
+									</object>
+									<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+									<border>5</border>
+									<option>1</option>
+								</object>
+							</object>
+						</object>
+						<label>Sub</label>
+					</object>
+					<object class="notebookpage">
+						<object class="wxPanel" name="ID_FILTERPAGE" variable="FilterPage" member="yes">
+							<object class="wxFlexGridSizer" variable="FilterSizer" member="yes">
+								<cols>1</cols>
+								<rows>2</rows>
+								<growablecols>0</growablecols>
+								<growablerows>0</growablerows>
+								<object class="sizeritem">
+									<object class="wxFlexGridSizer" variable="FlexGridSizer7" member="no">
+										<cols>2</cols>
+										<rows>2</rows>
+										<growablecols>0</growablecols>
+										<growablerows>0</growablerows>
+										<object class="sizeritem">
+											<object class="wxListBox" name="ID_FILTERLIST" variable="FilterList" member="yes">
+												<default>-1</default>
+												<style>wxLB_EXTENDED|wxHSCROLL</style>
+												<handler function="OnChoiceChange" entry="EVT_LISTBOX" />
+												<handler function="OnButtonClick" entry="EVT_LISTBOX_DCLICK" />
+											</object>
+											<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<border>3</border>
+											<option>1</option>
+										</object>
+										<object class="sizeritem">
+											<object class="wxFlexGridSizer" variable="FlexGridSizer5" member="no">
+												<cols>1</cols>
+												<rows>9</rows>
+												<growablecols>0</growablecols>
+												<growablerows>8</growablerows>
+												<object class="sizeritem">
+													<object class="wxButton" name="ID_ADDFILTERBUTTON" variable="AddFilterButton" member="yes">
+														<label>+</label>
+														<extra_code>AddFilterButton-&gt;SetLabel(FFQS(SID__COMMON__ADD));</extra_code>
+														<handler function="OnButtonClick" entry="EVT_BUTTON" />
+													</object>
+													<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<border>3</border>
+													<option>1</option>
+												</object>
+												<object class="sizeritem">
+													<object class="wxButton" name="ID_EDITFILTERBUTTON" variable="EditFilterButton" member="yes">
+														<label>?</label>
+														<extra_code>EditFilterButton-&gt;SetLabel(FFQS(SID__COMMON__EDIT));</extra_code>
+														<handler function="OnButtonClick" entry="EVT_BUTTON" />
+													</object>
+													<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<border>3</border>
+													<option>1</option>
+												</object>
+												<object class="sizeritem">
+													<object class="wxButton" name="ID_REMOVEFILTERBUTTON" variable="RemoveFilterButton" member="yes">
+														<label>-</label>
+														<extra_code>RemoveFilterButton-&gt;SetLabel(FFQS(SID__COMMON__REMOVE));</extra_code>
+														<handler function="OnButtonClick" entry="EVT_BUTTON" />
+													</object>
+													<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<border>3</border>
+													<option>1</option>
+												</object>
+												<object class="spacer">
+													<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<option>1</option>
+													<size>-1,15</size>
+												</object>
+												<object class="sizeritem">
+													<object class="wxButton" name="ID_FILTERUPBUTTON" variable="FilterUpButton" member="yes">
+														<label>^</label>
+														<extra_code>FilterUpButton-&gt;SetLabel(FFQS(SID__COMMON__MOVE__UP));</extra_code>
+														<handler function="OnButtonClick" entry="EVT_BUTTON" />
+													</object>
+													<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<border>3</border>
+													<option>1</option>
+												</object>
+												<object class="sizeritem">
+													<object class="wxButton" name="ID_FILTERDOWNBUTTON" variable="FilterDownButton" member="yes">
+														<label>v</label>
+														<extra_code>FilterDownButton-&gt;SetLabel(FFQS(SID__COMMON__MOVE__DOWN));</extra_code>
+														<handler function="OnButtonClick" entry="EVT_BUTTON" />
+													</object>
+													<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<border>3</border>
+													<option>1</option>
+												</object>
+												<object class="spacer">
+													<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<option>1</option>
+													<size>-1,15</size>
+												</object>
+												<object class="sizeritem">
+													<object class="wxButton" name="ID_FILTERPREVIEWBUTTON" variable="FilterPreviewButton" member="yes">
+														<label>Pw</label>
+														<extra_code>FilterPreviewButton-&gt;SetLabel(FFQS(SID__COMMON__PREVIEW));</extra_code>
+														<handler function="OnButtonClick" entry="EVT_BUTTON" />
+													</object>
+													<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<border>3</border>
+													<option>1</option>
+												</object>
+												<object class="spacer">
+													<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<option>1</option>
+												</object>
+											</object>
+											<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<border>3</border>
+											<option>1</option>
+										</object>
+										<object class="sizeritem">
+											<object class="wxCheckBox" name="ID_AUDIOFILTERSCOMPLEX" variable="AudioFiltersComplex" member="yes">
+												<label>ACpl</label>
+												<extra_code>AudioFiltersComplex-&gt;SetLabel(FFQS(SID__PRESET__AUDIO__FILTERS__COMPLEX));</extra_code>
+											</object>
+											<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+											<border>3</border>
+											<option>1</option>
+										</object>
+										<object class="spacer">
+											<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<option>1</option>
+										</object>
+									</object>
+									<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+									<border>5</border>
+									<option>1</option>
+								</object>
+								<object class="sizeritem">
+									<object class="wxStaticText" name="ID_FILTERTIP" variable="FilterTip" member="yes">
+										<label>Inf</label>
+										<enabled>0</enabled>
+										<extra_code>FilterTip-&gt;SetLabel(FFQS(SID__PRESET__FILTER__INFO));</extra_code>
+									</object>
+									<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+									<border>8</border>
+								</object>
+							</object>
+						</object>
+						<label>Flt</label>
+					</object>
+					<object class="notebookpage">
+						<object class="wxPanel" name="ID_METADATAPAGE" variable="MetaDataPage" member="yes">
+							<object class="wxFlexGridSizer" variable="FlexGridSizer9" member="no">
+								<cols>1</cols>
+								<rows>1</rows>
+								<growablecols>0</growablecols>
+								<growablerows>0</growablerows>
+								<object class="sizeritem">
+									<object class="wxStaticBoxSizer" variable="SBS31" member="no">
+										<label>Md</label>
+										<orient>wxVERTICAL</orient>
+										<object class="sizeritem">
+											<object class="wxFlexGridSizer" variable="FlexGridSizer10" member="no">
+												<cols>1</cols>
+												<rows>1</rows>
+												<growablecols>0</growablecols>
+												<growablerows>0</growablerows>
+												<object class="sizeritem">
+													<object class="wxGrid" name="ID_METADATA" variable="MetaData" member="yes">
+														<cols>2</cols>
+														<rows>5</rows>
+														<labelcolwidth>1</labelcolwidth>
+														<extra_code>MetaData-&gt;SetColLabelValue(0, FFQS(SID__PRESET__METADATA__KEY));&#x0A;MetaData-&gt;SetColLabelValue(1, FFQS(SID__PRESET__METADATA__VALUE));&#x0A;SBS31-&gt;GetStaticBox()-&gt;SetLabel(FFQS(SID__PRESET__METADATA__DEFINE));</extra_code>
+														<handler function="OnMetaDataCellChange" entry="EVT_CMD_GRID_CELL_CHANGE" />
+													</object>
+													<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<border>3</border>
+													<option>1</option>
+												</object>
+											</object>
+											<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<border>3</border>
+											<option>1</option>
+										</object>
+									</object>
+									<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+									<border>5</border>
+									<option>1</option>
+								</object>
+							</object>
+						</object>
+						<label>MD</label>
+					</object>
+					<object class="notebookpage">
+						<object class="wxPanel" name="ID_THUMBSPAGE" variable="ThumbsPage" member="yes">
+							<object class="wxFlexGridSizer" variable="FlexGridSizer11" member="no">
+								<cols>1</cols>
+								<rows>1</rows>
+								<growablecols>0</growablecols>
+								<growablerows>0</growablerows>
+								<object class="sizeritem">
+									<object class="Custom" name="ID_THUMBSPANEL" subclass="FFQThumbPanel" variable="ThumbsPanel" member="yes">
+										<creating_code>$(THIS) = new $(CLASS)($(PARENT),$(ID));</creating_code>
+										<include_file>tools/FFQThumbPanel.h</include_file>
+										<local_include>1</local_include>
+										<style></style>
+									</object>
+									<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+									<border>5</border>
+									<option>1</option>
+								</object>
+							</object>
+						</object>
+						<label>Tbs</label>
+					</object>
+					<object class="notebookpage">
+						<object class="wxPanel" name="ID_MISCPANEL" variable="MiscPage" member="yes">
+							<object class="wxFlexGridSizer" variable="FlexGridSizer14" member="no">
+								<cols>1</cols>
+								<rows>4</rows>
+								<growablecols>0</growablecols>
+								<object class="sizeritem">
+									<object class="wxStaticBoxSizer" variable="FourCCSizer" member="yes">
+										<label>Fcc</label>
+										<object class="sizeritem">
+											<object class="wxFlexGridSizer" variable="FlexGridSizer15" member="no">
+												<cols>5</cols>
+												<rows>1</rows>
+												<growablecols>4</growablecols>
+												<object class="sizeritem">
+													<object class="wxStaticText" name="ID_ST51" variable="ST51" member="yes">
+														<label>V</label>
+														<extra_code>ST51-&gt;SetLabel(FFQS(SID__PRESET__FOURCC__VIDS));&#x0A;FourCCSizer-&gt;GetStaticBox()-&gt;SetLabel(FFQS(SID__PRESET__DEFINE__FOURCC));</extra_code>
+													</object>
+													<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<border>5</border>
+													<option>1</option>
+												</object>
+												<object class="sizeritem">
+													<object class="wxTextCtrl" name="ID_FOURCC_VID" variable="FOURCC_Vid" member="yes">
+														<maxlength>4</maxlength>
+														<size>60,-1</size>
+													</object>
+													<flag>wxRIGHT|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<border>20</border>
+													<option>1</option>
+												</object>
+												<object class="sizeritem">
+													<object class="wxStaticText" name="ID_ST52" variable="ST52" member="yes">
+														<label>A</label>
+														<extra_code>ST52-&gt;SetLabel(FFQS(SID__PRESET__FOURCC__AUDS));</extra_code>
+													</object>
+													<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+													<border>3</border>
+													<option>1</option>
+												</object>
+												<object class="sizeritem">
+													<object class="wxTextCtrl" name="ID_FOURCC_AUD" variable="FOURCC_Aud" member="yes">
+														<maxlength>4</maxlength>
+														<size>60,-1</size>
+													</object>
+													<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+													<option>1</option>
+												</object>
+												<object class="spacer">
+													<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<option>1</option>
+												</object>
+											</object>
+											<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<border>3</border>
+											<option>1</option>
+										</object>
+									</object>
+									<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+									<border>5</border>
+									<option>1</option>
+								</object>
+								<object class="sizeritem">
+									<object class="wxStaticBoxSizer" variable="SBS52" member="no">
+										<label>CArgs</label>
+										<object class="sizeritem">
+											<object class="wxFlexGridSizer" variable="FlexGridSizer20" member="no">
+												<cols>2</cols>
+												<rows>2</rows>
+												<growablecols>1</growablecols>
+												<object class="sizeritem">
+													<object class="wxStaticText" name="ID_CST1" variable="CST1" member="yes">
+														<label>P1</label>
+														<extra_code>SBS52-&gt;GetStaticBox()-&gt;SetLabel(FFQS(SID__PRESET__CUSTOM__CMDLINE__ARGS));&#x0A;CST1-&gt;SetLabel(FFQS(SID__PRESET__CUSTOM__ARGS__PASS__1));</extra_code>
+													</object>
+													<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+													<border>3</border>
+													<option>1</option>
+												</object>
+												<object class="sizeritem">
+													<object class="wxTextCtrl" name="ID_CUSTOMARGS" variable="CustomArgs1" member="yes">
+														<extra_code>SBS52-&gt;GetStaticBox()-&gt;SetLabel(FFQS(SID__PRESET__CUSTOM__CMDLINE__ARGS));</extra_code>
+													</object>
+													<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<border>3</border>
+													<option>1</option>
+												</object>
+												<object class="sizeritem">
+													<object class="wxStaticText" name="ID_CST2" variable="CST2" member="yes">
+														<label>P2</label>
+														<extra_code>CST2-&gt;SetLabel(FFQS(SID__PRESET__CUSTOM__ARGS__PASS__2));</extra_code>
+													</object>
+													<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+													<border>3</border>
+													<option>1</option>
+												</object>
+												<object class="sizeritem">
+													<object class="wxTextCtrl" name="ID_CUSTOMARGS2" variable="CustomArgs2" member="yes" />
+													<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<border>3</border>
+													<option>1</option>
+												</object>
+											</object>
+											<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<option>1</option>
+										</object>
+									</object>
+									<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+									<border>5</border>
+									<option>1</option>
+								</object>
+								<object class="sizeritem">
+									<object class="wxStaticBoxSizer" variable="SBS51" member="no">
+										<label>Ot</label>
+										<orient>wxVERTICAL</orient>
+										<object class="sizeritem">
+											<object class="wxFlexGridSizer" variable="FlexGridSizer2" member="no">
+												<cols>1</cols>
+												<rows>2</rows>
+												<growablecols>0</growablecols>
+												<growablerows>0,1</growablerows>
+												<object class="sizeritem">
+													<object class="wxFlexGridSizer" variable="FlexGridSizer26" member="no">
+														<cols>2</cols>
+														<rows>2</rows>
+														<growablecols>1</growablecols>
+														<object class="sizeritem">
+															<object class="wxStaticText" name="ID_STATICTEXT13" variable="ST55" member="yes">
+																<label>Ar</label>
+																<extra_code>SBS51-&gt;GetStaticBox()-&gt;SetLabel(FFQS(SID__PRESET__OTHER));&#x0A;ST55-&gt;SetLabel(FFQS(SID__PRESET__ASPECT__RATIO));</extra_code>
+															</object>
+															<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+															<border>3</border>
+															<option>1</option>
+														</object>
+														<object class="sizeritem">
+															<object class="wxComboBox" name="ID_ASPECT" variable="Aspect" member="yes">
+																<content>
+																	<item>3:2</item>
+																	<item>4:3</item>
+																	<item>5:3</item>
+																	<item>5:4</item>
+																	<item>16:9</item>
+																	<item>16:10</item>
+																</content>
+																<minsize>100,-1</minsize>
+															</object>
+															<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+															<border>3</border>
+															<option>1</option>
+														</object>
+														<object class="sizeritem">
+															<object class="wxStaticText" name="wxID_ANY" variable="ST56" member="yes">
+																<label>Of</label>
+																<extra_code>ST56-&gt;SetLabel(FFQS(SID__PRESET__OUTPUT__FORMAT));</extra_code>
+															</object>
+															<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+															<border>3</border>
+															<option>1</option>
+														</object>
+														<object class="sizeritem">
+															<object class="wxComboBox" name="ID_OUTPUTFORMAT" variable="OutputFormat" member="yes" />
+															<flag>wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+															<border>3</border>
+															<option>1</option>
+														</object>
+													</object>
+													<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<border>3</border>
+													<option>1</option>
+												</object>
+												<object class="sizeritem">
+													<object class="wxBoxSizer" variable="BoxSizer2" member="no">
+														<orient>wxVERTICAL</orient>
+														<object class="sizeritem">
+															<object class="wxCheckBox" name="ID_MF_FASTSTART" variable="MF_FastStart" member="yes">
+																<label>Fs</label>
+																<extra_code>MF__FastStart-&gt;SetLabel(FFQS(SID__PRESET__MOVFLAGS__FASTSTART));</extra_code>
+															</object>
+															<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+															<border>3</border>
+															<option>1</option>
+														</object>
+														<object class="sizeritem">
+															<object class="wxCheckBox" name="ID_KEEPFILETIME" variable="KeepFileTime" member="yes">
+																<label>Kft</label>
+																<extra_code>KeepFileTime-&gt;SetLabel(FFQS(SID__PRESET__KEEP__FILETIME));</extra_code>
+															</object>
+															<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+															<border>3</border>
+															<option>1</option>
+														</object>
+													</object>
+													<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<border>3</border>
+													<option>1</option>
+												</object>
+											</object>
+											<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<option>1</option>
+										</object>
+									</object>
+									<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+									<border>5</border>
+									<option>1</option>
+								</object>
+							</object>
+						</object>
+						<label>Msc</label>
+					</object>
+				</object>
+				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<border>5</border>
+				<option>1</option>
+			</object>
+			<object class="sizeritem">
+				<object class="wxBoxSizer" variable="BoxSizer1" member="no">
+					<object class="spacer">
+						<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<border>5</border>
+						<option>1</option>
+					</object>
+					<object class="spacer">
+						<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<border>5</border>
+						<option>1</option>
+					</object>
+					<object class="sizeritem">
+						<object class="wxButton" name="ID_OKBUTTON" variable="OKButton" member="yes">
+							<label>O</label>
+							<default>1</default>
+							<size>100,25</size>
+							<extra_code>OKButton-&gt;SetLabel(FFQS(SID__COMMON__OK));</extra_code>
+							<handler function="OnButtonClick" entry="EVT_BUTTON" />
+						</object>
+						<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<border>5</border>
+						<option>1</option>
+					</object>
+					<object class="sizeritem">
+						<object class="wxButton" name="ID_CANCELBUTTON" variable="CancelButton" member="yes">
+							<label>C</label>
+							<size>100,25</size>
+							<extra_code>CancelButton-&gt;SetLabel(FFQS(SID__COMMON__CANCEL));</extra_code>
+							<handler function="OnButtonClick" entry="EVT_BUTTON" />
+						</object>
+						<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<border>5</border>
+						<option>1</option>
+					</object>
+				</object>
+				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<border>5</border>
+				<option>1</option>
+			</object>
+		</object>
+		<object class="wxMenu" variable="AddFilterMenu" member="yes" />
+		<object class="wxFileDialog" variable="OpenFileDlg" member="yes">
+			<extra_code>OpenFileDlg-&gt;SetMessage(FFQS(SID__PRESET__SELECT__PREVIEW__FILE));</extra_code>
+			<style>wxFD_DEFAULT_STYLE|wxFD_OPEN|wxFD_FILE_MUST_EXIST</style>
+		</object>
+	</object>
+</wxsmith>

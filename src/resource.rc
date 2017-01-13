@@ -1,0 +1,4 @@
+aaaa ICON "../res/MainIcon.ico"
+wxSTD_FRAME ICON "../res/MainIcon.ico"
+
+#include "wx/msw/wx.rc"

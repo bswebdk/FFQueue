@@ -1,0 +1,10 @@
+bin/*
+obj/*
+build/*
+junk/*
+res/org/*
+res/junk/*
+*.layout
+*.depend
+*.save
+.copykit

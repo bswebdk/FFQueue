@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<wxsmith>
+	<object class="wxPanel" name="FFQThumbPanel">
+		<object class="wxFlexGridSizer" variable="FGS_Main" member="yes">
+			<cols>1</cols>
+			<rows>7</rows>
+			<growablecols>0</growablecols>
+			<growablerows>0</growablerows>
+			<object class="sizeritem">
+				<object class="wxFlexGridSizer" variable="MakeSizer" member="no">
+					<cols>3</cols>
+					<rows>1</rows>
+					<object class="sizeritem">
+						<object class="wxCheckBox" name="ID_MAKETHUMBS" variable="MakeThumbs" member="yes">
+							<label>Tb</label>
+							<extra_code>MakeThumbs-&gt;SetLabel(FFQS(SID__THUMBS__CREATE__THUMBS));</extra_code>
+							<handler function="OnAction" entry="EVT_CHECKBOX" />
+						</object>
+						<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<border>5</border>
+						<option>1</option>
+					</object>
+					<object class="spacer">
+						<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<option>1</option>
+					</object>
+					<object class="sizeritem">
+						<object class="wxCheckBox" name="ID_MAKETILES" variable="MakeTiles" member="yes">
+							<label>Tm</label>
+							<extra_code>MakeTiles-&gt;SetLabel(FFQS(SID__THUMBS__CREATE__MOSAICS));</extra_code>
+							<handler function="OnAction" entry="EVT_CHECKBOX" />
+						</object>
+						<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<border>5</border>
+						<option>1</option>
+					</object>
+				</object>
+				<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+				<border>3</border>
+				<option>1</option>
+			</object>
+			<object class="sizeritem">
+				<object class="wxFlexGridSizer" variable="DestSizer" member="yes">
+					<cols>2</cols>
+					<rows>2</rows>
+					<growablecols>1</growablecols>
+					<object class="sizeritem">
+						<object class="wxStaticText" name="ID_ST1" variable="ST1" member="yes">
+							<label>Dst</label>
+							<extra_code>ST1-&gt;SetLabel(FFQS(SID__COMMON__DEST__FOLDER));</extra_code>
+						</object>
+						<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+						<border>5</border>
+						<option>1</option>
+					</object>
+					<object class="sizeritem">
+						<object class="wxChoice" name="ID_IMGDEST" variable="ImgDest" member="yes">
+							<selection>0</selection>
+							<extra_code>ImgDest-&gt;SetSelection( ImgDest-&gt;Append(FFQS(SID__THUMBS__DEST__NEW__UNIQUE)) );&#x0A;ImgDest-&gt;Append(FFQS(SID__THUMBS__DEST__SAME));&#x0A;ImgDest-&gt;Append(FFQS(SID__THUMBS__DEST__THUMBS));&#x0A;</extra_code>
+						</object>
+						<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<border>2</border>
+						<option>1</option>
+					</object>
+					<object class="sizeritem">
+						<object class="wxStaticText" name="ID_ST2" variable="ST2" member="yes">
+							<label>ImgF</label>
+							<extra_code>ST2-&gt;SetLabel(FFQS(SID__THUMBS__IMAGE__FORMAT));</extra_code>
+						</object>
+						<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+						<border>5</border>
+						<option>1</option>
+					</object>
+					<object class="sizeritem">
+						<object class="wxComboBox" name="ID_IMGFORMAT" variable="ImgFormat" member="yes">
+							<content>
+								<item>png</item>
+								<item>PNG</item>
+								<item>jpg</item>
+								<item>JPG</item>
+								<item>jpeg</item>
+								<item>JPEG</item>
+								<item>bmp</item>
+								<item>BMP</item>
+							</content>
+							<selection>0</selection>
+						</object>
+						<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<border>2</border>
+						<option>1</option>
+					</object>
+				</object>
+				<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+				<border>3</border>
+				<option>1</option>
+			</object>
+			<object class="sizeritem">
+				<object class="wxFlexGridSizer" variable="WidthSizer" member="yes">
+					<cols>3</cols>
+					<rows>1</rows>
+					<growablecols>2</growablecols>
+					<object class="sizeritem">
+						<object class="wxStaticText" name="ID_ST3" variable="ST3" member="yes">
+							<label>Tbw</label>
+							<extra_code>ST3-&gt;SetLabel(FFQS(SID__THUMBS__WIDTH));</extra_code>
+						</object>
+						<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<border>5</border>
+						<option>1</option>
+					</object>
+					<object class="sizeritem">
+						<object class="wxTextCtrl" name="ID_WIDTH" variable="Width" member="yes">
+							<size>50,-1</size>
+							<validator>iVal</validator>
+						</object>
+						<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<border>2</border>
+						<option>1</option>
+					</object>
+					<object class="sizeritem">
+						<object class="wxStaticText" name="ID_ST4" variable="ST4" member="yes">
+							<label>Inf</label>
+							<enabled>0</enabled>
+							<extra_code>ST4-&gt;SetLabel(FFQS(SID__THUMBS__HEIGHT__INFO));</extra_code>
+						</object>
+						<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+						<border>5</border>
+						<option>1</option>
+					</object>
+				</object>
+				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<border>3</border>
+				<option>1</option>
+			</object>
+			<object class="sizeritem">
+				<object class="wxFlexGridSizer" variable="TimeSizer" member="yes">
+					<cols>1</cols>
+					<rows>1</rows>
+					<growablecols>0</growablecols>
+					<growablerows>0</growablerows>
+					<object class="sizeritem">
+						<object class="wxHyperlinkCtrl" name="ID_STARTTIME" variable="StartTime" member="yes">
+							<label>Start Time</label>
+							<handler function="OnAction" entry="EVT_HYPERLINK" />
+						</object>
+						<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+						<border>5</border>
+						<option>1</option>
+					</object>
+				</object>
+				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<border>2</border>
+				<option>1</option>
+			</object>
+			<object class="sizeritem">
+				<object class="wxFlexGridSizer" variable="FreqSizer" member="yes">
+					<cols>1</cols>
+					<rows>2</rows>
+					<growablecols>0</growablecols>
+					<object class="sizeritem">
+						<object class="wxFlexGridSizer" variable="FlexGridSizer7" member="no">
+							<cols>3</cols>
+							<growablecols>2</growablecols>
+							<object class="sizeritem">
+								<object class="wxRadioButton" name="ID_EVERYCUSTOM" variable="EveryCustom" member="yes">
+									<label>Iv</label>
+									<extra_code>EveryCustom-&gt;SetLabel(FFQS(SID__THUMBS__INTERVAL));</extra_code>
+									<handler function="OnAction" entry="EVT_RADIOBUTTON" />
+								</object>
+								<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<border>5</border>
+								<option>1</option>
+							</object>
+							<object class="sizeritem">
+								<object class="wxTextCtrl" name="ID_CUSTFREQ" variable="CustFreq" member="yes">
+									<size>60,-1</size>
+									<validator>fVal</validator>
+								</object>
+								<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<border>2</border>
+								<option>1</option>
+							</object>
+							<object class="sizeritem">
+								<object class="wxChoice" name="ID_CUSTFREQTYPE" variable="CustFreqType" member="yes">
+									<selection>0</selection>
+									<extra_code>CustFreqType-&gt;SetSelection( CustFreqType-&gt;Append(FFQS(SID__THUMBS__INTERVAL__FRAME)) );&#x0A;CustFreqType-&gt;Append(FFQS(SID__THUMBS__INTERVAL__SECOND));&#x0A;CustFreqType-&gt;Append(FFQS(SID__THUMBS__INTERVAL__MINUTE));</extra_code>
+								</object>
+								<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<border>2</border>
+								<option>1</option>
+							</object>
+						</object>
+						<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<border>2</border>
+						<option>1</option>
+					</object>
+					<object class="sizeritem">
+						<object class="wxFlexGridSizer" variable="FlexGridSizer8" member="no">
+							<cols>3</cols>
+							<object class="sizeritem">
+								<object class="wxRadioButton" name="ID_EVERYSCENE" variable="EveryScene" member="yes">
+									<label>Sc</label>
+									<selected>1</selected>
+									<extra_code>EveryScene-&gt;SetLabel(FFQS(SID__THUMBS__SCENE__CHANGE));</extra_code>
+									<handler function="OnAction" entry="EVT_RADIOBUTTON" />
+								</object>
+								<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<border>5</border>
+								<option>1</option>
+							</object>
+						</object>
+						<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+						<border>2</border>
+						<option>1</option>
+					</object>
+				</object>
+				<flag>wxALIGN_LEFT|wxALIGN_TOP</flag>
+			</object>
+			<object class="sizeritem">
+				<object class="wxFlexGridSizer" variable="AmountSizer" member="yes">
+					<cols>4</cols>
+					<rows>1</rows>
+					<object class="sizeritem">
+						<object class="wxStaticText" name="ID_ST5" variable="ST5" member="yes">
+							<label>Mtb</label>
+							<extra_code>ST5-&gt;SetLabel(FFQS(SID__THUMBS__MAX__THUMBS));</extra_code>
+						</object>
+						<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<border>5</border>
+						<option>1</option>
+					</object>
+					<object class="sizeritem">
+						<object class="wxTextCtrl" name="ID_MAXTHUMBS" variable="MaxThumbs" member="yes">
+							<size>50,-1</size>
+							<validator>iVal</validator>
+						</object>
+						<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<border>2</border>
+						<option>1</option>
+					</object>
+					<object class="sizeritem">
+						<object class="wxStaticText" name="ID_ST6" variable="ST6" member="yes">
+							<label>Mtm</label>
+							<extra_code>ST6-&gt;SetLabel(FFQS(SID__THUMBS__MAX__MOSAICS));</extra_code>
+						</object>
+						<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<border>5</border>
+						<option>1</option>
+					</object>
+					<object class="sizeritem">
+						<object class="wxTextCtrl" name="ID_MAXTILES" variable="MaxTiles" member="yes">
+							<size>50,-1</size>
+							<validator>iVal</validator>
+						</object>
+						<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<border>2</border>
+						<option>1</option>
+					</object>
+				</object>
+				<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+				<border>2</border>
+				<option>1</option>
+			</object>
+			<object class="sizeritem">
+				<object class="wxFlexGridSizer" variable="MosaicSizer" member="yes">
+					<cols>4</cols>
+					<rows>2</rows>
+					<object class="sizeritem">
+						<object class="wxStaticText" name="ID_ST7" variable="ST7" member="yes">
+							<label>Mr</label>
+							<extra_code>ST7-&gt;SetLabel(FFQS(SID__THUMBS__MOSAIC__ROWS));</extra_code>
+						</object>
+						<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+						<border>5</border>
+						<option>1</option>
+					</object>
+					<object class="sizeritem">
+						<object class="wxTextCtrl" name="ID_ROWS" variable="Rows" member="yes">
+							<size>50,-1</size>
+							<validator>iVal</validator>
+						</object>
+						<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<border>2</border>
+						<option>1</option>
+					</object>
+					<object class="sizeritem">
+						<object class="wxStaticText" name="ID_ST8" variable="ST8" member="yes">
+							<label>Mc</label>
+							<extra_code>ST8-&gt;SetLabel(FFQS(SID__THUMBS__MOSAIC__COLS));</extra_code>
+						</object>
+						<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+						<border>5</border>
+						<option>1</option>
+					</object>
+					<object class="sizeritem">
+						<object class="wxTextCtrl" name="ID_COLUMNS" variable="Columns" member="yes">
+							<size>50,-1</size>
+							<validator>iVal</validator>
+						</object>
+						<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<border>2</border>
+						<option>1</option>
+					</object>
+				</object>
+				<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+				<border>3</border>
+				<option>1</option>
+			</object>
+		</object>
+	</object>
+</wxsmith>

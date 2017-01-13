@@ -1,0 +1,27 @@
+Application version %s © by Torben Bruchhaus
+Language: %s%s
+Options: %s
+This @pp is truely non-commercial freeware!
+
+%u%% internal, %u%%
+
+Programmed with Code::Blocks - http://www.codeblocks.org/
+Using wxWidgets ver. %s (static build) - http://www.wxwidgets.org/
+Using ZLib for compression - http://www.zlib.net/
+Using GnuC / MinGW compilers, ver. %s:
+    http://www.mingw.org/
+    http://mingw-w64.org/
+    http://gcc.gnu.org/
+
+Utilizing FFmpeg command line tool: %s
+
+Graphics are self made and found here and there
+http://www.designkindle.com/2011/04/12/basal-icons/
+http://www.designkindle.com/2011/10/07/build-icons/
+http://pcunleashed.com/
+
+F F Q u e u e
+The best Graphical User Interface for FFMpeg!
+Visit website
+http://ffqueue.bruchhaus.dk/
+100% Danish Quality Product (This is the new BACON!)

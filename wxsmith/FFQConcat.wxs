@@ -1,0 +1,692 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<wxsmith>
+	<object class="wxDialog" name="FFQConcat">
+		<title>Make slideshow / concat</title>
+		<id_arg>0</id_arg>
+		<object class="wxFlexGridSizer" variable="FlexGridSizer1" member="no">
+			<cols>1</cols>
+			<rows>4</rows>
+			<growablecols>0</growablecols>
+			<growablerows>0</growablerows>
+			<object class="sizeritem">
+				<object class="wxNotebook" name="ID_PAGES" variable="Pages" member="yes">
+					<handler function="OnPagesPageChanging" entry="EVT_NOTEBOOK_PAGE_CHANGING" />
+					<object class="notebookpage">
+						<object class="wxPanel" name="ID_SLIDESHOWPAGE" variable="SlideshowPage" member="yes">
+							<object class="wxFlexGridSizer" variable="FlexGridSizer2" member="no">
+								<cols>1</cols>
+								<rows>3</rows>
+								<growablecols>0</growablecols>
+								<object class="sizeritem">
+									<object class="wxStaticBoxSizer" variable="SBS1" member="no">
+										<label>Src</label>
+										<orient>wxVERTICAL</orient>
+										<object class="sizeritem">
+											<object class="wxFlexGridSizer" variable="FlexGridSizer5" member="no">
+												<cols>1</cols>
+												<rows>2</rows>
+												<growablecols>0</growablecols>
+												<object class="sizeritem">
+													<object class="wxFlexGridSizer" variable="Sizer1" member="yes">
+														<cols>3</cols>
+														<rows>2</rows>
+														<growablecols>1</growablecols>
+														<growablerows>0</growablerows>
+														<object class="sizeritem">
+															<object class="wxStaticText" name="ID_ST1" variable="ST1" member="yes">
+																<label>Frst</label>
+																<extra_code>ST1-&gt;SetLabel(FFQS(SID__CONCAT__FIRST__IMAGE));&#x0A;SBS1-&gt;GetStaticBox()-&gt;SetLabel(FFQS(SID__CONCAT__SOURCE__FRAMES));</extra_code>
+															</object>
+															<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+															<border>5</border>
+															<option>1</option>
+														</object>
+														<object class="sizeritem">
+															<object class="wxTextCtrl" name="ID_IMGSRC" variable="SSSource" member="yes" />
+															<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+															<border>3</border>
+															<option>1</option>
+														</object>
+														<object class="sizeritem">
+															<object class="wxButton" name="ID_SSBROWSEIMG" variable="SSBrowseImg" member="yes">
+																<label>...</label>
+																<size>50,-1</size>
+																<handler function="OnAction" entry="EVT_BUTTON" />
+															</object>
+															<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+															<border>3</border>
+															<option>1</option>
+														</object>
+														<object class="spacer">
+															<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+															<option>1</option>
+														</object>
+														<object class="sizeritem">
+															<object class="wxHyperlinkCtrl" name="ID_SSFRAMESTATUS" variable="SSFrameStatus" member="yes">
+																<label>link</label>
+																<handler function="OnAction" entry="EVT_HYPERLINK" />
+															</object>
+															<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+															<border>3</border>
+															<option>1</option>
+														</object>
+														<object class="spacer">
+															<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+															<option>1</option>
+														</object>
+													</object>
+													<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<border>3</border>
+													<option>1</option>
+												</object>
+												<object class="sizeritem">
+													<object class="wxFlexGridSizer" variable="FlexGridSizer13" member="no">
+														<cols>1</cols>
+														<rows>5</rows>
+														<growablecols>0</growablecols>
+														<object class="sizeritem">
+															<object class="wxCheckBox" name="ID_SSFIT" variable="SSFit" member="yes">
+																<label>SaP</label>
+																<extra_code>SSFit-&gt;SetLabel(FFQS(SID__CONCAT__SCALE__AND__PAD));</extra_code>
+																<handler function="OnAction" entry="EVT_CHECKBOX" />
+															</object>
+															<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+															<border>5</border>
+															<option>1</option>
+														</object>
+														<object class="sizeritem">
+															<object class="wxFlexGridSizer" variable="SSSizer1" member="yes">
+																<cols>7</cols>
+																<rows>1</rows>
+																<object class="spacer">
+																	<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+																	<option>1</option>
+																</object>
+																<object class="sizeritem">
+																	<object class="wxStaticText" name="ID_ST2" variable="ST2" member="yes">
+																		<label>Si</label>
+																		<extra_code>ST2-&gt;SetLabel(FFQS(SID__CONCAT__SIZE));</extra_code>
+																	</object>
+																	<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+																	<border>3</border>
+																	<option>1</option>
+																</object>
+																<object class="sizeritem">
+																	<object class="wxTextCtrl" name="ID_TEXTCTRL1" variable="SSWidth" member="yes">
+																		<size>75,-1</size>
+																	</object>
+																	<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+																	<border>3</border>
+																	<option>1</option>
+																</object>
+																<object class="sizeritem">
+																	<object class="wxStaticText" name="ID_ST22" variable="ST22" member="yes">
+																		<label>X</label>
+																	</object>
+																	<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+																	<border>3</border>
+																	<option>1</option>
+																</object>
+																<object class="sizeritem">
+																	<object class="wxTextCtrl" name="ID_TEXTCTRL2" variable="SSHeight" member="yes">
+																		<size>75,-1</size>
+																	</object>
+																	<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+																	<border>3</border>
+																	<option>1</option>
+																</object>
+																<object class="sizeritem">
+																	<object class="wxStaticText" name="ID_ST3" variable="ST3" member="yes">
+																		<label>Fi</label>
+																		<extra_code>ST3-&gt;SetLabel(FFQS(SID__CONCAT__FILL__COLOR));</extra_code>
+																	</object>
+																	<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+																	<border>3</border>
+																	<option>1</option>
+																</object>
+																<object class="sizeritem">
+																	<object class="wxColourPickerCtrl" name="ID_SSPADDING" variable="SSPadding" member="yes">
+																		<colour>#000000</colour>
+																	</object>
+																	<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+																	<border>3</border>
+																	<option>1</option>
+																</object>
+															</object>
+															<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+															<border>3</border>
+															<option>1</option>
+														</object>
+														<object class="sizeritem">
+															<object class="wxStaticText" name="ID_ST4" variable="ST4" member="yes">
+																<label>Inf</label>
+																<enabled>0</enabled>
+																<extra_code>ST4-&gt;SetLabel(FFQS(SID__CONCAT__SCALE__INFORMATION));</extra_code>
+															</object>
+															<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+															<border>5</border>
+															<option>1</option>
+														</object>
+														<object class="sizeritem">
+															<object class="wxFlexGridSizer" variable="FlexGridSizer7" member="no">
+																<cols>3</cols>
+																<rows>1</rows>
+																<object class="sizeritem">
+																	<object class="wxStaticText" name="ID_ST5" variable="ST5" member="yes">
+																		<label>Ft</label>
+																		<extra_code>ST5-&gt;SetLabel(FFQS(SID__CONCAT__FRAME__TIME));</extra_code>
+																	</object>
+																	<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+																	<border>3</border>
+																	<option>1</option>
+																</object>
+																<object class="sizeritem">
+																	<object class="wxTextCtrl" name="ID_SSFRAMETIME" variable="SSFrameTime" member="yes">
+																		<size>75,-1</size>
+																	</object>
+																	<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+																	<border>3</border>
+																	<option>1</option>
+																</object>
+																<object class="sizeritem">
+																	<object class="wxStaticText" name="ID_ST6" variable="ST6" member="yes">
+																		<label>s</label>
+																		<extra_code>ST6-&gt;SetLabel(FFQS(SID__CONCAT__SECONDS));</extra_code>
+																	</object>
+																	<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+																	<border>3</border>
+																	<option>1</option>
+																</object>
+															</object>
+															<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+															<border>3</border>
+															<option>1</option>
+														</object>
+														<object class="sizeritem">
+															<object class="wxCheckBox" name="ID_SSSETPTS" variable="SSSetPTS" member="yes">
+																<label>FPTS</label>
+																<extra_code>SSSetPTS-&gt;SetLabel(FFQS(SID__CONCAT__FORCE__PTS));</extra_code>
+															</object>
+															<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+															<border>5</border>
+															<option>1</option>
+														</object>
+													</object>
+													<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<border>3</border>
+													<option>1</option>
+												</object>
+											</object>
+											<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<option>1</option>
+										</object>
+									</object>
+									<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+									<border>5</border>
+									<option>1</option>
+								</object>
+								<object class="sizeritem">
+									<object class="wxStaticBoxSizer" variable="SBS2" member="no">
+										<label>At</label>
+										<orient>wxVERTICAL</orient>
+										<object class="sizeritem">
+											<object class="wxFlexGridSizer" variable="FlexGridSizer10" member="no">
+												<cols>2</cols>
+												<rows>1</rows>
+												<growablecols>0</growablecols>
+												<object class="sizeritem">
+													<object class="wxTextCtrl" name="ID_SSAUDIO" variable="SSAudio" member="yes" />
+													<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<border>3</border>
+													<option>1</option>
+												</object>
+												<object class="sizeritem">
+													<object class="wxButton" name="ID_SSBROWSEAUDIO" variable="SSBrowseAudio" member="yes">
+														<label>...</label>
+														<size>50,-1</size>
+														<handler function="OnAction" entry="EVT_BUTTON" />
+													</object>
+													<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<border>3</border>
+													<option>1</option>
+												</object>
+											</object>
+											<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<option>1</option>
+										</object>
+										<object class="sizeritem">
+											<object class="wxCheckBox" name="ID_SSLOOPFRAMES" variable="SSLoopFrames" member="yes">
+												<label>Loop</label>
+												<extra_code>SSLoopFrames-&gt;SetLabel(FFQS(SID__CONCAT__LOOP__FRAMES));&#x0A;SBS2-&gt;GetStaticBox()-&gt;SetLabel(FFQS(SID__CONCAT__AUDIO__TRACK));</extra_code>
+											</object>
+											<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+											<border>5</border>
+											<option>1</option>
+										</object>
+									</object>
+									<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+									<border>5</border>
+									<option>1</option>
+								</object>
+							</object>
+						</object>
+						<label>SS</label>
+					</object>
+					<object class="notebookpage">
+						<object class="wxPanel" name="ID_MERGEPAGE" variable="MergePage" member="yes">
+							<object class="wxFlexGridSizer" variable="FlexGridSizer9" member="no">
+								<cols>1</cols>
+								<rows>1</rows>
+								<growablecols>0</growablecols>
+								<growablerows>0</growablerows>
+								<object class="sizeritem">
+									<object class="wxStaticBoxSizer" variable="SBS4" member="no">
+										<label>Src</label>
+										<object class="sizeritem">
+											<object class="wxFlexGridSizer" variable="FlexGridSizer4" member="no">
+												<cols>1</cols>
+												<rows>6</rows>
+												<growablecols>0</growablecols>
+												<growablerows>0</growablerows>
+												<object class="sizeritem">
+													<object class="wxFlexGridSizer" variable="FlexGridSizer3" member="no">
+														<cols>2</cols>
+														<rows>1</rows>
+														<growablecols>0</growablecols>
+														<growablerows>0</growablerows>
+														<object class="sizeritem">
+															<object class="wxListBox" name="ID_CCSOURCES" variable="CCSources" member="yes">
+																<default>-1</default>
+																<size>300,-1</size>
+																<style>wxLB_EXTENDED|wxLB_HSCROLL|wxHSCROLL</style>
+																<handler function="OnAction" entry="EVT_LISTBOX" />
+																<handler function="OnCCSrcDblClick" entry="EVT_LISTBOX_DCLICK" />
+															</object>
+															<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+															<border>3</border>
+															<option>1</option>
+														</object>
+														<object class="sizeritem">
+															<object class="wxFlexGridSizer" variable="FlexGridSizer12" member="no">
+																<cols>1</cols>
+																<rows>6</rows>
+																<growablecols>0</growablecols>
+																<growablerows>5</growablerows>
+																<object class="sizeritem">
+																	<object class="wxButton" name="ID_CCADD" variable="CCAdd" member="yes">
+																		<label>A</label>
+																		<extra_code>CCAdd-&gt;SetLabel(FFQS(SID__COMMON__ADD));&#x0A;SBS4-&gt;GetStaticBox()-&gt;SetLabel(FFQS(SID__CONCAT__SOURCE__FILES));</extra_code>
+																		<handler function="OnAction" entry="EVT_BUTTON" />
+																	</object>
+																	<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+																	<border>3</border>
+																	<option>1</option>
+																</object>
+																<object class="sizeritem">
+																	<object class="wxButton" name="ID_CCREMOVE" variable="CCRemove" member="yes">
+																		<label>R</label>
+																		<extra_code>CCRemove-&gt;SetLabel(FFQS(SID__COMMON__REMOVE));</extra_code>
+																		<handler function="OnAction" entry="EVT_BUTTON" />
+																	</object>
+																	<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+																	<border>3</border>
+																	<option>1</option>
+																</object>
+																<object class="spacer">
+																	<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+																	<option>1</option>
+																	<size>-1,10</size>
+																</object>
+																<object class="sizeritem">
+																	<object class="wxButton" name="ID_CCUP" variable="CCUp" member="yes">
+																		<label>U</label>
+																		<extra_code>CCUp-&gt;SetLabel(FFQS(SID__COMMON__MOVE__UP));</extra_code>
+																		<handler function="OnAction" entry="EVT_BUTTON" />
+																	</object>
+																	<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+																	<border>3</border>
+																	<option>1</option>
+																</object>
+																<object class="sizeritem">
+																	<object class="wxButton" name="ID_CCDOWN" variable="CCDown" member="yes">
+																		<label>D</label>
+																		<extra_code>CCDown-&gt;SetLabel(FFQS(SID__COMMON__MOVE__DOWN));</extra_code>
+																		<handler function="OnAction" entry="EVT_BUTTON" />
+																	</object>
+																	<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+																	<border>3</border>
+																	<option>1</option>
+																</object>
+															</object>
+															<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+															<border>3</border>
+															<option>1</option>
+														</object>
+													</object>
+													<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<option>1</option>
+												</object>
+												<object class="sizeritem">
+													<object class="wxCheckBox" name="ID_CCSIMPLE" variable="CCSimple" member="yes">
+														<label>SC</label>
+														<extra_code>CCSimple-&gt;SetLabel(FFQS(SID__CONCAT__SIMPLE));</extra_code>
+														<handler function="OnAction" entry="EVT_CHECKBOX" />
+													</object>
+													<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+													<border>3</border>
+													<option>1</option>
+												</object>
+												<object class="sizeritem">
+													<object class="wxCheckBox" name="ID_CCSETSAR" variable="CCSetSar" member="yes">
+														<label>FSAR</label>
+														<extra_code>CCSetSar-&gt;SetLabel(FFQS(SID__CONCAT__FORCE__ASPECT));</extra_code>
+													</object>
+													<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+													<border>3</border>
+													<option>1</option>
+												</object>
+												<object class="sizeritem">
+													<object class="wxCheckBox" name="ID_CCPADDING" variable="CCPadding" member="yes">
+														<label>Pad</label>
+														<extra_code>CCPadding-&gt;SetLabel(FFQS(SID__CONCAT__PADDING));</extra_code>
+														<handler function="OnAction" entry="EVT_CHECKBOX" />
+													</object>
+													<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+													<border>3</border>
+													<option>1</option>
+												</object>
+												<object class="sizeritem">
+													<object class="wxFlexGridSizer" variable="CCPadSizer" member="yes">
+														<cols>3</cols>
+														<rows>2</rows>
+														<growablecols>2</growablecols>
+														<object class="spacer">
+															<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+															<option>1</option>
+															<size>20,-1</size>
+														</object>
+														<object class="sizeritem">
+															<object class="wxRadioButton" name="ID_CCUSEPADCOLOR" variable="CCUsePadColor" member="yes">
+																<label>PadC</label>
+																<extra_code>CCUsePadColor-&gt;SetLabel(FFQS(SID__PAD__COLOR));</extra_code>
+																<handler function="OnAction" entry="EVT_RADIOBUTTON" />
+															</object>
+															<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+															<border>3</border>
+															<option>1</option>
+														</object>
+														<object class="sizeritem">
+															<object class="wxColourPickerCtrl" name="ID_CCPADCOLOR" variable="CCPadColor" member="yes">
+																<colour>#000000</colour>
+															</object>
+															<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+															<option>1</option>
+														</object>
+														<object class="spacer">
+															<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+															<option>1</option>
+															<size>20,-1</size>
+														</object>
+														<object class="sizeritem">
+															<object class="wxRadioButton" name="ID_CCUSEPADBLUR" variable="CCUsePadBlur" member="yes">
+																<label>PadB</label>
+																<extra_code>CCUsePadBlur-&gt;SetLabel(FFQS(SID__PAD__BLUR));</extra_code>
+																<handler function="OnAction" entry="EVT_RADIOBUTTON" />
+															</object>
+															<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+															<border>3</border>
+															<option>1</option>
+														</object>
+														<object class="sizeritem">
+															<object class="wxFlexGridSizer" variable="CCBlurSizer" member="yes">
+																<cols>3</cols>
+																<rows>1</rows>
+																<growablecols>1</growablecols>
+																<object class="sizeritem">
+																	<object class="wxStaticText" name="ID_STATICTEXT1" variable="StaticText1" member="yes">
+																		<label>-</label>
+																	</object>
+																	<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+																	<border>3</border>
+																	<option>1</option>
+																</object>
+																<object class="sizeritem">
+																	<object class="wxSlider" name="ID_CCPADBLUR" variable="CCPadBlur" member="yes">
+																		<value>2</value>
+																		<min>1</min>
+																		<max>10</max>
+																		<size>-1,20</size>
+																	</object>
+																	<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+																	<option>1</option>
+																</object>
+																<object class="sizeritem">
+																	<object class="wxStaticText" name="ID_STATICTEXT2" variable="StaticText2" member="yes">
+																		<label>+</label>
+																	</object>
+																	<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+																	<border>3</border>
+																	<option>1</option>
+																</object>
+															</object>
+															<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+															<option>1</option>
+														</object>
+													</object>
+													<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<option>1</option>
+												</object>
+												<object class="sizeritem">
+													<object class="wxFlexGridSizer" variable="Sizer4" member="yes">
+														<cols>4</cols>
+														<object class="sizeritem">
+															<object class="wxStaticText" name="ID_ST9" variable="ST9" member="yes">
+																<label>St</label>
+																<extra_code>ST9-&gt;SetLabel(FFQS(SID__CONCAT__CONTENT__TYPES));</extra_code>
+															</object>
+															<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+															<border>3</border>
+															<option>1</option>
+														</object>
+														<object class="sizeritem">
+															<object class="wxCheckBox" name="ID_CCVideo" variable="CCVideo" member="yes">
+																<label>V</label>
+																<checked>1</checked>
+																<extra_code>CCVideo-&gt;SetLabel(FFQS(SID__COMMON__VIDEO));</extra_code>
+															</object>
+															<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+															<border>3</border>
+															<option>1</option>
+														</object>
+														<object class="sizeritem">
+															<object class="wxCheckBox" name="ID_CCAUDIO" variable="CCAudio" member="yes">
+																<label>A</label>
+																<checked>1</checked>
+																<extra_code>CCAudio-&gt;SetLabel(FFQS(SID__COMMON__AUDIO));</extra_code>
+															</object>
+															<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+															<border>3</border>
+															<option>1</option>
+														</object>
+														<object class="sizeritem">
+															<object class="wxCheckBox" name="ID_CCSUBTITLES" variable="CCSubtitles" member="yes">
+																<label>S</label>
+																<enabled>0</enabled>
+																<extra_code>CCSubtitles-&gt;SetLabel(FFQS(SID__COMMON__SUBTITLES));</extra_code>
+															</object>
+															<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+															<border>5</border>
+															<option>1</option>
+														</object>
+													</object>
+													<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<option>1</option>
+												</object>
+											</object>
+											<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<option>1</option>
+										</object>
+									</object>
+									<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+									<border>5</border>
+									<option>1</option>
+								</object>
+							</object>
+						</object>
+						<label>CC</label>
+					</object>
+				</object>
+				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<border>5</border>
+				<option>1</option>
+			</object>
+			<object class="sizeritem">
+				<object class="wxStaticBoxSizer" variable="SBS3" member="no">
+					<label>Dst</label>
+					<orient>wxVERTICAL</orient>
+					<object class="sizeritem">
+						<object class="wxFlexGridSizer" variable="FlexGridSizer8" member="no">
+							<cols>3</cols>
+							<rows>1</rows>
+							<growablecols>1</growablecols>
+							<growablerows>0</growablerows>
+							<object class="sizeritem">
+								<object class="wxStaticText" name="ID_ST7" variable="ST7" member="yes">
+									<label>Fn</label>
+									<extra_code>ST7-&gt;SetLabel(FFQS(SID__CONCAT__FILE__NAME));&#x0A;SBS3-&gt;GetStaticBox()-&gt;SetLabel(FFQS(SID__CONCAT__DESTINATION));</extra_code>
+								</object>
+								<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<border>3</border>
+								<option>1</option>
+							</object>
+							<object class="sizeritem">
+								<object class="wxTextCtrl" name="ID_DESTFILE" variable="DestFile" member="yes" />
+								<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<border>3</border>
+								<option>1</option>
+							</object>
+							<object class="sizeritem">
+								<object class="wxButton" name="ID_BROWSEDEST" variable="BrowseDest" member="yes">
+									<label>...</label>
+									<size>50,-1</size>
+									<handler function="OnAction" entry="EVT_BUTTON" />
+								</object>
+								<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<border>3</border>
+								<option>1</option>
+							</object>
+						</object>
+						<flag>wxBOTTOM|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<border>2</border>
+						<option>1</option>
+					</object>
+					<object class="sizeritem">
+						<object class="wxFlexGridSizer" variable="Sizer3" member="yes">
+							<cols>2</cols>
+							<rows>1</rows>
+							<growablecols>1</growablecols>
+							<growablerows>0</growablerows>
+							<object class="sizeritem">
+								<object class="wxStaticText" name="ID_ST8" variable="ST8" member="yes">
+									<label>Pst</label>
+									<extra_code>ST8-&gt;SetLabel(FFQS(SID__CONCAT__PRESET));</extra_code>
+								</object>
+								<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<border>3</border>
+								<option>1</option>
+							</object>
+							<object class="sizeritem">
+								<object class="Custom" name="ID_PRESET" subclass="FFQPresetPanel" variable="Preset" member="yes">
+									<creating_code>$(THIS) = new $(CLASS)($(PARENT));</creating_code>
+									<include_file>FFQPresetPanel.h</include_file>
+									<local_include>1</local_include>
+									<style></style>
+								</object>
+								<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<border>3</border>
+								<option>1</option>
+							</object>
+						</object>
+						<flag>wxBOTTOM|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<border>2</border>
+						<option>1</option>
+					</object>
+					<object class="sizeritem">
+						<object class="wxFlexGridSizer" variable="Sizer2" member="yes">
+							<cols>1</cols>
+							<rows>1</rows>
+							<growablecols>0</growablecols>
+							<growablerows>0</growablerows>
+							<object class="sizeritem">
+								<object class="wxHyperlinkCtrl" name="ID_LIMITDEST" variable="LimitDest" member="yes">
+									<label>limit</label>
+									<handler function="OnAction" entry="EVT_HYPERLINK" />
+								</object>
+								<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+								<border>3</border>
+								<option>1</option>
+							</object>
+						</object>
+						<flag>wxBOTTOM|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<border>2</border>
+						<option>1</option>
+					</object>
+					<object class="sizeritem">
+						<object class="wxCheckBox" name="ID_SAVELOG" variable="SaveLog" member="yes">
+							<label>Log</label>
+							<extra_code>SaveLog-&gt;SetLabel(FFQS(SID__COMMON__SAVE__LOG));</extra_code>
+						</object>
+						<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+						<border>5</border>
+						<option>1</option>
+					</object>
+				</object>
+				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<border>5</border>
+				<option>1</option>
+			</object>
+			<object class="sizeritem">
+				<object class="wxBoxSizer" variable="BoxSizer1" member="no">
+					<object class="spacer">
+						<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<border>5</border>
+						<option>1</option>
+					</object>
+					<object class="sizeritem">
+						<object class="wxButton" name="ID_OKBUTTON" variable="OkButton" member="yes">
+							<label>O</label>
+							<default>1</default>
+							<extra_code>OkButton-&gt;SetLabel(FFQS(SID__COMMON__OK));</extra_code>
+							<handler function="OnAction" entry="EVT_BUTTON" />
+						</object>
+						<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<border>5</border>
+						<option>1</option>
+					</object>
+					<object class="sizeritem">
+						<object class="wxButton" name="ID_CANCELBUTTON" variable="CancelButton" member="yes">
+							<label>C</label>
+							<extra_code>CancelButton-&gt;SetLabel(FFQS(SID__COMMON__CANCEL));</extra_code>
+							<handler function="OnAction" entry="EVT_BUTTON" />
+						</object>
+						<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<border>5</border>
+						<option>1</option>
+					</object>
+				</object>
+				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<border>5</border>
+				<option>1</option>
+			</object>
+		</object>
+		<object class="wxFileDialog" variable="OpenFileDlg" member="yes">
+			<extra_code>OpenFileDlg-&gt;SetMessage(FFQS(SID__COMMON__SELECT__INPUT__FILE));</extra_code>
+			<style>wxFD_DEFAULT_STYLE|wxFD_OPEN|wxFD_FILE_MUST_EXIST</style>
+		</object>
+		<object class="wxFileDialog" variable="SaveFileDlg" member="yes">
+			<message>Select destination file</message>
+			<extra_code>SaveFileDlg-&gt;SetMessage(FFQS(SID__COMMON__SELECT__OUTPUT__FILE));</extra_code>
+			<style>wxFD_SAVE</style>
+		</object>
+	</object>
+</wxsmith>

@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<wxsmith>
+	<object class="wxPanel" name="FFQBitRatePanel">
+		<id_arg>0</id_arg>
+		<object class="wxFlexGridSizer" variable="MainSizer" member="yes">
+			<cols>6</cols>
+			<rows>5</rows>
+			<growablecols>2</growablecols>
+			<object class="sizeritem">
+				<object class="wxStaticText" name="ID_ST1" variable="ST1" member="yes">
+					<label>Brt</label>
+					<extra_code>ST1-&gt;SetLabel(FFQS(SID__PRESET__BITRATE__DECLARED__AS));</extra_code>
+				</object>
+				<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+				<border>3</border>
+				<option>1</option>
+			</object>
+			<object class="sizeritem">
+				<object class="wxChoice" name="ID_BITRATETYPE" variable="BitRateType" member="yes">
+					<size>100,-1</size>
+					<extra_code>BitRateType-&gt;Append(FFQS(SID__PRESET__BITRATE__BIT__SEC));&#x0A;BitRateType-&gt;SetSelection( BitRateType-&gt;Append(FFQS(SID__PRESET__BITRATE__KBIT__SEC)) );&#x0A;BitRateType-&gt;Append(FFQS(SID__PRESET__BITRATE__MBIT__SEC));&#x0A;BitRateType-&gt;Append(FFQS(SID__PRESET__BITRATE__BYTE__SEC));&#x0A;BitRateType-&gt;Append(FFQS(SID__PRESET__BITRATE__KBYTE__SEC));&#x0A;BitRateType-&gt;Append(FFQS(SID__PRESET__BITRATE__MBYTE__SEC));</extra_code>
+					<handler function="OnChoiceChange" entry="EVT_CHOICE" />
+				</object>
+				<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<border>2</border>
+				<option>1</option>
+			</object>
+			<object class="spacer">
+				<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<option>1</option>
+				<size>80,-1</size>
+			</object>
+			<object class="spacer">
+				<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<option>1</option>
+			</object>
+			<object class="spacer">
+				<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<option>1</option>
+			</object>
+			<object class="spacer">
+				<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<option>1</option>
+				<size>80,-1</size>
+			</object>
+			<object class="sizeritem">
+				<object class="wxStaticText" name="ID_ST2" variable="ST2" member="yes">
+					<label>Abr</label>
+					<extra_code>ST2-&gt;SetLabel(FFQS(SID__PRESET__AVERAGE__BITRATE));</extra_code>
+				</object>
+				<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+				<border>3</border>
+				<option>1</option>
+			</object>
+			<object class="sizeritem">
+				<object class="wxTextCtrl" name="ID_BITRATE" variable="BitRate" member="yes">
+					<size>100,-1</size>
+				</object>
+				<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+				<border>2</border>
+				<option>1</option>
+			</object>
+			<object class="sizeritem">
+				<object class="wxStaticText" name="ID_BST1" variable="BST1" member="yes">
+					<label>Brt</label>
+				</object>
+				<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+				<border>3</border>
+				<option>1</option>
+			</object>
+			<object class="sizeritem">
+				<object class="wxStaticText" name="ID_ST3" variable="ST3" member="yes">
+					<label>Min</label>
+					<extra_code>ST3-&gt;SetLabel(FFQS(SID__PRESET__MINIMUM__BITRATE));</extra_code>
+				</object>
+				<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+				<border>3</border>
+				<option>1</option>
+			</object>
+			<object class="sizeritem">
+				<object class="wxTextCtrl" name="ID_MINRATE" variable="MinRate" member="yes">
+					<size>100,-1</size>
+				</object>
+				<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+				<border>2</border>
+				<option>1</option>
+			</object>
+			<object class="sizeritem">
+				<object class="wxStaticText" name="ID_BST2" variable="BST2" member="yes">
+					<label>Brt</label>
+				</object>
+				<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+				<border>3</border>
+				<option>1</option>
+			</object>
+			<object class="sizeritem">
+				<object class="wxStaticText" name="ID_ST5" variable="ST5" member="yes">
+					<label>Bs</label>
+					<extra_code>ST5-&gt;SetLabel(FFQS(SID__PRESET__BUFFER__SIZE));</extra_code>
+				</object>
+				<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+				<border>3</border>
+				<option>1</option>
+			</object>
+			<object class="sizeritem">
+				<object class="wxTextCtrl" name="ID_BUFSIZE" variable="BufSize" member="yes">
+					<size>100,-1</size>
+				</object>
+				<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+				<border>2</border>
+				<option>1</option>
+			</object>
+			<object class="sizeritem">
+				<object class="wxStaticText" name="ID_BST4" variable="BST4" member="yes">
+					<label>Brt</label>
+				</object>
+				<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+				<border>3</border>
+				<option>1</option>
+			</object>
+			<object class="sizeritem">
+				<object class="wxStaticText" name="ID_ST4" variable="ST4" member="yes">
+					<label>Max</label>
+					<extra_code>ST4-&gt;SetLabel(FFQS(SID__PRESET__MAXIMUM__BITRATE));</extra_code>
+				</object>
+				<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+				<border>3</border>
+				<option>1</option>
+			</object>
+			<object class="sizeritem">
+				<object class="wxTextCtrl" name="ID_MAXRATE" variable="MaxRate" member="yes">
+					<size>100,-1</size>
+				</object>
+				<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+				<border>2</border>
+				<option>1</option>
+			</object>
+			<object class="sizeritem">
+				<object class="wxStaticText" name="ID_BST3" variable="BST3" member="yes">
+					<label>Brt</label>
+				</object>
+				<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+				<border>3</border>
+				<option>1</option>
+			</object>
+		</object>
+	</object>
+</wxsmith>

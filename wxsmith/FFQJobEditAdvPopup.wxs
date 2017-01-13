@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<wxsmith>
+	<object class="wxDialog" name="FFQJobEditAdvPopup">
+		<id_arg>0</id_arg>
+		<style>wxTAB_TRAVERSAL|wxSTATIC_BORDER|wxWANTS_CHARS</style>
+		<handler function="OnChar" entry="EVT_CHAR" />
+		<object class="wxFlexGridSizer" variable="FlexGridSizer4" member="no">
+			<cols>1</cols>
+			<rows>7</rows>
+			<growablecols>0</growablecols>
+			<object class="sizeritem">
+				<object class="wxPanel" name="ID_PANEL1" variable="Panel1" member="yes">
+					<fg>wxSYS_COLOUR_CAPTIONTEXT</fg>
+					<bg>wxSYS_COLOUR_ACTIVECAPTION</bg>
+					<object class="wxBoxSizer" variable="BoxSizer2" member="no">
+						<object class="sizeritem">
+							<object class="wxStaticText" name="wxID_ANY" variable="ST0" member="yes">
+								<label>Label</label>
+								<font>
+									<size>11</size>
+									<style>normal</style>
+									<weight>bold</weight>
+									<underlined>0</underlined>
+									<family>swiss</family>
+								</font>
+								<extra_code>ST0-&gt;SetLabel(FFQS(SID__JOBEDIT__ADV__INPUT__SETTINGS));</extra_code>
+							</object>
+							<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+							<border>5</border>
+							<option>1</option>
+						</object>
+					</object>
+				</object>
+				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<option>1</option>
+			</object>
+			<object class="sizeritem">
+				<object class="wxFlexGridSizer" variable="FlexGridSizer2" member="no">
+					<cols>3</cols>
+					<rows>2</rows>
+					<object class="sizeritem">
+						<object class="wxStaticText" name="wxID_ANY" variable="ST1" member="yes">
+							<label>L1</label>
+							<extra_code>ST1-&gt;SetLabel(FFQS(SID__JOBEDIT__ADV__ITSOFFSET));</extra_code>
+						</object>
+						<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+						<border>3</border>
+						<option>1</option>
+					</object>
+					<object class="sizeritem">
+						<object class="wxTextCtrl" name="wxID_ANY" variable="ItsOffset" member="yes">
+							<size>75,-1</size>
+						</object>
+						<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+						<border>3</border>
+						<option>1</option>
+					</object>
+					<object class="sizeritem">
+						<object class="wxStaticText" name="wxID_ANY" variable="ST2" member="yes">
+							<label>L2</label>
+							<extra_code>ST2-&gt;SetLabel(FFQS(SID__JOBEDIT__ADV__MILLISECONDS));</extra_code>
+						</object>
+						<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+						<border>3</border>
+						<option>1</option>
+					</object>
+					<object class="sizeritem">
+						<object class="wxStaticText" name="wxID_ANY" variable="ST3" member="yes">
+							<label>L3</label>
+							<extra_code>ST3-&gt;SetLabel(FFQS(SID__JOBEDIT__ADV__FRAMERATE));</extra_code>
+						</object>
+						<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+						<border>3</border>
+						<option>1</option>
+					</object>
+					<object class="sizeritem">
+						<object class="wxTextCtrl" name="wxID_ANY" variable="FrameRate" member="yes">
+							<size>75,-1</size>
+						</object>
+						<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+						<border>3</border>
+						<option>1</option>
+					</object>
+					<object class="sizeritem">
+						<object class="wxStaticText" name="wxID_ANY" variable="ST4" member="yes">
+							<label>L4</label>
+							<extra_code>ST4-&gt;SetLabel(FFQS(SID__JOBEDIT__ADV__FPS));</extra_code>
+						</object>
+						<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+						<border>3</border>
+						<option>1</option>
+					</object>
+				</object>
+				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<border>5</border>
+				<option>1</option>
+			</object>
+			<object class="sizeritem">
+				<object class="wxFlexGridSizer" variable="FlexGridSizer1" member="no">
+					<cols>1</cols>
+					<rows>1</rows>
+					<object class="sizeritem">
+						<object class="wxCheckBox" name="wxID_ANY" variable="FrameRateSwitch" member="yes">
+							<label>Fr</label>
+							<extra_code>FrameRateSwitch-&gt;SetLabel(FFQS(SID__JOBEDIT__ADV__FRAMERATE__SWITCH));</extra_code>
+						</object>
+						<flag>wxBOTTOM|wxLEFT|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<border>3</border>
+						<option>1</option>
+					</object>
+				</object>
+				<flag>wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<border>5</border>
+				<option>1</option>
+			</object>
+			<object class="sizeritem">
+				<object class="wxStaticLine" name="wxID_ANY" variable="Line" member="yes" />
+				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<option>1</option>
+			</object>
+			<object class="sizeritem">
+				<object class="wxFlexGridSizer" variable="FlexGridSizer3" member="no">
+					<cols>2</cols>
+					<rows>2</rows>
+					<object class="sizeritem">
+						<object class="wxCheckBox" name="wxID_ANY" variable="DiscardCorrupt" member="yes">
+							<label>Dc</label>
+							<extra_code>DiscardCorrupt-&gt;SetLabel(FFQS(SID__JOBEDIT__ADV__DISCARDCORRUPT));</extra_code>
+						</object>
+						<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+						<border>3</border>
+						<option>1</option>
+					</object>
+					<object class="sizeritem">
+						<object class="wxCheckBox" name="wxID_ANY" variable="GenPTS" member="yes">
+							<label>Gp</label>
+							<extra_code>GenPTS-&gt;SetLabel(FFQS(SID__JOBEDIT__ADV__GENPTS));</extra_code>
+						</object>
+						<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+						<border>3</border>
+						<option>1</option>
+					</object>
+					<object class="sizeritem">
+						<object class="wxCheckBox" name="wxID_ANY" variable="IgnDTS" member="yes">
+							<label>Id</label>
+							<extra_code>IgnDTS-&gt;SetLabel(FFQS(SID__JOBEDIT__ADV__IGNOREDTS));</extra_code>
+						</object>
+						<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+						<border>3</border>
+						<option>1</option>
+					</object>
+					<object class="sizeritem">
+						<object class="wxCheckBox" name="wxID_ANY" variable="IgnIdx" member="yes">
+							<label>Ii</label>
+							<extra_code>IgnIdx-&gt;SetLabel(FFQS(SID__JOBEDIT__ADV__IGNOREIDX));</extra_code>
+						</object>
+						<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+						<border>3</border>
+						<option>1</option>
+					</object>
+				</object>
+				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<border>5</border>
+				<option>1</option>
+			</object>
+			<object class="sizeritem">
+				<object class="wxStaticLine" name="ID_STATICLINE1" variable="StaticLine1" member="yes">
+					<size>10,-1</size>
+				</object>
+				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<option>1</option>
+			</object>
+			<object class="sizeritem">
+				<object class="wxBoxSizer" variable="BoxSizer1" member="no">
+					<object class="sizeritem">
+						<object class="wxButton" name="ID_CLEARBTN" variable="ClearBtn" member="yes">
+							<label>Cl</label>
+							<extra_code>ClearBtn-&gt;SetLabel(FFQS(SID__COMMON__CLEAR));</extra_code>
+							<handler function="OnAction" entry="EVT_BUTTON" />
+						</object>
+						<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<border>5</border>
+						<option>1</option>
+					</object>
+					<object class="spacer">
+						<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<option>1</option>
+					</object>
+					<object class="sizeritem">
+						<object class="wxButton" name="ID_OKBTN" variable="OkBtn" member="yes">
+							<label>Ok</label>
+							<default>1</default>
+							<extra_code>OkBtn-&gt;SetLabel(FFQS(SID__COMMON__OK));</extra_code>
+							<handler function="OnAction" entry="EVT_BUTTON" />
+						</object>
+						<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<border>3</border>
+						<option>1</option>
+					</object>
+					<object class="sizeritem">
+						<object class="wxButton" name="ID_NOBTN" variable="NoBtn" member="yes">
+							<label>No</label>
+							<extra_code>NoBtn-&gt;SetLabel(FFQS(SID__COMMON__CANCEL));</extra_code>
+							<handler function="OnAction" entry="EVT_BUTTON" />
+						</object>
+						<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<border>3</border>
+						<option>1</option>
+					</object>
+				</object>
+				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<border>3</border>
+				<option>1</option>
+			</object>
+		</object>
+	</object>
+</wxsmith>

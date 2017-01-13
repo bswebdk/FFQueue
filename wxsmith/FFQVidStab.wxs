@@ -1,0 +1,698 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<wxsmith>
+	<object class="wxDialog" name="FFQVidStab">
+		<centered>1</centered>
+		<id_arg>0</id_arg>
+		<object class="wxFlexGridSizer" variable="FlexGridSizer1" member="no">
+			<cols>1</cols>
+			<rows>4</rows>
+			<object class="sizeritem">
+				<object class="wxStaticBoxSizer" variable="SBS1" member="no">
+					<label>If</label>
+					<orient>wxVERTICAL</orient>
+					<object class="sizeritem">
+						<object class="wxFlexGridSizer" variable="FlexGridSizer2" member="no">
+							<cols>2</cols>
+							<rows>1</rows>
+							<growablecols>0</growablecols>
+							<object class="sizeritem">
+								<object class="wxTextCtrl" name="ID_SRCFILE" variable="SrcFile" member="yes">
+									<minsize>400,-1</minsize>
+									<extra_code>SBS1-&gt;GetStaticBox()-&gt;SetLabel(FFQS(SID__VIDSTAB__IN__FILE));</extra_code>
+									<handler function="OnAction" entry="EVT_TEXT" />
+								</object>
+								<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<border>3</border>
+								<option>1</option>
+							</object>
+							<object class="sizeritem">
+								<object class="wxButton" name="ID_BROWSESRC" variable="BrowseSrc" member="yes">
+									<label>...</label>
+									<size>50,-1</size>
+									<handler function="OnAction" entry="EVT_BUTTON" />
+								</object>
+								<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<border>3</border>
+								<option>1</option>
+							</object>
+						</object>
+						<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<option>1</option>
+					</object>
+					<object class="sizeritem">
+						<object class="wxStaticText" name="ID_FILEINFO" variable="FileInfo" member="yes">
+							<label>Inf</label>
+						</object>
+						<flag>wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+						<border>3</border>
+						<option>1</option>
+					</object>
+				</object>
+				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<border>3</border>
+				<option>1</option>
+			</object>
+			<object class="sizeritem">
+				<object class="wxNotebook" name="ID_PAGES" variable="Pages" member="yes">
+					<object class="notebookpage">
+						<object class="wxPanel" name="ID_PAGE0" variable="Page0" member="yes">
+							<object class="wxFlexGridSizer" variable="FirstPassSizer" member="no">
+								<cols>1</cols>
+								<rows>3</rows>
+								<growablecols>0</growablecols>
+								<object class="sizeritem">
+									<object class="wxFlexGridSizer" variable="FlexGridSizer4" member="no">
+										<cols>3</cols>
+										<rows>5</rows>
+										<growablecols>1</growablecols>
+										<object class="spacer">
+											<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<option>1</option>
+											<size>-1,5</size>
+										</object>
+										<object class="sizeritem">
+											<object class="wxFlexGridSizer" variable="FlexGridSizer5" member="no">
+												<cols>2</cols>
+												<rows>1</rows>
+												<growablecols>0,1</growablecols>
+												<object class="sizeritem">
+													<object class="wxStaticText" name="wxID_ANY" variable="ST00" member="no">
+														<label>-</label>
+													</object>
+													<flag>wxLEFT|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+													<border>10</border>
+													<option>1</option>
+												</object>
+												<object class="sizeritem">
+													<object class="wxStaticText" name="wxID_ANY" variable="ST01" member="no">
+														<label>+</label>
+													</object>
+													<flag>wxRIGHT|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL</flag>
+													<border>10</border>
+													<option>1</option>
+												</object>
+											</object>
+											<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<border>2</border>
+											<option>1</option>
+										</object>
+										<object class="spacer">
+											<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<option>1</option>
+											<size>-1,5</size>
+										</object>
+										<object class="sizeritem">
+											<object class="wxStaticText" name="wxID_ANY" variable="ST1" member="no">
+												<label>Shk</label>
+												<extra_code>ST1-&gt;SetLabel(FFQS(SID__VIDSTAB__SHAKINESS));</extra_code>
+											</object>
+											<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+											<border>3</border>
+											<option>1</option>
+										</object>
+										<object class="sizeritem">
+											<object class="wxSlider" name="ID_SHAKINESS" variable="Shakiness" member="yes">
+												<value>5</value>
+												<min>1</min>
+												<max>10</max>
+												<size>-1,20</size>
+												<handler function="OnSliderChange" entry="EVT_COMMAND_SLIDER_UPDATED" />
+											</object>
+											<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<border>3</border>
+											<option>1</option>
+										</object>
+										<object class="sizeritem">
+											<object class="wxStaticText" name="wxID_ANY" variable="ShakinessText" member="yes">
+												<label>0000</label>
+												<extra_code>ShakinessText-&gt;SetMinSize(ShakinessText-&gt;GetSize());</extra_code>
+											</object>
+											<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+											<border>3</border>
+											<option>1</option>
+										</object>
+										<object class="sizeritem">
+											<object class="wxStaticText" name="wxID_ANY" variable="ST2" member="no">
+												<label>Acc</label>
+												<extra_code>ST2-&gt;SetLabel(FFQS(SID__VIDSTAB__ACCURACY));</extra_code>
+											</object>
+											<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+											<border>3</border>
+											<option>1</option>
+										</object>
+										<object class="sizeritem">
+											<object class="wxSlider" name="ID_ACCURACY" variable="Accuracy" member="yes">
+												<value>15</value>
+												<min>1</min>
+												<max>15</max>
+												<size>-1,20</size>
+												<handler function="OnSliderChange" entry="EVT_COMMAND_SLIDER_UPDATED" />
+											</object>
+											<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<border>3</border>
+											<option>1</option>
+										</object>
+										<object class="sizeritem">
+											<object class="wxStaticText" name="wxID_ANY" variable="AccuracyText" member="yes">
+												<label>0</label>
+												<extra_code>AccuracyText-&gt;SetMinSize(ShakinessText-&gt;GetSize());</extra_code>
+											</object>
+											<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+											<border>5</border>
+											<option>1</option>
+										</object>
+										<object class="sizeritem">
+											<object class="wxStaticText" name="wxID_ANY" variable="ST3" member="no">
+												<label>Ss</label>
+												<extra_code>ST3-&gt;SetLabel(FFQS(SID__VIDSTAB__STEP__SIZE));</extra_code>
+											</object>
+											<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+											<border>3</border>
+											<option>1</option>
+										</object>
+										<object class="sizeritem">
+											<object class="wxSlider" name="ID_STEPSIZE" variable="StepSize" member="yes">
+												<value>6</value>
+												<min>1</min>
+												<max>32</max>
+												<size>-1,20</size>
+												<handler function="OnSliderChange" entry="EVT_COMMAND_SLIDER_UPDATED" />
+											</object>
+											<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<border>3</border>
+											<option>1</option>
+										</object>
+										<object class="sizeritem">
+											<object class="wxStaticText" name="wxID_ANY" variable="StepSizeText" member="yes">
+												<label>0</label>
+												<extra_code>StepSizeText-&gt;SetMinSize(ShakinessText-&gt;GetSize());</extra_code>
+											</object>
+											<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+											<border>3</border>
+											<option>1</option>
+										</object>
+										<object class="sizeritem">
+											<object class="wxStaticText" name="wxID_ANY" variable="ST4" member="no">
+												<label>MC</label>
+												<extra_code>ST4-&gt;SetLabel(FFQS(SID__VIDSTAB__MIN__CONTRAST));</extra_code>
+											</object>
+											<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+											<border>3</border>
+											<option>1</option>
+										</object>
+										<object class="sizeritem">
+											<object class="wxSlider" name="ID_MINCONTRAST" variable="MinContrast" member="yes">
+												<value>30</value>
+												<size>-1,20</size>
+												<handler function="OnSliderChange" entry="EVT_COMMAND_SLIDER_UPDATED" />
+											</object>
+											<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<border>3</border>
+											<option>1</option>
+										</object>
+										<object class="sizeritem">
+											<object class="wxStaticText" name="wxID_ANY" variable="MinContrastText" member="yes">
+												<label>0</label>
+												<extra_code>MinContrastText-&gt;SetMinSize(ShakinessText-&gt;GetSize());</extra_code>
+											</object>
+											<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+											<border>3</border>
+											<option>1</option>
+										</object>
+									</object>
+									<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+									<border>3</border>
+									<option>1</option>
+								</object>
+								<object class="sizeritem">
+									<object class="wxFlexGridSizer" variable="FlexGridSizer6" member="no">
+										<cols>2</cols>
+										<rows>1</rows>
+										<object class="sizeritem">
+											<object class="wxStaticText" name="wxID_ANY" variable="ST5" member="yes">
+												<label>Tri</label>
+												<extra_code>ST5-&gt;SetLabel(FFQS(SID__VIDSTAB__TRIPOD__REF__FRAME));</extra_code>
+											</object>
+											<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<border>3</border>
+											<option>1</option>
+										</object>
+										<object class="sizeritem">
+											<object class="wxSpinCtrl" name="ID_TRIPODFRAME" variable="TripodFrame" member="yes">
+												<value>0</value>
+												<max>10000000</max>
+												<size>100,-1</size>
+											</object>
+											<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+											<border>3</border>
+											<option>1</option>
+										</object>
+									</object>
+									<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+									<border>3</border>
+									<option>1</option>
+								</object>
+							</object>
+						</object>
+						<label>1st</label>
+					</object>
+					<object class="notebookpage">
+						<object class="wxPanel" name="ID_PAGE1" variable="Page1" member="yes">
+							<object class="wxFlexGridSizer" variable="FlexGridSizer8" member="no">
+								<cols>1</cols>
+								<rows>3</rows>
+								<growablecols>0</growablecols>
+								<object class="sizeritem">
+									<object class="wxFlexGridSizer" variable="FlexGridSizer9" member="no">
+										<cols>2</cols>
+										<rows>5</rows>
+										<growablecols>1</growablecols>
+										<object class="sizeritem">
+											<object class="wxStaticText" name="wxID_ANY" variable="ST7" member="no">
+												<label>Sm</label>
+												<extra_code>ST7-&gt;SetLabel(FFQS(SID__VIDSTAB__SMOOTHING));</extra_code>
+											</object>
+											<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+											<border>3</border>
+											<option>1</option>
+										</object>
+										<object class="sizeritem">
+											<object class="wxSpinCtrl" name="ID_SMOOTHING" variable="Smoothing" member="yes">
+												<value>10</value>
+												<max>10000000</max>
+												<size>100,-1</size>
+											</object>
+											<flag>wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL</flag>
+											<border>3</border>
+											<option>1</option>
+										</object>
+										<object class="sizeritem">
+											<object class="wxStaticText" name="wxID_ANY" variable="ST8" member="no">
+												<label>Ms</label>
+												<extra_code>ST8-&gt;SetLabel(FFQS(SID__VIDSTAB__MAX__SHIFT));</extra_code>
+											</object>
+											<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+											<border>3</border>
+											<option>1</option>
+										</object>
+										<object class="sizeritem">
+											<object class="wxSpinCtrl" name="ID_MAXSHIFT" variable="MaxShift" member="yes">
+												<value>0</value>
+												<min>-1</min>
+												<max>1000000</max>
+												<size>100,-1</size>
+											</object>
+											<flag>wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL</flag>
+											<border>3</border>
+											<option>1</option>
+										</object>
+										<object class="sizeritem">
+											<object class="wxStaticText" name="wxID_ANY" variable="ST9" member="no">
+												<label>Ma</label>
+												<extra_code>ST9-&gt;SetLabel(FFQS(SID__VIDSTAB__MAX__ANGLE));</extra_code>
+											</object>
+											<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+											<border>3</border>
+											<option>1</option>
+										</object>
+										<object class="sizeritem">
+											<object class="wxSpinCtrl" name="ID_MAXANGLE" variable="MaxAngle" member="yes">
+												<value>0</value>
+												<min>-1</min>
+												<max>180</max>
+												<size>100,-1</size>
+											</object>
+											<flag>wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL</flag>
+											<border>3</border>
+											<option>1</option>
+										</object>
+										<object class="sizeritem">
+											<object class="wxStaticText" name="wxID_ANY" variable="ST13" member="no">
+												<label>Zm</label>
+												<extra_code>ST13-&gt;SetLabel(FFQS(SID__VIDSTAB__ZOOM));</extra_code>
+											</object>
+											<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+											<border>3</border>
+											<option>1</option>
+										</object>
+										<object class="sizeritem">
+											<object class="wxSpinCtrl" name="ID_ZOOM" variable="Zoom" member="yes">
+												<value>0</value>
+												<min>-100</min>
+												<size>100,-1</size>
+											</object>
+											<flag>wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL</flag>
+											<border>3</border>
+											<option>1</option>
+										</object>
+										<object class="sizeritem">
+											<object class="wxStaticText" name="wxID_ANY" variable="ZoomSpeedText" member="yes">
+												<label>ZmS</label>
+												<extra_code>ZoomSpeedText-&gt;SetLabel(FFQS(SID__VIDSTAB__ZOOM__SPEED));</extra_code>
+											</object>
+											<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+											<border>3</border>
+											<option>1</option>
+										</object>
+										<object class="sizeritem">
+											<object class="wxSpinCtrl" name="ID_ZOOMSPEED" variable="ZoomSpeed" member="yes">
+												<value>0</value>
+												<size>100,-1</size>
+											</object>
+											<flag>wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL</flag>
+											<border>3</border>
+											<option>1</option>
+										</object>
+									</object>
+									<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+									<border>3</border>
+									<option>1</option>
+								</object>
+								<object class="sizeritem">
+									<object class="wxFlexGridSizer" variable="FlexGridSizer10" member="no">
+										<cols>2</cols>
+										<rows>3</rows>
+										<growablecols>1</growablecols>
+										<object class="sizeritem">
+											<object class="wxStaticText" name="wxID_ANY" variable="ST10" member="yes">
+												<label>Opt</label>
+												<extra_code>ST10-&gt;SetLabel(FFQS(SID__VIDSTAB__OPT__ALGO));</extra_code>
+											</object>
+											<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+											<border>3</border>
+											<option>1</option>
+										</object>
+										<object class="sizeritem">
+											<object class="wxChoice" name="ID_OPTALGO" variable="OptAlgo" member="yes">
+												<extra_code>OptAlgo-&gt;Append(VIDSTAB__OPT__ALGO__COUNT, OptAlgoItems);</extra_code>
+											</object>
+											<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<border>3</border>
+											<option>1</option>
+										</object>
+										<object class="sizeritem">
+											<object class="wxStaticText" name="wxID_ANY" variable="ST11" member="no">
+												<label>Intp</label>
+												<extra_code>ST11-&gt;SetLabel(FFQS(SID__VIDSTAB__INTERPOLATION));</extra_code>
+											</object>
+											<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+											<border>3</border>
+											<option>1</option>
+										</object>
+										<object class="sizeritem">
+											<object class="wxChoice" name="ID_INTERPOLATION" variable="Interpolation" member="yes">
+												<extra_code>Interpolation-&gt;Append(VIDSTAB__INTERPOLATION__COUNT, InterpolationItems);</extra_code>
+											</object>
+											<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<border>3</border>
+											<option>1</option>
+										</object>
+										<object class="sizeritem">
+											<object class="wxStaticText" name="wxID_ANY" variable="ST12" member="no">
+												<label>OpZm</label>
+												<extra_code>ST12-&gt;SetLabel(FFQS(SID__VIDSTAB__OPT__ZOOM));</extra_code>
+											</object>
+											<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+											<border>3</border>
+											<option>1</option>
+										</object>
+										<object class="sizeritem">
+											<object class="wxChoice" name="ID_OPTZOOM" variable="OptZoom" member="yes">
+												<extra_code>OptZoom-&gt;Append(VIDSTAB__OPT__ZOOM__COUNT, OptZoomItems);</extra_code>
+												<handler function="OnAction" entry="EVT_CHOICE" />
+											</object>
+											<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<border>3</border>
+											<option>1</option>
+										</object>
+									</object>
+									<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+									<border>3</border>
+									<option>1</option>
+								</object>
+								<object class="sizeritem">
+									<object class="wxBoxSizer" variable="BoxSizer1" member="no">
+										<orient>wxVERTICAL</orient>
+										<object class="sizeritem">
+											<object class="wxCheckBox" name="ID_CROPBLACK" variable="CropBlack" member="yes">
+												<label>Crop</label>
+												<extra_code>CropBlack-&gt;SetLabel(FFQS(SID__VIDSTAB__CROP__FILL__BLACK));</extra_code>
+											</object>
+											<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+											<border>3</border>
+											<option>1</option>
+										</object>
+										<object class="sizeritem">
+											<object class="wxCheckBox" name="ID_INVERT" variable="Invert" member="yes">
+												<label>Inv</label>
+												<extra_code>Invert-&gt;SetLabel(FFQS(SID__VIDSTAB__INVERT));</extra_code>
+											</object>
+											<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+											<border>3</border>
+											<option>1</option>
+										</object>
+										<object class="sizeritem">
+											<object class="wxCheckBox" name="ID_RELATIVE" variable="Relative" member="yes">
+												<label>Rel</label>
+												<extra_code>Relative-&gt;SetLabel(FFQS(SID__VIDSTAB__RELATIVE));</extra_code>
+											</object>
+											<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+											<border>3</border>
+											<option>1</option>
+										</object>
+										<object class="sizeritem">
+											<object class="wxCheckBox" name="ID_VIRTUALTRIPOD" variable="VirtualTripod" member="yes">
+												<label>VTri</label>
+												<extra_code>VirtualTripod-&gt;SetLabel(FFQS(SID__VIDSTAB__VIRTUAL__TRIPOD));</extra_code>
+											</object>
+											<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+											<border>3</border>
+											<option>1</option>
+										</object>
+									</object>
+									<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+									<border>3</border>
+									<option>1</option>
+								</object>
+							</object>
+						</object>
+						<label>2nd</label>
+					</object>
+					<object class="notebookpage">
+						<object class="wxPanel" name="ID_PAGE2" variable="Page2" member="yes">
+							<object class="wxFlexGridSizer" variable="FlexGridSizer11" member="no">
+								<cols>1</cols>
+								<rows>2</rows>
+								<growablecols>0</growablecols>
+								<object class="sizeritem">
+									<object class="wxFlexGridSizer" variable="FlexGridSizer14" member="no">
+										<cols>1</cols>
+										<rows>4</rows>
+										<growablecols>0</growablecols>
+										<object class="sizeritem">
+											<object class="wxCheckBox" name="ID_ONLY1ST" variable="Only1st" member="yes">
+												<label>1st</label>
+												<extra_code>Only1st-&gt;SetLabel(FFQS(SID__VIDSTAB__ONLY__1ST__PASS));</extra_code>
+												<handler function="OnAction" entry="EVT_CHECKBOX" />
+											</object>
+											<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+											<border>3</border>
+											<option>1</option>
+										</object>
+										<object class="sizeritem">
+											<object class="wxFlexGridSizer" variable="FlexGridSizer3" member="no">
+												<cols>2</cols>
+												<rows>1</rows>
+												<growablecols>1</growablecols>
+												<growablerows>0</growablerows>
+												<object class="spacer">
+													<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<option>1</option>
+													<size>15,5</size>
+												</object>
+												<object class="sizeritem">
+													<object class="wxCheckBox" name="ID_VERBOSE" variable="Verbose" member="yes">
+														<label>Vb</label>
+														<extra_code>Verbose-&gt;SetLabel(FFQS(SID__VIDSTAB__VERBOSE));</extra_code>
+													</object>
+													<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+													<option>1</option>
+												</object>
+											</object>
+											<flag>wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+											<border>3</border>
+											<option>1</option>
+										</object>
+										<object class="sizeritem">
+											<object class="wxCheckBox" name="ID_ONLY2ND" variable="Only2nd" member="yes">
+												<label>2nd</label>
+												<extra_code>Only2nd-&gt;SetLabel(FFQS(SID__VIDSTAB__ONLY__2ND__PASS));</extra_code>
+												<handler function="OnAction" entry="EVT_CHECKBOX" />
+											</object>
+											<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+											<border>3</border>
+											<option>1</option>
+										</object>
+										<object class="sizeritem">
+											<object class="wxCheckBox" name="ID_KEEPTRANSFORMS" variable="KeepTransforms" member="yes">
+												<label>Keep</label>
+												<extra_code>KeepTransforms-&gt;SetLabel(FFQS(SID__VIDSTAB__KEEP__TRANSFORMS));</extra_code>
+											</object>
+											<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+											<border>3</border>
+											<option>1</option>
+										</object>
+									</object>
+									<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+									<border>5</border>
+									<option>1</option>
+								</object>
+							</object>
+						</object>
+						<label>Opt</label>
+					</object>
+				</object>
+				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<border>3</border>
+				<option>1</option>
+			</object>
+			<object class="sizeritem">
+				<object class="wxStaticBoxSizer" variable="SBS2" member="no">
+					<label>Dst</label>
+					<orient>wxVERTICAL</orient>
+					<object class="sizeritem">
+						<object class="wxFlexGridSizer" variable="FlexGridSizer7" member="no">
+							<cols>3</cols>
+							<rows>1</rows>
+							<growablecols>1</growablecols>
+							<growablerows>0</growablerows>
+							<object class="sizeritem">
+								<object class="wxStaticText" name="wxID_ANY" variable="ST20" member="no">
+									<label>Fn</label>
+									<extra_code>ST20-&gt;SetLabel(FFQS(SID__CONCAT__FILE__NAME));&#x0A;SBS2-&gt;GetStaticBox()-&gt;SetLabel(FFQS(SID__CONCAT__DESTINATION));</extra_code>
+								</object>
+								<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<border>3</border>
+								<option>1</option>
+							</object>
+							<object class="sizeritem">
+								<object class="wxTextCtrl" name="ID_DESTFILE" variable="DestFile" member="yes" />
+								<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<border>3</border>
+								<option>1</option>
+							</object>
+							<object class="sizeritem">
+								<object class="wxButton" name="ID_BROWSEDEST" variable="BrowseDest" member="yes">
+									<label>...</label>
+									<size>50,-1</size>
+									<handler function="OnAction" entry="EVT_BUTTON" />
+								</object>
+								<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<border>3</border>
+								<option>1</option>
+							</object>
+						</object>
+						<flag>wxBOTTOM|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<border>2</border>
+						<option>1</option>
+					</object>
+					<object class="sizeritem">
+						<object class="wxFlexGridSizer" variable="Sizer3" member="yes">
+							<cols>2</cols>
+							<rows>1</rows>
+							<growablecols>1</growablecols>
+							<growablerows>0</growablerows>
+							<object class="sizeritem">
+								<object class="wxStaticText" name="wxID_ANY" variable="ST21" member="no">
+									<label>Pst</label>
+									<extra_code>ST21-&gt;SetLabel(FFQS(SID__CONCAT__PRESET));</extra_code>
+								</object>
+								<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<border>3</border>
+								<option>1</option>
+							</object>
+							<object class="sizeritem">
+								<object class="Custom" name="ID_PRESET" subclass="FFQPresetPanel" variable="Preset" member="yes">
+									<creating_code>$(THIS) = new $(CLASS)($(PARENT));</creating_code>
+									<include_file>FFQPresetPanel.h</include_file>
+									<local_include>1</local_include>
+									<style></style>
+								</object>
+								<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<border>3</border>
+								<option>1</option>
+							</object>
+						</object>
+						<flag>wxBOTTOM|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<border>2</border>
+						<option>1</option>
+					</object>
+					<object class="sizeritem">
+						<object class="wxCheckBox" name="ID_SAVELOG" variable="SaveLog" member="yes">
+							<label>Log</label>
+							<extra_code>SaveLog-&gt;SetLabel(FFQS(SID__COMMON__SAVE__LOG));</extra_code>
+						</object>
+						<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+						<border>2</border>
+						<option>1</option>
+					</object>
+				</object>
+				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<border>3</border>
+				<option>1</option>
+			</object>
+			<object class="sizeritem">
+				<object class="wxBoxSizer" variable="BoxSizer2" member="no">
+					<object class="sizeritem">
+						<object class="wxButton" name="ID_DEFAULTSBUTTON" variable="DefaultsButton" member="yes">
+							<label>D</label>
+							<extra_code>DefaultsButton-&gt;SetLabel(FFQS(SID__COMMON__DEFAULTS));</extra_code>
+							<handler function="OnAction" entry="EVT_BUTTON" />
+						</object>
+						<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<border>5</border>
+						<option>1</option>
+					</object>
+					<object class="spacer">
+						<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<border>5</border>
+						<option>1</option>
+					</object>
+					<object class="sizeritem">
+						<object class="wxButton" name="ID_CANCELBUTTON" variable="CancelButton" member="yes">
+							<label>N</label>
+							<extra_code>CancelButton-&gt;SetLabel(FFQS(SID__COMMON__CANCEL));</extra_code>
+							<handler function="OnAction" entry="EVT_BUTTON" />
+						</object>
+						<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<border>5</border>
+						<option>1</option>
+					</object>
+					<object class="sizeritem">
+						<object class="wxButton" name="ID_OKBUTTON" variable="OkButton" member="yes">
+							<label>Y</label>
+							<extra_code>OkButton-&gt;SetLabel(FFQS(SID__COMMON__OK));</extra_code>
+							<handler function="OnAction" entry="EVT_BUTTON" />
+						</object>
+						<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<border>5</border>
+						<option>1</option>
+					</object>
+				</object>
+				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<border>5</border>
+				<option>1</option>
+			</object>
+		</object>
+		<object class="wxFileDialog" variable="OpenFileDlg" member="yes">
+			<wildcard>*.*</wildcard>
+			<extra_code>OpenFileDlg-&gt;SetMessage(FFQS(SID__COMMON__SELECT__INPUT__FILE));</extra_code>
+			<style>wxFD_DEFAULT_STYLE|wxFD_OPEN|wxFD_FILE_MUST_EXIST</style>
+		</object>
+		<object class="wxFileDialog" variable="SaveFileDlg" member="yes">
+			<wildcard>*.*</wildcard>
+			<extra_code>SaveFileDlg-&gt;SetMessage(FFQS(SID__COMMON__SELECT__OUTPUT__FILE));</extra_code>
+			<style>wxFD_SAVE</style>
+		</object>
+	</object>
+</wxsmith>
