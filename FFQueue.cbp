@@ -15,12 +15,12 @@
 					<Add option="-Wall" />
 					<Add option="-g" />
 					<Add option="-DDEBUG" />
-					<Add directory="$(#wx)/lib/gcc_lib/mswu" />
 					<Add option="-pipe" />
 					<Add option="-mthreads" />
 					<Add option="-D__GNUWIN32__" />
 					<Add option="-D__WXMSW__" />
 					<Add option="-DwxUSE_UNICODE" />
+					<Add directory="$(#wx)/lib/gcc_lib/mswu" />
 					<Add directory="$(#wx)/include" />
 					<Add directory="$(#wx)/src/zlib" />
 				</Compiler>
@@ -72,12 +72,12 @@
 					<Add option="-O2" />
 					<Add option="-Wfatal-errors" />
 					<Add option="-DNDEBUG" />
-					<Add directory="$(#wx)/lib/gcc_lib/mswu" />
 					<Add option="-pipe" />
 					<Add option="-mthreads" />
 					<Add option="-D__GNUWIN32__" />
 					<Add option="-D__WXMSW__" />
 					<Add option="-DwxUSE_UNICODE" />
+					<Add directory="$(#wx)/lib/gcc_lib/mswu" />
 					<Add directory="$(#wx)/include" />
 					<Add directory="$(#wx)/src/zlib" />
 				</Compiler>
@@ -129,12 +129,12 @@
 				<Option compiler="gcc" />
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
-					<Add option="`$(#wx)/gtk-build/wx-config --version=3.0 --static=yes --unicode=yes --debug=yes --cflags`" />
+					<Add option="`$(#wx)/gtk-build/wx-config --version=3.1 --static=yes --unicode=yes --debug=yes --cflags`" />
 					<Add option="-g" />
 					<Add option="-DDEBUG" />
 				</Compiler>
 				<Linker>
-					<Add option="`$(#wx)/gtk-build/wx-config --version=3.0 --static=yes --debug=yes --libs`" />
+					<Add option="`$(#wx)/gtk-build/wx-config --version=3.1 --static=yes --debug=yes --libs`" />
 					<Add directory="$(#wx)/gtk-build/lib" />
 				</Linker>
 			</Target>
@@ -145,16 +145,16 @@
 				<Option compiler="gcc" />
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
-					<Add option="`$(#wx)/gtk-build/wx-config --version=3.0 --static=yes --unicode=yes --debug=no --cflags`" />
+					<Add option="`$(#wx)/gtk-build/wx-config --version=3.1 --static=yes --unicode=yes --debug=no --cflags`" />
 					<Add option="-O2" />
 					<Add option="-DNDEBUG" />
 				</Compiler>
 				<Linker>
-					<Add directory="$(#wx)/gtk-build/lib" />
-					<Add option="`$(#wx)/gtk-build/wx-config --version=3.0 --static=yes --debug=no --libs`" />
+					<Add option="`$(#wx)/gtk-build/wx-config --version=3.1 --static=yes --debug=no --libs`" />
 					<Add option="-s" />
 					<Add option="-static-libgcc" />
 					<Add option="-static-libstdc++" />
+					<Add directory="$(#wx)/gtk-build/lib" />
 				</Linker>
 			</Target>
 		</Build>
@@ -282,9 +282,9 @@
 		<Unit filename="src/filter/Watermark.cpp" />
 		<Unit filename="src/filter/Watermark.h" />
 		<Unit filename="src/resource.rc">
+			<Option compilerVar="WINDRES" />
 			<Option target="Debug_Win" />
 			<Option target="Release_Win" />
-			<Option compilerVar="WINDRES" />
 		</Unit>
 		<Unit filename="src/tools/FFQConcat.cpp" />
 		<Unit filename="src/tools/FFQConcat.h" />
@@ -296,6 +296,8 @@
 		<Unit filename="src/tools/FFQThumbPanel.h" />
 		<Unit filename="src/tools/FFQVidStab.cpp" />
 		<Unit filename="src/tools/FFQVidStab.h" />
+		<Unit filename="src/tools/FFQVideoToGIF.cpp" />
+		<Unit filename="src/tools/FFQVideoToGIF.h" />
 		<Unit filename="src/utils/FFQBuildCmd.cpp" />
 		<Unit filename="src/utils/FFQBuildCmd.h" />
 		<Unit filename="src/utils/FFQCodecInfo.cpp" />
@@ -311,10 +313,12 @@
 		<Unit filename="src/utils/FFQDebugUtils.cpp">
 			<Option target="Debug_Win" />
 			<Option target="Debug_Lin" />
+			<Option target="Debug_Lin_wx310" />
 		</Unit>
 		<Unit filename="src/utils/FFQDebugUtils.h">
 			<Option target="Debug_Win" />
 			<Option target="Debug_Lin" />
+			<Option target="Debug_Lin_wx310" />
 		</Unit>
 		<Unit filename="src/utils/FFQFilter.cpp" />
 		<Unit filename="src/utils/FFQFilter.h" />
@@ -375,6 +379,7 @@
 		<Unit filename="wxsmith/FFQThumbPanel.wxs" />
 		<Unit filename="wxsmith/FFQTimeEdit.wxs" />
 		<Unit filename="wxsmith/FFQVidStab.wxs" />
+		<Unit filename="wxsmith/FFQVideoToGIF.wxs" />
 		<Extensions>
 			<AutoVersioning>
 				<Scheme minor_max="10" build_max="0" rev_max="0" rev_rand_max="10" build_times_to_increment_minor="100" />
@@ -409,6 +414,7 @@
 					<wxDialog wxs="wxsmith/FFQJobEditAdv.wxs" src="src/FFQJobEditAdv.cpp" hdr="src/FFQJobEditAdv.h" fwddecl="0" i18n="0" name="FFQJobEditAdv" language="CPP" />
 					<wxDialog wxs="wxsmith/FFQJobEditAdvPopup.wxs" src="src/FFQJobEditAdvPopup.cpp" hdr="src/FFQJobEditAdvPopup.h" fwddecl="0" i18n="0" name="FFQJobEditAdvPopup" language="CPP" />
 					<wxDialog wxs="wxsmith/FFQJobEditAdvCuts.wxs" src="src/FFQJobEditAdvCuts.cpp" hdr="src/FFQJobEditAdvCuts.h" fwddecl="0" i18n="0" name="FFQJobEditAdvCuts" language="CPP" />
+					<wxDialog wxs="wxsmith/FFQVideoToGIF.wxs" src="src/tools/FFQVideoToGIF.cpp" hdr="src/tools/FFQVideoToGIF.h" fwddecl="0" i18n="1" name="FFQVideoToGIF" language="CPP" />
 				</resources>
 			</wxsmith>
 		</Extensions>

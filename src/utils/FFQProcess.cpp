@@ -110,7 +110,7 @@ bool FFQProcess::Abort(bool send_quit, int wait_timeout)
     else ThrowError(FFQS(SID_KILL_FFMPEG_FAILED));
 
     //Wait for the terminate event until timeout
-    return (wait_timeout >= 0) ? WaitFor((size_t)wait_timeout) : true;
+    return (wait_timeout >= 0) ? WaitFor((unsigned int)wait_timeout) : true;
 
 }
 
@@ -155,6 +155,10 @@ void FFQProcess::SetCommand(wxString command, wxString args)
     //Set the raw command line
     m_CommandLine = command;
 
+    //If the path to command includes spaces it must be quoted
+    if ((m_CommandLine.Find(' ') >= 0) && (wxString("\"\'").Find(m_CommandLine.at(0)) < 0))
+        m_CommandLine = "\"" + m_CommandLine + "\"";
+
     //Append any arguments
     if (args.Len() > 0) m_CommandLine += " " + args;
 
@@ -186,7 +190,7 @@ bool FFQProcess::TransactPipes(bool in, bool err)
 
 //---------------------------------------------------------------------------------------
 
-bool FFQProcess::WaitFor(size_t timeout)
+bool FFQProcess::WaitFor(unsigned int timeout)
 {
 
     //WARNING!! This method is dangerous! The yielding done with Yield_App
@@ -290,7 +294,7 @@ void FFQProcess::ExecuteAndWait()
 
 //---------------------------------------------------------------------------------------
 
-bool FFQProcess::ExtractFrameFromFile(wxString file_name, TIME_VALUE frame_time, wxImage *img, size_t timeout, size_t accuracy, wxSize fit_to)
+bool FFQProcess::ExtractFrameFromFile(wxString file_name, TIME_VALUE frame_time, wxImage *img, unsigned int timeout, unsigned int accuracy, wxSize fit_to)
 {
 
     //Extract one frame from a movie as an image;
@@ -557,7 +561,7 @@ wxString FFQProcess::GetProcessOutputLine(bool error_out, bool clear)
         {
 
             //Delete until and including CR or LF or CR+LF or LF+CR
-            if (((size_t)cr + 1 < str->Len()) && (str->at(cr + 1) == delChar)) cr++;
+            if (((unsigned int)cr + 1 < str->Len()) && (str->at(cr + 1) == delChar)) cr++;
             str->Remove(0, cr + 1);
 
         }
@@ -612,7 +616,7 @@ wxString FFQProcess::ReadInputStream(wxInputStream *in)
         in->Read(m_Buffer, READ_BUFFER_SIZE);
 
         //Get the amount of bytes read
-        size_t read = in->LastRead();
+        unsigned int read = in->LastRead();
 
         //If anything was read it is assumed to be UTF-8
         if (read > 0) return wxString::FromUTF8(m_Buffer, read);

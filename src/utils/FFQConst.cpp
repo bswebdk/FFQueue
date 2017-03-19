@@ -23,7 +23,7 @@
 
 #include "FFQConst.h"
 
-bool STRBOOLDEF(wxString sval, bool def)
+/*bool STRBOOLDEF(wxString sval, bool def)
 {
     return sval.Len() == 0 ? def : STRBOOL(sval);
-}
+}*/

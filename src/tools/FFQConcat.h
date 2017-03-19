@@ -28,18 +28,18 @@
 
 #ifndef WX_PRECOMP
 	//(*HeadersPCH(FFQConcat)
+	#include <wx/checkbox.h>
+	#include <wx/dialog.h>
 	#include <wx/sizer.h>
+	#include <wx/button.h>
+	#include <wx/hyperlink.h>
+	#include <wx/radiobut.h>
+	#include <wx/filedlg.h>
+	#include <wx/panel.h>
+	#include <wx/slider.h>
 	#include <wx/stattext.h>
 	#include <wx/textctrl.h>
-	#include <wx/checkbox.h>
 	#include <wx/listbox.h>
-	#include <wx/radiobut.h>
-	#include <wx/slider.h>
-	#include <wx/panel.h>
-	#include <wx/filedlg.h>
-	#include <wx/hyperlink.h>
-	#include <wx/button.h>
-	#include <wx/dialog.h>
 	//*)
 #endif
 //(*Headers(FFQConcat)
@@ -77,64 +77,64 @@ class FFQConcat: public wxDialog
 		//bool Execute(wxString &command, wxString &saveLogFor, int PageID = 0);
 
 		//(*Declarations(FFQConcat)
-		wxCheckBox* SaveLog;
-		wxFlexGridSizer* Sizer3;
-		wxButton* CCUp;
-		wxTextCtrl* SSAudio;
-		wxHyperlinkCtrl* LimitDest;
-		wxFlexGridSizer* Sizer4;
-		wxRadioButton* CCUsePadBlur;
-		wxFlexGridSizer* CCPadSizer;
-		wxStaticText* StaticText2;
-		wxStaticText* ST22;
-		wxTextCtrl* SSWidth;
-		wxCheckBox* CCSubtitles;
-		wxFlexGridSizer* CCBlurSizer;
-		wxFlexGridSizer* Sizer2;
-		wxSlider* CCPadBlur;
-		wxCheckBox* CCSimple;
+		wxCheckBox* CCVideo;
+		wxButton* CancelButton;
 		wxCheckBox* SSFit;
+		wxFlexGridSizer* CCPadSizer;
+		wxHyperlinkCtrl* SSFrameStatus;
+		wxColourPickerCtrl* CCPadColor;
+		wxPanel* MergePage;
+		wxStaticText* ST22;
+		wxTextCtrl* SSAudio;
+		wxButton* SSBrowseImg;
+		wxFlexGridSizer* Sizer4;
+		wxRadioButton* CCUsePadColor;
+		wxFlexGridSizer* Sizer2;
+		wxTextCtrl* SSHeight;
+		wxCheckBox* CCSubtitles;
+		wxPanel* SlideshowPage;
+		wxStaticText* ST2;
+		wxFileDialog* OpenFileDlg;
+		wxCheckBox* CCSetSar;
+		wxCheckBox* CCPadding;
+		wxFlexGridSizer* CCBlurSizer;
+		wxStaticText* ST1;
+		wxNotebook* Pages;
+		wxStaticText* ST7;
+		wxStaticText* ST8;
+		wxStaticText* StaticText1;
+		wxSlider* CCPadBlur;
+		wxStaticText* ST5;
+		wxFlexGridSizer* SSSizer1;
+		wxTextCtrl* SSSource;
+		wxCheckBox* SaveLog;
+		wxButton* CCDown;
+		wxRadioButton* CCUsePadBlur;
+		wxCheckBox* CCAudio;
+		wxStaticText* ST4;
+		wxButton* CCUp;
+		wxListBox* CCSources;
+		wxTextCtrl* DestFile;
+		wxCheckBox* SSLoopFrames;
+		FFQPresetPanel* Preset;
+		wxHyperlinkCtrl* LimitDest;
+		wxCheckBox* CCSimple;
+		wxButton* OkButton;
+		wxStaticText* StaticText2;
+		wxStaticText* ST3;
 		wxStaticText* ST9;
 		wxButton* CCAdd;
-		wxCheckBox* CCSetSar;
-		wxFlexGridSizer* SSSizer1;
-		wxStaticText* StaticText1;
-		wxButton* CCDown;
-		wxButton* OkButton;
-		wxStaticText* ST6;
-		wxFileDialog* SaveFileDlg;
-		wxPanel* MergePage;
-		wxCheckBox* CCAudio;
-		wxPanel* SlideshowPage;
-		wxColourPickerCtrl* CCPadColor;
-		wxRadioButton* CCUsePadColor;
-		wxStaticText* ST8;
-		wxTextCtrl* DestFile;
-		wxStaticText* ST5;
-		wxStaticText* ST2;
-		wxButton* SSBrowseAudio;
-		wxStaticText* ST4;
-		wxTextCtrl* SSSource;
-		wxStaticText* ST3;
-		wxTextCtrl* SSFrameTime;
-		wxCheckBox* SSSetPTS;
-		wxStaticText* ST1;
-		wxTextCtrl* SSHeight;
-		wxListBox* CCSources;
-		wxColourPickerCtrl* SSPadding;
-		wxCheckBox* CCVideo;
-		wxFileDialog* OpenFileDlg;
-		wxButton* SSBrowseImg;
-		wxButton* CancelButton;
-		FFQPresetPanel* Preset;
 		wxFlexGridSizer* Sizer1;
+		wxTextCtrl* SSFrameTime;
 		wxButton* CCRemove;
-		wxStaticText* ST7;
-		wxCheckBox* CCPadding;
-		wxHyperlinkCtrl* SSFrameStatus;
-		wxCheckBox* SSLoopFrames;
 		wxButton* BrowseDest;
-		wxNotebook* Pages;
+		wxFlexGridSizer* Sizer3;
+		wxColourPickerCtrl* SSPadding;
+		wxStaticText* ST6;
+		wxTextCtrl* SSWidth;
+		wxFileDialog* SaveFileDlg;
+		wxCheckBox* SSSetPTS;
+		wxButton* SSBrowseAudio;
 		//*)
 
 	protected:
@@ -198,7 +198,7 @@ class FFQConcat: public wxDialog
 
 		wxString m_ImgPatn, m_LastPst, m_Command, m_TempPath;
 		bool m_DoIdleTask, m_BlurOK;
-		size_t m_ImgCount, m_ImgFirst;
+		unsigned int m_ImgCount, m_ImgFirst;
 		TIME_VALUE m_LimitLen;
 		LPFFQ_CONCAT_JOB m_EditJob;
 		CONCAT_DATA m_AudInfo;

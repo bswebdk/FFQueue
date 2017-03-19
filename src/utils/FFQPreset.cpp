@@ -247,7 +247,7 @@ wxString FFQ_PRESET::SubsString()
     wxString res;
     res.Printf(
         "%s,%i,%i,%s,%s,%s",
-        BOOLSTR(subtitles.bitmap), subtitles.size_type, subtitles.scale,
+        BOOLSTR(subtitles.bitmap), (int)subtitles.size_type, (int)subtitles.scale,
         subtitles.width, subtitles.height, subtitles.codec
     );
 
@@ -317,7 +317,7 @@ wxString FFQ_PRESET::ToString()
     res.RemoveLast(CRLF.Len());
 
     //Append filters
-    for (size_t i = 0; i < filters.size(); i++) res += CRLF + PRESET_FILTER + "=" + filters.Item(i);
+    for (unsigned int i = 0; i < filters.size(); i++) res += CRLF + PRESET_FILTER + "=" + filters.Item(i);
 
     //Return the packed preset
     return res;

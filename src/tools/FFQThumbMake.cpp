@@ -23,6 +23,7 @@
 
 #include "FFQThumbMake.h"
 #include "../utils/FFQLang.h"
+#include "../utils/FFQConfig.h"
 #include "../utils/FFQMisc.h"
 #include "../utils/FFQProbing.h"
 
@@ -51,11 +52,11 @@ END_EVENT_TABLE()
 FFQThumbMake::FFQThumbMake(wxWindow* parent)
 {
 	//(*Initialize(FFQThumbMake)
-	wxStaticBoxSizer* SBS1;
-	wxFlexGridSizer* FlexGridSizer3;
-	wxFlexGridSizer* FlexGridSizer2;
-	wxBoxSizer* BoxSizer1;
 	wxFlexGridSizer* FlexGridSizer1;
+	wxStaticBoxSizer* SBS1;
+	wxFlexGridSizer* FlexGridSizer2;
+	wxFlexGridSizer* FlexGridSizer3;
+	wxBoxSizer* BoxSizer1;
 
 	Create(parent, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE, _T("wxID_ANY"));
 	FlexGridSizer1 = new wxFlexGridSizer(4, 1, 0, 0);
@@ -67,13 +68,13 @@ FFQThumbMake::FFQThumbMake(wxWindow* parent)
 	FlexGridSizer2->AddGrowableRow(0);
 	InFile = new wxTextCtrl(this, ID_INFILE, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_INFILE"));
 	SBS1->GetStaticBox()->SetLabel(FFQS(SID_THUMBS_INPUT_FILE));
-	FlexGridSizer2->Add(InFile, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
+	FlexGridSizer2->Add(InFile, 1, wxALL|wxEXPAND, 0);
 	BrowseButton = new wxButton(this, ID_BROWSEBUTTON, _T("..."), wxDefaultPosition, wxSize(50,-1), 0, wxDefaultValidator, _T("ID_BROWSEBUTTON"));
 	FlexGridSizer2->Add(BrowseButton, 1, wxLEFT|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
 	SBS1->Add(FlexGridSizer2, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
-	FlexGridSizer1->Add(SBS1, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+	FlexGridSizer1->Add(SBS1, 1, wxALL|wxEXPAND, 5);
 	ThumbPanel = new FFQThumbPanel(this,ID_ThumbPanel);
-	FlexGridSizer1->Add(ThumbPanel, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+	FlexGridSizer1->Add(ThumbPanel, 1, wxALL|wxEXPAND, 5);
 	FlexGridSizer3 = new wxFlexGridSizer(1, 1, 0, 0);
 	FlexGridSizer3->AddGrowableCol(0);
 	FlexGridSizer3->AddGrowableRow(0);
@@ -81,7 +82,7 @@ FFQThumbMake::FFQThumbMake(wxWindow* parent)
 	SaveLog->SetValue(true);
 	SaveLog->SetLabel(FFQS(SID_COMMON_SAVE_LOG));
 	FlexGridSizer3->Add(SaveLog, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
-	FlexGridSizer1->Add(FlexGridSizer3, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+	FlexGridSizer1->Add(FlexGridSizer3, 1, wxALL|wxEXPAND, 5);
 	BoxSizer1 = new wxBoxSizer(wxHORIZONTAL);
 	BoxSizer1->Add(-1,-1,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	MakeButton = new wxButton(this, ID_MAKEBUTTON, _T("M"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_MAKEBUTTON"));
@@ -91,7 +92,7 @@ FFQThumbMake::FFQThumbMake(wxWindow* parent)
 	CancelButton = new wxButton(this, ID_CANCELBUTTON, _T("C"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CANCELBUTTON"));
 	CancelButton->SetLabel(FFQS(SID_COMMON_CANCEL));
 	BoxSizer1->Add(CancelButton, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-	FlexGridSizer1->Add(BoxSizer1, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+	FlexGridSizer1->Add(BoxSizer1, 1, wxALL|wxEXPAND, 5);
 	SetSizer(FlexGridSizer1);
 	FileDlg = new wxFileDialog(this, wxEmptyString, wxEmptyString, wxEmptyString, wxFileSelectorDefaultWildcardStr, wxFD_OPEN|wxFD_FILE_MUST_EXIST, wxDefaultPosition, wxDefaultSize, _T("wxFileDialog"));
 	FileDlg->SetMessage(FFQS(SID_COMMON_SELECT_INPUT_FILE));
@@ -191,6 +192,7 @@ void FFQThumbMake::OnAction(wxCommandEvent& event)
 
         //Set save log
         m_EditJob->save_log = SaveLog->GetValue();
+        FFQCFG()->SetSaveLog(m_EditJob->save_log);
 
         //Return OK
         EndModal(wxID_OK);

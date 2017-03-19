@@ -205,7 +205,7 @@ bool Equalizer::GetFilter(LPFFMPEG_FILTER fltr)
     if (all_null) return ShowError(FFQS(SID_EQUALIZER_ERROR));
 
     //Add band-width to editable
-    s.Printf("%s,%u", w, m_WidthType->GetSelection());
+    s.Printf("%s,%i", w, m_WidthType->GetSelection());
 
     uf.Remove(uf.Len() - 1, 1);
     ff.Remove(ff.Len() - 1, 1);

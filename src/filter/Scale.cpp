@@ -25,7 +25,7 @@
 
 //---------------------------------------------------------------------------------------
 
-const size_t ALGORITHM_COUNT = 12;
+const unsigned int ALGORITHM_COUNT = 12;
 const wxString ALGORITHMS[ALGORITHM_COUNT] = {
     "default", "fast_bilinear", "bilinear", "bicubic", "experimental",
     "neighbor", "area", "bicublin", "gauss", "sinc", "lanczos", "spline"
@@ -33,26 +33,26 @@ const wxString ALGORITHMS[ALGORITHM_COUNT] = {
 
 //---------------------------------------------------------------------------------------
 
-const size_t DITHER_COUNT = 6;
+const unsigned int DITHER_COUNT = 6;
 const wxString DITHERS[DITHER_COUNT] = {
     "auto", "none", "bayer", "ed", "a_dither", "x_dither"
 };
 
 //---------------------------------------------------------------------------------------
 
-const size_t INTERLACE_COUNT = 3;
+const unsigned int INTERLACE_COUNT = 3;
 const wxString INTERLACE[INTERLACE_COUNT] = { "0", "1", "-1" };
 
 //---------------------------------------------------------------------------------------
 
-const size_t COLOR_SPACE_COUNT = 5;
+const unsigned int COLOR_SPACE_COUNT = 5;
 const wxString COLOR_SPACES[COLOR_SPACE_COUNT] = {
    "auto", "bt709", "fcc", "bt601", "smpte240m"
 };
 
 //---------------------------------------------------------------------------------------
 
-const size_t SAMPLE_RANGE_COUNT = 3;
+const unsigned int SAMPLE_RANGE_COUNT = 3;
 const wxString SAMPLE_RANGES[SAMPLE_RANGE_COUNT] = {
    "auto", "jpeg/full/pc", "mpeg/tv"
 };
@@ -310,7 +310,7 @@ bool Scale::GetFilter(LPFFMPEG_FILTER fltr)
     );
 
     fltr->editable.Printf(
-        "%s:%s:%s:%u:%u:%s:%s:%s:%s:%u:%u:%u:%u:%u:%s",
+        "%s:%s:%s:%i:%i:%s:%s:%s:%s:%i:%i:%i:%i:%i:%s",
         width, height, BOOLSTR(m_Percent->GetValue()),
         m_Algorithm->GetSelection(), m_Dither->GetSelection(),
         BOOLSTR(m_AccurateRnd->GetValue()),

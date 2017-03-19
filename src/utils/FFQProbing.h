@@ -76,8 +76,8 @@ class FFProbeInfoParser
         ~FFProbeInfoParser();
         LPFFPROBE_STREAM_INFO FindStreamByCodecType(wxString codec_type);
         LPFFPROBE_FILE_FORMAT GetFormat();
-        LPFFPROBE_STREAM_INFO GetStreamInfo(size_t StreamIndex);
-        size_t GetStreamCount();
+        LPFFPROBE_STREAM_INFO GetStreamInfo(unsigned int StreamIndex);
+        unsigned int GetStreamCount();
         bool GetDuration(TIME_VALUE &Time);
         bool GetVideoDimension(unsigned int &Width, unsigned int &Height);
         bool GetVideoRate(double &rate);

@@ -26,7 +26,7 @@
 //---------------------------------------------------------------------------------------
 
 const wxString poles[] = { "1", "2" };
-const size_t BAND_WIDTH_TYPE_COUNT = 4;
+const unsigned int BAND_WIDTH_TYPE_COUNT = 4;
 const wxString WIDTH_TYPES[] = { "h", "q", "o", "s" };
 
 //---------------------------------------------------------------------------------------
@@ -105,7 +105,7 @@ void HighLowBandPass::SetFilter(LPFFMPEG_FILTER fltr)
 
     if (m_FilterType == ftLOWPASS) t = "500";
     else if ( (m_FilterType == ftHIGHPASS) || (m_FilterType == ftBANDPASS) || (m_FilterType == ftBANDREJECT) ) t = "3000";
-    else ThrowError(FFQSF(SID_BANDPASS_BAD_FILTERTYPE, (size_t)m_FilterType));
+    else ThrowError(FFQSF(SID_BANDPASS_BAD_FILTERTYPE, (unsigned int)m_FilterType));
 
     if (fs.Len() == 0) fs = t + ",0,2,0.707,1"; //Set default values
 

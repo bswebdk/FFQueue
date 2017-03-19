@@ -33,7 +33,7 @@
 									<object class="wxTextCtrl" name="ID_DESCRIPTION" variable="Description" member="yes">
 										<maxlength>100</maxlength>
 									</object>
-									<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+									<flag>wxALL|wxEXPAND</flag>
 									<border>3</border>
 									<option>1</option>
 								</object>
@@ -55,7 +55,7 @@
 												<maxlength>50</maxlength>
 												<style>wxTE_PASSWORD</style>
 											</object>
-											<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<flag>wxALL|wxEXPAND</flag>
 											<option>1</option>
 										</object>
 										<object class="sizeritem">
@@ -70,21 +70,21 @@
 											<object class="wxTextCtrl" name="ID_PASSWORD2" variable="Password2" member="yes">
 												<style>wxTE_PASSWORD</style>
 											</object>
-											<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<flag>wxALL|wxEXPAND</flag>
 											<option>1</option>
 										</object>
 									</object>
-									<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+									<flag>wxALL|wxEXPAND</flag>
 									<border>3</border>
 									<option>1</option>
 								</object>
 							</object>
-							<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+							<flag>wxALL|wxEXPAND</flag>
 							<border>3</border>
 							<option>1</option>
 						</object>
 					</object>
-					<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+					<flag>wxALL|wxEXPAND</flag>
 					<border>5</border>
 					<option>1</option>
 				</object>
@@ -93,7 +93,7 @@
 						<style>wxLC_REPORT|wxLC_SINGLE_SEL|wxLC_NO_SORT_HEADER</style>
 						<handler function="OnListViewItemSelect" entry="EVT_LIST_ITEM_SELECTED" />
 					</object>
-					<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+					<flag>wxALL|wxEXPAND</flag>
 					<border>5</border>
 					<option>1</option>
 				</object>
@@ -109,9 +109,9 @@
 								<object class="sizeritem">
 									<object class="wxTextCtrl" name="ID_STREDIT" variable="StrEdit" member="yes">
 										<size>-1,200</size>
-										<style>wxTE_AUTO_SCROLL|wxTE_PROCESS_ENTER|wxTE_MULTILINE|wxTE_DONTWRAP</style>
+										<style>wxTE_PROCESS_ENTER|wxTE_MULTILINE|wxTE_DONTWRAP</style>
 									</object>
-									<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+									<flag>wxALL|wxEXPAND</flag>
 									<border>3</border>
 									<option>1</option>
 								</object>
@@ -130,7 +130,7 @@
 							<option>1</option>
 						</object>
 					</object>
-					<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+					<flag>wxALL|wxEXPAND</flag>
 					<border>5</border>
 					<option>1</option>
 				</object>

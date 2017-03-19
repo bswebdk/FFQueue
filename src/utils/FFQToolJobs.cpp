@@ -32,6 +32,7 @@
 #include "../FFQPresetMgr.h"
 #include <wx/filename.h>
 #include <wx/file.h>
+#include <math.h>
 
 //---------------------------------------------------------------------------------------
 
@@ -54,6 +55,10 @@ const wxString CONCAT_MERGE_PADDING = "merge_padding";
 const wxString CONCAT_FLTR_KEY1 = "$F1$";
 const wxString CONCAT_FLTR_KEY2 = "$F2$";
 const wxString CONCAT_FIT_AND_PAD = "scale='if(gt(iw,ih),$W,-1)':'if(gt(ih,iw),$H,-1)',pad=$W:$H:(ow-iw)/2:(oh-ih)/2:$C";
+
+const wxString VID2GIF_SETTINGS = "vid2gif_settings";
+const unsigned int VID2GIF_ACCURACY = 5000; //5 seconds
+
 
 //VIDSTAB constants
 const wxString OPT_ALGOS[VIDSTAB_OPT_ALGO_COUNT] = { "gauss", "avg" };
@@ -404,7 +409,7 @@ bool FFQ_VIDSTAB_JOB::MakeCommands()
     {
 
         //Make 1st pass filter
-        p1.Printf("vidstabdetect=result=%s:shakiness=%u:accuracy=%u:stepsize=%u:mincontrast=%g:tripod=%u",
+        p1.Printf("vidstabdetect=result=%s:shakiness=%i:accuracy=%i:stepsize=%i:mincontrast=%g:tripod=%i",
                   trf_file, shakiness, accuracy, step_size, ((double)min_contrast / 100.0), tripod_frame);
         if (only_1st) p1 = p1 + ":show=" + (verbose ? "2" : "1");
 
@@ -425,8 +430,8 @@ bool FFQ_VIDSTAB_JOB::MakeCommands()
 
         //Make 2nd pass filter
         double ang = (double)max_angle * (3.14159265359 / 180.0);
-        p2.Printf("vidstabtransform=input=%s:smoothing=%u:optalgo=%s:maxshift=%i:maxangle=%g:crop=%s:invert=%u:" \
-                  "relative=%u:zoom=%i:optzoom=%u:zoomspeed=%g:interpol=%s:tripod=%u",
+        p2.Printf("vidstabtransform=input=%s:smoothing=%i:optalgo=%s:maxshift=%i:maxangle=%g:crop=%s:invert=%i:" \
+                  "relative=%i:zoom=%i:optzoom=%i:zoomspeed=%g:interpol=%s:tripod=%i",
                   trf_file, smoothing, OPT_ALGOS[opt_algo], max_shift, ang, crop_black ? "black" : "keep", invert_trf ? 1 : 0,
                   relative_trf ? 1 : 0, zoom, opt_zoom, ((double)zoom_speed / 100.0 * 5.0), INTERPOLATION_VALUES[interpolation],
                   virtual_tripod ? 1 : 0);
@@ -727,7 +732,7 @@ wxString FFQ_CONCAT_JOB::MakeConcatCmd()
     wxString s, fn;
     uint64_t cmd_len = 0;
 
-    for (size_t i = 0; i < inputs.Count(); i++)
+    for (unsigned int i = 0; i < inputs.Count(); i++)
     {
 
         //Get input file
@@ -1051,6 +1056,294 @@ void FFQ_CONCAT_JOB::Reset(bool load)
         merge_smap = GetValue(VIDSTAB_STREAM_MAP, merge_smap);
         preset = UNIQUE_ID(GetValue(VIDSTAB_PRESET, preset.ToString()));
         limit_len = TIME_VALUE(GetValue(VIDSTAB_DURATION, limit_len.ToString()));
+
+    }
+
+}
+
+//---------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------
+
+
+FFQ_VID2GIF_JOB::FFQ_VID2GIF_JOB() : FFQ_QUEUE_ITEM()
+{
+
+    //New empty job
+    Reset(false);
+
+}
+
+//---------------------------------------------------------------------------------------
+
+FFQ_VID2GIF_JOB::FFQ_VID2GIF_JOB(const FFQ_VID2GIF_JOB &copy_from) : FFQ_QUEUE_ITEM(copy_from)
+{
+
+    //Clone a job
+    Reset(false);
+
+    out = copy_from.out;
+    two_pass = copy_from.two_pass;
+    width = copy_from.width;
+    height = copy_from.height;
+    fps = copy_from.fps;
+    start_time = copy_from.start_time;
+    limit_len = copy_from.limit_len;
+
+}
+
+//---------------------------------------------------------------------------------------
+
+FFQ_VID2GIF_JOB::FFQ_VID2GIF_JOB(wxString from) : FFQ_QUEUE_ITEM(from)
+{
+
+    //Load a job
+    Reset(true);
+
+}
+
+//---------------------------------------------------------------------------------------
+
+void FFQ_VID2GIF_JOB::Cleanup()
+{
+
+    //Remove temp files
+    if (wxFileExists(m_PaletteFile))
+    {
+
+        wxRemoveFile(m_PaletteFile);
+        m_PaletteFile.Clear();
+
+    }
+
+}
+
+//---------------------------------------------------------------------------------------
+
+bool FFQ_VID2GIF_JOB::GetLogFileName(wxString &name)
+{
+
+    //Set correct log file name
+    name = save_log ? MakeLogFileName(out) : "";
+    return name.Len() > 0;
+
+}
+
+//---------------------------------------------------------------------------------------
+
+wxString FFQ_VID2GIF_JOB::ToString()
+{
+
+    //return string representation of job for storing
+    wxString s;
+    s.Printf("%u,%u,%u,%s,%s," + UINT64FMT + "," + UINT64FMT,
+             (unsigned int)width, (unsigned int)height, (unsigned int)fps,
+             BOOLSTR(two_pass), BOOLSTR(precise_cuts),
+             start_time.ToMilliseconds(),
+             limit_len.ToMilliseconds()
+             );
+
+    SetValue(VID2GIF_SETTINGS, s);
+    SetValue(VIDSTAB_OUTPUT, out);
+
+    return FFQ_QUEUE_ITEM::ToString();
+
+}
+
+//---------------------------------------------------------------------------------------
+
+void appendFilter(wxString &appendTo, wxString append)
+{
+    if (append.Len() > 0)
+    {
+        if (appendTo.Len() > 0) appendTo += "," + append;
+        else appendTo = append;
+    }
+}
+
+wxString FFQ_VID2GIF_JOB::GetCommandAtIndex(int index)
+{
+
+    //Return the command at the specified index
+
+    //Check if requested command exists
+    if (index > (two_pass ? 1 : 0))
+    {
+
+        //Set as done and return empty string
+        status = qsDONE;
+        return "";
+
+    }
+
+    //Calculate values used to generate -ss argument and select filter
+    uint64_t st_ms = start_time.ToMilliseconds(), //start time millis
+             len_ms = limit_len.ToMilliseconds(), //limit length millis
+             ss_ms = 0; //value for the -ss argument
+
+    if (precise_cuts && (st_ms > VID2GIF_ACCURACY))
+    {
+
+        //If the -ss argument is > VID2GIF_ACCURACY then we
+        //adjust -ss to start_time - VID2GIF_ACCURACY and set
+        //the filter start to VID2GIF_ACCURACY
+        ss_ms = st_ms - VID2GIF_ACCURACY;
+        st_ms = VID2GIF_ACCURACY;
+
+    }
+
+    //Create the -ss argument
+    wxString res = "";
+    if (precise_cuts && (ss_ms > 0)) res = "-ss " + TIME_VALUE(ss_ms).ToShortString() + " ";
+    else if ((!precise_cuts) && (st_ms > 0)) res = "-ss " + start_time.ToShortString() + " ";
+
+    //Frame rate and frame count in GIF
+    double frate = (fps > 0) ? fps : Str2Float(GetInput(0).framerate, 0), fcount;
+
+    //Append input to command
+    res += "-i \"" + GetInput(0).path + "\" ";
+
+    //Create the required filters, select first
+    wxString filters = "";
+
+    if (st_ms > 0)
+    {
+
+        if (len_ms > 0)
+        {
+
+            //We have a cut at start and end
+            if (precise_cuts) filters = EscapeFilterString("between(t," + TIME_VALUE(st_ms).ToShortString() + "," + TIME_VALUE(st_ms+len_ms).ToShortString() + ")");
+            fcount = frate * len_ms / 1000;
+
+        }
+
+        else
+        {
+            //We only have a cut at the beginning
+            if (precise_cuts) filters = EscapeFilterString("gte(t," + TIME_VALUE(st_ms).ToShortString() + ")");
+            fcount = frate * (GetInput(0).duration.ToMilliseconds() - st_ms) / 1000;
+        }
+
+    }
+
+    else if (len_ms > 0)
+    {
+
+        //We only have a cut at the end
+        if (precise_cuts) filters = EscapeFilterString("lte(t," + TIME_VALUE(len_ms).ToShortString() + ")");
+        fcount = frate * len_ms / 1000;
+
+    }
+
+    else
+    {
+
+        //Convert entire video
+        fcount = frate * GetInput(0).duration.ToMilliseconds() / 1000;
+
+    }
+
+    //For some odd reason ffmpeg does not stop encoding after the selected (filter:select)
+    //has elapsed. In order to force the encoding to terminate properly we are specifing
+    //-vframes as a truncated value of fcount which will also be the length of the job
+    fcount = truncf(fcount);
+    wxString vframes = (fcount > 0) ? wxString::Format("-vframes %i ", froundi(fcount)) : "";
+
+    //Create the -t argument if no precise cuts /*and no vframes*/
+    wxString t = (precise_cuts/* || (fcount > 0)*/) ? "" : "-t " + limit_len.ToShortString() + " ";
+
+    //Finalize the select filter
+    if (filters.Len() > 0) filters = "select=" + filters;
+
+    //Append the fps filter if required
+    if (fps > 0) appendFilter(filters, wxString::Format("fps=%u", fps));
+
+    //Append the scale filter if required
+    if ((width > 0) || (height > 0))
+        appendFilter(filters, wxString::Format("scale=%i:%i:flags=lanczos", width==0?-1:width, height==0?-1:height));
+
+    if (index == 0)
+    {
+
+        //add no audio and video filter
+        res += "-an -vf \"";
+
+        if (two_pass)
+        {
+
+            //Make name for palette image generated in first pass
+            if (m_PaletteFile.Len() == 0) m_PaletteFile = FFQCFG()->GetTmpPath(out, false, "png");
+
+            //Append filter to generate palette
+            appendFilter(filters, "palettegen");
+
+            //Finish the first pass command
+            res += filters + "\" " + t + "-y \"" + m_PaletteFile + "\"";
+
+            //Status as first pass
+            status = qsPASS1;
+
+        }
+
+        else
+        {
+
+            //Finish the simple one pass command
+            res += filters + "\" " + vframes + t + "-y \"" + out + "\"";
+
+            //Status as active
+            status = qsACTIVE;
+
+        }
+
+    }
+
+    else
+    {
+
+        //Finish the second pass command
+        res += "-i \"" + m_PaletteFile + "\" -an -filter_complex \"[0:v]" + filters + "[VID];[VID][1]paletteuse\" " + vframes + t + "-y \"" + out + "\"";
+
+        //Status as second pass
+        status = qsPASS2;
+
+    }
+
+    //Return num_frames,command
+    return wxString::Format("%i,%s", froundi(fcount), res);
+
+}
+
+//---------------------------------------------------------------------------------------
+
+void FFQ_VID2GIF_JOB::Reset(bool load)
+{
+
+    //Reset to default values and load values if required
+
+    out.Clear();
+    width = 100;
+    height = 0;
+    fps = 10;
+    two_pass = true;
+    precise_cuts = true;
+    start_time = 0;
+    limit_len = 0;
+
+    if (load)
+    {
+
+        wxString s = GetValue(VID2GIF_SETTINGS);
+        width = Str2Long(GetToken(s, ",", true), width);
+        height = Str2Long(GetToken(s, ",", true), height);
+        fps = Str2Long(GetToken(s, ",", true), fps);
+        two_pass = STRBOOLDEF(GetToken(s, ",", true), two_pass);
+        precise_cuts = STRBOOLDEF(GetToken(s, ",", true), precise_cuts);
+        start_time = Str2LongLong(GetToken(s, ",", true), start_time.ToMilliseconds());
+        limit_len = Str2LongLong(GetToken(s, ",", true), limit_len.ToMilliseconds());
+        out = GetValue(VIDSTAB_OUTPUT);
 
     }
 

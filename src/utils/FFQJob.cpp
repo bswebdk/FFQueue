@@ -123,7 +123,7 @@ TIME_VALUE FFQ_JOB::Duration()
     {
 
         //Find first valid duration of input file
-        for (size_t i = 0; i < inputs.Count(); i++)
+        for (unsigned int i = 0; i < inputs.Count(); i++)
         {
 
             FFQ_INPUT_FILE inf = FFQ_INPUT_FILE(inputs[i]);
@@ -156,6 +156,17 @@ LPFFQ_PRESET FFQ_JOB::GetPreset()
 
     //Return the preset indicated by preset_id
     return FFQPresetMgr::Get()->GetPreset(preset_id.ToString());
+
+}
+
+//---------------------------------------------------------------------------------------
+
+wxString FFQ_JOB::GetPreviewCommand()
+{
+
+    //Return a preview command
+    long ep = 0;
+    return BuildCommandLine(this, ep, true);
 
 }
 

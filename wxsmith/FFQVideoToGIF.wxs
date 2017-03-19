@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<wxsmith>
+	<object class="wxDialog" name="FFQVideoToGIF">
+		<id_arg>0</id_arg>
+		<object class="wxFlexGridSizer" variable="FGS1" member="no">
+			<cols>1</cols>
+			<rows>4</rows>
+			<growablecols>0</growablecols>
+			<object class="sizeritem">
+				<object class="wxStaticBoxSizer" variable="SBS1" member="no">
+					<label>SV</label>
+					<object class="sizeritem">
+						<object class="wxFlexGridSizer" variable="TopSizer" member="yes">
+							<cols>2</cols>
+							<rows>3</rows>
+							<growablecols>0</growablecols>
+							<object class="sizeritem">
+								<object class="wxTextCtrl" name="ID_SOURCE" variable="Source" member="yes">
+									<minsize>400,-1</minsize>
+									<extra_code>SBS1-&gt;GetStaticBox()-&gt;SetLabel(FFQS(SID__COMMON__SELECT__INPUT__FILE));</extra_code>
+								</object>
+								<flag>wxALL|wxEXPAND</flag>
+								<option>1</option>
+							</object>
+							<object class="sizeritem">
+								<object class="wxButton" name="ID_BROWSESRC" variable="BrowseSrc" member="yes">
+									<label>...</label>
+									<size>50,-1</size>
+									<handler function="OnAction" entry="EVT_BUTTON" />
+								</object>
+								<flag>wxLEFT|wxEXPAND</flag>
+								<border>3</border>
+								<option>1</option>
+							</object>
+							<object class="sizeritem">
+								<object class="wxStaticText" name="ID_FILEINFO" variable="FileInfo" member="yes">
+									<label>Inf</label>
+								</object>
+								<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+								<option>1</option>
+							</object>
+							<object class="spacer">
+								<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<border>5</border>
+								<option>1</option>
+								<size>20,10</size>
+							</object>
+							<object class="sizeritem">
+								<object class="wxHyperlinkCtrl" name="ID_STARTTIME" variable="StartTime" member="yes">
+									<label>St</label>
+									<style>wxHL_ALIGN_CENTRE|wxNO_BORDER</style>
+									<handler function="OnAction" entry="EVT_HYPERLINK" />
+								</object>
+								<flag>wxTOP|wxBOTTOM</flag>
+								<border>5</border>
+								<option>1</option>
+							</object>
+							<object class="spacer">
+								<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<option>1</option>
+								<size>20,10</size>
+							</object>
+						</object>
+						<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<option>1</option>
+					</object>
+				</object>
+				<flag>wxALL|wxEXPAND</flag>
+				<border>3</border>
+				<option>1</option>
+			</object>
+			<object class="sizeritem">
+				<object class="wxStaticBoxSizer" variable="SBS3" member="no">
+					<label>Prop</label>
+					<orient>wxVERTICAL</orient>
+					<object class="sizeritem">
+						<object class="wxFlexGridSizer" variable="MidSizer" member="yes">
+							<cols>1</cols>
+							<rows>4</rows>
+							<growablecols>0</growablecols>
+							<object class="sizeritem">
+								<object class="wxFlexGridSizer" variable="FGS2" member="no">
+									<cols>6</cols>
+									<rows>3</rows>
+									<object class="sizeritem">
+										<object class="wxStaticText" name="wxID_ANY" variable="ST7" member="yes">
+											<label>w</label>
+											<extra_code>SBS3-&gt;GetStaticBox()-&gt;SetLabel(FFQS(SID__VIDEO2GIF__PROPERTIES));&#x0A;ST7-&gt;SetLabel(FFQS(SID__VIDEO2GIF__WIDTH));</extra_code>
+										</object>
+										<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+										<border>5</border>
+										<option>1</option>
+									</object>
+									<object class="sizeritem">
+										<object class="wxTextCtrl" name="ID_WIDTH" variable="Width" member="yes">
+											<size>50,-1</size>
+										</object>
+										<flag>wxRIGHT|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+										<border>5</border>
+										<option>1</option>
+									</object>
+									<object class="sizeritem">
+										<object class="wxStaticText" name="wxID_ANY" variable="ST8" member="yes">
+											<label>h</label>
+											<extra_code>ST8-&gt;SetLabel(FFQS(SID__VIDEO2GIF__HEIGHT));</extra_code>
+										</object>
+										<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+										<border>5</border>
+										<option>1</option>
+									</object>
+									<object class="sizeritem">
+										<object class="wxTextCtrl" name="ID_HEIGHT" variable="Height" member="yes">
+											<size>50,-1</size>
+										</object>
+										<flag>wxRIGHT|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+										<border>5</border>
+										<option>1</option>
+									</object>
+									<object class="sizeritem">
+										<object class="wxStaticText" name="wxID_ANY" variable="ST9" member="yes">
+											<label>Fr</label>
+											<extra_code>ST9-&gt;SetLabel(FFQS(SID__PRESET__FRAMERATE));</extra_code>
+										</object>
+										<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+										<border>3</border>
+										<option>1</option>
+									</object>
+									<object class="sizeritem">
+										<object class="wxTextCtrl" name="ID_FRAMERATE" variable="FrameRate" member="yes">
+											<size>50,-1</size>
+										</object>
+										<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+										<border>3</border>
+										<option>1</option>
+									</object>
+								</object>
+								<flag>wxALL|wxEXPAND</flag>
+								<border>3</border>
+								<option>1</option>
+							</object>
+							<object class="sizeritem">
+								<object class="wxCheckBox" name="ID_TWOPASS" variable="TwoPass" member="yes">
+									<label>Tp</label>
+									<extra_code>TwoPass-&gt;SetLabel(FFQS(SID__VIDEO2GIF__TWOPASS));</extra_code>
+								</object>
+								<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+								<border>3</border>
+								<option>1</option>
+							</object>
+							<object class="sizeritem">
+								<object class="wxCheckBox" name="ID_PRECISECUTS" variable="PreciseCuts" member="yes">
+									<label>Pc</label>
+									<extra_code>PreciseCuts-&gt;SetLabel(FFQS(SID__VIDEO2GIF__PRECISE__CUTS));</extra_code>
+								</object>
+								<flag>wxBOTTOM|wxLEFT|wxRIGHT|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+								<border>3</border>
+								<option>1</option>
+							</object>
+							<object class="sizeritem">
+								<object class="wxHyperlinkCtrl" name="ID_LIMITLEN" variable="LimitLen" member="yes">
+									<label>Len</label>
+									<handler function="OnAction" entry="EVT_HYPERLINK" />
+								</object>
+								<flag>wxALL|wxALIGN_LEFT</flag>
+								<border>3</border>
+								<option>1</option>
+							</object>
+						</object>
+						<flag>wxALL|wxEXPAND</flag>
+						<option>1</option>
+					</object>
+				</object>
+				<flag>wxALL|wxEXPAND</flag>
+				<border>3</border>
+				<option>1</option>
+			</object>
+			<object class="sizeritem">
+				<object class="wxStaticBoxSizer" variable="SBS2" member="no">
+					<label>DF</label>
+					<orient>wxVERTICAL</orient>
+					<object class="sizeritem">
+						<object class="wxFlexGridSizer" variable="FGS3" member="no">
+							<cols>2</cols>
+							<rows>1</rows>
+							<growablecols>0</growablecols>
+							<object class="sizeritem">
+								<object class="wxTextCtrl" name="ID_DEST" variable="Dest" member="yes">
+									<extra_code>SBS2-&gt;GetStaticBox()-&gt;SetLabel(FFQS(SID__COMMON__SELECT__OUTPUT__FILE));</extra_code>
+								</object>
+								<flag>wxRIGHT|wxEXPAND</flag>
+								<border>5</border>
+								<option>1</option>
+							</object>
+							<object class="sizeritem">
+								<object class="wxButton" name="ID_BROWSEDST" variable="BrowseDst" member="yes">
+									<label>...</label>
+									<size>50,-1</size>
+									<handler function="OnAction" entry="EVT_BUTTON" />
+								</object>
+								<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<option>1</option>
+							</object>
+						</object>
+						<flag>wxALL|wxEXPAND</flag>
+						<option>1</option>
+					</object>
+					<object class="sizeritem">
+						<object class="wxCheckBox" name="ID_SAVELOG" variable="SaveLog" member="yes">
+							<label>Log</label>
+							<extra_code>SaveLog-&gt;SetLabel(FFQS(SID__COMMON__SAVE__LOG));</extra_code>
+						</object>
+						<flag>wxALL</flag>
+						<option>1</option>
+					</object>
+				</object>
+				<flag>wxALL|wxEXPAND</flag>
+				<border>3</border>
+				<option>1</option>
+			</object>
+			<object class="sizeritem">
+				<object class="wxBoxSizer" variable="BS1" member="no">
+					<object class="spacer">
+						<flag>wxALL|wxEXPAND</flag>
+						<border>3</border>
+						<option>1</option>
+					</object>
+					<object class="spacer">
+						<flag>wxALL|wxEXPAND</flag>
+						<border>3</border>
+						<option>1</option>
+					</object>
+					<object class="sizeritem">
+						<object class="wxButton" name="ID_OKBTN" variable="OkBtn" member="yes">
+							<label>Y</label>
+							<default>1</default>
+							<extra_code>OkBtn-&gt;SetLabel(FFQS(SID__COMMON__OK));</extra_code>
+							<handler function="OnAction" entry="EVT_BUTTON" />
+						</object>
+						<flag>wxALL|wxALIGN_CENTER_VERTICAL</flag>
+						<border>3</border>
+						<option>1</option>
+					</object>
+					<object class="sizeritem">
+						<object class="wxButton" name="ID_NOBTN" variable="NoBtn" member="yes">
+							<label>N</label>
+							<extra_code>NoBtn-&gt;SetLabel(FFQS(SID__COMMON__CANCEL));</extra_code>
+							<handler function="OnAction" entry="EVT_BUTTON" />
+						</object>
+						<flag>wxALL|wxALIGN_CENTER_VERTICAL</flag>
+						<border>3</border>
+						<option>1</option>
+					</object>
+				</object>
+				<flag>wxALL|wxEXPAND</flag>
+				<border>3</border>
+				<option>1</option>
+			</object>
+		</object>
+		<object class="wxFileDialog" variable="OpenFile" member="yes">
+			<extra_code>OpenFile-&gt;SetMessage(FFQS(SID__COMMON__SELECT__INPUT__FILE));&#x0A;</extra_code>
+			<style>wxFD_OPEN|wxFD_FILE_MUST_EXIST</style>
+		</object>
+		<object class="wxFileDialog" variable="SaveFile" member="yes">
+			<extra_code>SaveFile-&gt;SetMessage(FFQS(SID__COMMON__SELECT__OUTPUT__FILE));&#x0A;</extra_code>
+			<style>wxFD_SAVE</style>
+		</object>
+	</object>
+</wxsmith>

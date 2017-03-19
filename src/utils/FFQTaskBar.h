@@ -58,7 +58,7 @@ class FFQTaskBar
         TASKBAR_STATE GetTaskBarState();
         void SetTaskBarState(TASKBAR_STATE state);
         void SetTaskBarProgress(unsigned char percent_done);
-        void SetTaskBarProgress(size_t position, size_t total);
+        void SetTaskBarProgress(unsigned int position, unsigned int total);
 
     protected:
 

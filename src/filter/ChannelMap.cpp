@@ -50,7 +50,7 @@ const unsigned short CH_SDL     = 22; //Surround direct left
 const unsigned short CH_SDR     = 23; //Surround direct right
 const unsigned short CH_LFE2    = 24; //Low frequency 2
 
-const size_t CHANNEL_COUNT = 25;
+const unsigned int CHANNEL_COUNT = 25;
 
 //---------------------------------------------------------------------------------------
 
@@ -85,7 +85,7 @@ const wxString CHANNEL_NAMES[CHANNEL_COUNT] = {
 //---------------------------------------------------------------------------------------
 
 //Channels layout strings are [layout name] space [2-digit channel id numbers from above]
-const size_t CHANNEL_LAYOUT_COUNT = 26;
+const unsigned int CHANNEL_LAYOUT_COUNT = 26;
 const wxString CHANNEL_LAYOUTS[CHANNEL_LAYOUT_COUNT] = {
                 "Mono 02", //FC
                 "Stereo 0001", //FL+FR
@@ -122,7 +122,7 @@ wxChoice* MakeChSel(wxWindow *parent, size_t srcChannel)
     wxChoice *res = new wxChoice(parent, wxID_ANY);
     res->Freeze();
     res->SetClientData((void*)srcChannel);
-    for (size_t i = 0; i < CHANNEL_COUNT; i++) res->Append(CHANNEL_NAMES[i].AfterFirst(' '));
+    for (unsigned int i = 0; i < CHANNEL_COUNT; i++) res->Append(CHANNEL_NAMES[i].AfterFirst(' '));
     res->SetSelection(srcChannel);
     res->Thaw();
     return res;
@@ -138,7 +138,7 @@ ChannelMap::ChannelMap(wxWindow* parent) : FilterBasePanel(parent)
     memset(usedChannels, 0, sizeof(bool) * CHANNEL_COUNT);
     int usedCount = 0, idx;
 
-    for (size_t i = 0; i < CHANNEL_LAYOUT_COUNT; i++)
+    for (unsigned int i = 0; i < CHANNEL_LAYOUT_COUNT; i++)
     {
         wxString s = CHANNEL_LAYOUTS[i];
         GetToken(s, " "); //Remove layout name
@@ -165,7 +165,7 @@ ChannelMap::ChannelMap(wxWindow* parent) : FilterBasePanel(parent)
 
         MakeLabel(FFQS(SID_CHMAP_CHANNEL_LAYOUT), fgs2);
         m_Layout = new wxChoice(this, 1);
-        for (size_t i = 0; i < CHANNEL_LAYOUT_COUNT; i++)
+        for (unsigned int i = 0; i < CHANNEL_LAYOUT_COUNT; i++)
         {
             wxString s = CHANNEL_LAYOUTS[i];
             m_Layout->Append(GetToken(s, ' '));
@@ -185,7 +185,7 @@ ChannelMap::ChannelMap(wxWindow* parent) : FilterBasePanel(parent)
         m_Remappings->Add(-1, 5, 1);
         m_Remappings->Add(-1, 5, 1);
 
-        for (size_t i = 0; i < CHANNEL_COUNT; i++) if (usedChannels[i])
+        for (unsigned int i = 0; i < CHANNEL_COUNT; i++) if (usedChannels[i])
         {
             MakeLabel(CHANNEL_NAMES[i].AfterFirst(' '), m_Remappings);
             m_Remappings->Add(10, -1, 1);
@@ -227,7 +227,7 @@ void ChannelMap::SetFilter(LPFFMPEG_FILTER fltr)
     EnableRemappings(m_Layout->GetSelection());
 
     wxChoice *ch;
-    size_t chId, mapTo;
+    unsigned int chId, mapTo;
 
     while (fs.Len() > 0)
     {
@@ -252,7 +252,7 @@ bool ChannelMap::GetFilter(LPFFMPEG_FILTER fltr)
 
     fltr->friendly = FFQSF(SID_CHMAP_USERFRIENDLY, FFQL()->FILTER_NAMES[fltr->type], user);
     fltr->ff_filter.Printf("%schannelmap=map=%s:channel_layout=%s%s", FILTER_AUDIO_IN, ffmpeg, m_Layout->GetStringSelection().Lower(), FILTER_AUDIO_OUT);
-    fltr->editable.Printf("%d,%s", m_Layout->GetSelection(), GetRemappings(false));
+    fltr->editable.Printf("%i,%s", m_Layout->GetSelection(), GetRemappings(false));
 
     return true;
 
@@ -276,7 +276,7 @@ void ChannelMap::EnableRemappings(wxString channelList)
     wxChoice *ch;
     wxStaticText *st;
 
-    for (size_t i = 0; i < GetChannelCount(); i++)
+    for (unsigned int i = 0; i < GetChannelCount(); i++)
     {
         GetChannelCtrls(i, &st, &ch);
         st->Enable(false);
@@ -299,11 +299,11 @@ void ChannelMap::EnableRemappings(wxString channelList)
 
 //---------------------------------------------------------------------------------------
 
-bool ChannelMap::FindChannelCtrls(size_t channelId, wxStaticText **label, wxChoice **choice)
+bool ChannelMap::FindChannelCtrls(unsigned int channelId, wxStaticText **label, wxChoice **choice)
 {
     wxChoice *ch;
     wxStaticText *st;
-    for (size_t i = 0; i < GetChannelCount(); i++)
+    for (unsigned int i = 0; i < GetChannelCount(); i++)
     {
         GetChannelCtrls(i, &st, &ch);
         if ((size_t)ch->GetClientData() == channelId)
@@ -318,16 +318,16 @@ bool ChannelMap::FindChannelCtrls(size_t channelId, wxStaticText **label, wxChoi
 
 //---------------------------------------------------------------------------------------
 
-size_t ChannelMap::GetChannelCount()
+unsigned int ChannelMap::GetChannelCount()
 {
     return m_Remappings->GetRows() - 2; //Headers and spacers subtracted
 }
 
 //---------------------------------------------------------------------------------------
 
-void ChannelMap::GetChannelCtrls(size_t channelIndex, wxStaticText **label, wxChoice **choice)
+void ChannelMap::GetChannelCtrls(unsigned int channelIndex, wxStaticText **label, wxChoice **choice)
 {
-    size_t ctrlOffs = (channelIndex + 2) * 3;
+    unsigned int ctrlOffs = (channelIndex + 2) * 3;
     if (label) *label = (wxStaticText*)m_Remappings->GetItem(ctrlOffs)->GetWindow();
     if (choice) *choice = (wxChoice*)m_Remappings->GetItem(ctrlOffs + 2)->GetWindow();
 }
@@ -340,7 +340,7 @@ wxString ChannelMap::GetRemappings(bool forFFMpeg)
     wxString res = "";
     wxChoice *ch;
 
-    for (size_t i = 0; i < GetChannelCount(); i++)
+    for (unsigned int i = 0; i < GetChannelCount(); i++)
     {
 
         GetChannelCtrls(i, NULL, &ch);
@@ -348,7 +348,7 @@ wxString ChannelMap::GetRemappings(bool forFFMpeg)
         if (ch->IsEnabled())
         {
 
-            size_t chId = (size_t)ch->GetClientData(), mapTo = (size_t)ch->GetSelection();
+            unsigned int chId = (size_t)ch->GetClientData(), mapTo = (unsigned int)ch->GetSelection();
 
             if (forFFMpeg)
             {

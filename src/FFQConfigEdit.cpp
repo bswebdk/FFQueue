@@ -30,8 +30,8 @@
 
 #ifndef WX_PRECOMP
 	//(*InternalHeadersPCH(FFQConfigEdit)
-	#include <wx/intl.h>
 	#include <wx/string.h>
+	#include <wx/intl.h>
 	//*)
 #endif
 //(*InternalHeaders(FFQConfigEdit)
@@ -50,6 +50,7 @@ const long FFQConfigEdit::ID_CUSTOMTEMP = wxNewId();
 const long FFQConfigEdit::ID_BROWSETEMP = wxNewId();
 const long FFQConfigEdit::ID_SECONDFILEEXTS = wxNewId();
 const long FFQConfigEdit::ID_CONSOLECMD = wxNewId();
+const long FFQConfigEdit::ID_CHECKLIST = wxNewId();
 const long FFQConfigEdit::ID_LANGBUTTON = wxNewId();
 const long FFQConfigEdit::ID_OKBUTTON = wxNewId();
 const long FFQConfigEdit::ID_CANCELBUTTON = wxNewId();
@@ -65,19 +66,18 @@ END_EVENT_TABLE()
 FFQConfigEdit::FFQConfigEdit(wxWindow* parent,wxWindowID id)
 {
 	//(*Initialize(FFQConfigEdit)
+	wxFlexGridSizer* FlexGridSizer1;
 	wxStaticBoxSizer* SBS1;
+	wxFlexGridSizer* FlexGridSizer2;
+	wxStaticBoxSizer* SBS2;
+	wxStaticBoxSizer* SBS4;
+	wxBoxSizer* BoxSizer2;
 	wxFlexGridSizer* FlexGridSizer4;
 	wxStaticBoxSizer* SBS3;
-	wxStaticBoxSizer* SBS5;
-	wxFlexGridSizer* FlexGridSizer3;
-	wxFlexGridSizer* FlexGridSizer5;
-	wxFlexGridSizer* FlexGridSizer2;
-	wxBoxSizer* BoxSizer2;
-	wxStaticBoxSizer* SBS4;
-	wxBoxSizer* BoxSizer1;
 	wxFlexGridSizer* FlexGridSizer6;
-	wxFlexGridSizer* FlexGridSizer1;
-	wxStaticBoxSizer* SBS2;
+	wxBoxSizer* BoxSizer1;
+	wxStaticBoxSizer* SBS5;
+	wxFlexGridSizer* FlexGridSizer5;
 
 	Create(parent, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE, _T("wxID_ANY"));
 	FlexGridSizer1 = new wxFlexGridSizer(7, 1, 0, 0);
@@ -88,23 +88,23 @@ FFQConfigEdit::FFQConfigEdit(wxWindow* parent,wxWindowID id)
 	FlexGridSizer2->AddGrowableCol(0);
 	FFMpegPath = new wxTextCtrl(this, ID_FFMPEGPATH, wxEmptyString, wxDefaultPosition, wxSize(420,-1), 0, wxDefaultValidator, _T("ID_FFMPEGPATH"));
 	SBS1->GetStaticBox()->SetLabel(FFQS(SID_OPTIONS_FFMPEG_PATH));
-	FlexGridSizer2->Add(FFMpegPath, 0, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
+	FlexGridSizer2->Add(FFMpegPath, 0, wxALL|wxEXPAND, 0);
 	FlexGridSizer2->Add(5,-1,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
 	BrowseFFMpeg = new wxButton(this, ID_BROWSEFFMPEG, _("..."), wxDefaultPosition, wxSize(50,-1), 0, wxDefaultValidator, _T("ID_BROWSEFFMPEG"));
 	FlexGridSizer2->Add(BrowseFFMpeg, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
-	SBS1->Add(FlexGridSizer2, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
-	FlexGridSizer1->Add(SBS1, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+	SBS1->Add(FlexGridSizer2, 1, wxALL|wxEXPAND, 3);
+	FlexGridSizer1->Add(SBS1, 1, wxALL|wxEXPAND, 3);
 	SBS4 = new wxStaticBoxSizer(wxVERTICAL, this, _("Playr"));
 	FlexGridSizer5 = new wxFlexGridSizer(1, 3, 0, 0);
 	FlexGridSizer5->AddGrowableCol(0);
 	CustPlayer = new wxTextCtrl(this, ID_CUSTPLAYER, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CUSTPLAYER"));
 	SBS4->GetStaticBox()->SetLabel(FFQS(SID_OPTIONS_CUSTOM_PLAYER));
-	FlexGridSizer5->Add(CustPlayer, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
+	FlexGridSizer5->Add(CustPlayer, 1, wxALL|wxEXPAND, 0);
 	FlexGridSizer5->Add(5,-1,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
 	BrowseCustPlayer = new wxButton(this, ID_BROWSECUSTPLAYER, _("..."), wxDefaultPosition, wxSize(50,-1), 0, wxDefaultValidator, _T("ID_BROWSECUSTPLAYER"));
 	FlexGridSizer5->Add(BrowseCustPlayer, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
-	SBS4->Add(FlexGridSizer5, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
-	FlexGridSizer1->Add(SBS4, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+	SBS4->Add(FlexGridSizer5, 1, wxALL|wxEXPAND, 3);
+	FlexGridSizer1->Add(SBS4, 1, wxALL|wxEXPAND, 3);
 	SBS2 = new wxStaticBoxSizer(wxHORIZONTAL, this, _("Tp"));
 	FlexGridSizer4 = new wxFlexGridSizer(2, 1, 0, 0);
 	FlexGridSizer4->AddGrowableCol(0);
@@ -124,77 +124,47 @@ FFQConfigEdit::FFQConfigEdit(wxWindow* parent,wxWindowID id)
 	TempPathRadioPanel->SetSizer(BoxSizer1);
 	BoxSizer1->Fit(TempPathRadioPanel);
 	BoxSizer1->SetSizeHints(TempPathRadioPanel);
-	FlexGridSizer4->Add(TempPathRadioPanel, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+	FlexGridSizer4->Add(TempPathRadioPanel, 1, wxALL|wxEXPAND, 3);
 	FlexGridSizer6 = new wxFlexGridSizer(1, 3, 0, 0);
 	FlexGridSizer6->AddGrowableCol(0);
 	FlexGridSizer6->AddGrowableRow(0);
 	CustomTemp = new wxTextCtrl(this, ID_CUSTOMTEMP, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CUSTOMTEMP"));
-	FlexGridSizer6->Add(CustomTemp, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
+	FlexGridSizer6->Add(CustomTemp, 1, wxALL|wxEXPAND, 0);
 	FlexGridSizer6->Add(3,0,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
 	BrowseTemp = new wxButton(this, ID_BROWSETEMP, _("..."), wxDefaultPosition, wxSize(50,-1), 0, wxDefaultValidator, _T("ID_BROWSETEMP"));
 	FlexGridSizer6->Add(BrowseTemp, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
-	FlexGridSizer4->Add(FlexGridSizer6, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+	FlexGridSizer4->Add(FlexGridSizer6, 1, wxALL|wxEXPAND, 3);
 	SBS2->Add(FlexGridSizer4, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
-	FlexGridSizer1->Add(SBS2, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+	FlexGridSizer1->Add(SBS2, 1, wxALL|wxEXPAND, 3);
 	SBS3 = new wxStaticBoxSizer(wxVERTICAL, this, _("2exts"));
 	SecondFileExts = new wxTextCtrl(this, ID_SECONDFILEEXTS, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_SECONDFILEEXTS"));
 	SBS3->GetStaticBox()->SetLabel(FFQS(SID_OPTIONS_FIND_2ND_INPUT_EXTS));
-	SBS3->Add(SecondFileExts, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
-	FlexGridSizer1->Add(SBS3, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+	SBS3->Add(SecondFileExts, 1, wxALL|wxEXPAND, 3);
+	FlexGridSizer1->Add(SBS3, 1, wxALL|wxEXPAND, 3);
 	SBS5 = new wxStaticBoxSizer(wxHORIZONTAL, this, _("Ccc"));
 	ConsoleCmd = new wxTextCtrl(this, ID_CONSOLECMD, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CONSOLECMD"));
 	SBS5->GetStaticBox()->SetLabel(FFQS(SID_OPTIONS_CUSTOM_CONSOLE_CMD));
-	SBS5->Add(ConsoleCmd, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
-	FlexGridSizer1->Add(SBS5, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
-	FlexGridSizer3 = new wxFlexGridSizer(8, 2, 5, 0);
-	FlexGridSizer3->AddGrowableCol(1);
-	FlexGridSizer3->AddGrowableRow(0);
-	FlexGridSizer3->Add(5,5,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
-	SaveOnExit = new wxCheckBox(this, wxID_ANY, _("Sox"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("wxID_ANY"));
-	SaveOnExit->SetValue(false);
-	SaveOnExit->SetLabel(FFQS(SID_OPTIONS_SAVE_JOBS_ON_EXIT));
-	FlexGridSizer3->Add(SaveOnExit, 0, wxEXPAND|wxALIGN_LEFT|wxALIGN_TOP, 0);
-	FlexGridSizer3->Add(5,5,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
-	AutoRemove = new wxCheckBox(this, wxID_ANY, _("Ar"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("wxID_ANY"));
-	AutoRemove->SetValue(false);
-	AutoRemove->SetLabel(FFQS(SID_OPTIONS_REMOVE_FINISHED_JOBS));
-	FlexGridSizer3->Add(AutoRemove, 0, wxEXPAND|wxALIGN_LEFT|wxALIGN_TOP, 0);
-	FlexGridSizer3->Add(5,5,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
-	LimitStats = new wxCheckBox(this, wxID_ANY, _("Ls"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("wxID_ANY"));
-	LimitStats->SetValue(false);
-	LimitStats->SetLabel(FFQS(SID_OPTIONS_LIMIT_STATISTICS));
-	FlexGridSizer3->Add(LimitStats, 0, wxEXPAND|wxALIGN_LEFT|wxALIGN_TOP, 0);
-	FlexGridSizer3->Add(5,5,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
-	ShowBanner = new wxCheckBox(this, wxID_ANY, _("Sbi"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("wxID_ANY"));
-	ShowBanner->SetValue(false);
-	ShowBanner->SetLabel(FFQS(SID_OPTIONS_SHOW_BANNER_INFO));
-	FlexGridSizer3->Add(ShowBanner, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
-	FlexGridSizer3->Add(5,5,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
-	SaveWindowPos = new wxCheckBox(this, wxID_ANY, _("Swp"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("wxID_ANY"));
-	SaveWindowPos->SetValue(false);
-	SaveWindowPos->SetLabel(FFQS(SID_OPTIONS_SAVE_WINDOW_POS));
-	FlexGridSizer3->Add(SaveWindowPos, 1, wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 0);
-	FlexGridSizer3->Add(5,5,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
-	FullCodecList = new wxCheckBox(this, wxID_ANY, _("Fc"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("wxID_ANY"));
-	FullCodecList->SetValue(false);
-	FullCodecList->SetLabel(FFQS(SID_OPTIONS_FULL_CODEC_LIST));
-	FlexGridSizer3->Add(FullCodecList, 1, wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 0);
-	FlexGridSizer3->Add(5,5,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
-	UniqueNames = new wxCheckBox(this, wxID_ANY, _("Un"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("wxID_ANY"));
-	UniqueNames->SetValue(false);
-	UniqueNames->SetLabel(FFQS(SID_OPTIONS_ALWAYS_UNIQUE_NAMES));
-	FlexGridSizer3->Add(UniqueNames, 1, wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 0);
-	FlexGridSizer3->Add(5,5,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
-	KeepConsole = new wxCheckBox(this, wxID_ANY, _("Kc"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("wxID_ANY"));
-	KeepConsole->SetValue(false);
-	KeepConsole->SetLabel(FFQS(SID_OPTIONS_KEEP_CONSOLE_OPEN));
-	FlexGridSizer3->Add(KeepConsole, 1, wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 0);
-	FlexGridSizer1->Add(FlexGridSizer3, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+	SBS5->Add(ConsoleCmd, 1, wxALL|wxEXPAND, 3);
+	FlexGridSizer1->Add(SBS5, 1, wxALL|wxEXPAND, 3);
+	CheckList = new wxCheckListBox(this, ID_CHECKLIST, wxDefaultPosition, wxDefaultSize, 0, 0, wxNO_BORDER|wxTAB_TRAVERSAL|wxVSCROLL, wxDefaultValidator, _T("ID_CHECKLIST"));
+	CheckList->SetMaxSize(wxSize(-1,180));
+	CheckList->SetBackgroundColour(GetBackgroundColour());
+	CheckList->Append(FFQS(SID_OPTIONS_SAVE_JOBS_ON_EXIT));
+	CheckList->Append(FFQS(SID_OPTIONS_SAVE_JOBS_ON_MODIFY));
+	CheckList->Append(FFQS(SID_OPTIONS_REMOVE_FINISHED_JOBS));
+	CheckList->Append(FFQS(SID_OPTIONS_LIMIT_STATISTICS));
+	CheckList->Append(FFQS(SID_OPTIONS_SHOW_BANNER_INFO));
+	CheckList->Append(FFQS(SID_OPTIONS_SAVE_WINDOW_POS));
+	CheckList->Append(FFQS(SID_OPTIONS_FULL_CODEC_LIST));
+	CheckList->Append(FFQS(SID_OPTIONS_ALWAYS_UNIQUE_NAMES));
+	CheckList->Append(FFQS(SID_OPTIONS_KEEP_CONSOLE_OPEN));
+	CheckList->Append(FFQS(SID_OPTIONS_SILENT_QUEUE_FINISH));
+	FlexGridSizer1->Add(CheckList, 1, wxALL|wxEXPAND, 3);
 	BoxSizer2 = new wxBoxSizer(wxHORIZONTAL);
 	LangButton = new wxButton(this, ID_LANGBUTTON, _("Lng"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_LANGBUTTON"));
 	LangButton->SetLabel(FFQS(SID_OPTIONS_EDIT_LANGUAGE));
 	BoxSizer2->Add(LangButton, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-	BoxSizer2->Add(-1,-1,1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+	BoxSizer2->Add(-1,-1,1, wxALL|wxEXPAND, 5);
 	OKButton = new wxButton(this, ID_OKBUTTON, _("O"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_OKBUTTON"));
 	OKButton->SetDefault();
 	OKButton->SetLabel(FFQS(SID_COMMON_OK));
@@ -202,7 +172,7 @@ FFQConfigEdit::FFQConfigEdit(wxWindow* parent,wxWindowID id)
 	CancelButton = new wxButton(this, ID_CANCELBUTTON, _("C"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CANCELBUTTON"));
 	CancelButton->SetLabel(FFQS(SID_COMMON_CANCEL));
 	BoxSizer2->Add(CancelButton, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-	FlexGridSizer1->Add(BoxSizer2, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+	FlexGridSizer1->Add(BoxSizer2, 1, wxALL|wxEXPAND, 5);
 	SetSizer(FlexGridSizer1);
 	OpenDialog = new wxFileDialog(this, wxEmptyString, wxEmptyString, wxEmptyString, wxFileSelectorDefaultWildcardStr, wxFD_DEFAULT_STYLE|wxFD_OPEN|wxFD_FILE_MUST_EXIST, wxDefaultPosition, wxDefaultSize, _T("wxFileDialog"));
 	DirDlg = new wxDirDialog(this, _("Select path"), wxEmptyString, wxDD_DEFAULT_STYLE|wxDD_DIR_MUST_EXIST, wxDefaultPosition, wxDefaultSize, _T("wxDirDialog"));
@@ -251,14 +221,16 @@ bool FFQConfigEdit::Execute()
     SecondFileExts->SetValue(FFQCFG()->second_file_extensions);
     ConsoleCmd->SetValue(FFQCFG()->console_cmd);
 
-    AutoRemove->SetValue(FFQCFG()->auto_remove_jobs);
-    SaveOnExit->SetValue(FFQCFG()->save_on_exit);
-    LimitStats->SetValue(FFQCFG()->limit_statistics);
-    ShowBanner->SetValue(!FFQCFG()->hide_banner);
-    SaveWindowPos->SetValue(FFQCFG()->save_window_pos);
-    FullCodecList->SetValue(FFQCFG()->full_codec_listings);
-    UniqueNames->SetValue(FFQCFG()->preferred_unique);
-    KeepConsole->SetValue(FFQCFG()->keep_console);
+    CheckList->Check(0, FFQCFG()->save_on_exit);
+    CheckList->Check(1, FFQCFG()->save_on_modify);
+    CheckList->Check(2, FFQCFG()->auto_remove_jobs);
+    CheckList->Check(3, FFQCFG()->limit_statistics);
+    CheckList->Check(4, !FFQCFG()->hide_banner);
+    CheckList->Check(5, FFQCFG()->save_window_pos);
+    CheckList->Check(6, FFQCFG()->full_codec_listings);
+    CheckList->Check(7, FFQCFG()->preferred_unique);
+    CheckList->Check(8, FFQCFG()->keep_console);
+    CheckList->Check(9, FFQCFG()->silent_qfinish);
 
     //Center and update
     CenterOnParent();
@@ -279,14 +251,16 @@ bool FFQConfigEdit::Execute()
         FFQCFG()->second_file_extensions = SecondFileExts->GetValue();
         FFQCFG()->console_cmd = ConsoleCmd->GetValue();
 
-        FFQCFG()->auto_remove_jobs = AutoRemove->GetValue();
-        FFQCFG()->save_on_exit = SaveOnExit->GetValue();
-        FFQCFG()->limit_statistics = LimitStats->GetValue();
-        FFQCFG()->hide_banner = !ShowBanner->GetValue();
-        FFQCFG()->save_window_pos = SaveWindowPos->GetValue();
-        FFQCFG()->full_codec_listings = FullCodecList->GetValue();
-        FFQCFG()->preferred_unique = UniqueNames->GetValue();
-        FFQCFG()->keep_console = KeepConsole->GetValue();
+        FFQCFG()->save_on_exit = CheckList->IsChecked(0);
+        FFQCFG()->save_on_modify = CheckList->IsChecked(1);
+        FFQCFG()->auto_remove_jobs = CheckList->IsChecked(2);
+        FFQCFG()->limit_statistics = CheckList->IsChecked(3);
+        FFQCFG()->hide_banner = !CheckList->IsChecked(4);
+        FFQCFG()->save_window_pos = CheckList->IsChecked(5);
+        FFQCFG()->full_codec_listings = CheckList->IsChecked(6);
+        FFQCFG()->preferred_unique = CheckList->IsChecked(7);
+        FFQCFG()->keep_console = CheckList->IsChecked(8);
+        FFQCFG()->silent_qfinish = CheckList->IsChecked(9);
 
         FFQCFG()->SaveConfig();
 

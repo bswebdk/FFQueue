@@ -23,7 +23,7 @@
 
 #include "Curves.h"
 
-const size_t CURVE_PRESET_COUNT = 11;
+const unsigned int CURVE_PRESET_COUNT = 11;
 
 //---------------------------------------------------------------------------------------
 
@@ -35,7 +35,7 @@ Curves::Curves(wxWindow* parent) : FilterBasePanel(parent)
 
     MakeLabel(FFQS(SID_CURVES_PRESET), m_Sizer);
     m_Preset = new wxChoice(this, 1, wxDefaultPosition, wxDefaultSize);
-    for (size_t i = 0; i < CURVE_PRESET_COUNT; i++) m_Preset->Append(FFQS(SID_CURVES_PRESET_BASE + i));
+    for (unsigned int i = 0; i < CURVE_PRESET_COUNT; i++) m_Preset->Append(FFQS(SID_CURVES_PRESET_BASE + i));
     m_Sizer->Add(m_Preset, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 3);
 
     MakeLabel(FFQS(SID_CURVES_MASTER_KEYS), m_Sizer);
@@ -156,7 +156,7 @@ bool Curves::GetFilter(LPFFMPEG_FILTER fltr)
                               FmtVal(av, "a"),
                               FILTER_VIDEO_OUT);
 
-    fltr->editable.Printf("%d,%s,%s,%s,%s,%s", m_Preset->GetSelection(), mv, rv, gv, bv, av);
+    fltr->editable.Printf("%i,%s,%s,%s,%s,%s", m_Preset->GetSelection(), mv, rv, gv, bv, av);
 
     return true;
 
@@ -175,7 +175,7 @@ void Curves::OnChoiceChange(wxCommandEvent& event)
 void Curves::UpdateCtrls()
 {
     bool enable = m_Preset->GetSelection() == 0;
-    for (size_t i = 2; i < m_Sizer->GetItemCount(); i++)
+    for (unsigned int i = 2; i < m_Sizer->GetItemCount(); i++)
     {
         wxSizerItem *si = m_Sizer->GetItem(i);
         if (si->GetWindow() != NULL) si->GetWindow()->Enable(enable);

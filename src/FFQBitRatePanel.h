@@ -29,9 +29,9 @@
 #ifndef WX_PRECOMP
 	//(*HeadersPCH(FFQBitRatePanel)
 	#include <wx/sizer.h>
+	#include <wx/panel.h>
 	#include <wx/stattext.h>
 	#include <wx/textctrl.h>
-	#include <wx/panel.h>
 	#include <wx/choice.h>
 	//*)
 #endif
@@ -50,20 +50,20 @@ class FFQBitRatePanel: public wxPanel
 
 		//(*Declarations(FFQBitRatePanel)
 		wxStaticText* BST1;
-		wxFlexGridSizer* MainSizer;
-		wxChoice* BitRateType;
-		wxStaticText* ST5;
 		wxStaticText* ST2;
-		wxTextCtrl* BufSize;
-		wxStaticText* ST4;
-		wxStaticText* ST3;
-		wxStaticText* BST2;
 		wxStaticText* BST4;
+		wxTextCtrl* BufSize;
 		wxStaticText* ST1;
-		wxTextCtrl* MinRate;
-		wxTextCtrl* MaxRate;
 		wxStaticText* BST3;
+		wxStaticText* ST5;
+		wxTextCtrl* MinRate;
+		wxStaticText* ST4;
+		wxTextCtrl* MaxRate;
+		wxChoice* BitRateType;
+		wxStaticText* BST2;
+		wxStaticText* ST3;
 		wxTextCtrl* BitRate;
+		wxFlexGridSizer* MainSizer;
 		//*)
 
 	protected:

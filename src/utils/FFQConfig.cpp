@@ -72,6 +72,10 @@ const wxString CFG_SAVE_WINDOW_POS = "save_pos";
 const wxString CFG_FULL_CODEC_LIST = "full_codec_list";
 const wxString CFG_VIDSTAB_SETTINGS = "vidstab_settings";
 const wxString CFG_CONSOLE_CMD = "console_cmd";
+const wxString CFG_SAVE_LOG = "save_log";
+const wxString CFG_SILENT_QFINISH = "silent_qfinish";
+const wxString CFG_SAVED_COMMANDS = "saved_commands";
+const wxString CFG_SAVE_ON_MODIFY = "save_on_modify";
 
 //---------------------------------------------------------------------------------------
 
@@ -86,7 +90,7 @@ CODEC_TYPE ParseCodec(wxString &c, bool encoders)
     {
 
         //This is purely for backwards compatibility with old ffmpeg's
-        for (size_t i = 0; i < 6; i++) if ( (i < c.Len()) && (c.GetChar(i) == ' ') ) c.SetChar(i, '.');
+        for (unsigned int i = 0; i < 6; i++) if ( (i < c.Len()) && (c.GetChar(i) == ' ') ) c.SetChar(i, '.');
 
     }
 
@@ -341,6 +345,10 @@ void FFQConfig::DefaultOptions()
     window_position = "";
     vidstab_settings = "";
     console_cmd = "";
+    save_log = true;
+    silent_qfinish = false;
+    save_on_modify = false;
+    saved_commands = "";
 
 	//Private config
     if (m_CodecInfo) delete m_CodecInfo;
@@ -376,7 +384,7 @@ wxString FFQConfig::FindSecondaryInputFile(wxString &for_filename)
 
 //---------------------------------------------------------------------------------------
 
-size_t FFQConfig::FindSecondaryInputFiles(wxString &for_filename, wxArrayString &dest, size_t limit)
+unsigned int FFQConfig::FindSecondaryInputFiles(wxString &for_filename, wxArrayString &dest, unsigned int limit)
 {
 
     //Find secondary input files based on the extensions in "second_file_extensions"
@@ -385,7 +393,7 @@ size_t FFQConfig::FindSecondaryInputFiles(wxString &for_filename, wxArrayString 
 
     wxString exts = second_file_extensions, ext, fn = for_filename.BeforeLast('.') + ".", p;
 
-    size_t cnt = 0;
+    unsigned int cnt = 0;
 
     while (exts.Len() > 0)
     {
@@ -782,7 +790,7 @@ wxArrayString* FFQConfig::LoadArrayString(wxString filename)
 
                 //Opened successfully, read content into a array string pointer
                 wxArrayString* res = new wxArrayString();
-                for (size_t i = 0; i < txt.GetLineCount(); i++) res->Add(StrTrim(txt.GetLine(i)));
+                for (unsigned int i = 0; i < txt.GetLineCount(); i++) res->Add(StrTrim(txt.GetLine(i)));
 
                 //Close the file
                 txt.Close();
@@ -925,6 +933,10 @@ void FFQConfig::LoadConfig()
                     else if (name == CFG_VIDSTAB_SETTINGS) vidstab_settings = line;
                     else if (name == CFG_FULL_CODEC_LIST) full_codec_listings = STRBOOL(line);
                     else if (name == CFG_CONSOLE_CMD) console_cmd = line;
+                    else if (name == CFG_SAVE_LOG) save_log = STRBOOL(line);
+                    else if (name == CFG_SILENT_QFINISH) silent_qfinish = STRBOOL(line);
+                    else if (name == CFG_SAVED_COMMANDS) saved_commands = line;
+                    else if (name == CFG_SAVE_ON_MODIFY) save_on_modify = STRBOOL(line);
 
                 }
 
@@ -992,7 +1004,7 @@ bool FFQConfig::SaveArrayString(wxString filename, wxArrayString* array_str)
                 txt.Clear();
 
                 //Add the strings in the array
-                for (size_t i = 0; i < array_str->Count(); i++) txt.AddLine(array_str->Item(i));
+                for (unsigned int i = 0; i < array_str->Count(); i++) txt.AddLine(array_str->Item(i));
 
                 //Write to file and set result to success
                 ok = txt.Write();
@@ -1065,6 +1077,10 @@ void FFQConfig::SaveConfig()
         cfg.AddLine(CFG_VIDSTAB_SETTINGS + "=" + vidstab_settings);
         cfg.AddLine(CFG_FULL_CODEC_LIST + "=" + BOOLSTR(full_codec_listings));
         cfg.AddLine(CFG_CONSOLE_CMD + "=" + console_cmd);
+        cfg.AddLine(CFG_SAVE_LOG + "=" + BOOLSTR(save_log));
+        cfg.AddLine(CFG_SILENT_QFINISH + "=" + BOOLSTR(silent_qfinish));
+        cfg.AddLine(CFG_SAVED_COMMANDS + "=" + saved_commands);
+        cfg.AddLine(CFG_SAVE_ON_MODIFY + "=" + BOOLSTR(save_on_modify));
 
         //Empty line to separate codec_info's
         cfg.AddLine("");
@@ -1090,7 +1106,7 @@ void FFQConfig::SaveConfig()
 
         //Write presets to file
         FFQPresetMgr* pm = (FFQPresetMgr*)m_PresetManager;
-        for (size_t i = 0; i < pm->GetPresetCount(); i++)
+        for (unsigned int i = 0; i < pm->GetPresetCount(); i++)
         {
 
             LPFFQ_PRESET p = pm->GetPreset(i);
@@ -1119,6 +1135,24 @@ void FFQConfig::SaveConfig()
 
     //Close configurations file if opened
     if (opened) cfg.Close();
+
+}
+
+//---------------------------------------------------------------------------------------
+
+bool FFQConfig::SetSaveLog(bool log, bool save_config)
+{
+
+    //Convenient set save_log and save as required
+    //used in FFQJobEditAdv, tools/*
+    if (save_log != log)
+    {
+        save_log = log;
+        if (save_config) SaveConfig();
+        return true;
+    }
+
+    return false;
 
 }
 

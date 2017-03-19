@@ -28,21 +28,21 @@ const wxString STR_UNDEF = "undef";
 
 //---------------------------------------------------------------------------------------
 
-const size_t MATRIX_ENC_COUNT = 4;
+const unsigned int MATRIX_ENC_COUNT = 4;
 const wxString MATRIX_ENCS[MATRIX_ENC_COUNT] = {
     STR_UNDEF, "none", "dolby", "dplii"
 };
 
 //---------------------------------------------------------------------------------------
 
-const size_t FILTER_TYPE_COUNT = 4;
+const unsigned int FILTER_TYPE_COUNT = 4;
 const wxString FILTER_TYPES[FILTER_TYPE_COUNT] = {
     STR_UNDEF, "cubic", "blackman_nuttall", "kaiser"
 };
 
 //---------------------------------------------------------------------------------------
 
-const size_t DITHER_METHOD_COUNT = 11;
+const unsigned int DITHER_METHOD_COUNT = 11;
 const wxString DITHER_METHODS[DITHER_METHOD_COUNT] = {
     STR_UNDEF,
     "rectangular",
@@ -59,7 +59,7 @@ const wxString DITHER_METHODS[DITHER_METHOD_COUNT] = {
 
 //---------------------------------------------------------------------------------------
 
-const size_t CUSTOM_VALUE_COUNT = 26;
+const unsigned int CUSTOM_VALUE_COUNT = 26;
 const wxString CUSTOM_VALUES[CUSTOM_VALUE_COUNT] = { //26
     "ich",
     "och",
@@ -93,7 +93,7 @@ const wxString CUSTOM_VALUES[CUSTOM_VALUE_COUNT] = { //26
 
 int CustomValueIndex(wxString cw)
 {
-    for (size_t i = 0; i < CUSTOM_VALUE_COUNT; i++)
+    for (unsigned int i = 0; i < CUSTOM_VALUE_COUNT; i++)
         if (CUSTOM_VALUES[i] == cw) return i;
     return -1;
 }
@@ -166,10 +166,10 @@ Resample::Resample(wxWindow* parent) : FilterBasePanel(parent)
 	m_Grid->SetDefaultCellTextColour( m_Grid->GetForegroundColour() );
 
     as = FFQL()->GetStringArray(SID_RESAMPLE_CUSTOM_VALUE_NAMES, CUSTOM_VALUE_COUNT);
-    for (size_t i = 0; i < CUSTOM_VALUE_COUNT; i++)
+    for (unsigned int i = 0; i < CUSTOM_VALUE_COUNT; i++)
     {
         m_Grid->SetRowLabelValue(i, as[i]);
-        m_Grid->SetCellAlignment(wxALIGN_LEFT, i, 0);
+        m_Grid->SetCellAlignment(i, 0, wxALIGN_LEFT, wxALIGN_CENTRE);
     }
     delete[] as;
 
@@ -199,7 +199,7 @@ bool Resample::Layout()
     wxClientDC dc(this);
     dc.SetFont(m_Grid->GetLabelFont());
     int cw = 0;
-    for (size_t i = 0; i < CUSTOM_VALUE_COUNT; i++)
+    for (unsigned int i = 0; i < CUSTOM_VALUE_COUNT; i++)
     {
         wxSize ts = dc.GetTextExtent(m_Grid->GetRowLabelValue(i));
         if (cw < ts.GetWidth()) cw = ts.GetWidth();
@@ -207,7 +207,8 @@ bool Resample::Layout()
     m_Grid->SetRowLabelSize(cw + 5);
 
     //Set value column width
-    m_Grid->SetColumnWidth(0, m_Grid->GetClientSize().GetWidth() - cw - 10);
+    //m_Grid->SetColumnWidth(0, m_Grid->GetClientSize().GetWidth() - cw - 10);
+    m_Grid->SetColSize(0, m_Grid->GetClientSize().GetWidth() - cw - 10);
 
     return res;
 }
@@ -256,7 +257,8 @@ void Resample::SetFilter(LPFFMPEG_FILTER fltr)
         s = GetToken(fs, ':');
         t = GetToken(s, '=');
         idx = CustomValueIndex(t);
-        if (idx >= 0) m_Grid->SetCellValue(s, idx, 0);
+        //if (idx >= 0) m_Grid->SetCellValue(s, idx, 0);
+        if (idx >= 0) m_Grid->SetCellValue(idx, 0, s);
     }
 
 }
@@ -288,7 +290,7 @@ bool Resample::GetFilter(LPFFMPEG_FILTER fltr)
     if (m_ForceResample->GetValue()) s+= ":flags=res";
     if (m_LinearInterp->GetValue()) s+= ":linear_iterp=1";
 
-    for (size_t i = 0; i < CUSTOM_VALUE_COUNT; i++)
+    for (unsigned int i = 0; i < CUSTOM_VALUE_COUNT; i++)
     {
         t = StrTrim(m_Grid->GetCellValue(i, 0));
         if (t.Len() > 0) grid += ":" + CUSTOM_VALUES[i] + "=" + t;

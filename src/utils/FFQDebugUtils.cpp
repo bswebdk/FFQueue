@@ -92,7 +92,7 @@ wxString GetCopyHeader()
 }
 //---------------------------------------------------------------------------------------
 
-wxString BufToArray(unsigned char *buf, int len, wxString array_name, size_t indent)
+wxString BufToArray(unsigned char *buf, int len, wxString array_name, unsigned int indent)
 {
 
     //Converts a byte buffer into a C-style array of unsigned
@@ -146,7 +146,7 @@ wxString BufToArray(unsigned char *buf, int len, wxString array_name, size_t ind
 
 //---------------------------------------------------------------------------------------
 
-wxString FileToArray(wxString filename, wxString array_name, size_t indent)
+wxString FileToArray(wxString filename, wxString array_name, unsigned int indent)
 {
 
     //This does the same as "BufToArray" above but instead of using a buffer
@@ -459,7 +459,7 @@ void AnalyzeNode(wxXmlNode *n, bool comp, int target)
 void DumpArray(wxString name, wxArrayString &arr)
 {
     FFQConsole::Get()->AppendLine("[" + name + "]", COLOR_BLUE);
-    for (size_t i = 0; i < arr.Count(); i++) FFQConsole::Get()->AppendLine(arr[i], COLOR_BLUE);
+    for (unsigned int i = 0; i < arr.Count(); i++) FFQConsole::Get()->AppendLine(arr[i], COLOR_BLUE);
     FFQConsole::Get()->AppendLine("", COLOR_BLUE);
 }
 
@@ -469,7 +469,7 @@ wxString ArrayToStr(wxArrayString &arr, wxString prefix, wxString sep = " ")
 {
 
     wxString res;
-    for (size_t i = 0; i < arr.Count(); i++) res += prefix + arr[i] + sep;
+    for (unsigned int i = 0; i < arr.Count(); i++) res += prefix + arr[i] + sep;
     if (res.Len() > 0) res.RemoveLast(sep.Len());
     return res;
 
@@ -649,7 +649,7 @@ wxString CreateMakefiles(wxString cbp_path)
     wxArrayString subdirs;
 
     //Make recipes and rules
-    for (size_t i = 0; i < units.Count(); i++)
+    for (unsigned int i = 0; i < units.Count(); i++)
     {
 
         //Get unit names
@@ -738,7 +738,7 @@ wxString CreateMakefiles(wxString cbp_path)
     lmf += tmp + WBR + "paths:" + LBR + "\t" + wxString::Format(MKDIR_LIN, "") + LBR;
 
     //Clean recipes
-    for (size_t sid = 0; sid < subdirs.Count(); sid++)
+    for (unsigned int sid = 0; sid < subdirs.Count(); sid++)
     {
 
         //wmf += "\t" + wxString::Format(MKDIR_WIN, WSEP + subdirs[sid], WSEP + subdirs[sid]) + WBR;

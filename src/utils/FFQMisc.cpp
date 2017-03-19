@@ -207,7 +207,7 @@ long long Str2LongLong(wxString str, long long def)
     //"def" argument if fail
 
     wxString nums = "+-0123456789";
-    for (size_t i = 0; i < str.Len(); i++) if (nums.Find(str.GetChar(i)) < 0) return def;
+    for (unsigned int i = 0; i < str.Len(); i++) if (nums.Find(str.GetChar(i)) < 0) return def;
     return strtol(str.c_str().AsChar(), NULL, 10);
 
 }
@@ -268,7 +268,7 @@ wxString GetLine(wxString &from, bool del_line)
     //Handy variable
     wxString res = "";
 
-    for (size_t i = 0; i < from.Len(); i++)
+    for (unsigned int i = 0; i < from.Len(); i++)
     {
 
         //Get current char
@@ -283,7 +283,7 @@ wxString GetLine(wxString &from, bool del_line)
                 //If line must be deleted we check for a double-char
                 //line break (CRLF or LFCR)
 
-                size_t del = i;
+                unsigned int del = i;
                 if (del < from.Len() - 1)
                 {
                     if ((cc == '\r') && (from.GetChar(del+1) == '\n')) del++; //CR+LF
@@ -313,7 +313,7 @@ wxString GetLine(wxString &from, bool del_line)
 
 //---------------------------------------------------------------------------------------
 
-wxString GetSubLine(wxString &from, size_t &offset)
+wxString GetSubLine(wxString &from, unsigned int &offset)
 {
 
     //Coded by Torben Bruchhaus @ 2014
@@ -327,7 +327,7 @@ wxString GetSubLine(wxString &from, size_t &offset)
     //Handy variable
     wxString res;
 
-    for (size_t i = offset; i < from.Len(); i++)
+    for (unsigned int i = offset; i < from.Len(); i++)
     {
 
         //Get current char
@@ -426,7 +426,7 @@ wxString Unescape(wxString str)
 
     //Un-escape string
     wxString res;
-    size_t i = 0;
+    unsigned int i = 0;
     while (i < str.Len())
     {
         if (str.at(i) == '\\') i++;
@@ -458,11 +458,21 @@ uint64_t GetTimeTickCount(wxLongLong *tick)
 //---------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------------
 
-int ConvertPctToMinMax(float pct, float min, float max, float pct_base)
+float ConvertPctToMinMaxFloat(float pct, float min, float max, float pct_base)
 {
 
     //Maps a percentage / fraction into a range defined by min..max
-    return froundi(min + ((max - min) / pct_base * pct));
+    return min + ((max - min) / pct_base * pct);
+
+}
+
+//---------------------------------------------------------------------------------------
+
+int ConvertPctToMinMaxInt(float pct, float min, float max, float pct_base)
+{
+
+    //Integer version of above
+    return froundi(ConvertPctToMinMaxFloat(pct, min, max, pct_base));
 
 }
 
@@ -539,7 +549,7 @@ wxString MakeLogFileName(wxString &forFile)
         do
         {
             i++;
-            ext.Printf("_log_%u.htm", i);
+            ext.Printf("_log_%i.htm", i);
         } while (wxFileExists(res + ext));
     }
 
@@ -559,7 +569,7 @@ void EnableSizer(wxSizer *sizer, bool enable, const long *skip)
     //except the ones that are defined by the array of control
     //id's "skip"
 
-    for (size_t i = 0; i < sizer->GetItemCount(); i++)
+    for (unsigned int i = 0; i < sizer->GetItemCount(); i++)
     {
         wxSizerItem* cur = sizer->GetItem(i);
         wxWindow* ctrl = cur->GetWindow();
@@ -572,7 +582,7 @@ void EnableSizer(wxSizer *sizer, bool enable, const long *skip)
         else
         {
             bool ok = true;
-            for (size_t ii = 0; (ii < sizeof(skip) / sizeof(*skip)) && ok; ii++) ok = (ctrl->GetId() != skip[ii]);
+            for (unsigned int ii = 0; (ii < sizeof(skip) / sizeof(*skip)) && ok; ii++) ok = (ctrl->GetId() != skip[ii]);
             if (ok) ctrl->Enable(enable);
         }
     }
@@ -589,14 +599,14 @@ void ListBoxMoveSelectedItems(wxListBox *lb, bool up, bool is_check_list_box)
     lb->Freeze();
     if (up)
     {
-        for (size_t i = 0; i < lb->GetCount(); i++)
+        for (unsigned int i = 0; i < lb->GetCount(); i++)
         {
             if (lb->IsSelected(i)) ListBoxSwapItems(lb, i, i-1, is_check_list_box);
         }
     }
     else
     {
-        for (size_t i = lb->GetCount() - 1; (long)i >= 0; i--)
+        for (unsigned int i = lb->GetCount() - 1; (long)i >= 0; i--)
         {
             if (lb->IsSelected(i)) ListBoxSwapItems(lb, i, i+1, is_check_list_box);
         }
@@ -608,7 +618,7 @@ void ListBoxMoveSelectedItems(wxListBox *lb, bool up, bool is_check_list_box)
 
 //---------------------------------------------------------------------------------------
 
-void ListBoxSwapItems(wxListBox *lb, size_t a, size_t b, bool is_check_list_box)
+void ListBoxSwapItems(wxListBox *lb, unsigned int a, unsigned int b, bool is_check_list_box)
 {
 
     //Swaps two items in a (check) list box
@@ -689,7 +699,7 @@ bool DeletePaths(wxArrayString *path_list)
 
     bool ok = true;
 
-    for (size_t i = 0; i < path_list->Count(); i++)
+    for (unsigned int i = 0; i < path_list->Count(); i++)
     {
 
         wxString cur = path_list->Item(i);

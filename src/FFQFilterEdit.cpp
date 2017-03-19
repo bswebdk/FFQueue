@@ -51,7 +51,7 @@ FFQFilterEdit::FFQFilterEdit(wxWindow* parent)
 	Create(parent, wxID_ANY, _T("Video filter"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE, _T("wxID_ANY"));
 	GridSizer = new wxFlexGridSizer(4, 1, 0, 0);
 	FilterContainer = new wxStaticBoxSizer(wxVERTICAL, this, _T("Fc"));
-	GridSizer->Add(FilterContainer, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+	GridSizer->Add(FilterContainer, 1, wxALL|wxEXPAND, 5);
 	BoxSizer1 = new wxBoxSizer(wxHORIZONTAL);
 	BoxSizer1->Add(-1,-1,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	BoxSizer1->Add(-1,-1,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
@@ -63,7 +63,7 @@ FFQFilterEdit::FFQFilterEdit(wxWindow* parent)
 	CancelButton->SetLabel(FFQS(SID_COMMON_CANCEL));
 	FilterContainer->GetStaticBox()->SetLabel(FFQS(SID_FILTER_DEFINE_PROPERTIES));
 	BoxSizer1->Add(CancelButton, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-	GridSizer->Add(BoxSizer1, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+	GridSizer->Add(BoxSizer1, 1, wxALL|wxEXPAND, 5);
 	SetSizer(GridSizer);
 	GridSizer->Fit(this);
 	GridSizer->SetSizeHints(this);
@@ -91,7 +91,7 @@ bool FFQFilterEdit::Execute(LPFFMPEG_FILTER filter)
     //Create properties panel
     m_Filter = filter;
     m_FilterPanel =  FilterBasePanel::GetFilterPanel(this, m_Filter->type);
-    if (m_FilterPanel == NULL) return ShowError(FFQSF(SID_FILTER_INVALID_ID, (size_t)m_Filter->type));
+    if (m_FilterPanel == NULL) return ShowError(FFQSF(SID_FILTER_INVALID_ID, (unsigned int)m_Filter->type));
 
     //Add to container and fit window
     FilterContainer->Add(m_FilterPanel, 1, wxALL|wxEXPAND, 3);

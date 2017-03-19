@@ -22,8 +22,8 @@ instruct you how to build and/or tweak your wx. But the steps I've used to creat
 wx build used by official FFQueue releases has been made by:
 
   {Common}
-  Download wxWidgets 3.0.2 as an archive from https://www.wxwidgets.org/downloads/ and
-  extract it to $ROOT/wxWidgets.
+  Download wxWidgets as an archive from https://www.wxwidgets.org/downloads/ and
+  extract it to $ROOT/wxWidgets. I use version 3.1.0 for Linux and 3.0.2 for Windows.
 
   {Linux}
   Create folder $(ROOT)wxWidgets/gtk-build and change working directory to the created

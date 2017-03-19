@@ -61,7 +61,7 @@ const wxString FILTER_NAMES[FILTER_COUNT] = {
 
 //---------------------------------------------------------------------------------------
 
-const size_t FILTER_ORDER_COUNT = FILTER_COUNT + 1;
+const unsigned int FILTER_ORDER_COUNT = FILTER_COUNT + 1;
 
 const int FILTER_ORDER[FILTER_ORDER_COUNT] = {
 

@@ -16,7 +16,7 @@
 						<object class="wxTextCtrl" name="ID_PRESETNAME" variable="PresetName" member="yes">
 							<size>550,-1</size>
 						</object>
-						<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<flag>wxALL|wxEXPAND</flag>
 						<border>2</border>
 						<option>1</option>
 					</object>
@@ -25,12 +25,12 @@
 							<label>Temp</label>
 							<extra_code>PresetTemp-&gt;SetLabel(FFQS(SID__PRESET__TEMPORARY__PRESET));&#x0A;SBS1-&gt;GetStaticBox()-&gt;SetLabel(FFQS(SID__PRESET__PRESET__NAME));</extra_code>
 						</object>
-						<flag>wxLEFT|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+						<flag>wxLEFT|wxALIGN_LEFT</flag>
 						<border>2</border>
 						<option>1</option>
 					</object>
 				</object>
-				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<flag>wxALL|wxEXPAND</flag>
 				<border>5</border>
 				<option>1</option>
 			</object>
@@ -56,7 +56,7 @@
 														<extra_code>VSBS1-&gt;GetStaticBox()-&gt;SetLabel(FFQS(SID__PRESET__CODEC));</extra_code>
 														<handler function="OnChoiceChange" entry="EVT_CHOICE" />
 													</object>
-													<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<flag>wxALL|wxEXPAND</flag>
 													<border>3</border>
 													<option>1</option>
 												</object>
@@ -85,7 +85,7 @@
 															<option>1</option>
 														</object>
 													</object>
-													<flag>wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+													<flag>wxALL|wxEXPAND</flag>
 													<border>3</border>
 													<option>1</option>
 												</object>
@@ -94,7 +94,7 @@
 											<option>1</option>
 										</object>
 									</object>
-									<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+									<flag>wxALL|wxEXPAND</flag>
 									<border>5</border>
 									<option>1</option>
 								</object>
@@ -113,7 +113,7 @@
 															<local_include>1</local_include>
 															<style></style>
 														</object>
-														<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+														<flag>wxALL|wxEXPAND</flag>
 														<border>3</border>
 														<option>1</option>
 													</object>
@@ -128,7 +128,7 @@
 													<rows>7</rows>
 													<growablecols>1</growablecols>
 													<object class="spacer">
-														<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+														<flag>wxALL|wxEXPAND</flag>
 														<option>1</option>
 													</object>
 													<object class="sizeritem">
@@ -155,7 +155,7 @@
 																<option>1</option>
 															</object>
 														</object>
-														<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+														<flag>wxALL|wxEXPAND</flag>
 														<border>3</border>
 														<option>1</option>
 													</object>
@@ -179,7 +179,7 @@
 															<size>-1,20</size>
 															<handler function="OnSubsScaleChange" entry="EVT_COMMAND_SLIDER_UPDATED" />
 														</object>
-														<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+														<flag>wxALL|wxEXPAND</flag>
 														<border>3</border>
 														<option>1</option>
 													</object>
@@ -206,7 +206,7 @@
 															<size>-1,20</size>
 															<handler function="OnSubsScaleChange" entry="EVT_COMMAND_SLIDER_UPDATED" />
 														</object>
-														<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+														<flag>wxALL|wxEXPAND</flag>
 														<border>3</border>
 														<option>1</option>
 													</object>
@@ -233,7 +233,7 @@
 															<size>-1,20</size>
 															<handler function="OnSubsScaleChange" entry="EVT_COMMAND_SLIDER_UPDATED" />
 														</object>
-														<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+														<flag>wxALL|wxEXPAND</flag>
 														<border>3</border>
 														<option>1</option>
 													</object>
@@ -260,7 +260,7 @@
 															<size>-1,20</size>
 															<handler function="OnSubsScaleChange" entry="EVT_COMMAND_SLIDER_UPDATED" />
 														</object>
-														<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+														<flag>wxALL|wxEXPAND</flag>
 														<border>3</border>
 														<option>1</option>
 													</object>
@@ -287,7 +287,7 @@
 															<size>-1,20</size>
 															<handler function="OnSubsScaleChange" entry="EVT_COMMAND_SLIDER_UPDATED" />
 														</object>
-														<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+														<flag>wxALL|wxEXPAND</flag>
 														<border>3</border>
 														<option>1</option>
 													</object>
@@ -314,7 +314,7 @@
 															<size>-1,20</size>
 															<handler function="OnSubsScaleChange" entry="EVT_COMMAND_SLIDER_UPDATED" />
 														</object>
-														<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+														<flag>wxALL|wxEXPAND</flag>
 														<border>3</border>
 														<option>1</option>
 													</object>
@@ -514,7 +514,7 @@
 																			<size>200,20</size>
 																			<handler function="OnSubsScaleChange" entry="EVT_COMMAND_SLIDER_UPDATED" />
 																		</object>
-																		<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+																		<flag>wxALL|wxEXPAND</flag>
 																		<option>1</option>
 																	</object>
 																	<object class="sizeritem">
@@ -527,7 +527,7 @@
 																		<option>1</option>
 																	</object>
 																</object>
-																<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+																<flag>wxALL|wxEXPAND</flag>
 																<option>1</option>
 															</object>
 															<object class="sizeritem">
@@ -539,7 +539,7 @@
 																<option>1</option>
 															</object>
 														</object>
-														<flag>wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_TOP</flag>
+														<flag>wxALL|wxEXPAND</flag>
 														<border>3</border>
 													</object>
 												</object>
@@ -566,7 +566,7 @@
 															<selection>0</selection>
 															<extra_code>VideoSync-&gt;SetSelection( VideoSync-&gt;Append( wxString::Format(VSYNC__FORMAT,  &quot;AUTO&quot;, FFQS(SID__PRESET__VIDEO__SYNC__AUTO)) ) );&#x0A;VideoSync-&gt;Append( wxString::Format(VSYNC__FORMAT,  &quot;PASSTHROUGH&quot;, FFQS(SID__PRESET__VIDEO__SYNC__PASSTHROUGH))  );&#x0A;VideoSync-&gt;Append( wxString::Format(VSYNC__FORMAT,  &quot;CFR&quot;, FFQS(SID__PRESET__VIDEO__SYNC__CFR)) );&#x0A;VideoSync-&gt;Append( wxString::Format(VSYNC__FORMAT,  &quot;VFR&quot;, FFQS(SID__PRESET__VIDEO__SYNC__VFR)) );&#x0A;VideoSync-&gt;Append( wxString::Format(VSYNC__FORMAT,  &quot;DROP&quot;, FFQS(SID__PRESET__VIDEO__SYNC__DROP)) );&#x0A;</extra_code>
 														</object>
-														<flag>wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+														<flag>wxALL|wxEXPAND</flag>
 														<border>3</border>
 														<option>1</option>
 													</object>
@@ -691,7 +691,7 @@
 											<label>Ot</label>
 										</object>
 									</object>
-									<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+									<flag>wxALL|wxEXPAND</flag>
 									<border>3</border>
 									<option>1</option>
 								</object>
@@ -720,16 +720,16 @@
 														<extra_code>ASBS1-&gt;GetStaticBox()-&gt;SetLabel(FFQS(SID__PRESET__CODEC));</extra_code>
 														<handler function="OnChoiceChange" entry="EVT_CHOICE" />
 													</object>
-													<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<flag>wxALL|wxEXPAND</flag>
 													<border>3</border>
 													<option>1</option>
 												</object>
 											</object>
-											<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<flag>wxALL|wxEXPAND</flag>
 											<option>1</option>
 										</object>
 									</object>
-									<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+									<flag>wxALL|wxEXPAND</flag>
 									<border>5</border>
 									<option>1</option>
 								</object>
@@ -744,11 +744,11 @@
 												<style></style>
 												<extra_code>ASBS2-&gt;GetStaticBox()-&gt;SetLabel(FFQS(SID__PRESET__BITRATE));</extra_code>
 											</object>
-											<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<flag>wxALL|wxEXPAND</flag>
 											<option>1</option>
 										</object>
 									</object>
-									<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+									<flag>wxALL|wxEXPAND</flag>
 									<border>5</border>
 									<option>1</option>
 								</object>
@@ -790,7 +790,7 @@
 																<size>-1,20</size>
 																<handler function="OnSubsScaleChange" entry="EVT_COMMAND_SLIDER_UPDATED" />
 															</object>
-															<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+															<flag>wxALL|wxEXPAND</flag>
 															<border>3</border>
 															<option>1</option>
 														</object>
@@ -812,15 +812,15 @@
 															<option>1</option>
 														</object>
 													</object>
-													<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<flag>wxALL|wxEXPAND</flag>
 													<option>1</option>
 												</object>
 											</object>
-											<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<flag>wxALL|wxEXPAND</flag>
 											<option>1</option>
 										</object>
 									</object>
-									<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+									<flag>wxALL|wxEXPAND</flag>
 									<border>5</border>
 									<option>1</option>
 								</object>
@@ -887,7 +887,7 @@
 											<option>1</option>
 										</object>
 									</object>
-									<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+									<flag>wxALL|wxEXPAND</flag>
 									<border>5</border>
 									<option>1</option>
 								</object>
@@ -915,16 +915,16 @@
 														<extra_code>SSBS1-&gt;GetStaticBox()-&gt;SetLabel(FFQS(SID__PRESET__CODEC));</extra_code>
 														<handler function="OnChoiceChange" entry="EVT_CHOICE" />
 													</object>
-													<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<flag>wxALL|wxEXPAND</flag>
 													<border>3</border>
 													<option>1</option>
 												</object>
 											</object>
-											<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<flag>wxALL|wxEXPAND</flag>
 											<option>1</option>
 										</object>
 									</object>
-									<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+									<flag>wxALL|wxEXPAND</flag>
 									<border>5</border>
 									<option>1</option>
 								</object>
@@ -974,7 +974,7 @@
 															<option>1</option>
 														</object>
 													</object>
-													<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<flag>wxALL|wxEXPAND</flag>
 													<border>3</border>
 													<option>1</option>
 												</object>
@@ -1048,7 +1048,7 @@
 															</object>
 														</object>
 													</object>
-													<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<flag>wxALL|wxEXPAND</flag>
 													<border>3</border>
 													<option>1</option>
 												</object>
@@ -1073,7 +1073,7 @@
 																<size>-1,23</size>
 																<handler function="OnSubsScaleChange" entry="EVT_COMMAND_SLIDER_UPDATED" />
 															</object>
-															<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+															<flag>wxALL|wxEXPAND</flag>
 															<border>1</border>
 															<option>1</option>
 														</object>
@@ -1086,16 +1086,16 @@
 															<option>1</option>
 														</object>
 													</object>
-													<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<flag>wxALL|wxEXPAND</flag>
 													<border>3</border>
 													<option>1</option>
 												</object>
 											</object>
-											<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<flag>wxALL|wxEXPAND</flag>
 											<option>1</option>
 										</object>
 									</object>
-									<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+									<flag>wxALL|wxEXPAND</flag>
 									<border>5</border>
 									<option>1</option>
 								</object>
@@ -1123,7 +1123,7 @@
 												<handler function="OnChoiceChange" entry="EVT_LISTBOX" />
 												<handler function="OnButtonClick" entry="EVT_LISTBOX_DCLICK" />
 											</object>
-											<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<flag>wxALL|wxEXPAND</flag>
 											<border>3</border>
 											<option>1</option>
 										</object>
@@ -1164,7 +1164,7 @@
 													<option>1</option>
 												</object>
 												<object class="spacer">
-													<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<flag>wxALL|wxEXPAND</flag>
 													<option>1</option>
 													<size>-1,15</size>
 												</object>
@@ -1189,7 +1189,7 @@
 													<option>1</option>
 												</object>
 												<object class="spacer">
-													<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<flag>wxALL|wxEXPAND</flag>
 													<option>1</option>
 													<size>-1,15</size>
 												</object>
@@ -1204,11 +1204,11 @@
 													<option>1</option>
 												</object>
 												<object class="spacer">
-													<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<flag>wxALL|wxEXPAND</flag>
 													<option>1</option>
 												</object>
 											</object>
-											<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<flag>wxALL|wxEXPAND</flag>
 											<border>3</border>
 											<option>1</option>
 										</object>
@@ -1222,11 +1222,11 @@
 											<option>1</option>
 										</object>
 										<object class="spacer">
-											<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<flag>wxALL|wxEXPAND</flag>
 											<option>1</option>
 										</object>
 									</object>
-									<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+									<flag>wxALL|wxEXPAND</flag>
 									<border>5</border>
 									<option>1</option>
 								</object>
@@ -1268,17 +1268,17 @@
 														<extra_code>MetaData-&gt;SetColLabelValue(0, FFQS(SID__PRESET__METADATA__KEY));&#x0A;MetaData-&gt;SetColLabelValue(1, FFQS(SID__PRESET__METADATA__VALUE));&#x0A;SBS31-&gt;GetStaticBox()-&gt;SetLabel(FFQS(SID__PRESET__METADATA__DEFINE));</extra_code>
 														<handler function="OnMetaDataCellChange" entry="EVT_CMD_GRID_CELL_CHANGE" />
 													</object>
-													<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<flag>wxALL|wxEXPAND</flag>
 													<border>3</border>
 													<option>1</option>
 												</object>
 											</object>
-											<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<flag>wxALL|wxEXPAND</flag>
 											<border>3</border>
 											<option>1</option>
 										</object>
 									</object>
-									<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+									<flag>wxALL|wxEXPAND</flag>
 									<border>5</border>
 									<option>1</option>
 								</object>
@@ -1358,16 +1358,16 @@
 													<option>1</option>
 												</object>
 												<object class="spacer">
-													<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<flag>wxALL|wxEXPAND</flag>
 													<option>1</option>
 												</object>
 											</object>
-											<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<flag>wxALL|wxEXPAND</flag>
 											<border>3</border>
 											<option>1</option>
 										</object>
 									</object>
-									<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+									<flag>wxALL|wxEXPAND</flag>
 									<border>5</border>
 									<option>1</option>
 								</object>
@@ -1392,7 +1392,7 @@
 													<object class="wxTextCtrl" name="ID_CUSTOMARGS" variable="CustomArgs1" member="yes">
 														<extra_code>SBS52-&gt;GetStaticBox()-&gt;SetLabel(FFQS(SID__PRESET__CUSTOM__CMDLINE__ARGS));</extra_code>
 													</object>
-													<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<flag>wxALL|wxEXPAND</flag>
 													<border>3</border>
 													<option>1</option>
 												</object>
@@ -1407,16 +1407,16 @@
 												</object>
 												<object class="sizeritem">
 													<object class="wxTextCtrl" name="ID_CUSTOMARGS2" variable="CustomArgs2" member="yes" />
-													<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<flag>wxALL|wxEXPAND</flag>
 													<border>3</border>
 													<option>1</option>
 												</object>
 											</object>
-											<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<flag>wxALL|wxEXPAND</flag>
 											<option>1</option>
 										</object>
 									</object>
-									<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+									<flag>wxALL|wxEXPAND</flag>
 									<border>5</border>
 									<option>1</option>
 								</object>
@@ -1471,12 +1471,12 @@
 														</object>
 														<object class="sizeritem">
 															<object class="wxComboBox" name="ID_OUTPUTFORMAT" variable="OutputFormat" member="yes" />
-															<flag>wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+															<flag>wxALL|wxEXPAND</flag>
 															<border>3</border>
 															<option>1</option>
 														</object>
 													</object>
-													<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<flag>wxALL|wxEXPAND</flag>
 													<border>3</border>
 													<option>1</option>
 												</object>
@@ -1488,7 +1488,7 @@
 																<label>Fs</label>
 																<extra_code>MF__FastStart-&gt;SetLabel(FFQS(SID__PRESET__MOVFLAGS__FASTSTART));</extra_code>
 															</object>
-															<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+															<flag>wxALL|wxALIGN_LEFT</flag>
 															<border>3</border>
 															<option>1</option>
 														</object>
@@ -1497,21 +1497,21 @@
 																<label>Kft</label>
 																<extra_code>KeepFileTime-&gt;SetLabel(FFQS(SID__PRESET__KEEP__FILETIME));</extra_code>
 															</object>
-															<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+															<flag>wxALL|wxALIGN_LEFT</flag>
 															<border>3</border>
 															<option>1</option>
 														</object>
 													</object>
-													<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<flag>wxALL|wxEXPAND</flag>
 													<border>3</border>
 													<option>1</option>
 												</object>
 											</object>
-											<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<flag>wxALL|wxEXPAND</flag>
 											<option>1</option>
 										</object>
 									</object>
-									<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+									<flag>wxALL|wxEXPAND</flag>
 									<border>5</border>
 									<option>1</option>
 								</object>
@@ -1520,7 +1520,7 @@
 						<label>Msc</label>
 					</object>
 				</object>
-				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<flag>wxALL|wxEXPAND</flag>
 				<border>5</border>
 				<option>1</option>
 			</object>
@@ -1560,7 +1560,7 @@
 						<option>1</option>
 					</object>
 				</object>
-				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<flag>wxALL|wxEXPAND</flag>
 				<border>5</border>
 				<option>1</option>
 			</object>

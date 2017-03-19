@@ -61,6 +61,7 @@ const wxString DEFAULT_CODEC_INFO = "*v=0,31,1,0,0\n" //Values used for any vide
                                     "wmv1=1,31,1,0,0\n"
                                     "wmv2=1,31,1,0,0\n"
                                     "libmp3lame=1,9,0,0,0\n"
+                                    "aac=1,0.1f,2,0,0\n"
                                     "mp3=1,9,0,0,0\n"
                                     "flac=1,0,0,0,0\n"
                                     "pcm_s16le=1,0,0,0,0\n"
@@ -73,6 +74,28 @@ const wxString DEFAULT_CODEC_INFO = "*v=0,31,1,0,0\n" //Values used for any vide
                                     "wmav1=1,0,0,0,0\n"
                                     "wmav2=1,0,0,0,0\n";
 
+//---------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------
+
+float GetNumericPart(wxString &from, bool &is_float, float def)
+{
+
+    //Returns the value of a numeric part and examines
+    //if it is an integral value or a floating point
+
+    wxString s = GetToken(from, ",", true);
+    if (s.Right(1) == "f")
+    {
+        is_float = true;
+        s.RemoveLast();
+    }
+    return Str2Float(s, def);
+
+}
+
+//---------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------------
 
 CODEC_INFO::CODEC_INFO()
@@ -130,6 +153,8 @@ void CODEC_INFO::CopyTo(CODEC_INFO &dst)
     dst.max_qscale = max_qscale;
     dst.min_crf = min_crf;
     dst.max_crf = max_crf;
+    dst.crf_float = crf_float;
+    dst.qscale_float = qscale_float;
 
 }
 
@@ -151,23 +176,47 @@ CODEC_INFO* CODEC_INFO::Find(const wxString find_codec)
 
 //---------------------------------------------------------------------------------------
 
-int CODEC_INFO::GetConstRate(int pct)
+float CODEC_INFO::GetConstRate(int pct)
 {
 
     //Convert a percent (0..100) to the range of min_crf..max_crf
     if (min_crf == max_crf) return -1;
-    return ConvertPctToMinMax(pct, min_crf, max_crf);
+
+    //Return the value
+    return crf_float ? ConvertPctToMinMaxFloat(pct, min_crf, max_crf) : ConvertPctToMinMaxInt(pct, min_crf, max_crf);
 
 }
 
 //---------------------------------------------------------------------------------------
 
-int CODEC_INFO::GetQScale(int pct)
+wxString CODEC_INFO::GetConstRateStr(int pct)
+{
+
+    //Return string representation of QScale
+    return crf_float ? wxString::Format("%.2f", GetConstRate(pct)) : wxString::Format("%i", (int)GetConstRate(pct));
+
+}
+
+//---------------------------------------------------------------------------------------
+
+float CODEC_INFO::GetQScale(int pct)
 {
 
     //Convert a percent (0..100) to the range of min_qscale..max_qscale
     if (min_qscale == max_qscale) return -1;
-    return ConvertPctToMinMax(pct, min_qscale, max_qscale);
+
+    //Return the value
+    return qscale_float ? ConvertPctToMinMaxFloat(pct, min_qscale, max_qscale) : ConvertPctToMinMaxInt(pct, min_qscale, max_qscale);
+
+}
+
+//---------------------------------------------------------------------------------------
+
+wxString CODEC_INFO::GetQScaleStr(int pct)
+{
+
+    //Return string representation of QScale
+    return qscale_float ? wxString::Format("%.2f", GetQScale(pct)) : wxString::Format("%i", (int)GetQScale(pct));
 
 }
 
@@ -191,10 +240,15 @@ void CODEC_INFO::Parse(wxString &from)
     //Parse values from a string
     codec = GetToken(from, "=", true);
     friendly = (GetToken(from, ",", true) == STR_YES);
-    min_qscale = Str2Long(GetToken(from, ",", true), min_qscale);
-    max_qscale = Str2Long(GetToken(from, ",", true), max_qscale);
-    min_crf = Str2Long(GetToken(from, ",", true), min_crf);
-    max_crf = Str2Long(GetToken(from, ",", true), max_crf);
+    min_qscale = GetNumericPart(from, qscale_float, min_qscale);
+    max_qscale = GetNumericPart(from, qscale_float, max_qscale);
+    min_crf = GetNumericPart(from, crf_float, min_crf);
+    max_crf = GetNumericPart(from, crf_float, max_crf);
+
+    /*min_qscale = Str2Float(GetToken(from, ",", true), min_qscale);
+    max_qscale = Str2Float(GetToken(from, ",", true), max_qscale);
+    min_crf = Str2Float(GetToken(from, ",", true), min_crf);
+    max_crf = Str2Float(GetToken(from, ",", true), max_crf);*/
 
 }
 
@@ -211,19 +265,29 @@ void CODEC_INFO::Reset()
     min_crf=0;
     max_crf=0;
     next=NULL;
+    crf_float = false;
+    qscale_float = false;
 
 }
 
 //---------------------------------------------------------------------------------------
 
+#define FFMT ",%gf,%g"
+#define IFMT ",%i,%i"
+
 wxString CODEC_INFO::ToString()
 {
 
     //Pack the values to a string
-    return wxString::Format(
-        "%s=%s,%i,%i,%i,%i",
+    wxString res = wxString::Format("%s=%s", codec, BOOLSTR(friendly));
+    res += qscale_float ? wxString::Format(FFMT, min_qscale, max_qscale) : wxString::Format(IFMT, (int)min_qscale, (int)max_qscale);
+    res += crf_float ? wxString::Format(FFMT, min_crf, max_crf) : wxString::Format(IFMT, (int)min_crf, (int)max_crf);
+    return res;
+
+    /*return wxString::Format(
+        "%s=%s,%.2f,%.2f,%.2f,%.2f",
         codec, BOOLSTR(friendly), min_qscale, max_qscale, min_crf, max_crf
-    );
+    );*/
 
 }
 

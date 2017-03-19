@@ -57,12 +57,12 @@ FFQJobEditAdvPopup::FFQJobEditAdvPopup(wxWindow* parent)
 {
 
 	//(*Initialize(FFQJobEditAdvPopup)
-	wxFlexGridSizer* FlexGridSizer4;
-	wxFlexGridSizer* FlexGridSizer3;
+	wxFlexGridSizer* FlexGridSizer1;
 	wxFlexGridSizer* FlexGridSizer2;
 	wxBoxSizer* BoxSizer2;
+	wxFlexGridSizer* FlexGridSizer4;
+	wxFlexGridSizer* FlexGridSizer3;
 	wxBoxSizer* BoxSizer1;
-	wxFlexGridSizer* FlexGridSizer1;
 
 	Create(parent, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL|wxSTATIC_BORDER|wxWANTS_CHARS, _T("wxID_ANY"));
 	FlexGridSizer4 = new wxFlexGridSizer(7, 1, 0, 0);
@@ -72,14 +72,14 @@ FFQJobEditAdvPopup::FFQJobEditAdvPopup(wxWindow* parent)
 	Panel1->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_ACTIVECAPTION));
 	BoxSizer2 = new wxBoxSizer(wxHORIZONTAL);
 	ST0 = new wxStaticText(Panel1, wxID_ANY, _T("Label"), wxDefaultPosition, wxDefaultSize, 0, _T("wxID_ANY"));
-	wxFont ST0Font(11,wxSWISS,wxFONTSTYLE_NORMAL,wxBOLD,false,wxEmptyString,wxFONTENCODING_DEFAULT);
+	wxFont ST0Font(11,wxFONTFAMILY_SWISS,wxFONTSTYLE_NORMAL,wxFONTWEIGHT_BOLD,false,wxEmptyString,wxFONTENCODING_DEFAULT);
 	ST0->SetFont(ST0Font);
 	ST0->SetLabel(FFQS(SID_JOBEDIT_ADV_INPUT_SETTINGS));
-	BoxSizer2->Add(ST0, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+	BoxSizer2->Add(ST0, 1, wxALL|wxEXPAND, 5);
 	Panel1->SetSizer(BoxSizer2);
 	BoxSizer2->Fit(Panel1);
 	BoxSizer2->SetSizeHints(Panel1);
-	FlexGridSizer4->Add(Panel1, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
+	FlexGridSizer4->Add(Panel1, 1, wxALL|wxEXPAND, 0);
 	FlexGridSizer2 = new wxFlexGridSizer(2, 3, 0, 0);
 	ST1 = new wxStaticText(this, wxID_ANY, _T("L1"), wxDefaultPosition, wxDefaultSize, 0, _T("wxID_ANY"));
 	ST1->SetLabel(FFQS(SID_JOBEDIT_ADV_ITSOFFSET));
@@ -97,15 +97,15 @@ FFQJobEditAdvPopup::FFQJobEditAdvPopup(wxWindow* parent)
 	ST4 = new wxStaticText(this, wxID_ANY, _T("L4"), wxDefaultPosition, wxDefaultSize, 0, _T("wxID_ANY"));
 	ST4->SetLabel(FFQS(SID_JOBEDIT_ADV_FPS));
 	FlexGridSizer2->Add(ST4, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
-	FlexGridSizer4->Add(FlexGridSizer2, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+	FlexGridSizer4->Add(FlexGridSizer2, 1, wxALL|wxEXPAND, 5);
 	FlexGridSizer1 = new wxFlexGridSizer(1, 1, 0, 0);
 	FrameRateSwitch = new wxCheckBox(this, wxID_ANY, _T("Fr"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("wxID_ANY"));
 	FrameRateSwitch->SetValue(false);
 	FrameRateSwitch->SetLabel(FFQS(SID_JOBEDIT_ADV_FRAMERATE_SWITCH));
 	FlexGridSizer1->Add(FrameRateSwitch, 1, wxBOTTOM|wxLEFT|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
-	FlexGridSizer4->Add(FlexGridSizer1, 1, wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+	FlexGridSizer4->Add(FlexGridSizer1, 1, wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND, 5);
 	Line = new wxStaticLine(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL, _T("wxID_ANY"));
-	FlexGridSizer4->Add(Line, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
+	FlexGridSizer4->Add(Line, 1, wxALL|wxEXPAND, 0);
 	FlexGridSizer3 = new wxFlexGridSizer(2, 2, 0, 0);
 	DiscardCorrupt = new wxCheckBox(this, wxID_ANY, _T("Dc"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("wxID_ANY"));
 	DiscardCorrupt->SetValue(false);
@@ -123,9 +123,9 @@ FFQJobEditAdvPopup::FFQJobEditAdvPopup(wxWindow* parent)
 	IgnIdx->SetValue(false);
 	IgnIdx->SetLabel(FFQS(SID_JOBEDIT_ADV_IGNOREIDX));
 	FlexGridSizer3->Add(IgnIdx, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
-	FlexGridSizer4->Add(FlexGridSizer3, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+	FlexGridSizer4->Add(FlexGridSizer3, 1, wxALL|wxEXPAND, 5);
 	StaticLine1 = new wxStaticLine(this, ID_STATICLINE1, wxDefaultPosition, wxSize(10,-1), wxLI_HORIZONTAL, _T("ID_STATICLINE1"));
-	FlexGridSizer4->Add(StaticLine1, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
+	FlexGridSizer4->Add(StaticLine1, 1, wxALL|wxEXPAND, 0);
 	BoxSizer1 = new wxBoxSizer(wxHORIZONTAL);
 	ClearBtn = new wxButton(this, ID_CLEARBTN, _T("Cl"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CLEARBTN"));
 	ClearBtn->SetLabel(FFQS(SID_COMMON_CLEAR));
@@ -138,7 +138,7 @@ FFQJobEditAdvPopup::FFQJobEditAdvPopup(wxWindow* parent)
 	NoBtn = new wxButton(this, ID_NOBTN, _T("No"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_NOBTN"));
 	NoBtn->SetLabel(FFQS(SID_COMMON_CANCEL));
 	BoxSizer1->Add(NoBtn, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
-	FlexGridSizer4->Add(BoxSizer1, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+	FlexGridSizer4->Add(BoxSizer1, 1, wxALL|wxEXPAND, 3);
 	SetSizer(FlexGridSizer4);
 	FlexGridSizer4->Fit(this);
 	FlexGridSizer4->SetSizeHints(this);

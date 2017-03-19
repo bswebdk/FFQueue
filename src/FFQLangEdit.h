@@ -28,13 +28,13 @@
 
 #ifndef WX_PRECOMP
 	//(*HeadersPCH(FFQLangEdit)
-	#include <wx/listctrl.h>
 	#include <wx/sizer.h>
+	#include <wx/listctrl.h>
+	#include <wx/panel.h>
+	#include <wx/statusbr.h>
+	#include <wx/frame.h>
 	#include <wx/stattext.h>
 	#include <wx/textctrl.h>
-	#include <wx/panel.h>
-	#include <wx/frame.h>
-	#include <wx/statusbr.h>
 	//*)
 #endif
 //(*Headers(FFQLangEdit)
@@ -60,17 +60,17 @@ class FFQLangEdit: public wxFrame
 
 
 		//(*Declarations(FFQLangEdit)
-		wxStatusBar* SB;
-		wxTextCtrl* Password1;
 		wxStaticText* Info;
-		wxTextCtrl* Description;
-		wxTextCtrl* Password2;
 		wxStaticText* ST2;
+		wxTextCtrl* Password2;
+		wxListView* ListView;
+		wxPanel* TabPanel;
 		wxStaticText* ST4;
 		wxTextCtrl* StrEdit;
+		wxStatusBar* SB;
+		wxTextCtrl* Password1;
 		wxStaticText* ST3;
-		wxPanel* TabPanel;
-		wxListView* ListView;
+		wxTextCtrl* Description;
 		//*)
 
 	protected:
@@ -103,7 +103,7 @@ class FFQLangEdit: public wxFrame
 		LPFFQ_STRING m_EditStr, m_OrgStr;
 		long m_EditIndex, m_Modified;
 		bool m_SkipEvents;
-		size_t m_EditListSize;
+		unsigned int m_EditListSize;
 
 		void LoadEditStr(bool internal = false);
 		bool SaveEditStr(bool force, bool clear = true);

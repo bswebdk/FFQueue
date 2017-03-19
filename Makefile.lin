@@ -16,13 +16,13 @@ MAKEROOT:=build
 MAKEBINARY:=$(MAKEROOT)/FFQueue
 
 # Compiler settings, you may need to change "/gtk_build/" to the folder you used to build wxWidgets:
-COMPVARS:=$(shell $(WX)/gtk-build/wx-config --version=3.0 --static=yes --unicode=yes --debug=no --cflags) -O2 -DNDEBUG -Wall -std=gnu++11 -Winvalid-pch -include wx_pch.h
+COMPVARS:=$(shell $(WX)/gtk-build/wx-config --version=3.1 --static=yes --unicode=yes --debug=no --cflags) -O2 -DNDEBUG -Wall -std=gnu++11 -Winvalid-pch -include wx_pch.h
 
 # Compiler search directories
 COMPDIRS:=-I.
 
 # Linker settings, you may need to change "/gtk_build/" to the folder you used to build wxWidgets:
-LINKVARS:=$(shell $(WX)/gtk-build/wx-config --version=3.0 --static=yes --debug=no --libs) -s -static-libgcc -static-libstdc++
+LINKVARS:=$(shell $(WX)/gtk-build/wx-config --version=3.1 --static=yes --debug=no --libs) -s -static-libgcc -static-libstdc++
 
 # Linker search directories
 LINKDIRS:=
@@ -94,6 +94,7 @@ OBJECTS:=\
 	$(MAKEROOT)/obj/tools/FFQThumbMake.o\
 	$(MAKEROOT)/obj/tools/FFQThumbPanel.o\
 	$(MAKEROOT)/obj/tools/FFQVidStab.o\
+	$(MAKEROOT)/obj/tools/FFQVideoToGIF.o\
 	$(MAKEROOT)/obj/utils/FFQBuildCmd.o\
 	$(MAKEROOT)/obj/utils/FFQCodecInfo.o\
 	$(MAKEROOT)/obj/utils/FFQCompress.o\
@@ -328,6 +329,9 @@ $(MAKEROOT)/obj/tools/FFQThumbPanel.o:
 
 $(MAKEROOT)/obj/tools/FFQVidStab.o:
 	$(CXX) $(COMPVARS) $(COMPDIRS) -c "src/tools/FFQVidStab.cpp" -o $@
+
+$(MAKEROOT)/obj/tools/FFQVideoToGIF.o:
+	$(CXX) $(COMPVARS) $(COMPDIRS) -c "src/tools/FFQVideoToGIF.cpp" -o $@
 
 $(MAKEROOT)/obj/utils/FFQBuildCmd.o:
 	$(CXX) $(COMPVARS) $(COMPDIRS) -c "src/utils/FFQBuildCmd.cpp" -o $@

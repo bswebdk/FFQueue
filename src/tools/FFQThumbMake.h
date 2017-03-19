@@ -28,12 +28,12 @@
 
 #ifndef WX_PRECOMP
 	//(*HeadersPCH(FFQThumbMake)
-	#include <wx/sizer.h>
-	#include <wx/textctrl.h>
 	#include <wx/checkbox.h>
-	#include <wx/filedlg.h>
-	#include <wx/button.h>
 	#include <wx/dialog.h>
+	#include <wx/sizer.h>
+	#include <wx/button.h>
+	#include <wx/filedlg.h>
+	#include <wx/textctrl.h>
 	//*)
 #endif
 //(*Headers(FFQThumbMake)
@@ -52,13 +52,13 @@ class FFQThumbMake: public wxDialog
 		//bool Execute(THUMBS_AND_TILES &tnt, wxString &forFile, bool &saveLog);
 
 		//(*Declarations(FFQThumbMake)
-		wxCheckBox* SaveLog;
+		wxButton* CancelButton;
 		wxButton* BrowseButton;
+		wxCheckBox* SaveLog;
 		wxTextCtrl* InFile;
+		wxButton* MakeButton;
 		wxFileDialog* FileDlg;
 		FFQThumbPanel* ThumbPanel;
-		wxButton* CancelButton;
-		wxButton* MakeButton;
 		//*)
 
 	protected:

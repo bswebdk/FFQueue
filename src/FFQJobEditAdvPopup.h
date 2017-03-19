@@ -28,13 +28,13 @@
 
 #ifndef WX_PRECOMP
 	//(*HeadersPCH(FFQJobEditAdvPopup)
+	#include <wx/checkbox.h>
+	#include <wx/dialog.h>
 	#include <wx/sizer.h>
+	#include <wx/button.h>
+	#include <wx/panel.h>
 	#include <wx/stattext.h>
 	#include <wx/textctrl.h>
-	#include <wx/checkbox.h>
-	#include <wx/panel.h>
-	#include <wx/button.h>
-	#include <wx/dialog.h>
 	//*)
 #endif
 //(*Headers(FFQJobEditAdvPopup)
@@ -52,24 +52,24 @@ class FFQJobEditAdvPopup: public wxDialog
 		//bool CheckFocus(wxWindow *focus = NULL);
 
 		//(*Declarations(FFQJobEditAdvPopup)
-		wxCheckBox* IgnIdx;
-		wxButton* NoBtn;
-		wxCheckBox* DiscardCorrupt;
-		wxStaticLine* Line;
-		wxCheckBox* FrameRateSwitch;
-		wxPanel* Panel1;
-		wxStaticText* ST0;
 		wxCheckBox* IgnDTS;
+		wxPanel* Panel1;
 		wxStaticText* ST2;
-		wxStaticText* ST4;
-		wxStaticText* ST3;
-		wxStaticLine* StaticLine1;
-		wxButton* ClearBtn;
+		wxCheckBox* FrameRateSwitch;
 		wxStaticText* ST1;
-		wxTextCtrl* ItsOffset;
-		wxButton* OkBtn;
-		wxTextCtrl* FrameRate;
+		wxStaticLine* Line;
+		wxCheckBox* IgnIdx;
+		wxButton* ClearBtn;
+		wxStaticLine* StaticLine1;
 		wxCheckBox* GenPTS;
+		wxStaticText* ST4;
+		wxButton* OkBtn;
+		wxStaticText* ST0;
+		wxCheckBox* DiscardCorrupt;
+		wxStaticText* ST3;
+		wxTextCtrl* ItsOffset;
+		wxTextCtrl* FrameRate;
+		wxButton* NoBtn;
 		//*)
 
 	protected:

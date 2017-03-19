@@ -83,7 +83,7 @@ class FFQConsole
         void AppendStatistics(const wxString &Prog);
         void Clear(bool Ctrl = true);
         void FlushMessages(bool Finalize = true);
-        size_t GetEncodedFrames();
+        unsigned int GetEncodedFrames();
         TIME_VALUE GetEncodedTime();
         uint64_t GetStatisticsTotal();
         void ReplaceLine(int LineNo, const wxString &NewLine);
@@ -94,9 +94,9 @@ class FFQConsole
 
         //Static helper functions (used to be part of the horror named FFQueueUtils.*)
         static bool IsLineClipping(const wxString &Line);
-        static bool IsLineMessageRepeat(wxString Line, size_t &Repetitions);
-        static bool IsLineStatistics(wxString Line, TIME_VALUE &Time, size_t &Frame);
-        static bool IsLineVidStabLowContrast(wxString Line, size_t &Frame);
+        static bool IsLineMessageRepeat(wxString Line, unsigned int &Repetitions);
+        static bool IsLineStatistics(wxString Line, TIME_VALUE &Time, unsigned int &Frame);
+        static bool IsLineVidStabLowContrast(wxString Line, unsigned int &Frame);
 
     protected:
 
@@ -109,9 +109,9 @@ class FFQConsole
         uint64_t m_StatsTotal; //Total number of status lines
         uint64_t m_ClippingsTotal; //Total number of clipping warnings received
         TIME_VALUE m_EncTime; //The time that has been processed
-        size_t m_EncFrames; //Number of frames processed
-        size_t m_LowContrastFirst; //First frame reported with low contrast from vidstabdetect
-        size_t m_LowContrastLast; //Last frame of above
+        unsigned int m_EncFrames; //Number of frames processed
+        unsigned int m_LowContrastFirst; //First frame reported with low contrast from vidstabdetect
+        unsigned int m_LowContrastLast; //Last frame of above
         FF_MSG_TYPE m_LastMsgType; //The last message type added
 
         bool ClearStatsAnim();

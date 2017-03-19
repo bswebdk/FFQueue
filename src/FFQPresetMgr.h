@@ -28,10 +28,10 @@
 
 #ifndef WX_PRECOMP
 	//(*HeadersPCH(FFQPresetMgr)
-	#include <wx/sizer.h>
-	#include <wx/listbox.h>
-	#include <wx/button.h>
 	#include <wx/dialog.h>
+	#include <wx/sizer.h>
+	#include <wx/button.h>
+	#include <wx/listbox.h>
 	//*)
 #endif
 //(*Headers(FFQPresetMgr)
@@ -48,32 +48,32 @@ class FFQPresetMgr: public wxDialog
 		FFQPresetMgr(wxWindow* parent, wxWindowID id=wxID_ANY);
 		virtual ~FFQPresetMgr();
 
-		size_t AddPreset(LPFFQ_PRESET pst, bool select = false);
+		unsigned int AddPreset(LPFFQ_PRESET pst, bool select = false);
 		void ClearPresets();
 		void DeletePreset(LPFFQ_PRESET pst);
-		void DeletePreset(size_t pstIndex);
+		void DeletePreset(unsigned int pstIndex);
 		bool EditPreset(LPFFQ_PRESET pst);
 		bool Execute(wxChoice* forChoice = NULL);
 		void FillChoice(wxChoice* choice, wxString selectId);
 		long FindPreset(wxString name, bool matchCase = false);
 		LPFFQ_PRESET GetLastModified();
-		size_t GetPresetCount();
-		LPFFQ_PRESET GetPreset(size_t pstIndex);
+		unsigned int GetPresetCount();
+		LPFFQ_PRESET GetPreset(unsigned int pstIndex);
 		LPFFQ_PRESET GetPreset(wxString pstId);
 		LPFFQ_PRESET GetPresetByFingerPrint(wxString pstFp);
 		long IndexOf(LPFFQ_PRESET pst);
 
 		//(*Declarations(FFQPresetMgr)
+		wxButton* CopyButton;
 		wxButton* UpButton;
 		wxListBox* Presets;
-		wxButton* CopyButton;
+		wxButton* EditButton;
+		wxButton* DeleteButton;
 		wxButton* CloseButton;
 		wxButton* SortButton;
-		wxButton* PasteButton;
-		wxButton* DownButton;
 		wxButton* NewButton;
-		wxButton* DeleteButton;
-		wxButton* EditButton;
+		wxButton* DownButton;
+		wxButton* PasteButton;
 		//*)
 
 	protected:
@@ -100,10 +100,10 @@ class FFQPresetMgr: public wxDialog
 
 		FFQPresetEdit *m_Editor;
 		LPFFQ_PRESET m_LastMod;
-		size_t m_Changes;
+		unsigned int m_Changes;
 
 		//void MoveSelectedPresets(int by);
-		size_t SetListItem(long idx, LPFFQ_PRESET pst, bool select = false);
+		unsigned int SetListItem(long idx, LPFFQ_PRESET pst, bool select = false);
 		void SortPresets();
 		//void SwapPresets(size_t idx1, size_t idx2);
 		void UpdateControls();

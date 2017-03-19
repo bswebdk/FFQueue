@@ -29,9 +29,9 @@
 #ifndef WX_PRECOMP
 	//(*HeadersPCH(FFQPresetPanel)
 	#include <wx/sizer.h>
+	#include <wx/button.h>
 	#include <wx/panel.h>
 	#include <wx/choice.h>
-	#include <wx/button.h>
 	//*)
 #endif
 //(*Headers(FFQPresetPanel)
@@ -51,8 +51,8 @@ class FFQPresetPanel: public wxPanel
 		LPFFQ_PRESET GetSelectedPreset();
 
 		//(*Declarations(FFQPresetPanel)
-		wxChoice* Presets;
 		wxButton* MgrButton;
+		wxChoice* Presets;
 		//*)
 
 	protected:

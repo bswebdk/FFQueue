@@ -54,7 +54,7 @@ FFQPresetPanel::FFQPresetPanel(wxWindow* parent)
 	FlexGridSizer1->AddGrowableCol(0);
 	FlexGridSizer1->AddGrowableRow(0);
 	Presets = new wxChoice(this, ID_PRESETS, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator, _T("ID_PRESETS"));
-	FlexGridSizer1->Add(Presets, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
+	FlexGridSizer1->Add(Presets, 1, wxALL|wxEXPAND, 0);
 	MgrButton = new wxButton(this, ID_MGRBUTTON, _T("..."), wxDefaultPosition, wxSize(50,-1), 0, wxDefaultValidator, _T("ID_MGRBUTTON"));
 	FlexGridSizer1->Add(MgrButton, 1, wxLEFT|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
 	SetSizer(FlexGridSizer1);

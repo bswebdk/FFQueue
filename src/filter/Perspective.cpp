@@ -171,7 +171,7 @@ bool Perspective::GetFilter(LPFFMPEG_FILTER fltr)
     fltr->friendly = FFQSF(SID_PERSPECTIVE_USERFRIENDLY, FFQL()->FILTER_NAMES[fltr->type],
                            Friendly(l), Friendly(r), Friendly(t), Friendly(b), BOOLSTR(ic), tl);
     fltr->ff_filter.Printf("%s%s%s", FILTER_VIDEO_IN, f, FILTER_VIDEO_OUT);
-    fltr->editable.Printf("%i,%i,%i,%i,%s,%llu,%llu", l+100, r+100, t+100, b+100, BOOLSTR(ic), t1, t2);
+    fltr->editable.Printf("%i,%i,%i,%i,%s,"+UINT64FMT+","+UINT64FMT, l+100, r+100, t+100, b+100, BOOLSTR(ic), t1, t2);
 
     return true;
 

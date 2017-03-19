@@ -97,7 +97,7 @@ extern const wxString FILTER_NAMES[];
 
 //The order in which the filters appear in the menu. A better way of sorting
 //filters should be established in the future.
-extern const size_t FILTER_ORDER_COUNT;
+extern const unsigned int FILTER_ORDER_COUNT;
 extern const int FILTER_ORDER[];
 
 

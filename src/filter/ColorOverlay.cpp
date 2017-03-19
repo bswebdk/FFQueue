@@ -159,7 +159,7 @@ bool ColorOverlay::GetFilter(LPFFMPEG_FILTER fltr)
                                rgb, left, top, width, height, alpha, tf);
 
     wxString uid = NextFilterUID();
-    fltr->ff_filter.Printf("color=%s@0x%X:%ux%u%s;%s%soverlay=%u:%u:shortest=1%s%s",
+    fltr->ff_filter.Printf("color=%s@0x%X:%ix%i%s;%s%soverlay=%i:%i:shortest=1%s%s",
                               rgb,
                               m_Visibility->GetValue(),
                               width, height,
@@ -170,7 +170,7 @@ bool ColorOverlay::GetFilter(LPFFMPEG_FILTER fltr)
                               timeLimit,
                               FILTER_VIDEO_OUT);
 
-    fltr->editable.Printf("%s,%u,%u,%u,%u,%u," + UINT64FMT + "," + UINT64FMT,
+    fltr->editable.Printf("%s,%i,%i,%i,%i,%i," + UINT64FMT + "," + UINT64FMT,
                             rgb,
                             m_Visibility->GetValue(),
                             left, top, width, height,

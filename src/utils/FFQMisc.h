@@ -89,7 +89,8 @@ wxString Unescape(wxString str);
 uint64_t GetTimeTickCount(wxLongLong *tick = NULL);
 
 //Miscellaneous conversion
-int ConvertPctToMinMax(float pct, float min, float max, float pct_base = 100);
+float ConvertPctToMinMaxFloat(float pct, float min, float max, float pct_base = 100);
+int ConvertPctToMinMaxInt(float pct, float min, float max, float pct_base = 100);
 int froundi(float n);
 int64_t droundi(double n);
 
@@ -102,7 +103,7 @@ wxString MakeLogFileName(wxString &for_file);
 //UI related function
 void EnableSizer(wxSizer *sizer, bool enable, const long *skip = NULL);
 void ListBoxMoveSelectedItems(wxListBox *lb, bool up, bool is_check_list_box);
-void ListBoxSwapItems(wxListBox *lb, size_t a, size_t b, bool is_check_list_box);
+void ListBoxSwapItems(wxListBox *lb, unsigned int a, unsigned int b, bool is_check_list_box);
 
 //File handling
 bool CopyFileTime(wxString from_path, wxString to_path);

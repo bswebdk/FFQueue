@@ -24,6 +24,7 @@
 #include "FFQTimeValue.h"
 #include "FFQMisc.h"
 #include "../utils/FFQLang.h"
+#include "../utils/FFQConst.h"
 
 TIME_VALUE::TIME_VALUE()
 {
@@ -175,7 +176,7 @@ wxString TIME_VALUE::ToShortString()
     //in the format [seconds].[millis]
     uint64_t ms = ToMilliseconds(), secs = ms / 1000;
     ms = ms % 1000;
-    return wxString::Format("%llu.%03llu", secs, ms);
+    return wxString::Format(UINT64FMT + ".%03u", secs, (unsigned int)ms);
 
 }
 
@@ -186,7 +187,7 @@ wxString TIME_VALUE::ToString(bool ZeroPadding, bool AppendMillis, wxUniChar Mil
 
     //Convert the time value to a FF-compatible string
     wxString res = ZeroPadding ? "%02u:%02u:%02u.%03u" : "%u:%u:%u.%u";
-    res.Printf(res, hours, minutes, seconds, milliseconds);
+    res.Printf(res, (unsigned int)hours, (unsigned int)minutes, (unsigned int)seconds, (unsigned int)milliseconds);
     if (!AppendMillis) return res.BeforeLast('.');
     if (MillisSep != '.') res.Replace('.', MillisSep);
     return res;

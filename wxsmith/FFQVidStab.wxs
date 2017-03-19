@@ -21,7 +21,7 @@
 									<extra_code>SBS1-&gt;GetStaticBox()-&gt;SetLabel(FFQS(SID__VIDSTAB__IN__FILE));</extra_code>
 									<handler function="OnAction" entry="EVT_TEXT" />
 								</object>
-								<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<flag>wxALL|wxEXPAND</flag>
 								<border>3</border>
 								<option>1</option>
 							</object>
@@ -43,12 +43,12 @@
 						<object class="wxStaticText" name="ID_FILEINFO" variable="FileInfo" member="yes">
 							<label>Inf</label>
 						</object>
-						<flag>wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+						<flag>wxALL|wxEXPAND</flag>
 						<border>3</border>
 						<option>1</option>
 					</object>
 				</object>
-				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<flag>wxALL|wxEXPAND</flag>
 				<border>3</border>
 				<option>1</option>
 			</object>
@@ -92,7 +92,7 @@
 													<option>1</option>
 												</object>
 											</object>
-											<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<flag>wxALL|wxEXPAND</flag>
 											<border>2</border>
 											<option>1</option>
 										</object>
@@ -118,7 +118,7 @@
 												<size>-1,20</size>
 												<handler function="OnSliderChange" entry="EVT_COMMAND_SLIDER_UPDATED" />
 											</object>
-											<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<flag>wxALL|wxEXPAND</flag>
 											<border>3</border>
 											<option>1</option>
 										</object>
@@ -148,7 +148,7 @@
 												<size>-1,20</size>
 												<handler function="OnSliderChange" entry="EVT_COMMAND_SLIDER_UPDATED" />
 											</object>
-											<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<flag>wxALL|wxEXPAND</flag>
 											<border>3</border>
 											<option>1</option>
 										</object>
@@ -178,7 +178,7 @@
 												<size>-1,20</size>
 												<handler function="OnSliderChange" entry="EVT_COMMAND_SLIDER_UPDATED" />
 											</object>
-											<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<flag>wxALL|wxEXPAND</flag>
 											<border>3</border>
 											<option>1</option>
 										</object>
@@ -206,7 +206,7 @@
 												<size>-1,20</size>
 												<handler function="OnSliderChange" entry="EVT_COMMAND_SLIDER_UPDATED" />
 											</object>
-											<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<flag>wxALL|wxEXPAND</flag>
 											<border>3</border>
 											<option>1</option>
 										</object>
@@ -220,7 +220,7 @@
 											<option>1</option>
 										</object>
 									</object>
-									<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+									<flag>wxALL|wxEXPAND</flag>
 									<border>3</border>
 									<option>1</option>
 								</object>
@@ -248,7 +248,7 @@
 											<option>1</option>
 										</object>
 									</object>
-									<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+									<flag>wxALL|wxEXPAND</flag>
 									<border>3</border>
 									<option>1</option>
 								</object>
@@ -364,7 +364,7 @@
 											<option>1</option>
 										</object>
 									</object>
-									<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+									<flag>wxALL|wxEXPAND</flag>
 									<border>3</border>
 									<option>1</option>
 								</object>
@@ -386,7 +386,7 @@
 											<object class="wxChoice" name="ID_OPTALGO" variable="OptAlgo" member="yes">
 												<extra_code>OptAlgo-&gt;Append(VIDSTAB__OPT__ALGO__COUNT, OptAlgoItems);</extra_code>
 											</object>
-											<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<flag>wxALL|wxEXPAND</flag>
 											<border>3</border>
 											<option>1</option>
 										</object>
@@ -403,7 +403,7 @@
 											<object class="wxChoice" name="ID_INTERPOLATION" variable="Interpolation" member="yes">
 												<extra_code>Interpolation-&gt;Append(VIDSTAB__INTERPOLATION__COUNT, InterpolationItems);</extra_code>
 											</object>
-											<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<flag>wxALL|wxEXPAND</flag>
 											<border>3</border>
 											<option>1</option>
 										</object>
@@ -421,12 +421,12 @@
 												<extra_code>OptZoom-&gt;Append(VIDSTAB__OPT__ZOOM__COUNT, OptZoomItems);</extra_code>
 												<handler function="OnAction" entry="EVT_CHOICE" />
 											</object>
-											<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<flag>wxALL|wxEXPAND</flag>
 											<border>3</border>
 											<option>1</option>
 										</object>
 									</object>
-									<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+									<flag>wxALL|wxEXPAND</flag>
 									<border>3</border>
 									<option>1</option>
 								</object>
@@ -438,7 +438,7 @@
 												<label>Crop</label>
 												<extra_code>CropBlack-&gt;SetLabel(FFQS(SID__VIDSTAB__CROP__FILL__BLACK));</extra_code>
 											</object>
-											<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+											<flag>wxALL|wxALIGN_LEFT</flag>
 											<border>3</border>
 											<option>1</option>
 										</object>
@@ -447,7 +447,7 @@
 												<label>Inv</label>
 												<extra_code>Invert-&gt;SetLabel(FFQS(SID__VIDSTAB__INVERT));</extra_code>
 											</object>
-											<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+											<flag>wxALL|wxALIGN_LEFT</flag>
 											<border>3</border>
 											<option>1</option>
 										</object>
@@ -456,7 +456,7 @@
 												<label>Rel</label>
 												<extra_code>Relative-&gt;SetLabel(FFQS(SID__VIDSTAB__RELATIVE));</extra_code>
 											</object>
-											<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+											<flag>wxALL|wxALIGN_LEFT</flag>
 											<border>3</border>
 											<option>1</option>
 										</object>
@@ -465,12 +465,12 @@
 												<label>VTri</label>
 												<extra_code>VirtualTripod-&gt;SetLabel(FFQS(SID__VIDSTAB__VIRTUAL__TRIPOD));</extra_code>
 											</object>
-											<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+											<flag>wxALL|wxALIGN_LEFT</flag>
 											<border>3</border>
 											<option>1</option>
 										</object>
 									</object>
-									<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+									<flag>wxALL|wxEXPAND</flag>
 									<border>3</border>
 									<option>1</option>
 								</object>
@@ -519,7 +519,7 @@
 													<option>1</option>
 												</object>
 											</object>
-											<flag>wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+											<flag>wxALL|wxEXPAND</flag>
 											<border>3</border>
 											<option>1</option>
 										</object>
@@ -543,7 +543,7 @@
 											<option>1</option>
 										</object>
 									</object>
-									<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+									<flag>wxALL|wxEXPAND</flag>
 									<border>5</border>
 									<option>1</option>
 								</object>
@@ -552,7 +552,7 @@
 						<label>Opt</label>
 					</object>
 				</object>
-				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<flag>wxALL|wxEXPAND</flag>
 				<border>3</border>
 				<option>1</option>
 			</object>
@@ -577,7 +577,7 @@
 							</object>
 							<object class="sizeritem">
 								<object class="wxTextCtrl" name="ID_DESTFILE" variable="DestFile" member="yes" />
-								<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<flag>wxALL|wxEXPAND</flag>
 								<border>3</border>
 								<option>1</option>
 							</object>
@@ -592,7 +592,7 @@
 								<option>1</option>
 							</object>
 						</object>
-						<flag>wxBOTTOM|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<flag>wxBOTTOM|wxEXPAND</flag>
 						<border>2</border>
 						<option>1</option>
 					</object>
@@ -614,16 +614,16 @@
 							<object class="sizeritem">
 								<object class="Custom" name="ID_PRESET" subclass="FFQPresetPanel" variable="Preset" member="yes">
 									<creating_code>$(THIS) = new $(CLASS)($(PARENT));</creating_code>
-									<include_file>FFQPresetPanel.h</include_file>
+									<include_file>../FFQPresetPanel.h</include_file>
 									<local_include>1</local_include>
 									<style></style>
 								</object>
-								<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<flag>wxALL|wxEXPAND</flag>
 								<border>3</border>
 								<option>1</option>
 							</object>
 						</object>
-						<flag>wxBOTTOM|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<flag>wxBOTTOM|wxEXPAND</flag>
 						<border>2</border>
 						<option>1</option>
 					</object>
@@ -632,12 +632,12 @@
 							<label>Log</label>
 							<extra_code>SaveLog-&gt;SetLabel(FFQS(SID__COMMON__SAVE__LOG));</extra_code>
 						</object>
-						<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+						<flag>wxALL|wxALIGN_LEFT</flag>
 						<border>2</border>
 						<option>1</option>
 					</object>
 				</object>
-				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<flag>wxALL|wxEXPAND</flag>
 				<border>3</border>
 				<option>1</option>
 			</object>
@@ -659,16 +659,6 @@
 						<option>1</option>
 					</object>
 					<object class="sizeritem">
-						<object class="wxButton" name="ID_CANCELBUTTON" variable="CancelButton" member="yes">
-							<label>N</label>
-							<extra_code>CancelButton-&gt;SetLabel(FFQS(SID__COMMON__CANCEL));</extra_code>
-							<handler function="OnAction" entry="EVT_BUTTON" />
-						</object>
-						<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
-						<border>5</border>
-						<option>1</option>
-					</object>
-					<object class="sizeritem">
 						<object class="wxButton" name="ID_OKBUTTON" variable="OkButton" member="yes">
 							<label>Y</label>
 							<extra_code>OkButton-&gt;SetLabel(FFQS(SID__COMMON__OK));</extra_code>
@@ -678,8 +668,18 @@
 						<border>5</border>
 						<option>1</option>
 					</object>
+					<object class="sizeritem">
+						<object class="wxButton" name="ID_CANCELBUTTON" variable="CancelButton" member="yes">
+							<label>N</label>
+							<extra_code>CancelButton-&gt;SetLabel(FFQS(SID__COMMON__CANCEL));</extra_code>
+							<handler function="OnAction" entry="EVT_BUTTON" />
+						</object>
+						<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<border>5</border>
+						<option>1</option>
+					</object>
 				</object>
-				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<flag>wxALL|wxEXPAND</flag>
 				<border>5</border>
 				<option>1</option>
 			</object>

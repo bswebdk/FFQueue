@@ -28,9 +28,9 @@
 
 #ifndef WX_PRECOMP
 	//(*HeadersPCH(FFQFilterEdit)
+	#include <wx/dialog.h>
 	#include <wx/sizer.h>
 	#include <wx/button.h>
-	#include <wx/dialog.h>
 	//*)
 #endif
 //(*Headers(FFQFilterEdit)
@@ -48,10 +48,10 @@ class FFQFilterEdit: public wxDialog
 		bool Execute(LPFFMPEG_FILTER filter);
 
 		//(*Declarations(FFQFilterEdit)
-		wxButton* OKButton;
-		wxFlexGridSizer* GridSizer;
-		wxStaticBoxSizer* FilterContainer;
 		wxButton* CancelButton;
+		wxStaticBoxSizer* FilterContainer;
+		wxFlexGridSizer* GridSizer;
+		wxButton* OKButton;
 		//*)
 
 	protected:

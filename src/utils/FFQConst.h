@@ -26,7 +26,6 @@
 
 #include <wx/string.h>
 
-
 #ifdef __WINDOWS__
 const wxString CRLF = "\r\n";
 const wxString NULL_FILENAME = "NUL";
@@ -45,12 +44,22 @@ const wxString STR_NO = "0";
 #define BOOLSTR(bval) (bval ? STR_YES : STR_NO)
 #define STRBOOL(sval) (sval == STR_YES)
 
-bool STRBOOLDEF(wxString sval, bool def);
+inline bool STRBOOLDEF(wxString sval, bool def)
+{
+    return sval.Len() == 0 ? def : STRBOOL(sval);
+}
 
 //Blank chars (trim chars)
 const wxString BLANKS = "\r\n\t\f ";
 
 const wxString INT64FMT = "%" + wxString(wxLongLongFmtSpec) + "d";
 const wxString UINT64FMT = "%" + wxString(wxLongLongFmtSpec) + "u";
+
+//used to prevent assertions when formatting "size_t" data types
+inline unsigned int SIZEFMT(size_t x)
+{
+    if (x > 0xffffffff) wxMessageBox("size_t shot in the knee!");
+    return (unsigned int)x;
+}
 
 #endif // FFQCONST_H

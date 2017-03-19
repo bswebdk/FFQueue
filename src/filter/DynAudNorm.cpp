@@ -192,8 +192,8 @@ void DynAudNorm::OnSliderChange(wxCommandEvent &event)
 {
     event.Skip();
     wxObject *o = event.GetEventObject();
-    if ((o == NULL) || (o == m_FrameLen)) m_FrameLenText->SetLabel(wxString::Format("%u", FRAME_LENGTH(m_FrameLen->GetValue())));
-    if ((o == NULL) || (o == m_GaussWnd)) m_GaussWndText->SetLabel(wxString::Format("%u", GAUSSIAN_WND(m_GaussWnd->GetValue())));
+    if ((o == NULL) || (o == m_FrameLen)) m_FrameLenText->SetLabel(wxString::Format("%i", FRAME_LENGTH(m_FrameLen->GetValue())));
+    if ((o == NULL) || (o == m_GaussWnd)) m_GaussWndText->SetLabel(wxString::Format("%i", GAUSSIAN_WND(m_GaussWnd->GetValue())));
     if ((o == NULL) || (o == m_PeakVal)) m_PeakValText->SetLabel(wxString::Format("%.2f", PEAK_VALUE(m_PeakVal->GetValue())));
     if ((o == NULL) || (o == m_MaxGain)) m_MaxGainText->SetLabel(wxString::Format("%.2f", MAX_GAIN(m_MaxGain->GetValue())));
     if ((o == NULL) || (o == m_TargetRMS)) m_TargetRMSText->SetLabel(wxString::Format("%.2f", PEAK_VALUE(m_TargetRMS->GetValue())));

@@ -86,7 +86,7 @@ FF_MSG_TYPE FFQConsole::AppendFFOutput(wxString &Output, bool IsStdOut, bool Cle
 {
 
     //Handle a raw line(s) of output from ffmpeg
-    size_t val;
+    unsigned int val;
 
     wxString all = StrTrim(Output);
     while (all.Len() > 0)
@@ -359,7 +359,7 @@ void FFQConsole::FlushMessages(bool Finalize)
 
 //---------------------------------------------------------------------------------------
 
-size_t FFQConsole::GetEncodedFrames()
+unsigned int FFQConsole::GetEncodedFrames()
 {
 
     //Return the frames processed
@@ -436,11 +436,11 @@ bool FFQConsole::SaveAsHtml(const wxString &FileName)
                          "div{margin:0px;padding:0px;}" + CRLF, t;
 
             //Save styles for each of the colors used
-            for (size_t i = 0; i < CONSOLE_COLOR_COUNT; i++)
+            for (unsigned int i = 0; i < CONSOLE_COLOR_COUNT; i++)
             {
 
                 //Color values are back-words; fix this or colors are wrong in HTML
-                int c = CONSOLE_COLORS[i];
+                unsigned int c = CONSOLE_COLORS[i];
                 c = ((c & 0xFF0000) >> 16) | ((c & 0x0000FF) << 16) | (c & 0x00FF00);
 
                 //Print the  corrected color value as 6-digit hex
@@ -459,7 +459,7 @@ bool FFQConsole::SaveAsHtml(const wxString &FileName)
             log->Write((void*)scb.data(), scb.length());
 
             //Impossible color value to force new <div in HTML
-            size_t last_col = 0xff000000;
+            unsigned int last_col = 0xff000000;
 
             //Freeze
             m_Ctrl->Freeze();
@@ -486,7 +486,7 @@ bool FFQConsole::SaveAsHtml(const wxString &FileName)
                     t += "<div class=\"c";
 
                     //Find correct color
-                    for (size_t i = 0; i < CONSOLE_COLOR_COUNT; i++)
+                    for (unsigned int i = 0; i < CONSOLE_COLOR_COUNT; i++)
                     {
                         if (last_col == CONSOLE_COLORS[i])
                         {
@@ -564,7 +564,7 @@ bool FFQConsole::IsLineClipping(const wxString &Line)
 
 //---------------------------------------------------------------------------------------
 
-bool FFQConsole::IsLineMessageRepeat(wxString Line, size_t &Repetitions)
+bool FFQConsole::IsLineMessageRepeat(wxString Line, unsigned int &Repetitions)
 {
 
     //Examine if a line is info about a repeated message
@@ -574,7 +574,7 @@ bool FFQConsole::IsLineMessageRepeat(wxString Line, size_t &Repetitions)
 
     //Yes it was, extract the repetition count
     Line.Remove(0, pos + 17);
-    Repetitions = (size_t)Str2Long(Line.BeforeFirst(' '), 0);
+    Repetitions = (unsigned int)Str2Long(Line.BeforeFirst(' '), 0);
 
     //If Repetitions if <= 0 the number convert failed
     return Repetitions > 0;
@@ -583,7 +583,7 @@ bool FFQConsole::IsLineMessageRepeat(wxString Line, size_t &Repetitions)
 
 //---------------------------------------------------------------------------------------
 
-bool FFQConsole::IsLineStatistics(wxString Line, TIME_VALUE &Time, size_t &Frame)
+bool FFQConsole::IsLineStatistics(wxString Line, TIME_VALUE &Time, unsigned int &Frame)
 {
 
     //This function extracts information from statistical output in the format:
@@ -631,7 +631,7 @@ bool FFQConsole::IsLineStatistics(wxString Line, TIME_VALUE &Time, size_t &Frame
 
 //---------------------------------------------------------------------------------------
 
-bool FFQConsole::IsLineVidStabLowContrast(wxString Line, size_t &Frame)
+bool FFQConsole::IsLineVidStabLowContrast(wxString Line, unsigned int &Frame)
 {
 
     //This function examines the line and checks if it is a report about no transforms
@@ -654,7 +654,7 @@ bool FFQConsole::IsLineVidStabLowContrast(wxString Line, size_t &Frame)
     if (f < 0) return false;
 
     //Something might go missing here 64bit => 32bit
-    Frame = (size_t)f;
+    Frame = (unsigned int)f;
 
     //Return success
     return true;

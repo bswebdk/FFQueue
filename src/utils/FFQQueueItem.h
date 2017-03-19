@@ -86,10 +86,10 @@ typedef struct FFQ_INPUT_FILE
 
 //The status of items in the queue
 typedef enum QUEUE_STATUS { qsQUEUED, qsACTIVE, qsPASS1, qsPASS2, qsTHUMBS, qsDONE, qsFAILED, qsABORTED, qsSKIPPED, qsDORMANT } QUEUE_STATUS;
-const size_t QUEUE_STATUS_COUNT = 10;
+const unsigned int QUEUE_STATUS_COUNT = 10;
 
 //Types of items (used for saving and loading)
-typedef enum QUEUE_ITEM_TYPE { qtUNKNOWN, qtJOB, qtSTATIC_JOB, qtTHUMB_JOB, qtVIDSTAB_JOB, qtCONCAT_JOB } QUEUE_ITEM_TYPE;
+typedef enum QUEUE_ITEM_TYPE { qtUNKNOWN, qtJOB, qtSTATIC_JOB, qtTHUMB_JOB, qtVIDSTAB_JOB, qtCONCAT_JOB, qtVID2GIF_JOB } QUEUE_ITEM_TYPE;
 
 //Flags used in the queue
 typedef unsigned short QUEUE_FLAG;
@@ -111,12 +111,14 @@ typedef struct FFQ_QUEUE_ITEM
     FFQ_QUEUE_ITEM(const FFQ_QUEUE_ITEM &copy_item);
     virtual ~FFQ_QUEUE_ITEM();
 
+    virtual bool CanPreview() { return GetItemType() == qtJOB; }; //Returns true if previewing is supported
     bool CheckNotActive(); //Called by editors to prevent an active job from being modified
     virtual void Cleanup(); //Called when the job has been processed
     static FFQ_QUEUE_ITEM* Clone(FFQ_QUEUE_ITEM* item); //Used to clone an item
+    virtual wxString GetPreviewCommand() { return wxEmptyString; }; //Returns the command used for previewing
     virtual wxString DisplayName(); //Gets the display name (or info) of the item
     //virtual TIME_VALUE Duration(uint64_t *frames = NULL) = 0; //Gets the duration of the current command in time or frames
-    FFQ_INPUT_FILE& GetInput(size_t index); //Return an input file from "inputs"
+    FFQ_INPUT_FILE& GetInput(unsigned int index); //Return an input file from "inputs"
     virtual QUEUE_ITEM_TYPE GetItemType() = 0; //Returns the type of item
     virtual bool GetLogFileName(wxString &name); //Return true if log should be saved and sets name accordingly
     bool GetNextCommand(wxString &command); //Called to get the next command for the item
@@ -137,7 +139,7 @@ private:
 
     int m_CommandIdx; //Index of current command
     FFQ_INPUT_FILE m_TempInput; //Used in GetInput()
-    size_t m_TempIndex; //As above
+    unsigned int m_TempIndex; //As above
     LPFFQ_NVP_LIST m_Values; //Used to set extra values with SetValue & GetValue
 
     void Reset(); //Reset vars

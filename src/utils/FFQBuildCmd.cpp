@@ -125,7 +125,7 @@ void CommandLineReplace(wxString &cmd, const wxString old_str, const wxString ne
         }
 
         //Remove any blank chars after the old string
-        size_t delp = idx + old_str.Len();
+        unsigned int delp = idx + old_str.Len();
         while ((delp < cmd.Len()) && (cmd.GetChar(delp) == ' ')) cmd.Remove(delp, 1);
 
         //Replace the old with the new
@@ -141,7 +141,7 @@ void CommandLineReplace(wxString &cmd, const wxString old_str, const wxString ne
 
 //---------------------------------------------------------------------------------------
 
-wxString FormatSingleQualityArg(wxString &from, const wxString cmd, int min, int max, int &qval)
+wxString FormatSingleQualityArg(wxString &from, const wxString cmd, float min, float max, float &qval, bool is_float)
 {
 
     //Used by the two following functions to convert a single
@@ -150,11 +150,17 @@ wxString FormatSingleQualityArg(wxString &from, const wxString cmd, int min, int
     //defined in CODEC_INFO's
 
     bool b = GetToken(from, ",") == STR_YES; //Use?
-    int v = Str2Long(GetToken(from, ","), INT_MIN); //Percent
+    float v = Str2Long(GetToken(from, ","), INT_MIN); //Percent
+
     if (b && (v > INT_MIN) && (max != min)) //Validate
     {
-        qval = ConvertPctToMinMax(v, min, max); //Convert
-        return "-" + cmd + " " + ToStr(qval) + " "; //Make cmd line arg
+
+        qval = ConvertPctToMinMaxFloat(v, min, max); //Convert
+
+        //Float or int command line argument?
+        if (is_float) return "-" + cmd + " " + wxString::Format("%.2f", qval) + " "; //Float
+        else return "-" + cmd + " " + wxString::Format("%i", froundi(qval)) + " "; //Int
+
     }
 
     return ""; //Nope, not used!
@@ -172,10 +178,10 @@ bool FormatAudioQuality(wxString &aq, const wxString &codec)
     //Get codec information
     CODEC_INFO *ci = FFQCFG()->GetCodecInfo()->Find(codec);
     if (ci == NULL) ci = FFQCFG()->GetCodecInfo()->Find(DEFAULT_AUDIO_CODEC_INFO);
-    int val;
+    float val;
 
     //Oh yeah! More formatting!
-    res  = FormatSingleQualityArg(aq, "q:a", ci->min_qscale, ci->max_qscale, val);
+    res  = FormatSingleQualityArg(aq, "q:a", ci->min_qscale, ci->max_qscale, val, ci->qscale_float);
 
     //Heeeeeeeere's JOHNNY!!
     aq = res;
@@ -194,15 +200,15 @@ bool FormatVideoQuality(wxString &vq, const wxString &codec)
     //Get codec information
     CODEC_INFO *ci = FFQCFG()->GetCodecInfo()->Find(codec);
     if (ci == NULL) ci = FFQCFG()->GetCodecInfo()->Find(DEFAULT_VIDEO_CODEC_INFO);
-    int qmin, qmax;
+    float qmin, qmax;
 
     //Format da shit!
-    res  = FormatSingleQualityArg(vq, "q:v", ci->min_qscale, ci->max_qscale, qmin);
-    res += FormatSingleQualityArg(vq, "crf", ci->min_crf, ci->max_crf, qmin);
-    res += FormatSingleQualityArg(vq, "crf_max", ci->min_crf, ci->max_crf, qmin);
-    res += FormatSingleQualityArg(vq, "qmin", QUANTIZER_WORST_QUALITY, QUANTIZER_BEST_QUALITY, qmin);
-    res += FormatSingleQualityArg(vq, "qmax", QUANTIZER_WORST_QUALITY, QUANTIZER_BEST_QUALITY, qmax);
-    res += FormatSingleQualityArg(vq, "qdiff", 0, qmax - qmin, qmin);
+    res  = FormatSingleQualityArg(vq, "q:v", ci->min_qscale, ci->max_qscale, qmin, ci->qscale_float);
+    res += FormatSingleQualityArg(vq, "crf", ci->min_crf, ci->max_crf, qmin, ci->crf_float);
+    res += FormatSingleQualityArg(vq, "crf_max", ci->min_crf, ci->max_crf, qmin, ci->crf_float);
+    res += FormatSingleQualityArg(vq, "qmin", QUANTIZER_WORST_QUALITY, QUANTIZER_BEST_QUALITY, qmin, false);
+    res += FormatSingleQualityArg(vq, "qmax", QUANTIZER_WORST_QUALITY, QUANTIZER_BEST_QUALITY, qmax, false);
+    res += FormatSingleQualityArg(vq, "qdiff", 0, qmax - qmin, qmin, false);
 
     //Booya!
     vq = res;
@@ -389,8 +395,8 @@ wxString NextFilterID(int &fid, wxString stream_tag = "")
     //in the format [FID(n)(:stream_tag)] and increments the identification counter
     //to ensure unique filter tokens
     wxString res;
-    if (stream_tag.Len() == 0) res.Printf("[FID%u]", fid);
-    else res.Printf("[FID%u:%s]", fid, stream_tag);
+    if (stream_tag.Len() == 0) res.Printf("[FID%i]", fid);
+    else res.Printf("[FID%i:%s]", fid, stream_tag);
     fid++;
     return res;
 
@@ -405,7 +411,7 @@ void MakeInputFileArgs(wxArrayString &src, wxArrayString &dst)
     //to a list of -i arguments to use with ffmpeg
     wxString s, t;
 
-    for (size_t i = 0; i < src.Count(); i++)
+    for (unsigned int i = 0; i < src.Count(); i++)
     {
 
         //Get FFQ_INPUT_FILE
@@ -656,7 +662,7 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
         LPSBINFO first_vid = (has_video ? (LPSBINFO)streams[vid_idx] : &dummy),
                  first_aud = (has_audio ? (LPSBINFO)streams[aud_idx] : &dummy);
 
-        for (size_t sidx = 0; sidx < streams.GetCount(); sidx++)
+        for (unsigned int sidx = 0; sidx < streams.GetCount(); sidx++)
         {
 
             //Get the stream info
@@ -675,7 +681,7 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
                     vf += sbi->cuts.cuts;
 
                 //Apply all other video filters from the presets filter list
-                for (size_t fidx = 0; fidx < pst->filters.Count(); fidx++)
+                for (unsigned int fidx = 0; fidx < pst->filters.Count(); fidx++)
                 {
 
                     //Get filter
@@ -693,7 +699,7 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
                             if (fltr.required_file.loop.Len() > 0) s = "-loop " + fltr.required_file.loop + " " + s;
                             wxString tag = fltr.required_file.tag;
                             if (tag.Len() > 0) tag = ":" + tag;
-                            req_in.Printf("[%u%s]", input_list.GetCount(), tag);
+                            req_in.Printf("[%u%s]", SIZEFMT(input_list.GetCount()), tag);
                             input_list.Add(s);
 
                         }
@@ -749,7 +755,7 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
                 if (has_cuts && sbi->cuts.filter_first) af += cuts;
 
                 //Process audio filters from the list
-                for (size_t fidx = 0; fidx < pst->filters.Count(); fidx++)
+                for (unsigned int fidx = 0; fidx < pst->filters.Count(); fidx++)
                 {
 
                     FFMPEG_FILTER fltr = FFMPEG_FILTER(pst->filters[fidx]);
@@ -805,7 +811,7 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
 
         //Release memory, this cannot be done in the loop above, since it might
         //result in first_vid and / or first_aud as being bad memory
-        for (size_t sidx = 0; sidx < streams.GetCount(); sidx++) delete (LPSBINFO)streams[sidx];
+        for (unsigned int sidx = 0; sidx < streams.GetCount(); sidx++) delete (LPSBINFO)streams[sidx];
         streams.Clear();
 
         //Video codec
@@ -905,7 +911,7 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
 
     //Convert inputList to string and insert inputs & mapping to command line
     t = "";
-    for (size_t i = 0; i < input_list.GetCount(); i++) if (input_list[i].Len() > 0) t += input_list[i];
+    for (unsigned int i = 0; i < input_list.GetCount(); i++) if (input_list[i].Len() > 0) t += input_list[i];
 
     #ifdef DEBUG
     //ShowInfo(t);
@@ -1020,7 +1026,7 @@ void CleanupFinishedJob(LPFFQ_JOB job)
     for (int i = 0; i < 1000; i++)
     {
 
-        cf.Printf("%s-%d.log", plf, i);
+        cf.Printf("%s-%i.log", plf, i);
 
         if (wxFileExists(cf))
         {
@@ -1084,10 +1090,14 @@ wxString EscapeFilterString(wxString s, bool unEscape)
         _E(s, ']');
         _E(s, ',');
         _E(s, ';');
+
         //Third level (the shell level - not required in windows)
         //There must be made a conditional compiler statement to
         //properly enable this level where required
-        //_E(s, '\\');
+        #ifndef __WINDOWS__
+        _E(s, '\\');
+        #endif
+
     }
 
     //Return the result
@@ -1115,7 +1125,7 @@ const wxString TRIM_FILTER = "{$%i}%strim=%s:%s,%ssetpts=PTS-STARTPTS";
 
 //---------------------------------------------------------------------------------------
 
-void AppendTrim(wxString &fltr, wxString &concat, int &fid, int &tid, bool video, TIME_VALUE from, TIME_VALUE to, TIME_VALUE duration, size_t compensate = 0)
+void AppendTrim(wxString &fltr, wxString &concat, int &fid, int &tid, bool video, TIME_VALUE from, TIME_VALUE to, TIME_VALUE duration, unsigned int compensate = 0)
 {
 
     //Compensation required?
@@ -1317,7 +1327,7 @@ bool FormatFilter(wxString &filter, wxString &vid_in, wxString &aud_in, wxString
     filter.Replace(FILTER_SUBTITLE_OUT, sub_in);
 
     //Handle unique ID's used by filters that have multiple parts
-    size_t uid = 1, rep;
+    unsigned int uid = 1, rep;
     do { rep = filter.Replace(wxString::Format(FILTER_UNIQUE_ID, uid), NextFilterID(filter_id)); uid++; } while (rep > 0);
 
     //Make sure that the filter end with semicolon

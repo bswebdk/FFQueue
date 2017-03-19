@@ -27,18 +27,18 @@
 //#include "wx_pch.h"
 
 //(*Headers(FFQMain)
-#include <wx/listctrl.h>
-#include <wx/sizer.h>
-#include <wx/menu.h>
-#include <wx/textctrl.h>
-#include <wx/splitter.h>
-#include <wx/toolbar.h>
-#include <wx/panel.h>
-#include <wx/filedlg.h>
-#include <wx/frame.h>
-#include <wx/timer.h>
 #include <wx/gauge.h>
+#include <wx/toolbar.h>
+#include <wx/sizer.h>
+#include <wx/listctrl.h>
+#include <wx/menu.h>
+#include <wx/filedlg.h>
+#include <wx/panel.h>
+#include <wx/splitter.h>
 #include <wx/statusbr.h>
+#include <wx/frame.h>
+#include <wx/textctrl.h>
+#include <wx/timer.h>
 //*)
 
 #include "FFQAbout.h"
@@ -49,6 +49,7 @@
 #include "tools/FFQThumbMake.h"
 #include "tools/FFQConcat.h"
 #include "tools/FFQVidStab.h"
+#include "tools/FFQVideoToGIF.h"
 #include "utils/FFQConsole.h"
 #include "utils/FFQProcess.h"
 #include "utils/FFQQueueItem.h"
@@ -95,6 +96,7 @@ class FFQMain: public wxFrame
         FFQConfigEdit* OptionsDlg; //Options editor - created when needed
         FFQConcat* ConcatDlg;
         FFQVidStab* VidStabDlg;
+        FFQVideoToGIF* Video2Gif;
         FFQConsole* Console;
         wxString m_JobsFileName;
         wxRect m_RestoredRect;
@@ -123,7 +125,7 @@ class FFQMain: public wxFrame
 
         void BatchMakeJobs(wxArrayString *files, bool releaseFilesPtr);
 
-        void DefineItem(long index, LPFFQ_QUEUE_ITEM item, DEFINE_SELECT select); //Uused to modify items in the ListView
+        void DefineItem(long index, LPFFQ_QUEUE_ITEM item, DEFINE_SELECT select, bool save_if_required); //Uused to modify items in the ListView
         void DeleteItem(long index); //Delete job and attached data
         void EditJob(long index, wxString forFileName = "", LPFFQ_QUEUE_ITEM clone = NULL); //Edit the job at idx
         void LoadItems(); //Load previously stored items
@@ -141,7 +143,7 @@ class FFQMain: public wxFrame
         void ShowFFMpegVersion(bool langInfo); //Displays FFMpeg version in the TextCtrl used as console
         void ShowFFProbeInfo(LPFFQ_QUEUE_ITEM item = NULL); //Display ffprobe info for an item
         void UpdateControls(); //Used to enable/disable buttons according to the current state of query and listview
-        void UpdateProgress(size_t pos); //Used to update progress in gauge and task bar
+        void UpdateProgress(unsigned int pos); //Used to update progress in gauge and task bar
         void UpdateStatus(); //Used to update statusbar and current job progress
 
         wxString GetWindowPos();
@@ -200,45 +202,47 @@ class FFQMain: public wxFrame
         static const long ID_TOOLSLIDESHOW;
         static const long ID_TOOLCONCAT;
         static const long ID_TOOLVIDSTAB;
+        static const long ID_TOOLVID2GIF;
         //*)
 
         //(*Declarations(FFQMain)
-        wxMenuItem* SlideshowItem;
-        wxToolBarToolBase* ToolBarRemove;
-        wxToolBarToolBase* ToolBarEdit;
-        wxMenuItem* MenuStartAll;
-        wxMenuItem* MenuClone;
-        wxToolBarToolBase* ToolBarOptions;
-        wxMenuItem* MenuMoveUp;
-        wxMenu ListMenu;
-        wxSplitterWindow* SplitterWindow;
-        wxToolBarToolBase* ToolBarStop;
-        wxMenuItem* ThumbsItem;
-        wxPanel* BottomPan;
-        wxTextCtrl* TextCtrl;
-        wxToolBarToolBase* ToolBarTools;
-        wxMenuItem* MenuEdit;
-        wxMenuItem* MenuMoveDown;
-        wxMenuItem* ConcatItem;
-        wxFileDialog* OpenFilesDlg;
-        wxMenuItem* MenuRemove;
-        wxToolBarToolBase* ToolBarPreview;
+        wxToolBarToolBase* ToolBarBatch;
         wxToolBarToolBase* ToolBarAbout;
-        wxMenu ToolsMenu;
-        wxTimer Timer;
-        wxGauge* Gauge;
-        wxMenuItem* MenuFFProbe;
-        wxMenuItem* VidStabItem;
-        wxToolBarToolBase* ToolBarStart;
-        wxListView* ListView;
-        wxMenuItem* MenuStartSel;
         wxToolBar* ToolBar;
+        wxMenuItem* MenuFFCmd;
+        wxMenuItem* MenuMoveDown;
+        wxToolBarToolBase* ToolBarStop;
+        wxMenu ListMenu;
+        wxMenuItem* VidStabItem;
+        wxSplitterWindow* SplitterWindow;
+        wxMenuItem* SlideshowItem;
+        wxToolBarToolBase* ToolBarStart;
+        wxMenu ToolsMenu;
+        wxToolBarToolBase* ToolBarPreview;
+        wxMenuItem* MenuClone;
+        wxToolBarToolBase* ToolBarEdit;
+        wxMenuItem* MenuRemove;
+        wxMenuItem* MenuPreset;
+        wxToolBarToolBase* ToolBarPresets;
+        wxTextCtrl* TextCtrl;
+        wxListView* ListView;
+        wxGauge* Gauge;
+        wxMenuItem* MenuStartSel;
+        wxToolBarToolBase* ToolBarOptions;
+        wxPanel* BottomPan;
+        wxMenuItem* MenuEdit;
+        wxToolBarToolBase* ToolBarRemove;
+        wxMenuItem* MenuFFProbe;
+        wxToolBarToolBase* ToolBarTools;
+        wxTimer Timer;
+        wxFileDialog* OpenFilesDlg;
         wxToolBarToolBase* ToolBarAdd;
         wxStatusBar* StatusBar;
-        wxMenuItem* MenuFFCmd;
-        wxToolBarToolBase* ToolBarPresets;
-        wxToolBarToolBase* ToolBarBatch;
-        wxMenuItem* MenuPreset;
+        wxMenuItem* Vid2GifItem;
+        wxMenuItem* ThumbsItem;
+        wxMenuItem* ConcatItem;
+        wxMenuItem* MenuMoveUp;
+        wxMenuItem* MenuStartAll;
         //*)
 
         static const long ID_MENU_STOPSEL;

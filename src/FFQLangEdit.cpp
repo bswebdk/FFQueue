@@ -89,12 +89,12 @@ void FFQLangEdit::Release()
 FFQLangEdit::FFQLangEdit(wxWindow* parent)
 {
 	//(*Initialize(FFQLangEdit)
+	wxFlexGridSizer* FlexGridSizer1;
 	wxStaticBoxSizer* SBS1;
+	wxFlexGridSizer* FlexGridSizer2;
+	wxStaticBoxSizer* SBS2;
 	wxFlexGridSizer* FlexGridSizer4;
 	wxFlexGridSizer* FlexGridSizer3;
-	wxFlexGridSizer* FlexGridSizer2;
-	wxFlexGridSizer* FlexGridSizer1;
-	wxStaticBoxSizer* SBS2;
 
 	Create(parent, wxID_ANY, _T("FFQueue language editor"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL, _T("wxID_ANY"));
 	SetClientSize(wxSize(800,600));
@@ -109,7 +109,7 @@ FFQLangEdit::FFQLangEdit(wxWindow* parent)
 	FlexGridSizer2->Add(ST2, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
 	Description = new wxTextCtrl(TabPanel, ID_DESCRIPTION, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_DESCRIPTION"));
 	Description->SetMaxLength(100);
-	FlexGridSizer2->Add(Description, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+	FlexGridSizer2->Add(Description, 1, wxALL|wxEXPAND, 3);
 	ST3 = new wxStaticText(TabPanel, ID_ST3, _T("Password:"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_ST3"));
 	FlexGridSizer2->Add(ST3, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
 	FlexGridSizer3 = new wxFlexGridSizer(1, 3, 0, 0);
@@ -117,27 +117,27 @@ FFQLangEdit::FFQLangEdit(wxWindow* parent)
 	FlexGridSizer3->AddGrowableCol(2);
 	Password1 = new wxTextCtrl(TabPanel, ID_PASSWORD1, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PASSWORD, wxDefaultValidator, _T("ID_PASSWORD1"));
 	Password1->SetMaxLength(50);
-	FlexGridSizer3->Add(Password1, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
+	FlexGridSizer3->Add(Password1, 1, wxALL|wxEXPAND, 0);
 	ST4 = new wxStaticText(TabPanel, ID_ST4, _T("Re-type password:"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_ST4"));
 	FlexGridSizer3->Add(ST4, 1, wxLEFT|wxRIGHT|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	Password2 = new wxTextCtrl(TabPanel, ID_PASSWORD2, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PASSWORD, wxDefaultValidator, _T("ID_PASSWORD2"));
-	FlexGridSizer3->Add(Password2, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
-	FlexGridSizer2->Add(FlexGridSizer3, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
-	SBS1->Add(FlexGridSizer2, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
-	FlexGridSizer1->Add(SBS1, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+	FlexGridSizer3->Add(Password2, 1, wxALL|wxEXPAND, 0);
+	FlexGridSizer2->Add(FlexGridSizer3, 1, wxALL|wxEXPAND, 3);
+	SBS1->Add(FlexGridSizer2, 1, wxALL|wxEXPAND, 3);
+	FlexGridSizer1->Add(SBS1, 1, wxALL|wxEXPAND, 5);
 	ListView = new wxListView(TabPanel, ID_LISTVIEW, wxDefaultPosition, wxDefaultSize, wxLC_REPORT|wxLC_SINGLE_SEL|wxLC_NO_SORT_HEADER, wxDefaultValidator, _T("ID_LISTVIEW"));
-	FlexGridSizer1->Add(ListView, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+	FlexGridSizer1->Add(ListView, 1, wxALL|wxEXPAND, 5);
 	SBS2 = new wxStaticBoxSizer(wxHORIZONTAL, TabPanel, _T("Edit selected string"));
 	FlexGridSizer4 = new wxFlexGridSizer(2, 1, 0, 0);
 	FlexGridSizer4->AddGrowableCol(0);
 	FlexGridSizer4->AddGrowableRow(0);
-	StrEdit = new wxTextCtrl(TabPanel, ID_STREDIT, wxEmptyString, wxDefaultPosition, wxSize(-1,200), wxTE_AUTO_SCROLL|wxTE_PROCESS_ENTER|wxTE_MULTILINE|wxTE_DONTWRAP, wxDefaultValidator, _T("ID_STREDIT"));
-	FlexGridSizer4->Add(StrEdit, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+	StrEdit = new wxTextCtrl(TabPanel, ID_STREDIT, wxEmptyString, wxDefaultPosition, wxSize(-1,200), wxTE_PROCESS_ENTER|wxTE_MULTILINE|wxTE_DONTWRAP, wxDefaultValidator, _T("ID_STREDIT"));
+	FlexGridSizer4->Add(StrEdit, 1, wxALL|wxEXPAND, 3);
 	Info = new wxStaticText(TabPanel, ID_INFO, _T("Use [Ctrl]+[Enter] to store && next, [Ctrl]+[Up/Down] to navigate list (skipping changes), [Ctrl]+[S] to store changes, [Ctrl]+[I] to load integrated string."), wxDefaultPosition, wxDefaultSize, 0, _T("ID_INFO"));
 	Info->Disable();
 	FlexGridSizer4->Add(Info, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
 	SBS2->Add(FlexGridSizer4, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
-	FlexGridSizer1->Add(SBS2, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+	FlexGridSizer1->Add(SBS2, 1, wxALL|wxEXPAND, 5);
 	TabPanel->SetSizer(FlexGridSizer1);
 	FlexGridSizer1->Fit(TabPanel);
 	FlexGridSizer1->SetSizeHints(TabPanel);
@@ -241,7 +241,7 @@ void FFQLangEdit::LoadList()
         Password2->SetModified(false);
     }
     ListView->Freeze();
-    for (size_t i = 0; i < m_EditLang->GetCount(); i++) SetListItem(-1, m_EditLang->GetPtrAtIndex(i));
+    for (unsigned int i = 0; i < m_EditLang->GetCount(); i++) SetListItem(-1, m_EditLang->GetPtrAtIndex(i));
     ListView->Thaw();
     ListView->Select(0);
 }
@@ -307,7 +307,7 @@ bool FFQLangEdit::SaveEditStr(bool force, bool clear)
 
                 //Item is a list of items - validate the number of items
                 wxString t, ls = "";
-                size_t items = 0;
+                unsigned int items = 0;
 
                 while (s.Len() > 0)
                 {
@@ -380,7 +380,7 @@ bool FFQLangEdit::SaveEditStr(bool force, bool clear)
 bool FFQLangEdit::SavePwdAndDesc()
 {
     wxString s = StrTrim(Description->GetValue());
-    size_t r;
+    unsigned int r;
     do { r = s.Replace("<br>", " "); } while (r > 0);
     do { r = s.Replace("  ", " "); } while (r > 0);
     s.Trim();
@@ -415,9 +415,9 @@ bool FFQLangEdit::SkipItemChange(wxString reason)
 void FFQLangEdit::UpdateStatus()
 {
     SB->SetStatusText("", 0);
-    SB->SetStatusText(wxString::Format("Editing %u of %u", ListView->GetFirstSelected()+1, ListView->GetItemCount()), 1);
-    long pct = (long)( (float)m_EditLang->GetFlagCount(SF_STORED) / (float)m_EditLang->GetCount() * 100.0  );
-    SB->SetStatusText(wxString::Format("%u%% translated", pct), 2);
+    SB->SetStatusText(wxString::Format("Editing %i of %u", (int)(ListView->GetFirstSelected()+1), SIZEFMT(ListView->GetItemCount()), 1));
+    int pct = (int)( (float)m_EditLang->GetFlagCount(SF_STORED) / (float)m_EditLang->GetCount() * 100.0  );
+    SB->SetStatusText(wxString::Format("%i%% translated", pct), 2);
 }
 
 //---------------------------------------------------------------------------------------
@@ -486,7 +486,7 @@ void FFQLangEdit::OnKeyDown(wxKeyEvent &event)
 
             SaveEditStr(true, false);
 
-            while ((size_t)sel++ < m_EditLang->GetCount())
+            while ((unsigned int)sel++ < m_EditLang->GetCount())
             {
                 LPFFQ_STRING ffqs = m_EditLang->GetPtrAtIndex(sel);
                 if ((ffqs->flags & SF_STORED) == 0)

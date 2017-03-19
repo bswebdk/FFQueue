@@ -40,7 +40,7 @@ typedef struct PIXEL_FORMAT
     ~PIXEL_FORMAT();
 
     PIXEL_FORMAT* Find(wxString fmt);
-    size_t        GetCount();
+    unsigned int  GetCount();
     PIXEL_FORMAT* GetNext();
     bool          Is10BitQuantizer();
 

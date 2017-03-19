@@ -191,7 +191,7 @@ LPFFPROBE_FILE_FORMAT FFProbeInfoParser::GetFormat()
 
 //---------------------------------------------------------------------------------------
 
-LPFFPROBE_STREAM_INFO FFProbeInfoParser::GetStreamInfo(size_t StreamIndex)
+LPFFPROBE_STREAM_INFO FFProbeInfoParser::GetStreamInfo(unsigned int StreamIndex)
 {
 
     //Check if valid
@@ -208,7 +208,7 @@ LPFFPROBE_STREAM_INFO FFProbeInfoParser::GetStreamInfo(size_t StreamIndex)
 
 //---------------------------------------------------------------------------------------
 
-size_t FFProbeInfoParser::GetStreamCount()
+unsigned int FFProbeInfoParser::GetStreamCount()
 {
 
     //Return the number of streams held
@@ -343,7 +343,7 @@ long FFProbeInfoParser::IndexOf(LPFFPROBE_STREAM_INFO StreamInfo)
 {
 
     //Returns the index of the stream info pointer
-    for (size_t i = 0; i < GetStreamCount(); i++) if (GetStreamInfo(i) == StreamInfo) return i;
+    for (unsigned int i = 0; i < GetStreamCount(); i++) if (GetStreamInfo(i) == StreamInfo) return i;
 
     //Not found, return -1
     return -1;
@@ -361,7 +361,7 @@ bool FFProbeInfoParser::RunFFProbe(wxString ForFile, wxString *ErrorMsg, bool Er
     if (m_Process == NULL) m_Process = new FFQProcess();
 
     bool ok;
-    wxString err_msg;
+    wxString err_msg, std_out, err_out;
 
     try
     {
@@ -369,8 +369,12 @@ bool FFProbeInfoParser::RunFFProbe(wxString ForFile, wxString *ErrorMsg, bool Er
         //Run ffprobe on the file
         m_Process->FFProbe(ForFile);
 
+        //Get the output
+        std_out = m_Process->GetProcessOutput(false, true);
+        err_out = m_Process->GetProcessOutput(true, true);
+
         //Parse the returned output and throw error if not successful
-        ok = SetProbeOutput(m_Process->GetProcessOutput(false, true));
+        ok = SetProbeOutput(std_out);
 
         //Set error message
         if (!ok) err_msg = FFQS(SID_FFPROBE_BAD_OUTPUT);
@@ -389,7 +393,11 @@ bool FFProbeInfoParser::RunFFProbe(wxString ForFile, wxString *ErrorMsg, bool Er
     if (ErrorMsg) *ErrorMsg = err_msg;
 
     //Report error to console if required
+    #ifdef DEBUG
+    if ((!ok) && ErrorToConsole) FFQConsole::Get()->AppendLine(FFQSF(SID_LOG_FFPROBE_ERROR, ForFile, err_msg + "\n\nStdOut:\n" + std_out + "\n\nErrOut:\n" + err_out), COLOR_RED);
+    #else
     if ((!ok) && ErrorToConsole) FFQConsole::Get()->AppendLine(FFQSF(SID_LOG_FFPROBE_ERROR, ForFile, err_msg), COLOR_RED);
+    #endif // DEBUG
 
     //Return result
     return ok;

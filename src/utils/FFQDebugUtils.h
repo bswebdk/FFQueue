@@ -27,8 +27,8 @@
 #include <wx/string.h>
 
 //Convert files and buffera to arrays - only used in the debug version
-wxString BufToArray(unsigned char *buf, int len, wxString array_name, size_t indent = 8);
-wxString FileToArray(wxString filename, wxString array_name, size_t indent = 8);
+wxString BufToArray(unsigned char *buf, int len, wxString array_name, unsigned int indent = 8);
+wxString FileToArray(wxString filename, wxString array_name, unsigned int indent = 8);
 
 //Make binary resources ./bin_res.*
 bool MakeBinaryResources();

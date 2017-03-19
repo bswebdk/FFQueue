@@ -142,7 +142,7 @@ void FFQTaskBar::SetTaskBarProgress(unsigned char percent_done)
 
 //---------------------------------------------------------------------------------------
 
-void FFQTaskBar::SetTaskBarProgress(size_t position, size_t total)
+void FFQTaskBar::SetTaskBarProgress(unsigned int position, unsigned int total)
 {
 #ifdef __WINDOWS__
 

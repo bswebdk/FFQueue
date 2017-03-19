@@ -28,25 +28,25 @@
 
 #ifndef WX_PRECOMP
 	//(*HeadersPCH(FFQBatchMake)
-	#include <wx/sizer.h>
-	#include <wx/stattext.h>
-	#include <wx/textctrl.h>
+	#include <wx/gauge.h>
+	#include <wx/combobox.h>
 	#include <wx/checkbox.h>
+	#include <wx/dialog.h>
+	#include <wx/sizer.h>
 	#include <wx/button.h>
 	#include <wx/dirdlg.h>
-	#include <wx/dialog.h>
-	#include <wx/combobox.h>
-	#include <wx/gauge.h>
+	#include <wx/stattext.h>
+	#include <wx/textctrl.h>
 	//*)
 #endif
 //(*Headers(FFQBatchMake)
-#include <src/FFQPresetPanel.h>
+#include "FFQPresetPanel.h"
 //*)
 
 #include "utils/FFQProbing.h"
 #include "utils/FFQStreamMapping.h"
 
-const size_t PIP_COUNT = 2;
+const unsigned int PIP_COUNT = 2;
 
 class FFQBatchMake: public wxDialog
 {
@@ -57,30 +57,30 @@ class FFQBatchMake: public wxDialog
 
 		void Clear(bool releaseJobPointers = false);
 		bool Execute();
-		size_t GetJobCount();
-		void* GetJob(size_t index);
+		unsigned int GetJobCount();
+		void* GetJob(unsigned int index);
 		void SetFiles(wxArrayString *files);
 
 		//(*Declarations(FFQBatchMake)
+		wxButton* CancelButton;
+		wxComboBox* OutputFormat;
 		wxButton* BrowseButton;
-		wxFlexGridSizer* MainSizer;
-		wxDirDialog* DestPathDlg;
 		wxTextCtrl* OutputPath;
+		wxStaticText* ST2;
+		wxStaticText* ST1;
+		wxCheckBox* IncludeAudio;
+		wxStaticText* ST5;
+		wxGauge* Gauge;
+		wxStaticText* ST4;
+		FFQPresetPanel* Preset;
+		wxCheckBox* IncludeSubs;
 		wxCheckBox* IncludeVideo;
 		wxComboBox* PrefAudio;
-		wxStaticText* ST5;
-		wxStaticText* ST2;
-		wxStaticText* ST4;
 		wxStaticText* ST3;
-		wxStaticText* JobInfo;
-		wxStaticText* ST1;
-		wxGauge* Gauge;
-		wxCheckBox* IncludeSubs;
-		wxComboBox* OutputFormat;
-		wxButton* CancelButton;
-		FFQPresetPanel* Preset;
-		wxCheckBox* IncludeAudio;
+		wxDirDialog* DestPathDlg;
 		wxButton* MakeButton;
+		wxStaticText* JobInfo;
+		wxFlexGridSizer* MainSizer;
 		//*)
 
 	protected:
@@ -118,7 +118,7 @@ class FFQBatchMake: public wxDialog
 		FFProbeInfoParser m_PIPS[PIP_COUNT];
 
 		bool FindJobForDest(wxString dest);
-		void LogLine(wxString line, size_t color);
+		void LogLine(wxString line, unsigned int color);
 		void MakeJobs();
 		void SaveConfig();
 

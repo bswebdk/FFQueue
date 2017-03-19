@@ -63,9 +63,9 @@ const long FFQTimeEdit::ID_SUBTRACT = wxNewId();
 FFQTimeEdit::FFQTimeEdit(wxWindow* parent)
 {
 	//(*Initialize(FFQTimeEdit)
+	wxFlexGridSizer* FlexGridSizer1;
 	wxStaticBoxSizer* SBS1;
 	wxBoxSizer* BoxSizer1;
-	wxFlexGridSizer* FlexGridSizer1;
 
 	Create(parent, wxID_ANY, _T("Edit stream time"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE, _T("wxID_ANY"));
 	MainSizer = new wxFlexGridSizer(3, 1, 0, 0);
@@ -95,7 +95,7 @@ FFQTimeEdit::FFQTimeEdit(wxWindow* parent)
 	SBS1->Add(FlexGridSizer1, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
 	MainSizer->Add(SBS1, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	SubtractSizer = new wxStaticBoxSizer(wxVERTICAL, this, _T("Sub"));
-	MainSizer->Add(SubtractSizer, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+	MainSizer->Add(SubtractSizer, 1, wxALL|wxEXPAND, 5);
 	BoxSizer1 = new wxBoxSizer(wxHORIZONTAL);
 	ClearButton = new wxButton(this, ID_CLEARBUTTON, _T("Cl"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CLEARBUTTON"));
 	ClearButton->SetLabel(FFQS(SID_COMMON_CLEAR));
@@ -104,11 +104,11 @@ FFQTimeEdit::FFQTimeEdit(wxWindow* parent)
 	OKButton = new wxButton(this, ID_OKBUTTON, _T("O"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_OKBUTTON"));
 	OKButton->SetDefault();
 	OKButton->SetLabel(FFQS(SID_COMMON_OK));
-	BoxSizer1->Add(OKButton, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+	BoxSizer1->Add(OKButton, 1, wxALL|wxEXPAND, 5);
 	CancelButton = new wxButton(this, ID_CANCELBUTTON, _T("C"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CANCELBUTTON"));
 	CancelButton->SetLabel(FFQS(SID_COMMON_CANCEL));
-	BoxSizer1->Add(CancelButton, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-	MainSizer->Add(BoxSizer1, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+	BoxSizer1->Add(CancelButton, 1, wxALL|wxEXPAND, 5);
+	MainSizer->Add(BoxSizer1, 1, wxALL|wxEXPAND, 5);
 	SetSizer(MainSizer);
 	MainSizer->Fit(this);
 	MainSizer->SetSizeHints(this);
@@ -192,7 +192,7 @@ int FFQTimeEdit::ButtonIndex(wxButton *button)
 {
 
     //Return the index of the button in the subtract sizer
-    for(size_t i = 0; i < SubtractSizer->GetItemCount(); i++)
+    for(unsigned int i = 0; i < SubtractSizer->GetItemCount(); i++)
         if (button == SubtractSizer->GetItem(i)->GetWindow()) return i;
 
     //Not found
@@ -304,7 +304,7 @@ void FFQTimeEdit::UpdateControls()
     if (!MillisLabel->IsEnabled()) return; //No need to update buttons..
 
     //Update subtract buttons
-    for (size_t i = 0; i < SubtractSizer->GetItemCount(); i++)
+    for (unsigned int i = 0; i < SubtractSizer->GetItemCount(); i++)
     {
 
         wxButton *b = (wxButton*)SubtractSizer->GetItem(i)->GetWindow();

@@ -22,7 +22,7 @@
 									<size>420,-1</size>
 									<extra_code>SBS1-&gt;GetStaticBox()-&gt;SetLabel(FFQS(SID__OPTIONS__FFMPEG__PATH));</extra_code>
 								</object>
-								<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<flag>wxALL|wxEXPAND</flag>
 							</object>
 							<object class="spacer">
 								<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
@@ -38,12 +38,12 @@
 								<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
 							</object>
 						</object>
-						<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<flag>wxALL|wxEXPAND</flag>
 						<border>3</border>
 						<option>1</option>
 					</object>
 				</object>
-				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<flag>wxALL|wxEXPAND</flag>
 				<border>3</border>
 				<option>1</option>
 			</object>
@@ -60,7 +60,7 @@
 								<object class="wxTextCtrl" name="ID_CUSTPLAYER" variable="CustPlayer" member="yes">
 									<extra_code>SBS4-&gt;GetStaticBox()-&gt;SetLabel(FFQS(SID__OPTIONS__CUSTOM__PLAYER));</extra_code>
 								</object>
-								<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<flag>wxALL|wxEXPAND</flag>
 								<option>1</option>
 							</object>
 							<object class="spacer">
@@ -78,12 +78,12 @@
 								<option>1</option>
 							</object>
 						</object>
-						<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<flag>wxALL|wxEXPAND</flag>
 						<border>3</border>
 						<option>1</option>
 					</object>
 				</object>
-				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<flag>wxALL|wxEXPAND</flag>
 				<border>3</border>
 				<option>1</option>
 			</object>
@@ -131,7 +131,7 @@
 										</object>
 									</object>
 								</object>
-								<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<flag>wxALL|wxEXPAND</flag>
 								<border>3</border>
 								<option>1</option>
 							</object>
@@ -143,7 +143,7 @@
 									<growablerows>0</growablerows>
 									<object class="sizeritem">
 										<object class="wxTextCtrl" name="ID_CUSTOMTEMP" variable="CustomTemp" member="yes" />
-										<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+										<flag>wxALL|wxEXPAND</flag>
 										<option>1</option>
 									</object>
 									<object class="spacer">
@@ -161,7 +161,7 @@
 										<option>1</option>
 									</object>
 								</object>
-								<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<flag>wxALL|wxEXPAND</flag>
 								<border>3</border>
 								<option>1</option>
 							</object>
@@ -170,7 +170,7 @@
 						<option>1</option>
 					</object>
 				</object>
-				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<flag>wxALL|wxEXPAND</flag>
 				<border>3</border>
 				<option>1</option>
 			</object>
@@ -182,12 +182,12 @@
 						<object class="wxTextCtrl" name="ID_SECONDFILEEXTS" variable="SecondFileExts" member="yes">
 							<extra_code>SBS3-&gt;GetStaticBox()-&gt;SetLabel(FFQS(SID__OPTIONS__FIND__2ND__INPUT__EXTS));</extra_code>
 						</object>
-						<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<flag>wxALL|wxEXPAND</flag>
 						<border>3</border>
 						<option>1</option>
 					</object>
 				</object>
-				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<flag>wxALL|wxEXPAND</flag>
 				<border>3</border>
 				<option>1</option>
 			</object>
@@ -198,125 +198,22 @@
 						<object class="wxTextCtrl" name="ID_CONSOLECMD" variable="ConsoleCmd" member="yes">
 							<extra_code>SBS5-&gt;GetStaticBox()-&gt;SetLabel(FFQS(SID__OPTIONS__CUSTOM__CONSOLE__CMD));</extra_code>
 						</object>
-						<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<flag>wxALL|wxEXPAND</flag>
 						<border>3</border>
 						<option>1</option>
 					</object>
 				</object>
-				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<flag>wxALL|wxEXPAND</flag>
 				<border>3</border>
 				<option>1</option>
 			</object>
 			<object class="sizeritem">
-				<object class="wxFlexGridSizer" variable="FlexGridSizer3" member="no">
-					<cols>2</cols>
-					<rows>8</rows>
-					<vgap>5</vgap>
-					<growablecols>1</growablecols>
-					<growablerows>0</growablerows>
-					<object class="spacer">
-						<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
-						<option>1</option>
-						<size>5,5</size>
-					</object>
-					<object class="sizeritem">
-						<object class="wxCheckBox" name="wxID_ANY" variable="SaveOnExit" member="yes">
-							<label>Sox</label>
-							<extra_code>SaveOnExit-&gt;SetLabel(FFQS(SID__OPTIONS__SAVE__JOBS__ON__EXIT));</extra_code>
-						</object>
-						<flag>wxEXPAND|wxALIGN_LEFT|wxALIGN_TOP</flag>
-					</object>
-					<object class="spacer">
-						<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
-						<option>1</option>
-						<size>5,5</size>
-					</object>
-					<object class="sizeritem">
-						<object class="wxCheckBox" name="wxID_ANY" variable="AutoRemove" member="yes">
-							<label>Ar</label>
-							<extra_code>AutoRemove-&gt;SetLabel(FFQS(SID__OPTIONS__REMOVE__FINISHED__JOBS));</extra_code>
-						</object>
-						<flag>wxEXPAND|wxALIGN_LEFT|wxALIGN_TOP</flag>
-					</object>
-					<object class="spacer">
-						<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
-						<option>1</option>
-						<size>5,5</size>
-					</object>
-					<object class="sizeritem">
-						<object class="wxCheckBox" name="wxID_ANY" variable="LimitStats" member="yes">
-							<label>Ls</label>
-							<extra_code>LimitStats-&gt;SetLabel(FFQS(SID__OPTIONS__LIMIT__STATISTICS));</extra_code>
-						</object>
-						<flag>wxEXPAND|wxALIGN_LEFT|wxALIGN_TOP</flag>
-					</object>
-					<object class="spacer">
-						<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
-						<option>1</option>
-						<size>5,5</size>
-					</object>
-					<object class="sizeritem">
-						<object class="wxCheckBox" name="wxID_ANY" variable="ShowBanner" member="yes">
-							<label>Sbi</label>
-							<extra_code>ShowBanner-&gt;SetLabel(FFQS(SID__OPTIONS__SHOW__BANNER__INFO));</extra_code>
-						</object>
-						<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
-						<option>1</option>
-					</object>
-					<object class="spacer">
-						<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
-						<option>1</option>
-						<size>5,5</size>
-					</object>
-					<object class="sizeritem">
-						<object class="wxCheckBox" name="wxID_ANY" variable="SaveWindowPos" member="yes">
-							<label>Swp</label>
-							<extra_code>SaveWindowPos-&gt;SetLabel(FFQS(SID__OPTIONS__SAVE__WINDOW__POS));</extra_code>
-						</object>
-						<flag>wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
-						<option>1</option>
-					</object>
-					<object class="spacer">
-						<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
-						<option>1</option>
-						<size>5,5</size>
-					</object>
-					<object class="sizeritem">
-						<object class="wxCheckBox" name="wxID_ANY" variable="FullCodecList" member="yes">
-							<label>Fc</label>
-							<extra_code>FullCodecList-&gt;SetLabel(FFQS(SID__OPTIONS__FULL__CODEC__LIST));</extra_code>
-						</object>
-						<flag>wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
-						<option>1</option>
-					</object>
-					<object class="spacer">
-						<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
-						<option>1</option>
-						<size>5,5</size>
-					</object>
-					<object class="sizeritem">
-						<object class="wxCheckBox" name="wxID_ANY" variable="UniqueNames" member="yes">
-							<label>Un</label>
-							<extra_code>UniqueNames-&gt;SetLabel(FFQS(SID__OPTIONS__ALWAYS__UNIQUE__NAMES));</extra_code>
-						</object>
-						<flag>wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
-						<option>1</option>
-					</object>
-					<object class="spacer">
-						<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
-						<option>1</option>
-						<size>5,5</size>
-					</object>
-					<object class="sizeritem">
-						<object class="wxCheckBox" name="wxID_ANY" variable="KeepConsole" member="yes">
-							<label>Kc</label>
-							<extra_code>KeepConsole-&gt;SetLabel(FFQS(SID__OPTIONS__KEEP__CONSOLE__OPEN));</extra_code>
-						</object>
-						<flag>wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
-						<option>1</option>
-					</object>
+				<object class="wxCheckListBox" name="ID_CHECKLIST" variable="CheckList" member="yes">
+					<maxsize>-1,180</maxsize>
+					<extra_code>CheckList-&gt;SetBackgroundColour(GetBackgroundColour());&#x0A;CheckList-&gt;Append(FFQS(SID__OPTIONS__SAVE__JOBS__ON__EXIT));&#x0A;CheckList-&gt;Append(FFQS(SID__OPTIONS__SAVE__JOBS__ON__MODIFY));&#x0A;CheckList-&gt;Append(FFQS(SID__OPTIONS__REMOVE__FINISHED__JOBS));&#x0A;CheckList-&gt;Append(FFQS(SID__OPTIONS__LIMIT__STATISTICS));&#x0A;CheckList-&gt;Append(FFQS(SID__OPTIONS__SHOW__BANNER__INFO));&#x0A;CheckList-&gt;Append(FFQS(SID__OPTIONS__SAVE__WINDOW__POS));&#x0A;CheckList-&gt;Append(FFQS(SID__OPTIONS__FULL__CODEC__LIST));&#x0A;CheckList-&gt;Append(FFQS(SID__OPTIONS__ALWAYS__UNIQUE__NAMES));&#x0A;CheckList-&gt;Append(FFQS(SID__OPTIONS__KEEP__CONSOLE__OPEN));&#x0A;CheckList-&gt;Append(FFQS(SID__OPTIONS__SILENT__QUEUE__FINISH));&#x0A;</extra_code>
+					<style>wxNO_BORDER|wxTAB_TRAVERSAL|wxVSCROLL</style>
 				</object>
-				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<flag>wxALL|wxEXPAND</flag>
 				<border>3</border>
 				<option>1</option>
 			</object>
@@ -333,7 +230,7 @@
 						<option>1</option>
 					</object>
 					<object class="spacer">
-						<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<flag>wxALL|wxEXPAND</flag>
 						<border>5</border>
 						<option>1</option>
 					</object>
@@ -359,7 +256,7 @@
 						<option>1</option>
 					</object>
 				</object>
-				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<flag>wxALL|wxEXPAND</flag>
 				<border>5</border>
 				<option>1</option>
 			</object>

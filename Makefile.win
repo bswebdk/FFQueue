@@ -98,6 +98,7 @@ OBJECTS:=\
 	$(MAKEROOT)\obj\tools\FFQThumbMake.o\
 	$(MAKEROOT)\obj\tools\FFQThumbPanel.o\
 	$(MAKEROOT)\obj\tools\FFQVidStab.o\
+	$(MAKEROOT)\obj\tools\FFQVideoToGIF.o\
 	$(MAKEROOT)\obj\utils\FFQBuildCmd.o\
 	$(MAKEROOT)\obj\utils\FFQCodecInfo.o\
 	$(MAKEROOT)\obj\utils\FFQCompress.o\
@@ -340,6 +341,9 @@ $(MAKEROOT)\obj\tools\FFQThumbPanel.o:
 
 $(MAKEROOT)\obj\tools\FFQVidStab.o:
 	$(CXX) $(COMPVARS) $(COMPDIRS) -c "src\tools\FFQVidStab.cpp" -o $@
+
+$(MAKEROOT)\obj\tools\FFQVideoToGIF.o:
+	$(CXX) $(COMPVARS) $(COMPDIRS) -c "src\tools\FFQVideoToGIF.cpp" -o $@
 
 $(MAKEROOT)\obj\utils\FFQBuildCmd.o:
 	$(CXX) $(COMPVARS) $(COMPDIRS) -c "src\utils\FFQBuildCmd.cpp" -o $@

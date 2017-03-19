@@ -28,22 +28,22 @@
 
 #ifndef WX_PRECOMP
 	//(*HeadersPCH(FFQVidStab)
+	#include <wx/checkbox.h>
+	#include <wx/dialog.h>
 	#include <wx/sizer.h>
+	#include <wx/button.h>
+	#include <wx/filedlg.h>
+	#include <wx/panel.h>
+	#include <wx/slider.h>
 	#include <wx/stattext.h>
 	#include <wx/textctrl.h>
-	#include <wx/checkbox.h>
-	#include <wx/slider.h>
-	#include <wx/panel.h>
-	#include <wx/filedlg.h>
 	#include <wx/choice.h>
-	#include <wx/button.h>
-	#include <wx/dialog.h>
 	//*)
 #endif
 //(*Headers(FFQVidStab)
-#include <wx/notebook.h>
-#include "../FFQPresetPanel.h"
 #include <wx/spinctrl.h>
+#include "../FFQPresetPanel.h"
+#include <wx/notebook.h>
 //*)
 
 #include "../utils/FFQProbing.h"
@@ -58,51 +58,51 @@ class FFQVidStab: public wxDialog
 		bool Execute(LPFFQ_VIDSTAB_JOB job);
 
 		//(*Declarations(FFQVidStab)
-		wxSpinCtrl* ZoomSpeed;
-		wxCheckBox* SaveLog;
-		wxCheckBox* VirtualTripod;
-		wxFlexGridSizer* Sizer3;
-		wxSpinCtrl* Zoom;
-		wxCheckBox* Only2nd;
-		wxStaticText* MinContrastText;
-		wxCheckBox* CropBlack;
-		wxSpinCtrl* MaxShift;
-		wxSlider* Shakiness;
-		wxPanel* Page0;
-		wxStaticText* StepSizeText;
-		wxStaticText* ShakinessText;
-		wxSlider* Accuracy;
-		wxChoice* OptZoom;
-		wxButton* BrowseSrc;
-		wxCheckBox* Only1st;
-		wxCheckBox* Verbose;
-		wxSpinCtrl* TripodFrame;
-		wxCheckBox* KeepTransforms;
-		wxButton* OkButton;
-		wxButton* DefaultsButton;
-		wxFileDialog* SaveFileDlg;
-		wxSlider* MinContrast;
-		wxSpinCtrl* MaxAngle;
-		wxSlider* StepSize;
-		wxTextCtrl* DestFile;
-		wxCheckBox* Invert;
-		wxStaticText* ST5;
-		wxPanel* Page2;
-		wxPanel* Page1;
-		wxChoice* Interpolation;
-		wxSpinCtrl* Smoothing;
-		wxStaticText* FileInfo;
-		wxCheckBox* Relative;
+		wxButton* CancelButton;
 		wxChoice* OptAlgo;
 		wxStaticText* ZoomSpeedText;
+		wxCheckBox* KeepTransforms;
+		wxSlider* StepSize;
 		wxFileDialog* OpenFileDlg;
-		wxButton* CancelButton;
-		FFQPresetPanel* Preset;
-		wxStaticText* ST10;
-		wxStaticText* AccuracyText;
-		wxButton* BrowseDest;
+		wxButton* DefaultsButton;
 		wxNotebook* Pages;
+		wxCheckBox* Verbose;
+		wxSpinCtrl* MaxAngle;
+		wxStaticText* ST5;
+		wxPanel* Page1;
+		wxChoice* OptZoom;
+		wxSlider* MinContrast;
+		wxCheckBox* SaveLog;
+		wxCheckBox* Only2nd;
+		wxPanel* Page2;
+		wxCheckBox* CropBlack;
+		wxTextCtrl* DestFile;
+		FFQPresetPanel* Preset;
+		wxCheckBox* Only1st;
+		wxPanel* Page0;
+		wxStaticText* ShakinessText;
 		wxTextCtrl* SrcFile;
+		wxStaticText* ST10;
+		wxButton* OkButton;
+		wxSpinCtrl* ZoomSpeed;
+		wxStaticText* StepSizeText;
+		wxStaticText* FileInfo;
+		wxSpinCtrl* Smoothing;
+		wxCheckBox* Relative;
+		wxCheckBox* Invert;
+		wxSlider* Shakiness;
+		wxStaticText* MinContrastText;
+		wxCheckBox* VirtualTripod;
+		wxButton* BrowseDest;
+		wxStaticText* AccuracyText;
+		wxChoice* Interpolation;
+		wxFlexGridSizer* Sizer3;
+		wxSpinCtrl* Zoom;
+		wxSpinCtrl* MaxShift;
+		wxSpinCtrl* TripodFrame;
+		wxButton* BrowseSrc;
+		wxFileDialog* SaveFileDlg;
+		wxSlider* Accuracy;
 		//*)
 
 	protected:
@@ -141,8 +141,8 @@ class FFQVidStab: public wxDialog
 		static const long ID_PRESET;
 		static const long ID_SAVELOG;
 		static const long ID_DEFAULTSBUTTON;
-		static const long ID_CANCELBUTTON;
 		static const long ID_OKBUTTON;
+		static const long ID_CANCELBUTTON;
 		//*)
 
 	private:

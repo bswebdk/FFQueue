@@ -28,9 +28,9 @@
 
 #ifndef WX_PRECOMP
 	//(*HeadersPCH(FFQShowText)
+	#include <wx/dialog.h>
 	#include <wx/sizer.h>
 	#include <wx/textctrl.h>
-	#include <wx/dialog.h>
 	//*)
 #endif
 //(*Headers(FFQShowText)

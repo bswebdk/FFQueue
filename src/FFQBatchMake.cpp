@@ -78,15 +78,15 @@ const wxString PATH_TOKEN = "\"*?*\""; //Just something that is forbidden in pat
 FFQBatchMake::FFQBatchMake(wxWindow* parent,wxWindowID id)
 {
 	//(*Initialize(FFQBatchMake)
+	wxFlexGridSizer* FlexGridSizer1;
 	wxStaticBoxSizer* SBS1;
-	wxFlexGridSizer* FlexGridSizer4;
-	wxFlexGridSizer* FlexGridSizer3;
-	wxFlexGridSizer* FlexGridSizer5;
 	wxFlexGridSizer* FlexGridSizer2;
 	wxFlexGridSizer* FlexGridSizer7;
-	wxBoxSizer* BoxSizer1;
+	wxFlexGridSizer* FlexGridSizer4;
 	wxFlexGridSizer* FlexGridSizer6;
-	wxFlexGridSizer* FlexGridSizer1;
+	wxFlexGridSizer* FlexGridSizer3;
+	wxBoxSizer* BoxSizer1;
+	wxFlexGridSizer* FlexGridSizer5;
 
 	Create(parent, id, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE, _T("id"));
 	MainSizer = new wxFlexGridSizer(4, 1, 0, 0);
@@ -94,10 +94,10 @@ FFQBatchMake::FFQBatchMake(wxWindow* parent,wxWindowID id)
 	FlexGridSizer2->AddGrowableCol(0);
 	FlexGridSizer2->AddGrowableRow(0);
 	JobInfo = new wxStaticText(this, ID_JOBINFO, _T("L"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_JOBINFO"));
-	wxFont JobInfoFont(12,wxDEFAULT,wxFONTSTYLE_NORMAL,wxBOLD,false,wxEmptyString,wxFONTENCODING_DEFAULT);
+	wxFont JobInfoFont(12,wxFONTFAMILY_DEFAULT,wxFONTSTYLE_NORMAL,wxFONTWEIGHT_BOLD,false,wxEmptyString,wxFONTENCODING_DEFAULT);
 	JobInfo->SetFont(JobInfoFont);
 	FlexGridSizer2->Add(JobInfo, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-	MainSizer->Add(FlexGridSizer2, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+	MainSizer->Add(FlexGridSizer2, 1, wxALL|wxEXPAND, 5);
 	SBS1 = new wxStaticBoxSizer(wxHORIZONTAL, this, _T("Props"));
 	FlexGridSizer3 = new wxFlexGridSizer(5, 1, 0, 0);
 	FlexGridSizer3->AddGrowableCol(0);
@@ -121,7 +121,7 @@ FFQBatchMake::FFQBatchMake(wxWindow* parent,wxWindowID id)
 	IncludeSubs->SetValue(false);
 	IncludeSubs->SetLabel(FFQS(SID_COMMON_SUBTITLES));
 	FlexGridSizer4->Add(IncludeSubs, 1, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 0);
-	FlexGridSizer3->Add(FlexGridSizer4, 1, wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
+	FlexGridSizer3->Add(FlexGridSizer4, 1, wxALL|wxEXPAND, 3);
 	FlexGridSizer1 = new wxFlexGridSizer(1, 2, 0, 0);
 	FlexGridSizer1->AddGrowableCol(1);
 	ST2 = new wxStaticText(this, ID_ST2, _T("PrefA"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_ST2"));
@@ -133,8 +133,8 @@ FFQBatchMake::FFQBatchMake(wxWindow* parent,wxWindowID id)
 	PrefAudio->Append(_T("eac3"));
 	PrefAudio->Append(_T("mp2"));
 	PrefAudio->Append(_T("mp3"));
-	FlexGridSizer1->Add(PrefAudio, 1, wxALL|wxEXPAND|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 0);
-	FlexGridSizer3->Add(FlexGridSizer1, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+	FlexGridSizer1->Add(PrefAudio, 1, wxALL|wxEXPAND, 0);
+	FlexGridSizer3->Add(FlexGridSizer1, 1, wxALL|wxEXPAND, 3);
 	FlexGridSizer5 = new wxFlexGridSizer(1, 2, 0, 0);
 	FlexGridSizer5->AddGrowableCol(1);
 	ST3 = new wxStaticText(this, ID_ST3, _T("DestFmt"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_ST3"));
@@ -150,28 +150,28 @@ FFQBatchMake::FFQBatchMake(wxWindow* parent,wxWindowID id)
 	OutputFormat->Append(_T("mp3"));
 	OutputFormat->Append(_T("flac"));
 	OutputFormat->Append(_T("wav"));
-	FlexGridSizer5->Add(OutputFormat, 1, wxALL|wxEXPAND|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 0);
-	FlexGridSizer3->Add(FlexGridSizer5, 1, wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
+	FlexGridSizer5->Add(OutputFormat, 1, wxALL|wxEXPAND, 0);
+	FlexGridSizer3->Add(FlexGridSizer5, 1, wxALL|wxEXPAND, 3);
 	FlexGridSizer7 = new wxFlexGridSizer(1, 3, 0, 0);
 	FlexGridSizer7->AddGrowableCol(1);
 	ST4 = new wxStaticText(this, ID_ST4, _T("DestFo"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_ST4"));
 	ST4->SetLabel(FFQS(SID_COMMON_DEST_FOLDER));
 	FlexGridSizer7->Add(ST4, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
 	OutputPath = new wxTextCtrl(this, ID_OUTPUTPATH, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_OUTPUTPATH"));
-	FlexGridSizer7->Add(OutputPath, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
+	FlexGridSizer7->Add(OutputPath, 1, wxALL|wxEXPAND, 0);
 	BrowseButton = new wxButton(this, ID_BROWSEBUTTON, _T("..."), wxDefaultPosition, wxSize(50,-1), 0, wxDefaultValidator, _T("ID_BROWSEBUTTON"));
 	FlexGridSizer7->Add(BrowseButton, 1, wxLEFT|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 5);
-	FlexGridSizer3->Add(FlexGridSizer7, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+	FlexGridSizer3->Add(FlexGridSizer7, 1, wxALL|wxEXPAND, 3);
 	FlexGridSizer6 = new wxFlexGridSizer(1, 2, 0, 0);
 	FlexGridSizer6->AddGrowableCol(1);
 	ST5 = new wxStaticText(this, ID_ST5, _T("SelP"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_ST5"));
 	ST5->SetLabel(FFQS(SID_BATCHMAKE_SELECT_PRESET));
 	FlexGridSizer6->Add(ST5, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
 	Preset = new FFQPresetPanel(this);
-	FlexGridSizer6->Add(Preset, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
-	FlexGridSizer3->Add(FlexGridSizer6, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
-	SBS1->Add(FlexGridSizer3, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
-	MainSizer->Add(SBS1, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+	FlexGridSizer6->Add(Preset, 1, wxALL|wxEXPAND, 0);
+	FlexGridSizer3->Add(FlexGridSizer6, 1, wxALL|wxEXPAND, 3);
+	SBS1->Add(FlexGridSizer3, 1, wxALL|wxEXPAND, 0);
+	MainSizer->Add(SBS1, 1, wxALL|wxEXPAND, 5);
 	BoxSizer1 = new wxBoxSizer(wxHORIZONTAL);
 	BoxSizer1->Add(-1,-1,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	MakeButton = new wxButton(this, ID_MAKEBUTTON, _T("M"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_MAKEBUTTON"));
@@ -181,9 +181,9 @@ FFQBatchMake::FFQBatchMake(wxWindow* parent,wxWindowID id)
 	CancelButton = new wxButton(this, ID_CANCELBUTTON, _T("C"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CANCELBUTTON"));
 	CancelButton->SetLabel(FFQS(SID_COMMON_CANCEL));
 	BoxSizer1->Add(CancelButton, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-	MainSizer->Add(BoxSizer1, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+	MainSizer->Add(BoxSizer1, 1, wxALL|wxEXPAND, 5);
 	Gauge = new wxGauge(this, ID_GAUGE, 1000, wxDefaultPosition, wxSize(450,15), 0, wxDefaultValidator, _T("ID_GAUGE"));
-	MainSizer->Add(Gauge, 1, wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+	MainSizer->Add(Gauge, 1, wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND, 5);
 	SetSizer(MainSizer);
 	DestPathDlg = new wxDirDialog(this, _T("Select destination folder"), wxEmptyString, wxDD_DEFAULT_STYLE|wxDD_DIR_MUST_EXIST, wxDefaultPosition, wxDefaultSize, _T("wxDirDialog"));
 	MainSizer->Fit(this);
@@ -226,12 +226,12 @@ FFQBatchMake::~FFQBatchMake()
 void FFQBatchMake::Clear(bool releaseJobPointers)
 {
     //Clear parsers
-    for (size_t i = 0; i < PIP_COUNT; i++) m_PIPS[i].SetProbeOutput("");
+    for (unsigned int i = 0; i < PIP_COUNT; i++) m_PIPS[i].SetProbeOutput("");
 
     //Release job pointers
     if (releaseJobPointers)
     {
-        for (size_t i = 0; i < m_Jobs.size(); i++) delete (LPFFQ_JOB)m_Jobs[i];
+        for (unsigned int i = 0; i < m_Jobs.size(); i++) delete (LPFFQ_JOB)m_Jobs[i];
     }
 
     //Clear jobs
@@ -242,7 +242,7 @@ void FFQBatchMake::Clear(bool releaseJobPointers)
 
 bool FFQBatchMake::Execute()
 {
-    size_t c = (m_Files == NULL) ? 0 : m_Files->Count(), pc = FFQPresetMgr::Get()->GetPresetCount();
+    unsigned int c = (m_Files == NULL) ? 0 : m_Files->Count(), pc = FFQPresetMgr::Get()->GetPresetCount();
 
     if ((c == 0) || (pc == 0)) return ShowError(NULL, FFQS(SID_NO_FILES_OR_NO_PRESET));
 
@@ -283,14 +283,14 @@ bool FFQBatchMake::Execute()
 
 //---------------------------------------------------------------------------------------
 
-size_t FFQBatchMake::GetJobCount()
+unsigned int FFQBatchMake::GetJobCount()
 {
     return m_Jobs.size();
 }
 
 //---------------------------------------------------------------------------------------
 
-void* FFQBatchMake::GetJob(size_t index)
+void* FFQBatchMake::GetJob(unsigned int index)
 {
     return m_Jobs[index];
 }
@@ -368,7 +368,7 @@ bool FFQBatchMake::FindJobForDest(wxString dest)
 {
 
     //Find in already created jobs
-    for (size_t i = 0; i < m_Jobs.size(); i++)
+    for (unsigned int i = 0; i < m_Jobs.size(); i++)
         if ( CompareFileNames(((LPFFQ_JOB)m_Jobs[i])->out, dest) ) return true;
 
     //Find in main
@@ -381,7 +381,7 @@ bool FFQBatchMake::FindJobForDest(wxString dest)
 
 //---------------------------------------------------------------------------------------
 
-void FFQBatchMake::LogLine(wxString line, size_t color)
+void FFQBatchMake::LogLine(wxString line, unsigned int color)
 {
 
     FFQConsole::Get()->AppendLine(line, color, m_ClearLog);
@@ -404,12 +404,12 @@ LPFFPROBE_STREAM_INFO FindStreamInfo(FFProbeInfoParser *PIPs, CODEC_TYPE ct, wxS
 
     findStr.LowerCase(); //Always search for lowercase string
 
-    for (size_t pidx = 0; pidx < PIP_COUNT; pidx++)
+    for (unsigned int pidx = 0; pidx < PIP_COUNT; pidx++)
     {
 
         FFProbeInfoParser* pip = &PIPs[pidx];
 
-        for (size_t sidx = 0; sidx < pip->GetStreamCount(); sidx++)
+        for (unsigned int sidx = 0; sidx < pip->GetStreamCount(); sidx++)
         {
 
             LPFFPROBE_STREAM_INFO si = pip->GetStreamInfo(sidx);
@@ -455,7 +455,7 @@ void FFQBatchMake::MakeJobs()
     STREAM_MAPPING smap;
     LPFFPROBE_STREAM_INFO v_inf, a_inf, s_inf, si;
 
-    size_t fileCount = m_Files->Count();
+    unsigned int fileCount = m_Files->Count();
     wxString cur, sub_path;
     long idx, pt_pos;
     LPFFQ_PRESET preset = Preset->GetSelectedPreset();
@@ -470,7 +470,7 @@ void FFQBatchMake::MakeJobs()
     //FFQCFG()->preferred_format = StrTrim(OutputFormat->GetValue());
     //FFQCFG()->preferred_path = StrTrim(OutputPath->GetValue());
 
-    for (size_t i = 0; i < fileCount; i++)
+    for (unsigned int i = 0; i < fileCount; i++)
     {
 
         Gauge->SetValue((long)round((float)(i+1) / (float)fileCount * 1000.0));
@@ -584,12 +584,12 @@ void FFQBatchMake::MakeJobs()
                     if (s_inf != NULL) LogLine("\t" + s_inf->codec_type + " : " + s_inf->codec_long_name, COLOR_GREEN);
 
                     //All streams has to be implemented to prevent job-editor from sorting streams wrong
-                    for (size_t pidx = 0; pidx < PIP_COUNT; pidx++)
+                    for (unsigned int pidx = 0; pidx < PIP_COUNT; pidx++)
                     {
 
                         FFProbeInfoParser* pip = &m_PIPS[pidx];
 
-                        for (size_t sidx = 0; sidx < pip->GetStreamCount(); sidx++)
+                        for (unsigned int sidx = 0; sidx < pip->GetStreamCount(); sidx++)
                         {
                             si = pip->GetStreamInfo(sidx);
                             job->stream_map += MakeStreamMapping(si, pidx+1, (si == v_inf) || (si == a_inf) || (si == s_inf)) + STREAM_MAPPING_SEPERATOR;
@@ -677,7 +677,7 @@ void FFQBatchMake::OnIdle(wxIdleEvent &event)
         //Expand all folders in the list of files
         wxString s, t;
         wxArrayString tmp;
-        size_t i = 0;
+        unsigned int i = 0;
 
         while (i < m_Files->Count())
         {
@@ -699,7 +699,7 @@ void FFQBatchMake::OnIdle(wxIdleEvent &event)
 
                 //Add files from folder using PATH_TOKEN as separator
                 //to signal that a sub-folder must be created in destination folder
-                for (size_t ii = 0; ii < tmp.Count(); ii++)
+                for (unsigned int ii = 0; ii < tmp.Count(); ii++)
                 {
 
                     t = tmp[ii];
@@ -712,7 +712,7 @@ void FFQBatchMake::OnIdle(wxIdleEvent &event)
                 tmp.Clear();
 
                 //Update label
-                JobInfo->SetLabel(FFQSF(SID_BATCHMAKE_MAKE_JOBS_FOR, m_Files->Count()));
+                JobInfo->SetLabel(FFQSF(SID_BATCHMAKE_MAKE_JOBS_FOR, SIZEFMT(m_Files->Count())));
                 JobInfo->Update();
 
             }

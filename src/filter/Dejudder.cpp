@@ -115,7 +115,7 @@ bool Dejudder::GetFilter(LPFFMPEG_FILTER fltr)
 
     fltr->friendly = FFQSF(SID_DEJUDDER_USERFRIENDLY, FFQL()->FILTER_NAMES[fltr->type], cycle_f);
     fltr->ff_filter.Printf("%sdejudder=%i%s", FILTER_VIDEO_IN, cycle_f, FILTER_VIDEO_OUT);
-    fltr->editable.Printf("%u,%u", sel, cycle);
+    fltr->editable.Printf("%u,%i", sel, cycle);
 
     return true;
 

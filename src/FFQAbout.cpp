@@ -137,7 +137,7 @@ FFQAbout::FFQAbout(wxWindow* parent,wxWindowID id)
 	FlexGridSizer3->Add(FlexGridSizer4, 1, wxALL|wxEXPAND, 0);
 	FlexGridSizer2->Add(FlexGridSizer3, 1, wxALL|wxEXPAND, 5);
 	FlexGridSizer1->Add(FlexGridSizer2, 1, wxALL|wxEXPAND, 5);
-	TextCtrl = new wxTextCtrl(this, ID_TEXTCTRL, wxEmptyString, wxDefaultPosition, wxSize(500,300), wxTE_AUTO_SCROLL|wxTE_MULTILINE|wxTE_READONLY|wxTE_RICH|wxSTATIC_BORDER, wxDefaultValidator, _T("ID_TEXTCTRL"));
+	TextCtrl = new wxTextCtrl(this, ID_TEXTCTRL, wxEmptyString, wxDefaultPosition, wxSize(500,300), wxTE_MULTILINE|wxTE_READONLY|wxTE_RICH|wxSTATIC_BORDER, wxDefaultValidator, _T("ID_TEXTCTRL"));
 	FlexGridSizer1->Add(TextCtrl, 0, wxALL|wxEXPAND, 5);
 	BoxSizer1 = new wxBoxSizer(wxHORIZONTAL);
 	BoxSizer1->Add(-1,-1,1, wxALL|wxEXPAND, 5);

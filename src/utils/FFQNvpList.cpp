@@ -75,7 +75,7 @@ FFQ_NVP_LIST* FFQ_NVP_LIST::Find(wxString s, bool find_value, FFQ_NVP_LIST** par
 
 //---------------------------------------------------------------------------------------
 
-size_t FFQ_NVP_LIST::GetCount()
+unsigned int FFQ_NVP_LIST::GetCount()
 {
 
     //Returns the number of items in the list
@@ -140,7 +140,7 @@ LPFFQ_NVP_LIST NVPListFromLines(wxString &lines, wxString separator, bool allow_
 wxString NVPListToLines(LPFFQ_NVP_LIST first, wxString separator, bool pad)
 {
 
-    size_t namew = 0;
+    unsigned int namew = 0;
     wxString res, nm;
     LPFFQ_NVP_LIST ptr = first;
 

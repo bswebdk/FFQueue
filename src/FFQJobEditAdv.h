@@ -28,15 +28,16 @@
 
 #ifndef WX_PRECOMP
 	//(*HeadersPCH(FFQJobEditAdv)
+	#include <wx/checklst.h>
+	#include <wx/combobox.h>
+	#include <wx/checkbox.h>
+	#include <wx/dialog.h>
 	#include <wx/sizer.h>
+	#include <wx/button.h>
+	#include <wx/hyperlink.h>
+	#include <wx/filedlg.h>
 	#include <wx/stattext.h>
 	#include <wx/textctrl.h>
-	#include <wx/checklst.h>
-	#include <wx/checkbox.h>
-	#include <wx/filedlg.h>
-	#include <wx/hyperlink.h>
-	#include <wx/button.h>
-	#include <wx/dialog.h>
 	//*)
 #endif
 //(*Headers(FFQJobEditAdv)
@@ -82,28 +83,28 @@ class FFQJobEditAdv: public wxDialog
 		void ShowPopupCtrls(bool show = true, bool cancel = false);
 
 		//(*Declarations(FFQJobEditAdv)
-		wxCheckBox* SaveLog;
-		wxButton* BrowseOutput;
-		wxButton* SaveJob;
-		wxButton* DelInput;
-		wxButton* AddInput;
-		wxButton* StreamRefresh;
-		wxButton* StreamUp;
-		wxHyperlinkCtrl* OutputLength;
-		wxButton* CancelDlg;
-		wxStaticText* ST5;
-		wxStaticText* ST4;
-		wxStaticText* ST3;
 		wxTextCtrl* Output;
-		wxButton* AddSecondary;
-		wxButton* StreamDown;
-		wxFileDialog* OpenFile;
+		wxButton* CancelDlg;
 		wxCheckListBox* StreamList;
-		wxNotebook* Inputs;
-		wxTextCtrl* CmdLine;
-		FFQPresetPanel* Preset;
-		wxFileDialog* SaveFile;
+		wxFileDialog* OpenFile;
 		wxFlexGridSizer* OutputSizer;
+		wxStaticText* ST5;
+		wxNotebook* Inputs;
+		wxCheckBox* SaveLog;
+		wxComboBox* CmdLine;
+		wxButton* StreamUp;
+		wxStaticText* ST4;
+		wxButton* AddInput;
+		FFQPresetPanel* Preset;
+		wxButton* DelInput;
+		wxHyperlinkCtrl* OutputLength;
+		wxButton* BrowseOutput;
+		wxStaticText* ST3;
+		wxButton* SaveJob;
+		wxButton* AddSecondary;
+		wxFileDialog* SaveFile;
+		wxButton* StreamDown;
+		wxButton* StreamRefresh;
 		//*)
 
 	protected:
@@ -158,6 +159,7 @@ class FFQJobEditAdv: public wxDialog
 		int RefreshStreamList(bool force_all = false);
 		void RemoveInputFile(int index);
 		void SetStreamMapping(wxString mapping);
+		bool StoreCommand(wxString *cmd_line = NULL);
 		void UpdateControls();
 		void UpdateLink(int index);
 		void UpdateToolTip(LPINPUT_CTRLS ctrls = NULL);

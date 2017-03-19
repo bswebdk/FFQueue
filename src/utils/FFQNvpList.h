@@ -37,7 +37,7 @@ typedef struct FFQ_NVP_LIST
 
     FFQ_NVP_LIST* Append(wxString n, wxString v);
     FFQ_NVP_LIST* Find(wxString s, bool find_value = false, FFQ_NVP_LIST** parent = NULL);
-    size_t        GetCount();
+    unsigned int  GetCount();
     FFQ_NVP_LIST* GetNext();
     void          SetNext(FFQ_NVP_LIST* next);
 

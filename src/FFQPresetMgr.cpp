@@ -93,10 +93,10 @@ FFQPresetMgr* FFQPresetMgr::Get()
 FFQPresetMgr::FFQPresetMgr(wxWindow* parent,wxWindowID id)
 {
 	//(*Initialize(FFQPresetMgr)
-	wxFlexGridSizer* FlexGridSizer3;
-	wxBoxSizer* BoxSizer2;
-	wxBoxSizer* BoxSizer1;
 	wxFlexGridSizer* FlexGridSizer1;
+	wxBoxSizer* BoxSizer2;
+	wxFlexGridSizer* FlexGridSizer3;
+	wxBoxSizer* BoxSizer1;
 
 	Create(parent, id, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE, _T("id"));
 	FlexGridSizer1 = new wxFlexGridSizer(2, 1, 0, 0);
@@ -105,7 +105,7 @@ FFQPresetMgr::FFQPresetMgr(wxWindow* parent,wxWindowID id)
 	FlexGridSizer3->AddGrowableRow(0);
 	Presets = new wxListBox(this, ID_PRESETS, wxDefaultPosition, wxDefaultSize, 0, 0, wxLB_EXTENDED|wxLB_HSCROLL|wxHSCROLL, wxDefaultValidator, _T("ID_PRESETS"));
 	Presets->SetMinSize(wxSize(500,300));
-	FlexGridSizer3->Add(Presets, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+	FlexGridSizer3->Add(Presets, 1, wxALL|wxEXPAND, 5);
 	BoxSizer1 = new wxBoxSizer(wxVERTICAL);
 	NewButton = new wxButton(this, ID_NEWBUTTON, _T("+"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_NEWBUTTON"));
 	NewButton->SetLabel(FFQS(SID_COMMON_NEW));
@@ -116,7 +116,7 @@ FFQPresetMgr::FFQPresetMgr(wxWindow* parent,wxWindowID id)
 	DeleteButton = new wxButton(this, ID_DELETEBUTTON, _T("-"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_DELETEBUTTON"));
 	DeleteButton->SetLabel(FFQS(SID_COMMON_DELETE));
 	BoxSizer1->Add(DeleteButton, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 2);
-	BoxSizer1->Add(-1,-1,1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 2);
+	BoxSizer1->Add(-1,-1,1, wxALL|wxEXPAND, 2);
 	UpButton = new wxButton(this, ID_UPBUTTON, _T("^"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_UPBUTTON"));
 	UpButton->SetLabel(FFQS(SID_COMMON_MOVE_UP));
 	BoxSizer1->Add(UpButton, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 2);
@@ -126,7 +126,7 @@ FFQPresetMgr::FFQPresetMgr(wxWindow* parent,wxWindowID id)
 	SortButton = new wxButton(this, ID_SORTBUTTON, _T("S"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_SORTBUTTON"));
 	SortButton->SetLabel(FFQS(SID_COMMON_SORT));
 	BoxSizer1->Add(SortButton, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 2);
-	BoxSizer1->Add(-1,-1,1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 2);
+	BoxSizer1->Add(-1,-1,1, wxALL|wxEXPAND, 2);
 	CopyButton = new wxButton(this, ID_COPYBUTTON, _T("C"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_COPYBUTTON"));
 	CopyButton->SetLabel(FFQS(SID_COMMON_COPY));
 	BoxSizer1->Add(CopyButton, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 2);
@@ -134,16 +134,16 @@ FFQPresetMgr::FFQPresetMgr(wxWindow* parent,wxWindowID id)
 	PasteButton->SetLabel(FFQS(SID_COMMON_PASTE));
 	BoxSizer1->Add(PasteButton, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 2);
 	FlexGridSizer3->Add(BoxSizer1, 1, wxALL|wxALIGN_TOP|wxALIGN_CENTER_HORIZONTAL, 5);
-	FlexGridSizer1->Add(FlexGridSizer3, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+	FlexGridSizer1->Add(FlexGridSizer3, 1, wxALL|wxEXPAND, 5);
 	BoxSizer2 = new wxBoxSizer(wxHORIZONTAL);
-	BoxSizer2->Add(-1,-1,1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+	BoxSizer2->Add(-1,-1,1, wxALL|wxEXPAND, 5);
 	CloseButton = new wxButton(this, ID_CLOSEBUTTON, _T("X"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CLOSEBUTTON"));
 	CloseButton->SetDefault();
 	CloseButton->SetMinSize(wxSize(200,-1));
 	CloseButton->SetLabel(FFQS(SID_COMMON_CLOSE));
 	BoxSizer2->Add(CloseButton, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-	BoxSizer2->Add(-1,-1,1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-	FlexGridSizer1->Add(BoxSizer2, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+	BoxSizer2->Add(-1,-1,1, wxALL|wxEXPAND, 5);
+	FlexGridSizer1->Add(BoxSizer2, 1, wxALL|wxEXPAND, 5);
 	SetSizer(FlexGridSizer1);
 	FlexGridSizer1->Fit(this);
 	FlexGridSizer1->SetSizeHints(this);
@@ -184,7 +184,7 @@ FFQPresetMgr::~FFQPresetMgr()
 
 //---------------------------------------------------------------------------------------
 
-size_t FFQPresetMgr::AddPreset(LPFFQ_PRESET pst, bool select)
+unsigned int FFQPresetMgr::AddPreset(LPFFQ_PRESET pst, bool select)
 {
     return SetListItem(-1, pst, select);
 }
@@ -194,7 +194,7 @@ size_t FFQPresetMgr::AddPreset(LPFFQ_PRESET pst, bool select)
 void FFQPresetMgr::ClearPresets()
 {
     Presets->Freeze();
-    for (size_t i = 0; i < Presets->GetCount(); i++) delete (LPFFQ_PRESET)Presets->GetClientData(i);
+    for (unsigned int i = 0; i < Presets->GetCount(); i++) delete (LPFFQ_PRESET)Presets->GetClientData(i);
     Presets->Clear();
     Presets->Thaw();
 }
@@ -208,7 +208,7 @@ void FFQPresetMgr::DeletePreset(LPFFQ_PRESET pst)
 
 //---------------------------------------------------------------------------------------
 
-void FFQPresetMgr::DeletePreset(size_t pstIndex)
+void FFQPresetMgr::DeletePreset(unsigned int pstIndex)
 {
     Presets->Freeze();
     delete (LPFFQ_PRESET)Presets->GetClientData(pstIndex);
@@ -311,8 +311,8 @@ void FFQPresetMgr::FillChoice(wxChoice* choice, wxString selectId)
 {
     choice->Freeze();
     choice->Clear();
-    size_t sel = 0;
-    for (size_t i = 0; i < Presets->GetCount(); i++)
+    unsigned int sel = 0;
+    for (unsigned int i = 0; i < Presets->GetCount(); i++)
     {
         LPFFQ_PRESET pst = (LPFFQ_PRESET)Presets->GetClientData(i);
         if (selectId == pst->preset_id.ToString()) sel = choice->GetCount();
@@ -327,7 +327,7 @@ void FFQPresetMgr::FillChoice(wxChoice* choice, wxString selectId)
 long FFQPresetMgr::FindPreset(wxString name, bool matchCase)
 {
     if (!matchCase) name.LowerCase();
-    for (size_t i = 0; i < Presets->GetCount(); i++)
+    for (unsigned int i = 0; i < Presets->GetCount(); i++)
     {
         LPFFQ_PRESET pst = (LPFFQ_PRESET)Presets->GetClientData(i);
         if (matchCase && (pst->preset_name == name)) return i;
@@ -346,14 +346,14 @@ LPFFQ_PRESET FFQPresetMgr::GetLastModified()
 
 //---------------------------------------------------------------------------------------
 
-size_t FFQPresetMgr::GetPresetCount()
+unsigned int FFQPresetMgr::GetPresetCount()
 {
     return Presets->GetCount();
 }
 
 //---------------------------------------------------------------------------------------
 
-LPFFQ_PRESET FFQPresetMgr::GetPreset(size_t pstIndex)
+LPFFQ_PRESET FFQPresetMgr::GetPreset(unsigned int pstIndex)
 {
     if (pstIndex >= Presets->GetCount()) return NULL;
     return (LPFFQ_PRESET)Presets->GetClientData(pstIndex);
@@ -363,7 +363,7 @@ LPFFQ_PRESET FFQPresetMgr::GetPreset(size_t pstIndex)
 
 LPFFQ_PRESET FFQPresetMgr::GetPreset(wxString pstId)
 {
-    for (size_t i = 0; i < Presets->GetCount(); i++)
+    for (unsigned int i = 0; i < Presets->GetCount(); i++)
     {
         LPFFQ_PRESET pst = (LPFFQ_PRESET)Presets->GetClientData(i);
         if (pst->preset_id.ToString() == pstId) return pst;
@@ -375,7 +375,7 @@ LPFFQ_PRESET FFQPresetMgr::GetPreset(wxString pstId)
 
 LPFFQ_PRESET FFQPresetMgr::GetPresetByFingerPrint(wxString pstFp)
 {
-    for (size_t i = 0; i < Presets->GetCount(); i++)
+    for (unsigned int i = 0; i < Presets->GetCount(); i++)
     {
         LPFFQ_PRESET pst = (LPFFQ_PRESET)Presets->GetClientData(i);
         if (pst->finger_print == pstFp) return pst;
@@ -387,13 +387,13 @@ LPFFQ_PRESET FFQPresetMgr::GetPresetByFingerPrint(wxString pstFp)
 
 long FFQPresetMgr::IndexOf(LPFFQ_PRESET pst)
 {
-    for (size_t i = 0; i < Presets->GetCount(); i++) if (Presets->GetClientData(i) == pst) return i;
+    for (unsigned int i = 0; i < Presets->GetCount(); i++) if (Presets->GetClientData(i) == pst) return i;
     return -1;
 }
 
 //---------------------------------------------------------------------------------------
 
-size_t FFQPresetMgr::SetListItem(long idx, LPFFQ_PRESET pst, bool select)
+unsigned int FFQPresetMgr::SetListItem(long idx, LPFFQ_PRESET pst, bool select)
 {
     Presets->Freeze();
     if (idx < 0) idx = Presets->Append(pst->preset_name, pst);
@@ -429,8 +429,8 @@ void FFQPresetMgr::SortPresets()
 {
     Presets->Freeze();
     std::vector<LPFFQ_PRESET> temp;
-    for (size_t i = 0; i < Presets->GetCount(); i++) AddSorted(temp, (LPFFQ_PRESET)Presets->GetClientData(i));
-    for (size_t i = 0; i < Presets->GetCount(); i++) SetListItem(i, temp.at(i));
+    for (unsigned int i = 0; i < Presets->GetCount(); i++) AddSorted(temp, (LPFFQ_PRESET)Presets->GetClientData(i));
+    for (unsigned int i = 0; i < Presets->GetCount(); i++) SetListItem(i, temp.at(i));
     Presets->Thaw();
 }
 
@@ -444,7 +444,7 @@ void FFQPresetMgr::UpdateControls()
     EditButton->Enable(sel == 1);
     DeleteButton->Enable(sel > 0);
     UpButton->Enable((sel > 0) && (ints[0] > 0));
-    DownButton->Enable((sel > 0) && ((size_t)ints[sel-1] < Presets->GetCount() - 1));
+    DownButton->Enable((sel > 0) && ((unsigned int)ints[sel-1] < Presets->GetCount() - 1));
 }
 
 //---------------------------------------------------------------------------------------
@@ -466,9 +466,9 @@ void FFQPresetMgr::OnButtonClick(wxCommandEvent& event)
     {
 
         wxString s = "";
-        size_t cnt = 0;
+        unsigned int cnt = 0;
 
-        for (size_t i = 0; i < Presets->GetCount(); i++) if (Presets->IsSelected(i))
+        for (unsigned int i = 0; i < Presets->GetCount(); i++) if (Presets->IsSelected(i))
         {
             LPFFQ_PRESET pst = GetPreset(i);
             s += CFG_PRESET + CRLF + pst->ToString() + CRLF + CRLF;
@@ -490,7 +490,7 @@ void FFQPresetMgr::OnButtonClick(wxCommandEvent& event)
     {
 
         wxString s = "", t, dup = "";
-        size_t cnt = 0, first = Presets->GetCount();
+        unsigned int cnt = 0, first = Presets->GetCount();
         wxTextDataObject data;
         if (wxTheClipboard->GetData(data))
         {
@@ -515,7 +515,7 @@ void FFQPresetMgr::OnButtonClick(wxCommandEvent& event)
                     //Ensure unique name
                     if (FindPreset(pst->preset_name, false) >= 0)
                     {
-                        size_t i = 0;
+                        unsigned int i = 0;
                         do
                         {
                             i++;
@@ -542,7 +542,7 @@ void FFQPresetMgr::OnButtonClick(wxCommandEvent& event)
         if (cnt > 0)
         {
             Presets->DeselectAll();
-            for (size_t i = 0; i < cnt; i++) Presets->SetSelection(first + i);
+            for (unsigned int i = 0; i < cnt; i++) Presets->SetSelection(first + i);
             ShowInfo(Presets, FFQSF(SID_PASTE_PRESET_SUCCESS, cnt));
         }
         else ShowInfo(Presets, FFQS(SID_PASTE_PRESET_NONE));
@@ -555,7 +555,7 @@ void FFQPresetMgr::OnButtonClick(wxCommandEvent& event)
         if (DoConfirm(Presets, FFQS(SID_CONFIRM_DELETE_PRESETS)))
         {
 
-            size_t i = 0, ch = m_Changes;
+            unsigned int i = 0, ch = m_Changes;
 
             while (i < Presets->GetCount())
             {
@@ -580,7 +580,7 @@ void FFQPresetMgr::OnButtonClick(wxCommandEvent& event)
     else if ((evtId == ID_EDITBUTTON) || (evtId == ID_PRESETS))
     {
 
-        for (size_t i = 0; i < Presets->GetCount(); i++) if (Presets->IsSelected(i))
+        for (unsigned int i = 0; i < Presets->GetCount(); i++) if (Presets->IsSelected(i))
         {
             LPFFQ_PRESET pst = (LPFFQ_PRESET)Presets->GetClientData(i);
             if (EditPreset(pst))

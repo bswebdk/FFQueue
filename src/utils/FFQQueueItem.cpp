@@ -28,6 +28,7 @@
 #include "FFQStaticJob.h"
 #include "FFQToolJobs.h"
 #include "../utils/FFQLang.h"
+#include "../utils/FFQConfig.h"
 #include <wx/filename.h>
 
 //---------------------------------------------------------------------------------------
@@ -115,9 +116,9 @@ FFQ_INPUT_FILE::FFQ_INPUT_FILE(wxString from)
     duration = TIME_VALUE(GetToken(from, ","));
 
     d = Str2Long(GetToken(from, ","), -1);
-    width = (d < 0) ? 0 : (size_t)d;
+    width = (d < 0) ? 0 : (unsigned int)d;
     d = Str2Long(GetToken(from, ","), -1);
-    height = (d < 0) ? 0 : (size_t)d;
+    height = (d < 0) ? 0 : (unsigned int)d;
 
     itsoffset = Str2Long(GetToken(from, ","));
     framerate = GetToken(from, ",");
@@ -328,7 +329,7 @@ wxString FFQ_QUEUE_ITEM::DisplayName()
 
 //---------------------------------------------------------------------------------------
 
-FFQ_INPUT_FILE& FFQ_QUEUE_ITEM::GetInput(size_t index)
+FFQ_INPUT_FILE& FFQ_QUEUE_ITEM::GetInput(unsigned int index)
 {
 
     //Convenient function for getting a variable to an input file
@@ -431,6 +432,7 @@ FFQ_QUEUE_ITEM* FFQ_QUEUE_ITEM::Parse(wxString from)
     else if (qt == qtSTATIC_JOB) return new FFQ_STATIC_JOB(from);
     else if (qt == qtTHUMB_JOB) return new FFQ_THUMB_JOB(from);
     else if (qt == qtVIDSTAB_JOB) return new FFQ_VIDSTAB_JOB(from);
+    else if (qt == qtVID2GIF_JOB) return new FFQ_VID2GIF_JOB(from);
     else if (qt == qtCONCAT_JOB) return new FFQ_CONCAT_JOB(from);
 
     #ifdef DEBUG
@@ -476,7 +478,7 @@ wxString FFQ_QUEUE_ITEM::ToString()
     wxString res = ToStr((int)GetItemType()) + CRLF;
 
     //Inputs
-    for (size_t i = 0; i < inputs.GetCount(); i++) res += ITEM_INPUT + inputs[i] + CRLF;
+    for (unsigned int i = 0; i < inputs.GetCount(); i++) res += ITEM_INPUT + inputs[i] + CRLF;
 
     //Save values
     SetValue(ITEM_SAVE_LOG, BOOLSTR(save_log));
@@ -526,9 +528,9 @@ void FFQ_QUEUE_ITEM::Reset()
     status = qsDORMANT;
     queue_flags = 0;
     inputs.Clear();
-    save_log = true;
+    save_log = FFQCFG()->save_log;
     version = 0;
-    m_TempIndex = (size_t)-1;
+    m_TempIndex = (unsigned int)-1;
     m_Values = NULL;
 
 }

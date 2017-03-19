@@ -29,19 +29,24 @@
 					<object class="sizeritem">
 						<object class="wxTextCtrl" name="ID_TEXTCTRL" variable="TextCtrl" member="yes">
 							<font>
-								<family>modern</family>
+								<size>10</size>
+								<style>normal</style>
+								<weight>normal</weight>
+								<underlined>0</underlined>
+								<family>teletype</family>
+								<face>Monospace</face>
 							</font>
 							<minsize>800,100</minsize>
 							<style>wxTE_MULTILINE|wxTE_READONLY|wxTE_RICH|wxTE_DONTWRAP|wxNO_BORDER</style>
 						</object>
-						<flag>wxEXPAND|wxALIGN_LEFT|wxALIGN_TOP</flag>
+						<flag>wxEXPAND</flag>
 						<border>5</border>
 					</object>
 					<object class="sizeritem">
 						<object class="wxGauge" name="ID_GAUGE" variable="Gauge" member="yes">
 							<size>673,15</size>
 						</object>
-						<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<flag>wxALL|wxEXPAND</flag>
 						<option>1</option>
 					</object>
 				</object>
@@ -183,6 +188,10 @@
 			</object>
 			<object class="wxMenuItem" name="ID_TOOLVIDSTAB" variable="VidStabItem" member="yes">
 				<label>4</label>
+				<handler function="OnToolBarButtonClick" entry="EVT_MENU" />
+			</object>
+			<object class="wxMenuItem" name="ID_TOOLVID2GIF" variable="Vid2GifItem" member="yes">
+				<label>5</label>
 				<handler function="OnToolBarButtonClick" entry="EVT_MENU" />
 			</object>
 		</object>

@@ -24,9 +24,9 @@
 #include "Deinterlace.h"
 #include <wx/statline.h>
 
-const size_t DEINTER_MODE_COUNT = 4;
-const size_t DEINTER_PARITY_COUNT = 3;
-const size_t DEINTER_DEINTERLACE_COUNT = 2;
+const unsigned int DEINTER_MODE_COUNT = 4;
+const unsigned int DEINTER_PARITY_COUNT = 3;
+const unsigned int DEINTER_DEINTERLACE_COUNT = 2;
 
 //---------------------------------------------------------------------------------------
 

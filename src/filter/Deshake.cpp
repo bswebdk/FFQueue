@@ -23,7 +23,7 @@
 
 #include "Deshake.h"
 
-const size_t FILL_EDGE_COUNT = 4;
+const unsigned int FILL_EDGE_COUNT = 4;
 
 //---------------------------------------------------------------------------------------
 
@@ -70,7 +70,7 @@ Deshake::Deshake(wxWindow* parent) : FilterBasePanel(parent)
     MakeLabel(FFQS(SID_DESHAKE_FILL_EDGE), fgs);
     s = FFQS(SID_DESHAKE_FILL_EDGE_VALUES);
     m_FillEdge = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize);
-    for (size_t i = 0; i < FILL_EDGE_COUNT; i++) m_FillEdge->Append(GetToken(s, "|"));
+    for (unsigned int i = 0; i < FILL_EDGE_COUNT; i++) m_FillEdge->Append(GetToken(s, "|"));
     fgs->Add(m_FillEdge, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 6);
 
     MakeLabel(FFQS(SID_DESHAKE_BLOCK_SIZE), fgs);
@@ -204,7 +204,7 @@ bool Deshake::GetFilter(LPFFMPEG_FILTER fltr)
 
     s = FFQS(SID_DESHAKE_FILL_EDGE_FRIENDLY);
     wxString fill[FILL_EDGE_COUNT];
-    for (size_t i = 0; i < FILL_EDGE_COUNT; i++) fill[i] = GetToken(s, "|");
+    for (unsigned int i = 0; i < FILL_EDGE_COUNT; i++) fill[i] = GetToken(s, "|");
 
     fltr->friendly = FFQSF(SID_DESHAKE_USERFRIENDLY, FFQL()->FILTER_NAMES[fltr->type],
                            box_friendly, rx, ry, fill[edge], block, contrast, simple==1 ? m_Search0->GetLabel().Lower() : m_Search1->GetLabel().Lower(),

@@ -74,8 +74,8 @@ const long FFQVidStab::ID_BROWSEDEST = wxNewId();
 const long FFQVidStab::ID_PRESET = wxNewId();
 const long FFQVidStab::ID_SAVELOG = wxNewId();
 const long FFQVidStab::ID_DEFAULTSBUTTON = wxNewId();
-const long FFQVidStab::ID_CANCELBUTTON = wxNewId();
 const long FFQVidStab::ID_OKBUTTON = wxNewId();
+const long FFQVidStab::ID_CANCELBUTTON = wxNewId();
 //*)
 
 BEGIN_EVENT_TABLE(FFQVidStab,wxDialog)
@@ -95,37 +95,37 @@ FFQVidStab::FFQVidStab(wxWindow* parent)
     OptZoomItems = FFQL()->GetStringArray(SID_VIDSTAB_OPT_ZOOM_ITEMS, VIDSTAB_OPT_ZOOM_COUNT);
 
 	//(*Initialize(FFQVidStab)
-	wxStaticBoxSizer* SBS1;
-	wxFlexGridSizer* FlexGridSizer4;
-	wxStaticText* ST11;
-	wxFlexGridSizer* FlexGridSizer10;
-	wxFlexGridSizer* FlexGridSizer3;
-	wxStaticText* ST9;
-	wxFlexGridSizer* FlexGridSizer5;
-	wxFlexGridSizer* FlexGridSizer9;
-	wxStaticText* ST00;
-	wxFlexGridSizer* FlexGridSizer2;
-	wxBoxSizer* BoxSizer2;
-	wxFlexGridSizer* FlexGridSizer7;
-	wxStaticText* ST8;
-	wxStaticText* ST2;
-	wxStaticText* ST4;
 	wxFlexGridSizer* FlexGridSizer8;
-	wxStaticText* ST3;
-	wxFlexGridSizer* FlexGridSizer14;
-	wxStaticText* ST21;
-	wxStaticText* ST1;
-	wxBoxSizer* BoxSizer1;
-	wxFlexGridSizer* FlexGridSizer6;
-	wxStaticText* ST01;
-	wxFlexGridSizer* FlexGridSizer1;
-	wxStaticText* ST20;
-	wxFlexGridSizer* FlexGridSizer11;
 	wxStaticText* ST13;
-	wxFlexGridSizer* FirstPassSizer;
-	wxStaticText* ST12;
-	wxStaticText* ST7;
+	wxFlexGridSizer* FlexGridSizer1;
+	wxStaticBoxSizer* SBS1;
+	wxFlexGridSizer* FlexGridSizer2;
+	wxStaticText* ST00;
 	wxStaticBoxSizer* SBS2;
+	wxStaticText* ST2;
+	wxStaticText* ST11;
+	wxFlexGridSizer* FlexGridSizer11;
+	wxStaticText* ST1;
+	wxStaticText* ST7;
+	wxStaticText* ST12;
+	wxFlexGridSizer* FlexGridSizer7;
+	wxFlexGridSizer* FirstPassSizer;
+	wxStaticText* ST8;
+	wxBoxSizer* BoxSizer2;
+	wxStaticText* ST20;
+	wxFlexGridSizer* FlexGridSizer4;
+	wxFlexGridSizer* FlexGridSizer9;
+	wxFlexGridSizer* FlexGridSizer14;
+	wxFlexGridSizer* FlexGridSizer6;
+	wxFlexGridSizer* FlexGridSizer3;
+	wxStaticText* ST4;
+	wxFlexGridSizer* FlexGridSizer10;
+	wxBoxSizer* BoxSizer1;
+	wxStaticText* ST3;
+	wxStaticText* ST9;
+	wxStaticText* ST01;
+	wxFlexGridSizer* FlexGridSizer5;
+	wxStaticText* ST21;
 
 	Create(parent, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE, _T("wxID_ANY"));
 	FlexGridSizer1 = new wxFlexGridSizer(4, 1, 0, 0);
@@ -135,13 +135,13 @@ FFQVidStab::FFQVidStab(wxWindow* parent)
 	SrcFile = new wxTextCtrl(this, ID_SRCFILE, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_SRCFILE"));
 	SrcFile->SetMinSize(wxSize(400,-1));
 	SBS1->GetStaticBox()->SetLabel(FFQS(SID_VIDSTAB_IN_FILE));
-	FlexGridSizer2->Add(SrcFile, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+	FlexGridSizer2->Add(SrcFile, 1, wxALL|wxEXPAND, 3);
 	BrowseSrc = new wxButton(this, ID_BROWSESRC, _T("..."), wxDefaultPosition, wxSize(50,-1), 0, wxDefaultValidator, _T("ID_BROWSESRC"));
 	FlexGridSizer2->Add(BrowseSrc, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
 	SBS1->Add(FlexGridSizer2, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
 	FileInfo = new wxStaticText(this, ID_FILEINFO, _T("Inf"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_FILEINFO"));
-	SBS1->Add(FileInfo, 1, wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
-	FlexGridSizer1->Add(SBS1, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+	SBS1->Add(FileInfo, 1, wxALL|wxEXPAND, 3);
+	FlexGridSizer1->Add(SBS1, 1, wxALL|wxEXPAND, 3);
 	Pages = new wxNotebook(this, ID_PAGES, wxDefaultPosition, wxDefaultSize, 0, _T("ID_PAGES"));
 	Page0 = new wxPanel(Pages, ID_PAGE0, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, _T("ID_PAGE0"));
 	FirstPassSizer = new wxFlexGridSizer(3, 1, 0, 0);
@@ -156,13 +156,13 @@ FFQVidStab::FFQVidStab(wxWindow* parent)
 	FlexGridSizer5->Add(ST00, 1, wxLEFT|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 10);
 	ST01 = new wxStaticText(Page0, wxID_ANY, _T("+"), wxDefaultPosition, wxDefaultSize, 0, _T("wxID_ANY"));
 	FlexGridSizer5->Add(ST01, 1, wxRIGHT|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 10);
-	FlexGridSizer4->Add(FlexGridSizer5, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 2);
+	FlexGridSizer4->Add(FlexGridSizer5, 1, wxALL|wxEXPAND, 2);
 	FlexGridSizer4->Add(-1,5,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
 	ST1 = new wxStaticText(Page0, wxID_ANY, _T("Shk"), wxDefaultPosition, wxDefaultSize, 0, _T("wxID_ANY"));
 	ST1->SetLabel(FFQS(SID_VIDSTAB_SHAKINESS));
 	FlexGridSizer4->Add(ST1, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
 	Shakiness = new wxSlider(Page0, ID_SHAKINESS, 5, 1, 10, wxDefaultPosition, wxSize(-1,20), 0, wxDefaultValidator, _T("ID_SHAKINESS"));
-	FlexGridSizer4->Add(Shakiness, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+	FlexGridSizer4->Add(Shakiness, 1, wxALL|wxEXPAND, 3);
 	ShakinessText = new wxStaticText(Page0, wxID_ANY, _T("0000"), wxDefaultPosition, wxDefaultSize, 0, _T("wxID_ANY"));
 	ShakinessText->SetMinSize(ShakinessText->GetSize());
 	FlexGridSizer4->Add(ShakinessText, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
@@ -170,7 +170,7 @@ FFQVidStab::FFQVidStab(wxWindow* parent)
 	ST2->SetLabel(FFQS(SID_VIDSTAB_ACCURACY));
 	FlexGridSizer4->Add(ST2, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
 	Accuracy = new wxSlider(Page0, ID_ACCURACY, 15, 1, 15, wxDefaultPosition, wxSize(-1,20), 0, wxDefaultValidator, _T("ID_ACCURACY"));
-	FlexGridSizer4->Add(Accuracy, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+	FlexGridSizer4->Add(Accuracy, 1, wxALL|wxEXPAND, 3);
 	AccuracyText = new wxStaticText(Page0, wxID_ANY, _T("0"), wxDefaultPosition, wxDefaultSize, 0, _T("wxID_ANY"));
 	AccuracyText->SetMinSize(ShakinessText->GetSize());
 	FlexGridSizer4->Add(AccuracyText, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
@@ -178,7 +178,7 @@ FFQVidStab::FFQVidStab(wxWindow* parent)
 	ST3->SetLabel(FFQS(SID_VIDSTAB_STEP_SIZE));
 	FlexGridSizer4->Add(ST3, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
 	StepSize = new wxSlider(Page0, ID_STEPSIZE, 6, 1, 32, wxDefaultPosition, wxSize(-1,20), 0, wxDefaultValidator, _T("ID_STEPSIZE"));
-	FlexGridSizer4->Add(StepSize, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+	FlexGridSizer4->Add(StepSize, 1, wxALL|wxEXPAND, 3);
 	StepSizeText = new wxStaticText(Page0, wxID_ANY, _T("0"), wxDefaultPosition, wxDefaultSize, 0, _T("wxID_ANY"));
 	StepSizeText->SetMinSize(ShakinessText->GetSize());
 	FlexGridSizer4->Add(StepSizeText, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
@@ -186,11 +186,11 @@ FFQVidStab::FFQVidStab(wxWindow* parent)
 	ST4->SetLabel(FFQS(SID_VIDSTAB_MIN_CONTRAST));
 	FlexGridSizer4->Add(ST4, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
 	MinContrast = new wxSlider(Page0, ID_MINCONTRAST, 30, 0, 100, wxDefaultPosition, wxSize(-1,20), 0, wxDefaultValidator, _T("ID_MINCONTRAST"));
-	FlexGridSizer4->Add(MinContrast, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+	FlexGridSizer4->Add(MinContrast, 1, wxALL|wxEXPAND, 3);
 	MinContrastText = new wxStaticText(Page0, wxID_ANY, _T("0"), wxDefaultPosition, wxDefaultSize, 0, _T("wxID_ANY"));
 	MinContrastText->SetMinSize(ShakinessText->GetSize());
 	FlexGridSizer4->Add(MinContrastText, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
-	FirstPassSizer->Add(FlexGridSizer4, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+	FirstPassSizer->Add(FlexGridSizer4, 1, wxALL|wxEXPAND, 3);
 	FlexGridSizer6 = new wxFlexGridSizer(1, 2, 0, 0);
 	ST5 = new wxStaticText(Page0, wxID_ANY, _T("Tri"), wxDefaultPosition, wxDefaultSize, 0, _T("wxID_ANY"));
 	ST5->SetLabel(FFQS(SID_VIDSTAB_TRIPOD_REF_FRAME));
@@ -198,7 +198,7 @@ FFQVidStab::FFQVidStab(wxWindow* parent)
 	TripodFrame = new wxSpinCtrl(Page0, ID_TRIPODFRAME, _T("0"), wxDefaultPosition, wxSize(100,-1), 0, 0, 10000000, 0, _T("ID_TRIPODFRAME"));
 	TripodFrame->SetValue(_T("0"));
 	FlexGridSizer6->Add(TripodFrame, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
-	FirstPassSizer->Add(FlexGridSizer6, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+	FirstPassSizer->Add(FlexGridSizer6, 1, wxALL|wxEXPAND, 3);
 	Page0->SetSizer(FirstPassSizer);
 	FirstPassSizer->Fit(Page0);
 	FirstPassSizer->SetSizeHints(Page0);
@@ -237,7 +237,7 @@ FFQVidStab::FFQVidStab(wxWindow* parent)
 	ZoomSpeed = new wxSpinCtrl(Page1, ID_ZOOMSPEED, _T("0"), wxDefaultPosition, wxSize(100,-1), 0, 0, 100, 0, _T("ID_ZOOMSPEED"));
 	ZoomSpeed->SetValue(_T("0"));
 	FlexGridSizer9->Add(ZoomSpeed, 1, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 3);
-	FlexGridSizer8->Add(FlexGridSizer9, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+	FlexGridSizer8->Add(FlexGridSizer9, 1, wxALL|wxEXPAND, 3);
 	FlexGridSizer10 = new wxFlexGridSizer(3, 2, 0, 0);
 	FlexGridSizer10->AddGrowableCol(1);
 	ST10 = new wxStaticText(Page1, wxID_ANY, _T("Opt"), wxDefaultPosition, wxDefaultSize, 0, _T("wxID_ANY"));
@@ -245,38 +245,38 @@ FFQVidStab::FFQVidStab(wxWindow* parent)
 	FlexGridSizer10->Add(ST10, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
 	OptAlgo = new wxChoice(Page1, ID_OPTALGO, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator, _T("ID_OPTALGO"));
 	OptAlgo->Append(VIDSTAB_OPT_ALGO_COUNT, OptAlgoItems);
-	FlexGridSizer10->Add(OptAlgo, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+	FlexGridSizer10->Add(OptAlgo, 1, wxALL|wxEXPAND, 3);
 	ST11 = new wxStaticText(Page1, wxID_ANY, _T("Intp"), wxDefaultPosition, wxDefaultSize, 0, _T("wxID_ANY"));
 	ST11->SetLabel(FFQS(SID_VIDSTAB_INTERPOLATION));
 	FlexGridSizer10->Add(ST11, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
 	Interpolation = new wxChoice(Page1, ID_INTERPOLATION, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator, _T("ID_INTERPOLATION"));
 	Interpolation->Append(VIDSTAB_INTERPOLATION_COUNT, InterpolationItems);
-	FlexGridSizer10->Add(Interpolation, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+	FlexGridSizer10->Add(Interpolation, 1, wxALL|wxEXPAND, 3);
 	ST12 = new wxStaticText(Page1, wxID_ANY, _T("OpZm"), wxDefaultPosition, wxDefaultSize, 0, _T("wxID_ANY"));
 	ST12->SetLabel(FFQS(SID_VIDSTAB_OPT_ZOOM));
 	FlexGridSizer10->Add(ST12, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
 	OptZoom = new wxChoice(Page1, ID_OPTZOOM, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator, _T("ID_OPTZOOM"));
 	OptZoom->Append(VIDSTAB_OPT_ZOOM_COUNT, OptZoomItems);
-	FlexGridSizer10->Add(OptZoom, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
-	FlexGridSizer8->Add(FlexGridSizer10, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+	FlexGridSizer10->Add(OptZoom, 1, wxALL|wxEXPAND, 3);
+	FlexGridSizer8->Add(FlexGridSizer10, 1, wxALL|wxEXPAND, 3);
 	BoxSizer1 = new wxBoxSizer(wxVERTICAL);
 	CropBlack = new wxCheckBox(Page1, ID_CROPBLACK, _T("Crop"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CROPBLACK"));
 	CropBlack->SetValue(false);
 	CropBlack->SetLabel(FFQS(SID_VIDSTAB_CROP_FILL_BLACK));
-	BoxSizer1->Add(CropBlack, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
+	BoxSizer1->Add(CropBlack, 1, wxALL|wxALIGN_LEFT, 3);
 	Invert = new wxCheckBox(Page1, ID_INVERT, _T("Inv"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_INVERT"));
 	Invert->SetValue(false);
 	Invert->SetLabel(FFQS(SID_VIDSTAB_INVERT));
-	BoxSizer1->Add(Invert, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
+	BoxSizer1->Add(Invert, 1, wxALL|wxALIGN_LEFT, 3);
 	Relative = new wxCheckBox(Page1, ID_RELATIVE, _T("Rel"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_RELATIVE"));
 	Relative->SetValue(false);
 	Relative->SetLabel(FFQS(SID_VIDSTAB_RELATIVE));
-	BoxSizer1->Add(Relative, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
+	BoxSizer1->Add(Relative, 1, wxALL|wxALIGN_LEFT, 3);
 	VirtualTripod = new wxCheckBox(Page1, ID_VIRTUALTRIPOD, _T("VTri"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_VIRTUALTRIPOD"));
 	VirtualTripod->SetValue(false);
 	VirtualTripod->SetLabel(FFQS(SID_VIDSTAB_VIRTUAL_TRIPOD));
-	BoxSizer1->Add(VirtualTripod, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
-	FlexGridSizer8->Add(BoxSizer1, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+	BoxSizer1->Add(VirtualTripod, 1, wxALL|wxALIGN_LEFT, 3);
+	FlexGridSizer8->Add(BoxSizer1, 1, wxALL|wxEXPAND, 3);
 	Page1->SetSizer(FlexGridSizer8);
 	FlexGridSizer8->Fit(Page1);
 	FlexGridSizer8->SetSizeHints(Page1);
@@ -297,7 +297,7 @@ FFQVidStab::FFQVidStab(wxWindow* parent)
 	Verbose->SetValue(false);
 	Verbose->SetLabel(FFQS(SID_VIDSTAB_VERBOSE));
 	FlexGridSizer3->Add(Verbose, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 0);
-	FlexGridSizer14->Add(FlexGridSizer3, 1, wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
+	FlexGridSizer14->Add(FlexGridSizer3, 1, wxALL|wxEXPAND, 3);
 	Only2nd = new wxCheckBox(Page2, ID_ONLY2ND, _T("2nd"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_ONLY2ND"));
 	Only2nd->SetValue(false);
 	Only2nd->SetLabel(FFQS(SID_VIDSTAB_ONLY_2ND_PASS));
@@ -306,14 +306,14 @@ FFQVidStab::FFQVidStab(wxWindow* parent)
 	KeepTransforms->SetValue(false);
 	KeepTransforms->SetLabel(FFQS(SID_VIDSTAB_KEEP_TRANSFORMS));
 	FlexGridSizer14->Add(KeepTransforms, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
-	FlexGridSizer11->Add(FlexGridSizer14, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+	FlexGridSizer11->Add(FlexGridSizer14, 1, wxALL|wxEXPAND, 5);
 	Page2->SetSizer(FlexGridSizer11);
 	FlexGridSizer11->Fit(Page2);
 	FlexGridSizer11->SetSizeHints(Page2);
 	Pages->AddPage(Page0, _T("1st"), false);
 	Pages->AddPage(Page1, _T("2nd"), false);
 	Pages->AddPage(Page2, _T("Opt"), false);
-	FlexGridSizer1->Add(Pages, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+	FlexGridSizer1->Add(Pages, 1, wxALL|wxEXPAND, 3);
 	SBS2 = new wxStaticBoxSizer(wxVERTICAL, this, _T("Dst"));
 	FlexGridSizer7 = new wxFlexGridSizer(1, 3, 0, 0);
 	FlexGridSizer7->AddGrowableCol(1);
@@ -323,10 +323,10 @@ FFQVidStab::FFQVidStab(wxWindow* parent)
 	SBS2->GetStaticBox()->SetLabel(FFQS(SID_CONCAT_DESTINATION));
 	FlexGridSizer7->Add(ST20, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
 	DestFile = new wxTextCtrl(this, ID_DESTFILE, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_DESTFILE"));
-	FlexGridSizer7->Add(DestFile, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+	FlexGridSizer7->Add(DestFile, 1, wxALL|wxEXPAND, 3);
 	BrowseDest = new wxButton(this, ID_BROWSEDEST, _T("..."), wxDefaultPosition, wxSize(50,-1), 0, wxDefaultValidator, _T("ID_BROWSEDEST"));
 	FlexGridSizer7->Add(BrowseDest, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
-	SBS2->Add(FlexGridSizer7, 1, wxBOTTOM|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 2);
+	SBS2->Add(FlexGridSizer7, 1, wxBOTTOM|wxEXPAND, 2);
 	Sizer3 = new wxFlexGridSizer(1, 2, 0, 0);
 	Sizer3->AddGrowableCol(1);
 	Sizer3->AddGrowableRow(0);
@@ -334,25 +334,25 @@ FFQVidStab::FFQVidStab(wxWindow* parent)
 	ST21->SetLabel(FFQS(SID_CONCAT_PRESET));
 	Sizer3->Add(ST21, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
 	Preset = new FFQPresetPanel(this);
-	Sizer3->Add(Preset, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
-	SBS2->Add(Sizer3, 1, wxBOTTOM|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 2);
+	Sizer3->Add(Preset, 1, wxALL|wxEXPAND, 3);
+	SBS2->Add(Sizer3, 1, wxBOTTOM|wxEXPAND, 2);
 	SaveLog = new wxCheckBox(this, ID_SAVELOG, _T("Log"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_SAVELOG"));
 	SaveLog->SetValue(false);
 	SaveLog->SetLabel(FFQS(SID_COMMON_SAVE_LOG));
-	SBS2->Add(SaveLog, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 2);
-	FlexGridSizer1->Add(SBS2, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+	SBS2->Add(SaveLog, 1, wxALL|wxALIGN_LEFT, 2);
+	FlexGridSizer1->Add(SBS2, 1, wxALL|wxEXPAND, 3);
 	BoxSizer2 = new wxBoxSizer(wxHORIZONTAL);
 	DefaultsButton = new wxButton(this, ID_DEFAULTSBUTTON, _T("D"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_DEFAULTSBUTTON"));
 	DefaultsButton->SetLabel(FFQS(SID_COMMON_DEFAULTS));
 	BoxSizer2->Add(DefaultsButton, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	BoxSizer2->Add(-1,-1,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-	CancelButton = new wxButton(this, ID_CANCELBUTTON, _T("N"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CANCELBUTTON"));
-	CancelButton->SetLabel(FFQS(SID_COMMON_CANCEL));
-	BoxSizer2->Add(CancelButton, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	OkButton = new wxButton(this, ID_OKBUTTON, _T("Y"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_OKBUTTON"));
 	OkButton->SetLabel(FFQS(SID_COMMON_OK));
 	BoxSizer2->Add(OkButton, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-	FlexGridSizer1->Add(BoxSizer2, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+	CancelButton = new wxButton(this, ID_CANCELBUTTON, _T("N"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CANCELBUTTON"));
+	CancelButton->SetLabel(FFQS(SID_COMMON_CANCEL));
+	BoxSizer2->Add(CancelButton, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+	FlexGridSizer1->Add(BoxSizer2, 1, wxALL|wxEXPAND, 5);
 	SetSizer(FlexGridSizer1);
 	OpenFileDlg = new wxFileDialog(this, wxEmptyString, wxEmptyString, wxEmptyString, _T("*.*"), wxFD_DEFAULT_STYLE|wxFD_OPEN|wxFD_FILE_MUST_EXIST, wxDefaultPosition, wxDefaultSize, _T("wxFileDialog"));
 	OpenFileDlg->SetMessage(FFQS(SID_COMMON_SELECT_INPUT_FILE));
@@ -373,8 +373,8 @@ FFQVidStab::FFQVidStab(wxWindow* parent)
 	Connect(ID_ONLY2ND,wxEVT_COMMAND_CHECKBOX_CLICKED,(wxObjectEventFunction)&FFQVidStab::OnAction);
 	Connect(ID_BROWSEDEST,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&FFQVidStab::OnAction);
 	Connect(ID_DEFAULTSBUTTON,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&FFQVidStab::OnAction);
-	Connect(ID_CANCELBUTTON,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&FFQVidStab::OnAction);
 	Connect(ID_OKBUTTON,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&FFQVidStab::OnAction);
+	Connect(ID_CANCELBUTTON,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&FFQVidStab::OnAction);
 	//*)
 
     delete[] OptAlgoItems;
@@ -431,6 +431,9 @@ bool FFQVidStab::Execute(LPFFQ_VIDSTAB_JOB job)
 
     }
 
+    //Save log?
+    SaveLog->SetValue(job->save_log);
+
     //Reset
     m_StreamMap = job->stream_map;
     m_Duration = job->duration;
@@ -455,6 +458,7 @@ bool FFQVidStab::Execute(LPFFQ_VIDSTAB_JOB job)
         job->duration = m_Duration;
         job->preset = Preset->GetSelectedPreset()->preset_id;
         job->save_log = SaveLog->GetValue();
+        FFQCFG()->SetSaveLog(job->save_log);
 
 
         //1st pass
@@ -684,7 +688,7 @@ void FFQVidStab::OnIdle(wxIdleEvent &event)
             sm.file_id = 1;
             sm.checked = true;
             m_StreamMap = "";
-            for (size_t i = 0; i < m_PIP.GetStreamCount(); i++)
+            for (unsigned int i = 0; i < m_PIP.GetStreamCount(); i++)
             {
 
                 LPFFPROBE_STREAM_INFO si = m_PIP.GetStreamInfo(i);

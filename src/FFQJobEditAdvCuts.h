@@ -28,17 +28,17 @@
 
 #ifndef WX_PRECOMP
 	//(*HeadersPCH(FFQJobEditAdvCuts)
+	#include <wx/checkbox.h>
+	#include <wx/dialog.h>
 	#include <wx/sizer.h>
+	#include <wx/button.h>
+	#include <wx/radiobut.h>
+	#include <wx/panel.h>
+	#include <wx/slider.h>
 	#include <wx/stattext.h>
 	#include <wx/textctrl.h>
-	#include <wx/checkbox.h>
-	#include <wx/listbox.h>
-	#include <wx/radiobut.h>
-	#include <wx/slider.h>
-	#include <wx/panel.h>
-	#include <wx/button.h>
-	#include <wx/dialog.h>
 	#include <wx/timer.h>
+	#include <wx/listbox.h>
 	//*)
 #endif
 //(*Headers(FFQJobEditAdvCuts)
@@ -60,43 +60,43 @@ class FFQJobEditAdvCuts: public wxDialog
 		bool Execute(FFQ_CUTS &cuts, wxString file_path, FFProbeInfoParser *probe);
 
 		//(*Declarations(FFQJobEditAdvCuts)
-		wxRadioButton* KeepCuts;
+		wxSlider* CfgAccuracy;
+		wxButton* CancelButton;
+		wxListBox* CutList;
+		wxStaticText* ST2;
+		wxStaticText* ST11;
+		wxStaticText* ST7;
+		wxButton* SetTo;
+		wxTextCtrl* ToTime;
 		wxButton* AddCut;
+		wxFlexGridSizer* PreviewSizer2;
+		wxStaticText* ST8;
+		wxRadioButton* FilterFirst;
+		wxStaticText* ST5;
+		wxRadioButton* FilterLast;
+		wxSlider* CfgDelay;
+		wxCheckBox* FrameConv;
+		wxPanel* FrameView;
+		wxTextCtrl* TimePreviewAt;
+		wxStaticText* ST4;
+		wxFlexGridSizer* PreviewSizer1;
 		wxSlider* FrameSlider;
 		wxButton* NextFrame;
-		wxFlexGridSizer* PreviewSizer1;
-		wxStaticText* ST11;
-		wxTimer FrameTimer;
-		wxStaticText* ST9;
-		wxPanel* FrameView;
-		wxButton* SetFrom;
-		wxRadioButton* FilterFirst;
-		wxListBox* CutList;
-		wxButton* OkButton;
-		wxRadioButton* RemoveCuts;
-		wxStaticText* ST6;
-		wxSlider* CfgDelay;
-		wxTextCtrl* TimePreviewAt;
-		wxCheckBox* FrameConv;
-		wxStaticText* ST8;
-		wxStaticText* ST5;
-		wxStaticText* ST2;
-		wxButton* PrevFrame;
-		wxStaticText* ST4;
-		wxStaticText* ST3;
-		wxTextCtrl* ToTime;
-		wxRadioButton* FilterLast;
-		wxButton* RemoveCut;
-		wxButton* SetTo;
-		wxSlider* CfgAccuracy;
-		wxTextCtrl* FromTime;
-		wxButton* TimePreview;
-		wxFlexGridSizer* PreviewSizer2;
 		wxStaticText* FramePos;
-		wxStaticText* DurationLab;
-		wxButton* CancelButton;
-		wxStaticText* ST7;
+		wxTextCtrl* FromTime;
+		wxButton* SetFrom;
+		wxTimer FrameTimer;
 		wxStaticText* ST10;
+		wxButton* OkButton;
+		wxButton* PrevFrame;
+		wxButton* RemoveCut;
+		wxStaticText* ST3;
+		wxStaticText* ST9;
+		wxRadioButton* RemoveCuts;
+		wxRadioButton* KeepCuts;
+		wxButton* TimePreview;
+		wxStaticText* DurationLab;
+		wxStaticText* ST6;
 		//*)
 
 	protected:
@@ -135,7 +135,7 @@ class FFQJobEditAdvCuts: public wxDialog
 		wxImage *m_CurFrame;
 		wxBitmap *m_DrawBuf;
 		FFQProcess *m_Process;
-		size_t m_FrameTime;
+		unsigned int m_FrameTime;
 		FFProbeInfoParser *m_Probe;
 		LPFFPROBE_STREAM_INFO m_VidInfo;
 		double m_VidRate;

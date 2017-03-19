@@ -19,7 +19,7 @@
 								<object class="wxNotebook" name="ID_INPUTS" variable="Inputs" member="yes">
 									<extra_code>AddInputFile(NULL);</extra_code>
 								</object>
-								<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<flag>wxALL|wxEXPAND</flag>
 								<option>1</option>
 							</object>
 							<object class="sizeritem">
@@ -55,16 +55,16 @@
 										<option>1</option>
 									</object>
 								</object>
-								<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<flag>wxALL|wxEXPAND</flag>
 								<option>1</option>
 							</object>
 						</object>
-						<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<flag>wxALL|wxEXPAND</flag>
 						<border>3</border>
 						<option>1</option>
 					</object>
 				</object>
-				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<flag>wxALL|wxEXPAND</flag>
 				<border>3</border>
 				<option>1</option>
 			</object>
@@ -85,7 +85,7 @@
 									<handler function="OnStreamListChange" entry="EVT_LISTBOX" />
 									<handler function="OnAction" entry="EVT_LISTBOX_DCLICK" />
 								</object>
-								<flag>wxEXPAND|wxALIGN_LEFT|wxALIGN_TOP</flag>
+								<flag>wxEXPAND</flag>
 							</object>
 							<object class="sizeritem">
 								<object class="wxBoxSizer" variable="BoxSizer1" member="no">
@@ -97,7 +97,7 @@
 											<extra_code>StreamUp-&gt;SetLabel(FFQS(SID__COMMON__MOVE__UP));</extra_code>
 											<handler function="OnAction" entry="EVT_BUTTON" />
 										</object>
-										<flag>wxBOTTOM|wxLEFT|wxRIGHT|wxALIGN_TOP|wxALIGN_CENTER_HORIZONTAL</flag>
+										<flag>wxBOTTOM|wxLEFT|wxRIGHT|wxALIGN_CENTER_HORIZONTAL</flag>
 										<border>3</border>
 									</object>
 									<object class="sizeritem">
@@ -107,7 +107,7 @@
 											<extra_code>StreamDown-&gt;SetLabel(FFQS(SID__COMMON__MOVE__DOWN));</extra_code>
 											<handler function="OnAction" entry="EVT_BUTTON" />
 										</object>
-										<flag>wxBOTTOM|wxLEFT|wxRIGHT|wxALIGN_TOP|wxALIGN_CENTER_HORIZONTAL</flag>
+										<flag>wxBOTTOM|wxLEFT|wxRIGHT|wxALIGN_CENTER_HORIZONTAL</flag>
 										<border>3</border>
 									</object>
 									<object class="sizeritem">
@@ -117,11 +117,11 @@
 											<extra_code>StreamRefresh-&gt;SetLabel(FFQS(SID__COMMON__REFRESH));</extra_code>
 											<handler function="OnAction" entry="EVT_BUTTON" />
 										</object>
-										<flag>wxLEFT|wxRIGHT|wxALIGN_TOP|wxALIGN_CENTER_HORIZONTAL</flag>
+										<flag>wxLEFT|wxRIGHT|wxALIGN_CENTER_HORIZONTAL</flag>
 										<border>3</border>
 									</object>
 								</object>
-								<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<flag>wxALL|wxEXPAND</flag>
 								<option>1</option>
 							</object>
 							<object class="sizeritem">
@@ -134,7 +134,7 @@
 								<border>3</border>
 							</object>
 							<object class="spacer">
-								<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<flag>wxALL|wxEXPAND</flag>
 								<option>1</option>
 							</object>
 						</object>
@@ -143,7 +143,7 @@
 						<option>1</option>
 					</object>
 				</object>
-				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<flag>wxALL|wxEXPAND</flag>
 				<border>3</border>
 				<option>1</option>
 			</object>
@@ -158,7 +158,7 @@
 							<growablecols>0</growablecols>
 							<object class="sizeritem">
 								<object class="wxTextCtrl" name="ID_OUTPUT" variable="Output" member="yes" />
-								<flag>wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_TOP</flag>
+								<flag>wxALL|wxEXPAND</flag>
 								<border>3</border>
 							</object>
 							<object class="sizeritem">
@@ -167,7 +167,7 @@
 									<size>50,-1</size>
 									<handler function="OnAction" entry="EVT_BUTTON" />
 								</object>
-								<flag>wxALL|wxALIGN_LEFT|wxALIGN_TOP</flag>
+								<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
 								<border>3</border>
 							</object>
 							<object class="sizeritem">
@@ -179,16 +179,16 @@
 								<border>3</border>
 							</object>
 							<object class="spacer">
-								<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<flag>wxALL|wxEXPAND</flag>
 								<option>1</option>
 							</object>
 						</object>
-						<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<flag>wxALL|wxEXPAND</flag>
 						<border>3</border>
 						<option>1</option>
 					</object>
 				</object>
-				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<flag>wxALL|wxEXPAND</flag>
 				<border>3</border>
 				<option>1</option>
 			</object>
@@ -210,9 +210,12 @@
 								<border>3</border>
 							</object>
 							<object class="sizeritem">
-								<object class="wxTextCtrl" name="ID_CMDLINE" variable="CmdLine" member="yes" />
-								<flag>wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+								<object class="wxComboBox" name="ID_CMDLINE" variable="CmdLine" member="yes">
+									<style>wxCB_DROPDOWN</style>
+								</object>
+								<flag>wxALL|wxEXPAND</flag>
 								<border>3</border>
+								<option>1</option>
 							</object>
 							<object class="sizeritem">
 								<object class="wxStaticText" name="ID_STATICTEXT4" variable="ST4" member="yes">
@@ -229,17 +232,17 @@
 									<local_include>1</local_include>
 									<style></style>
 								</object>
-								<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<flag>wxALL|wxEXPAND</flag>
 								<border>3</border>
 								<option>1</option>
 							</object>
 						</object>
-						<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<flag>wxALL|wxEXPAND</flag>
 						<border>3</border>
 						<option>1</option>
 					</object>
 				</object>
-				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<flag>wxALL|wxEXPAND</flag>
 				<border>5</border>
 				<option>1</option>
 			</object>
@@ -276,7 +279,7 @@
 						<border>5</border>
 					</object>
 				</object>
-				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<flag>wxALL|wxEXPAND</flag>
 				<border>5</border>
 				<option>1</option>
 			</object>

@@ -58,10 +58,10 @@ const wxString FILTER_KEY2 = "$F2$";
 
 //---------------------------------------------------------------------------------------
 
-size_t TestFileRange(wxString &path, wxString &name, size_t start_num)
+unsigned int TestFileRange(wxString &path, wxString &name, unsigned int start_num)
 {
     //Return how many files are in the suggested range
-    size_t res = 0;
+    unsigned int res = 0;
     while (wxFileExists(path + wxString::Format(name, start_num))) { start_num++; res++; }
     return res;
 }
@@ -72,13 +72,13 @@ const wxString NUMS = "0123456789";
 
 //---------------------------------------------------------------------------------------
 
-size_t FilePathToRange(wxString &path, size_t &start_num)
+unsigned int FilePathToRange(wxString &path, unsigned int &start_num)
 {
 
     //Convert first file name in a range to a number pattern: %03d etc.
     wxString s = path.AfterLast(wxFileName::GetPathSeparator()), t, pat;
     path = path.BeforeLast(wxFileName::GetPathSeparator()) + wxFileName::GetPathSeparator();
-    size_t idx = 0, nStart, nEnd, nLen;
+    unsigned int idx = 0, nStart, nEnd, nLen;
 
     while (idx < s.Len())
     {
@@ -203,22 +203,22 @@ END_EVENT_TABLE()
 FFQConcat::FFQConcat(wxWindow* parent)
 {
 	//(*Initialize(FFQConcat)
+	wxFlexGridSizer* FlexGridSizer8;
+	wxFlexGridSizer* FlexGridSizer1;
 	wxStaticBoxSizer* SBS1;
+	wxFlexGridSizer* FlexGridSizer2;
+	wxStaticBoxSizer* SBS2;
+	wxStaticBoxSizer* SBS4;
+	wxFlexGridSizer* FlexGridSizer7;
 	wxFlexGridSizer* FlexGridSizer4;
 	wxStaticBoxSizer* SBS3;
-	wxFlexGridSizer* FlexGridSizer10;
-	wxFlexGridSizer* FlexGridSizer3;
-	wxFlexGridSizer* FlexGridSizer5;
 	wxFlexGridSizer* FlexGridSizer9;
-	wxFlexGridSizer* FlexGridSizer2;
-	wxFlexGridSizer* FlexGridSizer7;
-	wxFlexGridSizer* FlexGridSizer8;
-	wxStaticBoxSizer* SBS4;
+	wxFlexGridSizer* FlexGridSizer3;
+	wxFlexGridSizer* FlexGridSizer10;
 	wxBoxSizer* BoxSizer1;
 	wxFlexGridSizer* FlexGridSizer13;
 	wxFlexGridSizer* FlexGridSizer12;
-	wxFlexGridSizer* FlexGridSizer1;
-	wxStaticBoxSizer* SBS2;
+	wxFlexGridSizer* FlexGridSizer5;
 
 	Create(parent, wxID_ANY, _T("Make slideshow / concat"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE, _T("wxID_ANY"));
 	FlexGridSizer1 = new wxFlexGridSizer(4, 1, 0, 0);
@@ -239,14 +239,14 @@ FFQConcat::FFQConcat(wxWindow* parent)
 	SBS1->GetStaticBox()->SetLabel(FFQS(SID_CONCAT_SOURCE_FRAMES));
 	Sizer1->Add(ST1, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	SSSource = new wxTextCtrl(SlideshowPage, ID_IMGSRC, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_IMGSRC"));
-	Sizer1->Add(SSSource, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+	Sizer1->Add(SSSource, 1, wxALL|wxEXPAND, 3);
 	SSBrowseImg = new wxButton(SlideshowPage, ID_SSBROWSEIMG, _T("..."), wxDefaultPosition, wxSize(50,-1), 0, wxDefaultValidator, _T("ID_SSBROWSEIMG"));
 	Sizer1->Add(SSBrowseImg, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
-	Sizer1->Add(-1,-1,1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
+	Sizer1->Add(-1,-1,1, wxALL|wxEXPAND, 0);
 	SSFrameStatus = new wxHyperlinkCtrl(SlideshowPage, ID_SSFRAMESTATUS, _T("link"), wxEmptyString, wxDefaultPosition, wxDefaultSize, wxHL_CONTEXTMENU|wxHL_ALIGN_CENTRE|wxNO_BORDER, _T("ID_SSFRAMESTATUS"));
 	Sizer1->Add(SSFrameStatus, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
-	Sizer1->Add(-1,-1,1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
-	FlexGridSizer5->Add(Sizer1, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+	Sizer1->Add(-1,-1,1, wxALL|wxEXPAND, 0);
+	FlexGridSizer5->Add(Sizer1, 1, wxALL|wxEXPAND, 3);
 	FlexGridSizer13 = new wxFlexGridSizer(5, 1, 0, 0);
 	FlexGridSizer13->AddGrowableCol(0);
 	SSFit = new wxCheckBox(SlideshowPage, ID_SSFIT, _T("SaP"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_SSFIT"));
@@ -268,7 +268,7 @@ FFQConcat::FFQConcat(wxWindow* parent)
 	ST3->SetLabel(FFQS(SID_CONCAT_FILL_COLOR));
 	SSSizer1->Add(ST3, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
 	SSPadding = new wxColourPickerCtrl(SlideshowPage, ID_SSPADDING, wxColour(0,0,0), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_SSPADDING"));
-	SSSizer1->Add(SSPadding, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+	SSSizer1->Add(SSPadding, 1, wxALL|wxEXPAND, 3);
 	FlexGridSizer13->Add(SSSizer1, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
 	ST4 = new wxStaticText(SlideshowPage, ID_ST4, _T("Inf"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_ST4"));
 	ST4->Disable();
@@ -288,23 +288,23 @@ FFQConcat::FFQConcat(wxWindow* parent)
 	SSSetPTS->SetValue(false);
 	SSSetPTS->SetLabel(FFQS(SID_CONCAT_FORCE_PTS));
 	FlexGridSizer13->Add(SSSetPTS, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
-	FlexGridSizer5->Add(FlexGridSizer13, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
-	SBS1->Add(FlexGridSizer5, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
-	FlexGridSizer2->Add(SBS1, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+	FlexGridSizer5->Add(FlexGridSizer13, 1, wxALL|wxEXPAND, 3);
+	SBS1->Add(FlexGridSizer5, 1, wxALL|wxEXPAND, 0);
+	FlexGridSizer2->Add(SBS1, 1, wxALL|wxEXPAND, 5);
 	SBS2 = new wxStaticBoxSizer(wxVERTICAL, SlideshowPage, _T("At"));
 	FlexGridSizer10 = new wxFlexGridSizer(1, 2, 0, 0);
 	FlexGridSizer10->AddGrowableCol(0);
 	SSAudio = new wxTextCtrl(SlideshowPage, ID_SSAUDIO, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_SSAUDIO"));
-	FlexGridSizer10->Add(SSAudio, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+	FlexGridSizer10->Add(SSAudio, 1, wxALL|wxEXPAND, 3);
 	SSBrowseAudio = new wxButton(SlideshowPage, ID_SSBROWSEAUDIO, _T("..."), wxDefaultPosition, wxSize(50,-1), 0, wxDefaultValidator, _T("ID_SSBROWSEAUDIO"));
 	FlexGridSizer10->Add(SSBrowseAudio, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
-	SBS2->Add(FlexGridSizer10, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
+	SBS2->Add(FlexGridSizer10, 1, wxALL|wxEXPAND, 0);
 	SSLoopFrames = new wxCheckBox(SlideshowPage, ID_SSLOOPFRAMES, _T("Loop"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_SSLOOPFRAMES"));
 	SSLoopFrames->SetValue(false);
 	SSLoopFrames->SetLabel(FFQS(SID_CONCAT_LOOP_FRAMES));
 	SBS2->GetStaticBox()->SetLabel(FFQS(SID_CONCAT_AUDIO_TRACK));
-	SBS2->Add(SSLoopFrames, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
-	FlexGridSizer2->Add(SBS2, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+	SBS2->Add(SSLoopFrames, 1, wxALL|wxALIGN_LEFT, 5);
+	FlexGridSizer2->Add(SBS2, 1, wxALL|wxEXPAND, 5);
 	SlideshowPage->SetSizer(FlexGridSizer2);
 	FlexGridSizer2->Fit(SlideshowPage);
 	FlexGridSizer2->SetSizeHints(SlideshowPage);
@@ -320,7 +320,7 @@ FFQConcat::FFQConcat(wxWindow* parent)
 	FlexGridSizer3->AddGrowableCol(0);
 	FlexGridSizer3->AddGrowableRow(0);
 	CCSources = new wxListBox(MergePage, ID_CCSOURCES, wxDefaultPosition, wxSize(300,-1), 0, 0, wxLB_EXTENDED|wxLB_HSCROLL|wxHSCROLL, wxDefaultValidator, _T("ID_CCSOURCES"));
-	FlexGridSizer3->Add(CCSources, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+	FlexGridSizer3->Add(CCSources, 1, wxALL|wxEXPAND, 3);
 	FlexGridSizer12 = new wxFlexGridSizer(6, 1, 0, 0);
 	FlexGridSizer12->AddGrowableCol(0);
 	FlexGridSizer12->AddGrowableRow(5);
@@ -331,15 +331,15 @@ FFQConcat::FFQConcat(wxWindow* parent)
 	CCRemove = new wxButton(MergePage, ID_CCREMOVE, _T("R"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CCREMOVE"));
 	CCRemove->SetLabel(FFQS(SID_COMMON_REMOVE));
 	FlexGridSizer12->Add(CCRemove, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
-	FlexGridSizer12->Add(-1,10,1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
+	FlexGridSizer12->Add(-1,10,1, wxALL|wxEXPAND, 0);
 	CCUp = new wxButton(MergePage, ID_CCUP, _T("U"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CCUP"));
 	CCUp->SetLabel(FFQS(SID_COMMON_MOVE_UP));
 	FlexGridSizer12->Add(CCUp, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
 	CCDown = new wxButton(MergePage, ID_CCDOWN, _T("D"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CCDOWN"));
 	CCDown->SetLabel(FFQS(SID_COMMON_MOVE_DOWN));
 	FlexGridSizer12->Add(CCDown, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
-	FlexGridSizer3->Add(FlexGridSizer12, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
-	FlexGridSizer4->Add(FlexGridSizer3, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
+	FlexGridSizer3->Add(FlexGridSizer12, 1, wxALL|wxEXPAND, 3);
+	FlexGridSizer4->Add(FlexGridSizer3, 1, wxALL|wxEXPAND, 0);
 	CCSimple = new wxCheckBox(MergePage, ID_CCSIMPLE, _T("SC"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CCSIMPLE"));
 	CCSimple->SetValue(false);
 	CCSimple->SetLabel(FFQS(SID_CONCAT_SIMPLE));
@@ -359,7 +359,7 @@ FFQConcat::FFQConcat(wxWindow* parent)
 	CCUsePadColor->SetLabel(FFQS(SID_PAD_COLOR));
 	CCPadSizer->Add(CCUsePadColor, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
 	CCPadColor = new wxColourPickerCtrl(MergePage, ID_CCPADCOLOR, wxColour(0,0,0), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CCPADCOLOR"));
-	CCPadSizer->Add(CCPadColor, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
+	CCPadSizer->Add(CCPadColor, 1, wxALL|wxEXPAND, 0);
 	CCPadSizer->Add(20,-1,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
 	CCUsePadBlur = new wxRadioButton(MergePage, ID_CCUSEPADBLUR, _T("PadB"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CCUSEPADBLUR"));
 	CCUsePadBlur->SetLabel(FFQS(SID_PAD_BLUR));
@@ -369,11 +369,11 @@ FFQConcat::FFQConcat(wxWindow* parent)
 	StaticText1 = new wxStaticText(MergePage, ID_STATICTEXT1, _T("-"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT1"));
 	CCBlurSizer->Add(StaticText1, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
 	CCPadBlur = new wxSlider(MergePage, ID_CCPADBLUR, 2, 1, 10, wxDefaultPosition, wxSize(-1,20), 0, wxDefaultValidator, _T("ID_CCPADBLUR"));
-	CCBlurSizer->Add(CCPadBlur, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
+	CCBlurSizer->Add(CCPadBlur, 1, wxALL|wxEXPAND, 0);
 	StaticText2 = new wxStaticText(MergePage, ID_STATICTEXT2, _T("+"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT2"));
 	CCBlurSizer->Add(StaticText2, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
-	CCPadSizer->Add(CCBlurSizer, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
-	FlexGridSizer4->Add(CCPadSizer, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
+	CCPadSizer->Add(CCBlurSizer, 1, wxALL|wxEXPAND, 0);
+	FlexGridSizer4->Add(CCPadSizer, 1, wxALL|wxEXPAND, 0);
 	Sizer4 = new wxFlexGridSizer(0, 4, 0, 0);
 	ST9 = new wxStaticText(MergePage, ID_ST9, _T("St"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_ST9"));
 	ST9->SetLabel(FFQS(SID_CONCAT_CONTENT_TYPES));
@@ -391,15 +391,15 @@ FFQConcat::FFQConcat(wxWindow* parent)
 	CCSubtitles->Disable();
 	CCSubtitles->SetLabel(FFQS(SID_COMMON_SUBTITLES));
 	Sizer4->Add(CCSubtitles, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-	FlexGridSizer4->Add(Sizer4, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
-	SBS4->Add(FlexGridSizer4, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
-	FlexGridSizer9->Add(SBS4, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+	FlexGridSizer4->Add(Sizer4, 1, wxALL|wxEXPAND, 0);
+	SBS4->Add(FlexGridSizer4, 1, wxALL|wxEXPAND, 0);
+	FlexGridSizer9->Add(SBS4, 1, wxALL|wxEXPAND, 5);
 	MergePage->SetSizer(FlexGridSizer9);
 	FlexGridSizer9->Fit(MergePage);
 	FlexGridSizer9->SetSizeHints(MergePage);
 	Pages->AddPage(SlideshowPage, _T("SS"), false);
 	Pages->AddPage(MergePage, _T("CC"), false);
-	FlexGridSizer1->Add(Pages, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+	FlexGridSizer1->Add(Pages, 1, wxALL|wxEXPAND, 5);
 	SBS3 = new wxStaticBoxSizer(wxVERTICAL, this, _T("Dst"));
 	FlexGridSizer8 = new wxFlexGridSizer(1, 3, 0, 0);
 	FlexGridSizer8->AddGrowableCol(1);
@@ -409,10 +409,10 @@ FFQConcat::FFQConcat(wxWindow* parent)
 	SBS3->GetStaticBox()->SetLabel(FFQS(SID_CONCAT_DESTINATION));
 	FlexGridSizer8->Add(ST7, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
 	DestFile = new wxTextCtrl(this, ID_DESTFILE, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_DESTFILE"));
-	FlexGridSizer8->Add(DestFile, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+	FlexGridSizer8->Add(DestFile, 1, wxALL|wxEXPAND, 3);
 	BrowseDest = new wxButton(this, ID_BROWSEDEST, _T("..."), wxDefaultPosition, wxSize(50,-1), 0, wxDefaultValidator, _T("ID_BROWSEDEST"));
 	FlexGridSizer8->Add(BrowseDest, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
-	SBS3->Add(FlexGridSizer8, 1, wxBOTTOM|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 2);
+	SBS3->Add(FlexGridSizer8, 1, wxBOTTOM|wxEXPAND, 2);
 	Sizer3 = new wxFlexGridSizer(1, 2, 0, 0);
 	Sizer3->AddGrowableCol(1);
 	Sizer3->AddGrowableRow(0);
@@ -420,19 +420,19 @@ FFQConcat::FFQConcat(wxWindow* parent)
 	ST8->SetLabel(FFQS(SID_CONCAT_PRESET));
 	Sizer3->Add(ST8, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
 	Preset = new FFQPresetPanel(this);
-	Sizer3->Add(Preset, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
-	SBS3->Add(Sizer3, 1, wxBOTTOM|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 2);
+	Sizer3->Add(Preset, 1, wxALL|wxEXPAND, 3);
+	SBS3->Add(Sizer3, 1, wxBOTTOM|wxEXPAND, 2);
 	Sizer2 = new wxFlexGridSizer(1, 1, 0, 0);
 	Sizer2->AddGrowableCol(0);
 	Sizer2->AddGrowableRow(0);
 	LimitDest = new wxHyperlinkCtrl(this, ID_LIMITDEST, _T("limit"), wxEmptyString, wxDefaultPosition, wxDefaultSize, wxHL_CONTEXTMENU|wxHL_ALIGN_CENTRE|wxNO_BORDER, _T("ID_LIMITDEST"));
 	Sizer2->Add(LimitDest, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
-	SBS3->Add(Sizer2, 1, wxBOTTOM|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 2);
+	SBS3->Add(Sizer2, 1, wxBOTTOM|wxEXPAND, 2);
 	SaveLog = new wxCheckBox(this, ID_SAVELOG, _T("Log"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_SAVELOG"));
 	SaveLog->SetValue(false);
 	SaveLog->SetLabel(FFQS(SID_COMMON_SAVE_LOG));
-	SBS3->Add(SaveLog, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
-	FlexGridSizer1->Add(SBS3, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+	SBS3->Add(SaveLog, 1, wxALL|wxALIGN_LEFT, 5);
+	FlexGridSizer1->Add(SBS3, 1, wxALL|wxEXPAND, 5);
 	BoxSizer1 = new wxBoxSizer(wxHORIZONTAL);
 	BoxSizer1->Add(-1,-1,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	OkButton = new wxButton(this, ID_OKBUTTON, _T("O"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_OKBUTTON"));
@@ -442,7 +442,7 @@ FFQConcat::FFQConcat(wxWindow* parent)
 	CancelButton = new wxButton(this, ID_CANCELBUTTON, _T("C"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CANCELBUTTON"));
 	CancelButton->SetLabel(FFQS(SID_COMMON_CANCEL));
 	BoxSizer1->Add(CancelButton, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-	FlexGridSizer1->Add(BoxSizer1, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+	FlexGridSizer1->Add(BoxSizer1, 1, wxALL|wxEXPAND, 5);
 	SetSizer(FlexGridSizer1);
 	OpenFileDlg = new wxFileDialog(this, wxEmptyString, wxEmptyString, wxEmptyString, wxFileSelectorDefaultWildcardStr, wxFD_DEFAULT_STYLE|wxFD_OPEN|wxFD_FILE_MUST_EXIST, wxDefaultPosition, wxDefaultSize, _T("wxFileDialog"));
 	OpenFileDlg->SetMessage(FFQS(SID_COMMON_SELECT_INPUT_FILE));
@@ -504,7 +504,7 @@ FFQConcat::FFQConcat(wxWindow* parent)
     SSPadding->SetColour(wxColour(0, 0, 0));
     SSFrameTime->SetValue("5");
 
-    SaveLog->SetValue(true);
+    //SaveLog->SetValue(true);
 
 	//Preset->SetFixedFirstItem("")
 
@@ -622,6 +622,10 @@ bool FFQConcat::Execute(LPFFQ_CONCAT_JOB job)
         //Update job type
         job->slideshow = (Pages->GetSelection() == 0);
 
+        //Save log
+        job->save_log = SaveLog->GetValue();
+        FFQCFG()->SetSaveLog(job->save_log);
+
         //Store values
         if (job->slideshow)
         {
@@ -712,7 +716,7 @@ bool FFQConcat::Execute(LPFFQ_CONCAT_JOB job)
 
     //Clear CCSources (and concat data)
     CCSources->Freeze();
-    for (size_t i = 0; i < CCSources->GetCount(); i++) delete (LPCONCAT_DATA)CCSources->GetClientData(i);
+    for (unsigned int i = 0; i < CCSources->GetCount(); i++) delete (LPCONCAT_DATA)CCSources->GetClientData(i);
     CCSources->Clear();
     CCSources->Thaw();
 
@@ -729,7 +733,7 @@ void FFQConcat::AddConcatSources(wxArrayString *paths)
     LPCONCAT_DATA cd;
     wxString errors = "";
 
-    for (size_t i = 0; i < paths->GetCount(); i++)
+    for (unsigned int i = 0; i < paths->GetCount(); i++)
     {
 
         cd = new CONCAT_DATA(paths->Item(i));
@@ -764,13 +768,13 @@ void FFQConcat::BuildMergeFilter(wxString &filter, wxString &smap)
 
     //Generate the merge filter
 
-    size_t w = 0, h = 0;
+    unsigned int w = 0, h = 0;
     bool scale = false, vid = CCVideo->GetValue(), aud = CCAudio->GetValue();
     LPCONCAT_DATA cd, pcd = NULL;
     filter = "";
     wxString cv = "", ca = "", s, t;
 
-    for (size_t i = 0; i < CCSources->GetCount(); i++)
+    for (unsigned int i = 0; i < CCSources->GetCount(); i++)
     {
 
         cd = (LPCONCAT_DATA)CCSources->GetClientData(i);
@@ -817,8 +821,8 @@ void FFQConcat::BuildMergeFilter(wxString &filter, wxString &smap)
                         wxString sw, sh, fltr;
 
                         //Create scaling that remains aspect
-                        sw.Printf("'iw*min(%i/iw,%i/ih)'", w, h);
-                        sh.Printf("'ih*min(%i/iw,%i/ih)'", w, h);
+                        sw.Printf("'iw*min(%u/iw,%u/ih)'", w, h);
+                        sh.Printf("'ih*min(%u/iw,%u/ih)'", w, h);
 
                         if (CCUsePadBlur->GetValue())
                         {
@@ -833,7 +837,7 @@ void FFQConcat::BuildMergeFilter(wxString &filter, wxString &smap)
 
                             //Make the filter
                             fltr =  "%ssplit%s%s;"; //Split
-                            fltr += "%sscale=%i:%i,boxblur=%i:%i%s;"; //Stretch and blur
+                            fltr += "%sscale=%u:%u,boxblur=%i:%i%s;"; //Stretch and blur
                             fltr += "%sscale=%s:%s%s;"; //Scale to fit
                             fltr += "%s%soverlay=(W-w)/2:(H-h)/2%s"; //Overlay
 
@@ -849,7 +853,7 @@ void FFQConcat::BuildMergeFilter(wxString &filter, wxString &smap)
 
                             //Pad using color
                             fltr.Printf(
-                                "%sscale=%s:%s,pad=%i:%i:(ow-iw)/2:(oh-ih)/2:%s%s",
+                                "%sscale=%s:%s,pad=%u:%u:(ow-iw)/2:(oh-ih)/2:%s%s",
                                 s, sw, sh, w, h, CCPadColor->GetColour().GetAsString(wxC2S_HTML_SYNTAX), t
                             );
 
@@ -968,7 +972,7 @@ bool FFQConcat::GetFileInfo(LPCONCAT_DATA cd, bool dimensionRequired)
     {
         if ((!m_PIP->GetVideoDimension(cd->width, cd->height)) && dimensionRequired) return false;
         if (!m_PIP->GetDuration(cd->duration)) return false;
-        for (size_t i = 0; i < m_PIP->GetStreamCount(); i++)
+        for (unsigned int i = 0; i < m_PIP->GetStreamCount(); i++)
         {
             LPFFPROBE_STREAM_INFO si = m_PIP->GetStreamInfo(i);
             if ( (cd->videoID < 0) && (si->codec_type == CODEC_TYPE_VIDEO) ) cd->videoID = i;
@@ -983,9 +987,9 @@ bool FFQConcat::GetFileInfo(LPCONCAT_DATA cd, bool dimensionRequired)
 
 //---------------------------------------------------------------------------------------
 
-void SelItem(wxListBox *lb, size_t idx)
+void SelItem(wxListBox *lb, unsigned int idx)
 {
-    for (size_t i = 0; i < lb->GetCount(); i++) lb->SetSelection(i, i == idx);
+    for (unsigned int i = 0; i < lb->GetCount(); i++) lb->SetSelection(i, i == idx);
 }
 
 //---------------------------------------------------------------------------------------
@@ -1046,7 +1050,7 @@ void FFQConcat::UpdateControls()
 
     long s_first = -1, s_last = -1, s_count = 0, vids = 0, auds = 0;
 
-    for (size_t i = 0; i < CCSources->GetCount(); i++)
+    for (unsigned int i = 0; i < CCSources->GetCount(); i++)
     {
 
         //Check if audio and video is available
@@ -1155,9 +1159,9 @@ bool FFQConcat::ValidateDialog()
         {
 
             //Check that all files are same width*height and count video and audio streams
-            size_t w = 0, h = 0, a = 0, v = 0;
+            unsigned int w = 0, h = 0, a = 0, v = 0;
 
-            for (size_t i = 0; i < CCSources->GetCount(); i++)
+            for (unsigned int i = 0; i < CCSources->GetCount(); i++)
             {
 
                 cd = (LPCONCAT_DATA)CCSources->GetClientData(i);
@@ -1189,7 +1193,7 @@ bool FFQConcat::ValidateDialog()
             if ( (!vid) && (!aud) && (!CCSubtitles->GetValue()) ) return ShowError(CCVideo, FFQS(SID_NO_CONTENT_SELECTED));
 
             //Check if selected content is available
-            for (size_t i = 0; i < CCSources->GetCount(); i++)
+            for (unsigned int i = 0; i < CCSources->GetCount(); i++)
             {
 
                 cd = (LPCONCAT_DATA)CCSources->GetClientData(i);
@@ -1333,7 +1337,7 @@ void FFQConcat::OnAction(wxCommandEvent& event)
     else if (evtId == ID_CCREMOVE)
     {
 
-        size_t idx = 0;
+        unsigned int idx = 0;
         while (idx < CCSources->GetCount())
         {
             if (CCSources->IsSelected(idx))
@@ -1394,7 +1398,7 @@ void FFQConcat::OnAction(wxCommandEvent& event)
 
         //Update items to ensure that the correct time value is displayed
         CCSources->Freeze();
-        for (size_t i = 0; i < CCSources->GetCount(); i++)
+        for (unsigned int i = 0; i < CCSources->GetCount(); i++)
             CCSources->SetString(i, ConcatDataToString( (LPCONCAT_DATA)CCSources->GetClientData(i), CCSimple->GetValue() ) );
         CCSources->Thaw();
 
@@ -1412,7 +1416,7 @@ void FFQConcat::OnCCSrcDblClick(wxCommandEvent& event)
     if (CCSimple->GetValue())
     {
 
-        for (size_t i = 0; i < CCSources->GetCount(); i++) if (CCSources->IsSelected(i))
+        for (unsigned int i = 0; i < CCSources->GetCount(); i++) if (CCSources->IsSelected(i))
         {
 
             //Get concat data for first selected item

@@ -86,7 +86,7 @@ PIXEL_FORMAT* PIXEL_FORMAT::Find(wxString fmt)
 
 //---------------------------------------------------------------------------------------
 
-size_t PIXEL_FORMAT::GetCount()
+unsigned int PIXEL_FORMAT::GetCount()
 {
 
     //Returns the number of pixel formats in the list

@@ -169,7 +169,7 @@ bool FFQBitRatePanel::GetValues(wxString &values, bool showErr)
     if (br.Len() + mir.Len() + mar.Len() + buf.Len() == 0) values.Clear();
 
     //Values are set - pack them to the resulting string
-    else values.Printf("%s,%u,%s,%s,%s", br, BitRateType->GetSelection(), mir, mar, buf);
+    else values.Printf("%s,%i,%s,%s,%s", br, BitRateType->GetSelection(), mir, mar, buf);
 
     //Return result
     return ok;

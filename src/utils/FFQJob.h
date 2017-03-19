@@ -58,6 +58,7 @@ typedef struct FFQ_JOB : FFQ_QUEUE_ITEM
     virtual QUEUE_ITEM_TYPE GetItemType() { return qtJOB; };
     virtual bool GetLogFileName(wxString &name);
     LPFFQ_PRESET GetPreset();
+    virtual wxString GetPreviewCommand();
     virtual wxString ToString();
     virtual bool UsesPreset(wxString pst_id);
 

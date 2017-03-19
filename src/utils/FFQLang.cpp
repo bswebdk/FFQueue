@@ -675,6 +675,8 @@ FFQLang::FFQLang(bool loadFile)
     SetString(SID_OPTIONS_CUSTOM_PLAYER,            "Custom player for preview (must support piping, like VLC)");
     SetString(SID_OPTIONS_KEEP_CONSOLE_OPEN,        "Keep console open after preview finishes");
     SetString(SID_OPTIONS_CUSTOM_CONSOLE_CMD,       "Custom console command");
+    SetString(SID_OPTIONS_SILENT_QUEUE_FINISH,      "Silent queue finish");
+    SetString(SID_OPTIONS_SAVE_JOBS_ON_MODIFY,      "Save jobs whenever they are modified");
 
 
     //Thumb maker UI strings
@@ -749,7 +751,18 @@ FFQLang::FFQLang(bool loadFile)
     SetString(SID_VIDSTAB_OTHER_OPTIONS,            "Other options");
     SetString(SID_VIDSTAB_FILE_INFO,                "Duration:%s Video:%s %ix%i Audio:%i Subs:%i");
 
-    //SetString(,        "");
+
+    //VideoToGIF UI strings
+    SetString(SID_VIDEO2GIF_TITLE,                  "Convert video to GIF");
+    SetString(SID_VIDEO2GIF_PROPERTIES,             "GIF properties");
+    SetString(SID_VIDEO2GIF_WIDTH,                  "Width");
+    SetString(SID_VIDEO2GIF_HEIGHT,                 "Height");
+    SetString(SID_VIDEO2GIF_TWOPASS,                "2 passes for optimized palette / colors");
+    SetString(SID_VIDEO2GIF_START_FROM,             "Start conversion from %s");
+    SetString(SID_VIDEO2GIF_VIDEO_INFO,             "%ux%u @ %.2f fps, duration: %s");
+    SetString(SID_VIDEO2GIF_NO_VIDEO,               "No video found in input file");
+    SetString(SID_VIDEO2GIF_BEYOND_END_OF_VID,      "Start time and/or time length is beyond end of video");
+    SetString(SID_VIDEO2GIF_PRECISE_CUTS,           "Use filters to increase cut precision");
 
 
     //Filter editor UI strings
@@ -1559,8 +1572,8 @@ bool FFQLang::LoadLanguage()
 
         //Load garbage data and extract password hash
         file->Read((void*)buffer, 1024);
-        size_t offs = 20 + (buffer[0] + buffer[10] + buffer[20]) % 200;
-        for (size_t i = 0; i < sizeof(m_PasswordHash); i++) m_PasswordHash[i] = buffer[offs+(i*39)];
+        unsigned int offs = 20 + (buffer[0] + buffer[10] + buffer[20]) % 200;
+        for (unsigned int i = 0; i < sizeof(m_PasswordHash); i++) m_PasswordHash[i] = buffer[offs+(i*39)];
 
         //Load description
         LoadString(file, m_Description, buffer, m_PasswordHash);
@@ -1659,9 +1672,9 @@ bool FFQLang::SaveLanguage()
         uint8_t *buffer = new uint8_t[BUFFER_SIZE];
 
         //Make garbage data that includes password hash and save it
-        for (size_t i = 0; i < 1024; i++) buffer[i] = (rand() % 0xFF);
-        size_t offs = 20 + (buffer[0] + buffer[10] + buffer[20]) % 200;
-        for (size_t i = 0; i < sizeof(m_PasswordHash); i++) buffer[offs+(i*39)] = m_PasswordHash[i];
+        for (unsigned int i = 0; i < 1024; i++) buffer[i] = (rand() % 0xFF);
+        unsigned int offs = 20 + (buffer[0] + buffer[10] + buffer[20]) % 200;
+        for (unsigned int i = 0; i < sizeof(m_PasswordHash); i++) buffer[offs+(i*39)] = m_PasswordHash[i];
         file->Write((void*)buffer, 1024);
 
         //Save description
@@ -1820,7 +1833,7 @@ void FFQLang::InitStringVars()
 
     //Make new filter name array
     FILTER_NAMES = new wxString[FILTER_COUNT];
-    for (size_t i = 0; i < FILTER_COUNT; i++)
+    for (unsigned int i = 0; i < FILTER_COUNT; i++)
     {
         ffqs = FindString(SID_FILTER_NAME_BASE + i);
         FILTER_NAMES[i] = (ffqs == NULL) ? "???" : ffqs->str;

@@ -168,4 +168,39 @@ private:
 
 } FFQ_CONCAT_JOB, *LPFFQ_CONCAT_JOB;
 
+//---------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------
+
+//Structure to define a video-to-GIF job
+typedef struct FFQ_VID2GIF_JOB : FFQ_QUEUE_ITEM
+{
+
+    wxString out;
+    unsigned short width, height, fps;
+    bool two_pass, precise_cuts;
+    TIME_VALUE start_time, limit_len;
+
+    FFQ_VID2GIF_JOB();
+    FFQ_VID2GIF_JOB(const FFQ_VID2GIF_JOB &copy_from);
+    FFQ_VID2GIF_JOB(wxString from);
+
+    virtual void Cleanup();
+    virtual QUEUE_ITEM_TYPE GetItemType() { return qtVID2GIF_JOB; };
+    virtual bool GetLogFileName(wxString &name);
+    virtual wxString ToString();
+
+protected:
+
+    virtual wxString GetCommandAtIndex(int index);
+
+private:
+
+    wxString m_PaletteFile;
+
+    void Reset(bool load);
+
+} FFQ_VID2GIF_JOB, *LPFFQ_VID2GIF_JOB;
+
 #endif // FFQTOOLJOBS_H

@@ -72,6 +72,9 @@ class FFQConfig
 	    bool use_libav;
 	    bool preferred_unique;
 	    bool keep_console;
+	    bool save_log;
+	    bool silent_qfinish;
+	    bool save_on_modify;
 
 	    wxString app_name;
 	    wxString batch_config;
@@ -84,13 +87,14 @@ class FFQConfig
 	    wxString second_file_extensions;
 	    wxString window_position;
 	    wxString vidstab_settings;
+	    wxString saved_commands;
 
 		//Methods to access options not stored in public vars
 		bool            AreFiltersAvailable(wxString filter_list);
 		void            CheckFontsConf();
         void            DefaultOptions();
         wxString        FindSecondaryInputFile(wxString &for_filename);
-        size_t          FindSecondaryInputFiles(wxString &for_filename, wxArrayString &dest, size_t limit = 0);
+        unsigned int    FindSecondaryInputFiles(wxString &for_filename, wxArrayString &dest, unsigned int limit = 0);
         LPCODEC_INFO    GetCodecInfo();
 		wxString        GetConfigPath(wxString append_filename = "");
 		wxString        GetConsoleCommand(wxString prog, wxString args);
@@ -111,6 +115,7 @@ class FFQConfig
 	    void            LoadConfig();
 	    bool            SaveArrayString(wxString filename, wxArrayString* array_string);
 	    void            SaveConfig();
+	    bool            SetSaveLog(bool log, bool save_config = true);
 	    void            SetPreferredAndSave(wxString format, wxString path, bool save_always = false);
 	    bool            ValidateFFMpegPath(wxString path, bool set_config_path_if_valid);
 

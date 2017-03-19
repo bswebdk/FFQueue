@@ -38,9 +38,9 @@ extern const wxString DEFAULT_AUDIO_CODEC_INFO;
 typedef struct CODEC_INFO
 {
 
-    bool friendly;
+    bool friendly, qscale_float, crf_float;
     wxString codec;
-    int min_qscale, max_qscale, min_crf, max_crf;
+    float min_qscale, max_qscale, min_crf, max_crf;
     CODEC_INFO *next;
 
     CODEC_INFO();
@@ -50,8 +50,10 @@ typedef struct CODEC_INFO
     void Append(wxString &from);
     void CopyTo(CODEC_INFO &dst);
     CODEC_INFO* Find(const wxString find_codec);
-    int GetConstRate(int pct);
-    int GetQScale(int pct);
+    float GetConstRate(int pct);
+    wxString GetConstRateStr(int pct);
+    float GetQScale(int pct);
+    wxString GetQScaleStr(int pct);
     bool IsDefault(wxString *packed = NULL);
     void Parse(wxString &from);
     void Reset();

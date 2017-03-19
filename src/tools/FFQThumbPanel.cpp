@@ -71,7 +71,7 @@ END_EVENT_TABLE()
 FFQThumbPanel::FFQThumbPanel(wxWindow* parent,wxWindowID id)
 {
 
-    wxIntegerValidator<size_t> iVal;
+    wxIntegerValidator<unsigned int> iVal;
     iVal.SetRange(0, 99999);
 
     wxFloatingPointValidator<float> fVal;
@@ -79,9 +79,9 @@ FFQThumbPanel::FFQThumbPanel(wxWindow* parent,wxWindowID id)
 
 
 	//(*Initialize(FFQThumbPanel)
-	wxFlexGridSizer* MakeSizer;
-	wxFlexGridSizer* FlexGridSizer7;
 	wxFlexGridSizer* FlexGridSizer8;
+	wxFlexGridSizer* FlexGridSizer7;
+	wxFlexGridSizer* MakeSizer;
 
 	Create(parent, id, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, _T("id"));
 	FGS_Main = new wxFlexGridSizer(7, 1, 0, 0);
@@ -107,7 +107,7 @@ FFQThumbPanel::FFQThumbPanel(wxWindow* parent,wxWindowID id)
 	ImgDest->SetSelection( ImgDest->Append(FFQS(SID_THUMBS_DEST_NEW_UNIQUE)) );
 	ImgDest->Append(FFQS(SID_THUMBS_DEST_SAME));
 	ImgDest->Append(FFQS(SID_THUMBS_DEST_THUMBS));
-	DestSizer->Add(ImgDest, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 2);
+	DestSizer->Add(ImgDest, 1, wxALL|wxEXPAND, 2);
 	ST2 = new wxStaticText(this, ID_ST2, _T("ImgF"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_ST2"));
 	ST2->SetLabel(FFQS(SID_THUMBS_IMAGE_FORMAT));
 	DestSizer->Add(ST2, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
@@ -120,7 +120,7 @@ FFQThumbPanel::FFQThumbPanel(wxWindow* parent,wxWindowID id)
 	ImgFormat->Append(_T("JPEG"));
 	ImgFormat->Append(_T("bmp"));
 	ImgFormat->Append(_T("BMP"));
-	DestSizer->Add(ImgFormat, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 2);
+	DestSizer->Add(ImgFormat, 1, wxALL|wxEXPAND, 2);
 	FGS_Main->Add(DestSizer, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
 	WidthSizer = new wxFlexGridSizer(1, 3, 0, 0);
 	WidthSizer->AddGrowableCol(2);
@@ -128,18 +128,18 @@ FFQThumbPanel::FFQThumbPanel(wxWindow* parent,wxWindowID id)
 	ST3->SetLabel(FFQS(SID_THUMBS_WIDTH));
 	WidthSizer->Add(ST3, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	Width = new wxTextCtrl(this, ID_WIDTH, wxEmptyString, wxDefaultPosition, wxSize(50,-1), 0, iVal, _T("ID_WIDTH"));
-	WidthSizer->Add(Width, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 2);
+	WidthSizer->Add(Width, 1, wxALL|wxEXPAND, 2);
 	ST4 = new wxStaticText(this, ID_ST4, _T("Inf"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_ST4"));
 	ST4->Disable();
 	ST4->SetLabel(FFQS(SID_THUMBS_HEIGHT_INFO));
 	WidthSizer->Add(ST4, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
-	FGS_Main->Add(WidthSizer, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+	FGS_Main->Add(WidthSizer, 1, wxALL|wxEXPAND, 3);
 	TimeSizer = new wxFlexGridSizer(1, 1, 0, 0);
 	TimeSizer->AddGrowableCol(0);
 	TimeSizer->AddGrowableRow(0);
 	StartTime = new wxHyperlinkCtrl(this, ID_STARTTIME, _T("Start Time"), wxEmptyString, wxDefaultPosition, wxDefaultSize, wxHL_CONTEXTMENU|wxHL_ALIGN_CENTRE|wxNO_BORDER, _T("ID_STARTTIME"));
 	TimeSizer->Add(StartTime, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
-	FGS_Main->Add(TimeSizer, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 2);
+	FGS_Main->Add(TimeSizer, 1, wxALL|wxEXPAND, 2);
 	FreqSizer = new wxFlexGridSizer(2, 1, 0, 0);
 	FreqSizer->AddGrowableCol(0);
 	FlexGridSizer7 = new wxFlexGridSizer(0, 3, 0, 0);
@@ -153,8 +153,8 @@ FFQThumbPanel::FFQThumbPanel(wxWindow* parent,wxWindowID id)
 	CustFreqType->SetSelection( CustFreqType->Append(FFQS(SID_THUMBS_INTERVAL_FRAME)) );
 	CustFreqType->Append(FFQS(SID_THUMBS_INTERVAL_SECOND));
 	CustFreqType->Append(FFQS(SID_THUMBS_INTERVAL_MINUTE));
-	FlexGridSizer7->Add(CustFreqType, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 2);
-	FreqSizer->Add(FlexGridSizer7, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 2);
+	FlexGridSizer7->Add(CustFreqType, 1, wxALL|wxEXPAND, 2);
+	FreqSizer->Add(FlexGridSizer7, 1, wxALL|wxEXPAND, 2);
 	FlexGridSizer8 = new wxFlexGridSizer(0, 3, 0, 0);
 	EveryScene = new wxRadioButton(this, ID_EVERYSCENE, _T("Sc"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_EVERYSCENE"));
 	EveryScene->SetValue(true);
@@ -179,12 +179,12 @@ FFQThumbPanel::FFQThumbPanel(wxWindow* parent,wxWindowID id)
 	ST7->SetLabel(FFQS(SID_THUMBS_MOSAIC_ROWS));
 	MosaicSizer->Add(ST7, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
 	Rows = new wxTextCtrl(this, ID_ROWS, wxEmptyString, wxDefaultPosition, wxSize(50,-1), 0, iVal, _T("ID_ROWS"));
-	MosaicSizer->Add(Rows, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 2);
+	MosaicSizer->Add(Rows, 1, wxALL|wxEXPAND, 2);
 	ST8 = new wxStaticText(this, ID_ST8, _T("Mc"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_ST8"));
 	ST8->SetLabel(FFQS(SID_THUMBS_MOSAIC_COLS));
 	MosaicSizer->Add(ST8, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
 	Columns = new wxTextCtrl(this, ID_COLUMNS, wxEmptyString, wxDefaultPosition, wxSize(50,-1), 0, iVal, _T("ID_COLUMNS"));
-	MosaicSizer->Add(Columns, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 2);
+	MosaicSizer->Add(Columns, 1, wxALL|wxEXPAND, 2);
 	FGS_Main->Add(MosaicSizer, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
 	SetSizer(FGS_Main);
 	FGS_Main->Fit(this);

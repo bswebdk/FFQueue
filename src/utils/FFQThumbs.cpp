@@ -134,7 +134,7 @@ wxString BuildThumbsAndTilesCommand(THUMBS_AND_TILES &tnt, wxString &for_file, T
     if (tnt.every_scene) cmd += "select='gt(scene\\,0.5)'";
 
     //Fixed frequency - per frame
-    else if (tnt.freq_type == THUMB_FREQ_TYPE_FRAMES) cmd += "select='not(mod(n\\," + ToStr((size_t)tnt.thumb_freq) + "))'";
+    else if (tnt.freq_type == THUMB_FREQ_TYPE_FRAMES) cmd += "select='not(mod(n\\," + ToStr((unsigned int)tnt.thumb_freq) + "))'";
 
     else
     {

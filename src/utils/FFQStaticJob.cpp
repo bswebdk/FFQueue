@@ -102,8 +102,8 @@ wxString FFQ_STATIC_JOB::ToString()
 
     //Pack the job to a string
     wxString res = FFQ_QUEUE_ITEM::ToString();
-    if (commands.Count() > 0) for (size_t i = 0; i < commands.Count(); i++) res += JOB_COMMAND + '=' + commands[i] + CRLF;
-    if (del_paths.Count() > 0) for (size_t i = 0; i < del_paths.Count(); i++) res += JOB_DEL_PATH + '=' + del_paths[i] + CRLF;
+    if (commands.Count() > 0) for (unsigned int i = 0; i < commands.Count(); i++) res += JOB_COMMAND + '=' + commands[i] + CRLF;
+    if (del_paths.Count() > 0) for (unsigned int i = 0; i < del_paths.Count(); i++) res += JOB_DEL_PATH + '=' + del_paths[i] + CRLF;
     if (save_log_for.Len() > 0) res += JOB_SAVE_LOG + '=' + save_log_for + CRLF;
     if (res.Len() > 0) res.RemoveLast(CRLF.Len()); //Remove last CRLF
     return res;
@@ -116,10 +116,10 @@ wxString FFQ_STATIC_JOB::GetCommandAtIndex(int index)
 {
 
     //Return next command
-    if ((size_t)index < commands.Count())
+    if ((unsigned int)index < commands.Count())
     {
         status = qsACTIVE;
-        return commands[(size_t)index];
+        return commands[(unsigned int)index];
     }
 
     //Set status to done and cleanup

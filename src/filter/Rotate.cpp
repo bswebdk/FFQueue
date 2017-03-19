@@ -124,7 +124,7 @@ bool Rotate::GetFilter(LPFFMPEG_FILTER fltr)
     if (m_CounterClock->GetValue()) a = -a;
     ra = a * (3.14159265358979323846 / 180.0);
 
-    fltr->friendly =FFQSF(SID_ROTATE_USERFRIENDLY, FFQL()->FILTER_NAMES[fltr->type], a, c, b, ft);
+    fltr->friendly = FFQSF(SID_ROTATE_USERFRIENDLY, FFQL()->FILTER_NAMES[fltr->type], a, c, b, ft);
 
     fltr->ff_filter.Printf("%srotate=a=%f:c=%s:bilinear=%s%s%s", FILTER_VIDEO_IN, ra, c, b, tfltr, FILTER_VIDEO_OUT);
 

@@ -27,6 +27,7 @@
 #include "FFQPresetMgr.h"
 #include "utils/FFQStreamMapping.h"
 #include "utils/FFQConfig.h"
+#include "utils/FFQCompress.h"
 #include "utils/FFQMisc.h"
 #include "utils/FFQHash.h"
 #include "utils/FFQBuildCmd.h"
@@ -83,17 +84,17 @@ END_EVENT_TABLE()
 FFQJobEditAdv::FFQJobEditAdv(wxWindow* parent)
 {
 	//(*Initialize(FFQJobEditAdv)
-	wxStaticBoxSizer* SBS1;
-	wxStaticBoxSizer* SBS3;
-	wxFlexGridSizer* FlexGridSizer5;
-	wxFlexGridSizer* FlexGridSizer2;
-	wxBoxSizer* BoxSizer2;
-	wxFlexGridSizer* FlexGridSizer7;
-	wxStaticBoxSizer* SBS4;
-	wxBoxSizer* BoxSizer1;
-	wxFlexGridSizer* FlexGridSizer6;
 	wxFlexGridSizer* FlexGridSizer1;
+	wxStaticBoxSizer* SBS1;
+	wxFlexGridSizer* FlexGridSizer2;
 	wxStaticBoxSizer* SBS2;
+	wxStaticBoxSizer* SBS4;
+	wxFlexGridSizer* FlexGridSizer7;
+	wxBoxSizer* BoxSizer2;
+	wxStaticBoxSizer* SBS3;
+	wxFlexGridSizer* FlexGridSizer6;
+	wxBoxSizer* BoxSizer1;
+	wxFlexGridSizer* FlexGridSizer5;
 
 	Create(parent, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE, _T("wxID_ANY"));
 	FlexGridSizer1 = new wxFlexGridSizer(5, 1, 0, 0);
@@ -104,7 +105,7 @@ FFQJobEditAdv::FFQJobEditAdv(wxWindow* parent)
 	FlexGridSizer7->AddGrowableCol(0);
 	Inputs = new wxNotebook(this, ID_INPUTS, wxDefaultPosition, wxDefaultSize, 0, _T("ID_INPUTS"));
 	AddInputFile(NULL);
-	FlexGridSizer7->Add(Inputs, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
+	FlexGridSizer7->Add(Inputs, 1, wxALL|wxEXPAND, 0);
 	BoxSizer2 = new wxBoxSizer(wxHORIZONTAL);
 	AddInput = new wxButton(this, ID_ADDINPUT, _T("Add"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_ADDINPUT"));
 	AddInput->SetLabel(FFQS(SID_JOBEDIT_ADV_ADD_INPUT));
@@ -115,46 +116,46 @@ FFQJobEditAdv::FFQJobEditAdv(wxWindow* parent)
 	AddSecondary = new wxButton(this, ID_ADDSECONDARY, _T("Sec"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_ADDSECONDARY"));
 	AddSecondary->SetLabel(FFQS(SID_JOBEDIT_ADV_ADD_SECONDARY));
 	BoxSizer2->Add(AddSecondary, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
-	FlexGridSizer7->Add(BoxSizer2, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
-	SBS1->Add(FlexGridSizer7, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
-	FlexGridSizer1->Add(SBS1, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+	FlexGridSizer7->Add(BoxSizer2, 1, wxALL|wxEXPAND, 0);
+	SBS1->Add(FlexGridSizer7, 1, wxALL|wxEXPAND, 3);
+	FlexGridSizer1->Add(SBS1, 1, wxALL|wxEXPAND, 3);
 	SBS2 = new wxStaticBoxSizer(wxHORIZONTAL, this, _T("Strm"));
 	FlexGridSizer6 = new wxFlexGridSizer(2, 2, 0, 0);
 	FlexGridSizer6->AddGrowableCol(0);
 	FlexGridSizer6->AddGrowableRow(0);
 	StreamList = new wxCheckListBox(this, ID_STREAMLIST, wxDefaultPosition, wxSize(-1,100), 0, 0, wxLB_HSCROLL|wxHSCROLL, wxDefaultValidator, _T("ID_STREAMLIST"));
-	FlexGridSizer6->Add(StreamList, 0, wxEXPAND|wxALIGN_LEFT|wxALIGN_TOP, 0);
+	FlexGridSizer6->Add(StreamList, 0, wxEXPAND, 0);
 	BoxSizer1 = new wxBoxSizer(wxVERTICAL);
 	StreamUp = new wxButton(this, ID_STREAMUP, _T("U"), wxDefaultPosition, wxSize(-1,-1), 0, wxDefaultValidator, _T("ID_STREAMUP"));
 	StreamUp->SetLabel(FFQS(SID_COMMON_MOVE_UP));
-	BoxSizer1->Add(StreamUp, 0, wxBOTTOM|wxLEFT|wxRIGHT|wxALIGN_TOP|wxALIGN_CENTER_HORIZONTAL, 3);
+	BoxSizer1->Add(StreamUp, 0, wxBOTTOM|wxLEFT|wxRIGHT|wxALIGN_CENTER_HORIZONTAL, 3);
 	StreamDown = new wxButton(this, ID_STREAMDOWN, _T("D"), wxDefaultPosition, wxSize(-1,-1), 0, wxDefaultValidator, _T("ID_STREAMDOWN"));
 	StreamDown->SetLabel(FFQS(SID_COMMON_MOVE_DOWN));
-	BoxSizer1->Add(StreamDown, 0, wxBOTTOM|wxLEFT|wxRIGHT|wxALIGN_TOP|wxALIGN_CENTER_HORIZONTAL, 3);
+	BoxSizer1->Add(StreamDown, 0, wxBOTTOM|wxLEFT|wxRIGHT|wxALIGN_CENTER_HORIZONTAL, 3);
 	StreamRefresh = new wxButton(this, ID_STREAMREFRESH, _T("R"), wxDefaultPosition, wxSize(-1,-1), 0, wxDefaultValidator, _T("ID_STREAMREFRESH"));
 	StreamRefresh->SetLabel(FFQS(SID_COMMON_REFRESH));
-	BoxSizer1->Add(StreamRefresh, 0, wxLEFT|wxRIGHT|wxALIGN_TOP|wxALIGN_CENTER_HORIZONTAL, 3);
-	FlexGridSizer6->Add(BoxSizer1, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
+	BoxSizer1->Add(StreamRefresh, 0, wxLEFT|wxRIGHT|wxALIGN_CENTER_HORIZONTAL, 3);
+	FlexGridSizer6->Add(BoxSizer1, 1, wxALL|wxEXPAND, 0);
 	ST5 = new wxStaticText(this, wxID_ANY, _T("Inf"), wxDefaultPosition, wxDefaultSize, 0, _T("wxID_ANY"));
 	ST5->Disable();
 	ST5->SetLabel(FFQS(SID_JOBEDIT_DBLCLK_FOR_INFO));
 	SBS2->GetStaticBox()->SetLabel(FFQS(SID_JOBEDIT_SELECT_STREAMS));
 	FlexGridSizer6->Add(ST5, 0, wxTOP|wxBOTTOM|wxLEFT|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
-	FlexGridSizer6->Add(-1,-1,1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
+	FlexGridSizer6->Add(-1,-1,1, wxALL|wxEXPAND, 0);
 	SBS2->Add(FlexGridSizer6, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
-	FlexGridSizer1->Add(SBS2, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+	FlexGridSizer1->Add(SBS2, 1, wxALL|wxEXPAND, 3);
 	SBS3 = new wxStaticBoxSizer(wxVERTICAL, this, _T("Out"));
 	OutputSizer = new wxFlexGridSizer(2, 2, 0, 0);
 	OutputSizer->AddGrowableCol(0);
 	Output = new wxTextCtrl(this, ID_OUTPUT, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_OUTPUT"));
-	OutputSizer->Add(Output, 0, wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_TOP, 3);
+	OutputSizer->Add(Output, 0, wxALL|wxEXPAND, 3);
 	BrowseOutput = new wxButton(this, ID_BROWSEOUTPUT, _T("..."), wxDefaultPosition, wxSize(50,-1), 0, wxDefaultValidator, _T("ID_BROWSEOUTPUT"));
-	OutputSizer->Add(BrowseOutput, 0, wxALL|wxALIGN_LEFT|wxALIGN_TOP, 3);
+	OutputSizer->Add(BrowseOutput, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
 	OutputLength = new wxHyperlinkCtrl(this, ID_OUTPUTLENGTH, _T("OutL"), wxEmptyString, wxDefaultPosition, wxDefaultSize, wxHL_CONTEXTMENU|wxHL_ALIGN_CENTRE|wxNO_BORDER, _T("ID_OUTPUTLENGTH"));
 	OutputSizer->Add(OutputLength, 0, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
-	OutputSizer->Add(-1,-1,1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
-	SBS3->Add(OutputSizer, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
-	FlexGridSizer1->Add(SBS3, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+	OutputSizer->Add(-1,-1,1, wxALL|wxEXPAND, 0);
+	SBS3->Add(OutputSizer, 1, wxALL|wxEXPAND, 3);
+	FlexGridSizer1->Add(SBS3, 1, wxALL|wxEXPAND, 3);
 	SBS4 = new wxStaticBoxSizer(wxVERTICAL, this, _T("Enc"));
 	FlexGridSizer5 = new wxFlexGridSizer(2, 2, 0, 0);
 	FlexGridSizer5->AddGrowableCol(1);
@@ -162,16 +163,16 @@ FFQJobEditAdv::FFQJobEditAdv(wxWindow* parent)
 	ST3->SetLabel(FFQS(SID_JOBEDIT_COMMAND_LINE));
 	SBS3->GetStaticBox()->SetLabel(FFQS(SID_JOBEDIT_OUTPUT_FILE));
 	FlexGridSizer5->Add(ST3, 0, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
-	CmdLine = new wxTextCtrl(this, ID_CMDLINE, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CMDLINE"));
-	FlexGridSizer5->Add(CmdLine, 0, wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
+	CmdLine = new wxComboBox(this, ID_CMDLINE, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, 0, wxCB_DROPDOWN, wxDefaultValidator, _T("ID_CMDLINE"));
+	FlexGridSizer5->Add(CmdLine, 1, wxALL|wxEXPAND, 3);
 	ST4 = new wxStaticText(this, ID_STATICTEXT4, _T("Pst"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT4"));
 	ST4->SetLabel(FFQS(SID_JOBEDIT_PRESET));
 	SBS4->GetStaticBox()->SetLabel(FFQS(SID_JOBEDIT_OUTPUT_ENCODING));
 	FlexGridSizer5->Add(ST4, 0, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
 	Preset = new FFQPresetPanel(this);
-	FlexGridSizer5->Add(Preset, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
-	SBS4->Add(FlexGridSizer5, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
-	FlexGridSizer1->Add(SBS4, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+	FlexGridSizer5->Add(Preset, 1, wxALL|wxEXPAND, 3);
+	SBS4->Add(FlexGridSizer5, 1, wxALL|wxEXPAND, 3);
+	FlexGridSizer1->Add(SBS4, 1, wxALL|wxEXPAND, 5);
 	FlexGridSizer2 = new wxFlexGridSizer(1, 3, 0, 0);
 	FlexGridSizer2->AddGrowableCol(0);
 	SaveLog = new wxCheckBox(this, ID_SAVELOG, _T("Log"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_SAVELOG"));
@@ -185,7 +186,7 @@ FFQJobEditAdv::FFQJobEditAdv(wxWindow* parent)
 	CancelDlg = new wxButton(this, ID_CANCELDLG, _T("C"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CANCELDLG"));
 	CancelDlg->SetLabel(FFQS(SID_COMMON_CANCEL));
 	FlexGridSizer2->Add(CancelDlg, 0, wxALL|wxALIGN_LEFT|wxALIGN_TOP, 5);
-	FlexGridSizer1->Add(FlexGridSizer2, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+	FlexGridSizer1->Add(FlexGridSizer2, 1, wxALL|wxEXPAND, 5);
 	SetSizer(FlexGridSizer1);
 	OpenFile = new wxFileDialog(this, wxEmptyString, wxEmptyString, wxEmptyString, wxFileSelectorDefaultWildcardStr, wxFD_OPEN|wxFD_FILE_MUST_EXIST, wxDefaultPosition, wxDefaultSize, _T("wxFileDialog"));
 	OpenFile->SetMessage(FFQS(SID_COMMON_SELECT_INPUT_FILE));
@@ -212,6 +213,16 @@ FFQJobEditAdv::FFQJobEditAdv(wxWindow* parent)
 
 	SetTitle(FFQS(SID_JOBEDIT_TITLE));
     SBS1->GetStaticBox()->SetLabel(FFQS(SID_JOBEDIT_INPUT_FILES));
+
+    //Initialize command line combo
+    CmdLine->Append(CMD_DEFAULT);
+    wxString cmd_list = FFQCFG()->saved_commands;
+    if (cmd_list.Len() > 0)
+    {
+        DecompressFromBase64(cmd_list);
+        wxString cl_version = GetToken(cmd_list, "\n", true);
+        while (cmd_list.Len() > 0) CmdLine->Append(GetToken(cmd_list, "\n", true));
+    }
 
     m_TimeEdit = NULL;
     m_ViewText = NULL;
@@ -258,7 +269,7 @@ bool FFQJobEditAdv::Execute(LPFFQ_JOB job)
 
     //Set input files
     FFQ_INPUT_FILE inf;
-    for (size_t i = 0; i < job->inputs.Count(); i++)
+    for (unsigned int i = 0; i < job->inputs.Count(); i++)
     {
         inf = FFQ_INPUT_FILE(job->inputs[i]);
         AddInputFile(&inf, (i == 0));
@@ -299,7 +310,7 @@ bool FFQJobEditAdv::Execute(LPFFQ_JOB job)
 
         //Input files
         job->inputs.Clear();
-        for (size_t i = 0; i < m_CtrlData.Count(); i++)
+        for (unsigned int i = 0; i < m_CtrlData.Count(); i++)
         {
 
             //Get data
@@ -341,7 +352,8 @@ bool FFQJobEditAdv::Execute(LPFFQ_JOB job)
         job->out_len = m_OutLen;
         job->status = qsDORMANT; //Reset previous status to dormant
 
-        bool force_save_cfg = false;
+        //Store custom command and find out if config must be saved
+        bool force_save_cfg = StoreCommand(&job->cmd_line);
 
         LPFFQ_PRESET pst = Preset->GetSelectedPreset();
         if (pst == NULL) memset(&job->preset_id, 0, sizeof(job->preset_id));
@@ -351,11 +363,12 @@ bool FFQJobEditAdv::Execute(LPFFQ_JOB job)
 
             //Update preset finger print
             wxString pstFp = GetPresetFingerPrint();
-            force_save_cfg = pst->finger_print != pstFp;
+            force_save_cfg = force_save_cfg || (pst->finger_print != pstFp);
             if (force_save_cfg) pst->finger_print = pstFp;
         }
 
         job->save_log = SaveLog->GetValue();
+        force_save_cfg = force_save_cfg || FFQCFG()->SetSaveLog(job->save_log, false);
 
         FFQCFG()->SetPreferredAndSave(
             Output->GetValue().AfterLast('.'),
@@ -395,95 +408,6 @@ void FFQJobEditAdv::ShowPopupCtrls(bool show, bool cancel)
 
     //Execute the popup
     if (m_PopupCtrls->Execute(ctrls)) UpdateToolTip(ctrls);
-
-    /*if (show)
-    {
-
-        //Position the popup
-        wxPoint p = ctrls->more->GetScreenPosition();
-        wxSize s = ctrls->more->GetSize();
-        p.x += s.GetWidth();
-        p.y += s.GetHeight();
-        s = m_PopupCtrls->GetSize();
-        p.x -= s.GetWidth();
-        m_PopupCtrls->SetPosition(p);
-
-        //Set values
-        m_PopupCtrls->ItsOffset->SetValue(ctrls->itsoffset);
-        m_PopupCtrls->FrameRate->SetValue(ctrls->framerate);
-        m_PopupCtrls->DiscardCorrupt->SetValue(ctrls->discard_corrupt);
-        m_PopupCtrls->GenPTS->SetValue(ctrls->genpts);
-        m_PopupCtrls->IgnDTS->SetValue(ctrls->igndts);
-        m_PopupCtrls->IgnIdx->SetValue(ctrls->ignidx);
-
-        / *m_PopupCtrls->ItsOffset->SetValue(ctrls->itsoffset->GetValue());
-        m_PopupCtrls->FrameRate->SetValue(ctrls->framerate->GetValue());
-        m_PopupCtrls->DiscardCorrupt->SetValue(ctrls->discard_corrupt->GetValue());
-        m_PopupCtrls->GenPTS->SetValue(ctrls->genpts->GetValue());
-        m_PopupCtrls->IgnDTS->SetValue(ctrls->igndts->GetValue());
-        m_PopupCtrls->IgnIdx->SetValue(ctrls->ignidx->GetValue());*/
-
-        //Prevent the link from being clicked while popup is visible
-        /*ctrls->more->Enable(false);
-
-        //Show and focus
-        m_PopupCtrls->Show();
-        m_PopupCtrls->ItsOffset->SelectAll();
-        m_PopupCtrls->ItsOffset->SetFocus();
-
-    }
-
-    else if (!m_PopupValidate)
-    {
-
-        if (cancel)
-        {
-
-            //Hide and quit
-            m_PopupCtrls->Hide();
-            ctrls->more->Enable(true);
-            return;
-
-        }
-
-        //Validate frame rate
-        if (!IsValidFrameRate(m_PopupCtrls->FrameRate->GetValue()))
-        {
-
-            //Not valid, select and prompt
-            m_PopupValidate = true; //Prevent focus related issues
-            ShowError(m_PopupCtrls, FFQS(SID_PRESET_INVALID_FRAME_RATE));
-            m_PopupCtrls->SetFocus();
-            m_PopupCtrls->FrameRate->SelectAll();
-            m_PopupCtrls->FrameRate->SetFocus();
-            m_PopupValidate = false;
-            return;
-
-        }
-
-        //Hide
-        m_PopupCtrls->Hide();
-        ctrls->more->Enable(true);
-
-        //Save values
-        ctrls->itsoffset = m_PopupCtrls->ItsOffset->GetValue();
-        ctrls->framerate = m_PopupCtrls->FrameRate->GetValue();
-        ctrls->discard_corrupt = m_PopupCtrls->DiscardCorrupt->GetValue();
-        ctrls->genpts = m_PopupCtrls->GenPTS->GetValue();
-        ctrls->igndts = m_PopupCtrls->IgnDTS->GetValue();
-        ctrls->ignidx = m_PopupCtrls->IgnIdx->GetValue();
-
-        / *ctrls->itsoffset->SetValue(m_PopupCtrls->ItsOffset->GetValue());
-        ctrls->framerate->SetValue(m_PopupCtrls->FrameRate->GetValue());
-        ctrls->discard_corrupt->SetValue(m_PopupCtrls->DiscardCorrupt->GetValue());
-        ctrls->genpts->SetValue(m_PopupCtrls->GenPTS->GetValue());
-        ctrls->igndts->SetValue(m_PopupCtrls->IgnDTS->GetValue());
-        ctrls->ignidx->SetValue(m_PopupCtrls->IgnIdx->GetValue());*/
-
-
-    /*}
-
-    */
 
 }
 
@@ -540,12 +464,12 @@ void FFQJobEditAdv::AddInputFile(LPFFQ_INPUT_FILE in_file, bool select)
 	//Sizer for input file and start time
 	ctrls->sizer = new wxFlexGridSizer(2, 2, 0, 0);
 	ctrls->sizer->AddGrowableCol(0);
-	ctrls->sizer->AddGrowableRow(0);
+	//ctrls->sizer->AddGrowableRow(0);
 	ctrls->input = new wxTextCtrl(ctrls->panel, wxID_ANY, (in_file == NULL) ? "" : in_file->path);
 	ctrls->input->SetMinSize(wxSize(500,-1));
-	ctrls->sizer->Add(ctrls->input, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+	ctrls->sizer->Add(ctrls->input, 1, wxALL|wxEXPAND/*|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL*/, 3);
 	ctrls->browse = new wxButton(ctrls->panel, ID_BROWSE, _T("..."), wxDefaultPosition, wxSize(50,-1));
-	ctrls->sizer->Add(ctrls->browse, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+	ctrls->sizer->Add(ctrls->browse, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
 	ctrls->browse->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &FFQJobEditAdv::OnAction, this);
 
 	wxFlexGridSizer *fgs = new wxFlexGridSizer(1, 2, 0, 0);
@@ -569,7 +493,7 @@ void FFQJobEditAdv::AddInputFile(LPFFQ_INPUT_FILE in_file, bool select)
 	ctrls->sizer->SetSizeHints(ctrls->panel);
 
     //Create a name for the tab
-    wxString pn = wxString::Format("#%u", (uint32_t)Inputs->GetPageCount() + 1);
+    wxString pn = wxString::Format("#%u", SIZEFMT(Inputs->GetPageCount()) + 1);
 
 	//Add the page and control set
 	m_CtrlData.Add(ctrls);
@@ -598,7 +522,7 @@ int FFQJobEditAdv::AddSecondaryFiles(wxString &for_file)
         //Files found, add them
         Inputs->Freeze();
 
-        for (size_t i = 0; i < files.Count(); i++) if (FindInputByPath(files[i]) < 0)
+        for (unsigned int i = 0; i < files.Count(); i++) if (FindInputByPath(files[i]) < 0)
         {
 
             //One file found, add it
@@ -636,7 +560,7 @@ bool FFQJobEditAdv::EditTime(TIME_VALUE &time, bool subtract)
     {
 
         //Yup, count items required
-        for (size_t i = 0; i < m_CtrlData.Count(); i++) if(!GetCtrlData(i)->start_val.IsUndefined()) cnt++;
+        for (unsigned int i = 0; i < m_CtrlData.Count(); i++) if(!GetCtrlData(i)->start_val.IsUndefined()) cnt++;
 
         if (cnt > 0)
         {
@@ -646,7 +570,7 @@ bool FFQJobEditAdv::EditTime(TIME_VALUE &time, bool subtract)
             int idx = 0;
 
             //Set values to the array
-            for (size_t i = 0; i < m_CtrlData.Count(); i++)
+            for (unsigned int i = 0; i < m_CtrlData.Count(); i++)
             {
 
                 LPINPUT_CTRLS ctrls = GetCtrlData(i);
@@ -677,7 +601,7 @@ int FFQJobEditAdv::FindInputByPath(wxString path)
 {
 
     //Find the index of the input with the file name "path"
-    for (size_t i = 0; i < m_CtrlData.Count(); i++)
+    for (unsigned int i = 0; i < m_CtrlData.Count(); i++)
         if (CompareFileNames(GetCtrlData(i)->input->GetValue(), path)) return i;
 
     //Not found
@@ -691,7 +615,7 @@ int FFQJobEditAdv::FindInvalidInput(bool select, bool frame_rate)
 {
 
     //Search for an invalid input file
-    for (size_t i = 0; i < m_CtrlData.Count(); i++)
+    for (unsigned int i = 0; i < m_CtrlData.Count(); i++)
     {
 
         LPINPUT_CTRLS ctrls = (LPINPUT_CTRLS)m_CtrlData[i];
@@ -748,7 +672,7 @@ wxString FFQJobEditAdv::GetPresetFingerPrint(int file_index)
 
         //Get list of streams
         wxArrayString inf;
-        for (size_t i = 0; i < ctrls->probe.GetStreamCount(); i++)
+        for (unsigned int i = 0; i < ctrls->probe.GetStreamCount(); i++)
         {
             LPFFPROBE_STREAM_INFO si = ctrls->probe.GetStreamInfo(i);
             inf.Add(wxString::Format("%s|%s|%s|%d|%d", si->codec_type, si->codec_name, si->pixel_fmt, si->width, si->height));
@@ -758,7 +682,7 @@ wxString FFQJobEditAdv::GetPresetFingerPrint(int file_index)
         //and combine the list to a single string
         inf.Sort();
         wxString fp = "";
-        for (size_t i = 0; i < inf.GetCount(); i++) fp += inf[i];
+        for (unsigned int i = 0; i < inf.GetCount(); i++) fp += inf[i];
 
         //Hash
         wxScopedCharBuffer cb = fp.ToUTF8();
@@ -783,7 +707,7 @@ wxString FFQJobEditAdv::GetStreamMapping()
     wxString res = "", cur;
     STREAM_MAPPING smap;
 
-    for (size_t i = 0; i < StreamList->GetCount(); i++)
+    for (unsigned int i = 0; i < StreamList->GetCount(); i++)
     {
 
         cur = StreamList->GetString(i);
@@ -809,7 +733,7 @@ int FFQJobEditAdv::RefreshStreamList(bool force_all)
     int probe_count = 0;
     LPINPUT_CTRLS ctrls;
 
-    for (size_t i = 0; i < m_CtrlData.Count(); i++)
+    for (unsigned int i = 0; i < m_CtrlData.Count(); i++)
     {
 
         //Get data
@@ -869,7 +793,7 @@ int FFQJobEditAdv::RefreshStreamList(bool force_all)
         StreamList->Freeze();
         StreamList->Clear();
 
-        for (size_t i = 0; i < m_CtrlData.Count(); i++)
+        for (unsigned int i = 0; i < m_CtrlData.Count(); i++)
         {
 
             LPINPUT_CTRLS ctrls = (LPINPUT_CTRLS)m_CtrlData[i];
@@ -877,7 +801,7 @@ int FFQJobEditAdv::RefreshStreamList(bool force_all)
             //Set id of current file (starting from 1)
             smap.file_id = (i + 1);
 
-            for (size_t i = 0; i < ctrls->probe.GetStreamCount(); i++)
+            for (unsigned int i = 0; i < ctrls->probe.GetStreamCount(); i++)
             {
 
                 //Construct the stream mapping based on the stream info
@@ -916,7 +840,7 @@ void FFQJobEditAdv::RemoveInputFile(int index)
 
         //All
         Inputs->DeleteAllPages();
-        for (size_t i = 0; i < m_CtrlData.Count(); i++) delete (LPINPUT_CTRLS)m_CtrlData[i];
+        for (unsigned int i = 0; i < m_CtrlData.Count(); i++) delete (LPINPUT_CTRLS)m_CtrlData[i];
         m_CtrlData.Clear();
         StreamList->Clear();
 
@@ -931,15 +855,15 @@ void FFQJobEditAdv::RemoveInputFile(int index)
         m_CtrlData.RemoveAt(index);
 
         //Update page names and start links
-        for (size_t i = index; i < Inputs->GetPageCount(); i++)
+        for (unsigned int i = index; i < Inputs->GetPageCount(); i++)
         {
-            Inputs->SetPageText(i, wxString::Format("#%i", i+1));
+            Inputs->SetPageText(i, wxString::Format("#%u", SIZEFMT(i+1)));
             UpdateLink(i);
         }
 
         //Update stream list
         index++; //File index in stream mapping starts from 1, not 0
-        size_t i = 0;
+        unsigned int i = 0;
         while (i < StreamList->GetCount())
         {
 
@@ -984,7 +908,7 @@ void FFQJobEditAdv::SetStreamMapping(wxString mapping)
     //stream mapping supplied.
 
     //If the stream mapping is empty all streams must be selected
-    if (mapping.Len() == 0) for (size_t i = 0; i < StreamList->GetCount(); i++) StreamList->Check(i, true);
+    if (mapping.Len() == 0) for (unsigned int i = 0; i < StreamList->GetCount(); i++) StreamList->Check(i, true);
 
     //Else the mapping must examined and applied per stream
     else
@@ -992,7 +916,7 @@ void FFQJobEditAdv::SetStreamMapping(wxString mapping)
 
         STREAM_MAPPING smap;
         wxString sw; //starts with
-        size_t midx = 0; //mapping index
+        unsigned int midx = 0; //mapping index
 
         do
         {
@@ -1003,7 +927,7 @@ void FFQJobEditAdv::SetStreamMapping(wxString mapping)
             sw << smap.file_id << ":" << smap.stream_id << " " << smap.codec_type;
 
             //Locate the current mapping in the stream list
-            for (size_t i = midx; i < StreamList->GetCount(); i++)
+            for (unsigned int i = midx; i < StreamList->GetCount(); i++)
             {
 
                 if (StreamList->GetString(i).StartsWith(sw))
@@ -1024,6 +948,58 @@ void FFQJobEditAdv::SetStreamMapping(wxString mapping)
         } while (mapping.Len() > 0);
 
     }
+
+}
+
+//---------------------------------------------------------------------------------------
+
+bool FFQJobEditAdv::StoreCommand(wxString *cmd_line)
+{
+
+    //This will update the items in the CmdLine combo
+    //to have the most recently used command in top
+    //and then save the entire list of commands to
+    //config and return true if any modifications
+    //was performed, get command;
+
+    wxString cmd = (cmd_line == NULL) ? CmdLine->GetValue() : *cmd_line;
+
+    //Get index of the command
+    int idx = CmdLine->FindString(cmd, false);
+
+    //Item at index 0 must always be CMD_DEFAULT,
+    //so we must ensure the most recent command is
+    //at index 1
+    if (idx > 1)
+    {
+        CmdLine->Delete(idx);
+        idx = -1;
+    }
+    else return false; //No change
+
+    if (idx < 0)
+    {
+
+        //Insert at pos 1
+        CmdLine->Insert(cmd, 1);
+
+        //Delete last item until only 25 custom commands
+        //remains; ignore CMD_DEFAULT at pos 0
+        while (CmdLine->GetCount() > 26) CmdLine->Delete(CmdLine->GetCount() - 1);
+
+    }
+
+    //Pack and base64 all custom items
+    cmd = "1\n"; //Stored commands version
+    for (unsigned int i = 1; i < CmdLine->GetCount(); i++) cmd += CmdLine->GetString(i) + "\n";
+    CompressAndBase64(cmd, 0);
+
+    //Check for no modifications
+    if (cmd == FFQCFG()->saved_commands) return false;
+
+    //Modified, alright..
+    FFQCFG()->saved_commands = cmd;
+    return true;
 
 }
 

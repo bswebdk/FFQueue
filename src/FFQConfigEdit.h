@@ -28,15 +28,15 @@
 
 #ifndef WX_PRECOMP
 	//(*HeadersPCH(FFQConfigEdit)
+	#include <wx/checklst.h>
+	#include <wx/dialog.h>
 	#include <wx/sizer.h>
-	#include <wx/textctrl.h>
-	#include <wx/checkbox.h>
-	#include <wx/radiobut.h>
-	#include <wx/panel.h>
-	#include <wx/filedlg.h>
 	#include <wx/button.h>
 	#include <wx/dirdlg.h>
-	#include <wx/dialog.h>
+	#include <wx/radiobut.h>
+	#include <wx/filedlg.h>
+	#include <wx/panel.h>
+	#include <wx/textctrl.h>
 	//*)
 #endif
 //(*Headers(FFQConfigEdit)
@@ -51,31 +51,24 @@ class FFQConfigEdit: public wxDialog
 		bool Execute();
 
 		//(*Declarations(FFQConfigEdit)
-		wxButton* BrowseTemp;
-		wxRadioButton* TP_System;
-		wxTextCtrl* CustPlayer;
-		wxRadioButton* TP_Dest;
-		wxButton* LangButton;
-		wxButton* OKButton;
-		wxCheckBox* KeepConsole;
-		wxTextCtrl* CustomTemp;
-		wxFileDialog* OpenDialog;
+		wxButton* CancelButton;
+		wxCheckListBox* CheckList;
+		wxRadioButton* TP_Custom;
 		wxButton* BrowseFFMpeg;
-		wxCheckBox* FullCodecList;
-		wxCheckBox* UniqueNames;
-		wxCheckBox* ShowBanner;
-		wxCheckBox* SaveWindowPos;
-		wxTextCtrl* ConsoleCmd;
-		wxTextCtrl* FFMpegPath;
-		wxButton* BrowseCustPlayer;
+		wxFileDialog* OpenDialog;
+		wxDirDialog* DirDlg;
 		wxPanel* TempPathRadioPanel;
 		wxTextCtrl* SecondFileExts;
-		wxRadioButton* TP_Custom;
-		wxDirDialog* DirDlg;
-		wxCheckBox* LimitStats;
-		wxCheckBox* SaveOnExit;
-		wxButton* CancelButton;
-		wxCheckBox* AutoRemove;
+		wxTextCtrl* ConsoleCmd;
+		wxTextCtrl* CustPlayer;
+		wxRadioButton* TP_Dest;
+		wxButton* BrowseCustPlayer;
+		wxButton* LangButton;
+		wxRadioButton* TP_System;
+		wxTextCtrl* CustomTemp;
+		wxButton* OKButton;
+		wxButton* BrowseTemp;
+		wxTextCtrl* FFMpegPath;
 		//*)
 
 	protected:
@@ -93,6 +86,7 @@ class FFQConfigEdit: public wxDialog
 		static const long ID_BROWSETEMP;
 		static const long ID_SECONDFILEEXTS;
 		static const long ID_CONSOLECMD;
+		static const long ID_CHECKLIST;
 		static const long ID_LANGBUTTON;
 		static const long ID_OKBUTTON;
 		static const long ID_CANCELBUTTON;
@@ -103,6 +97,7 @@ class FFQConfigEdit: public wxDialog
 
 		//(*Handlers(FFQConfigEdit)
 		void OnButtonClick(wxCommandEvent& event);
+		void OnCheckListToggled(wxCommandEvent& event);
 		//*)
 
 		void UpdateControls();

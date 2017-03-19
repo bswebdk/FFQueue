@@ -90,28 +90,28 @@ FFQJobEditAdvCuts::FFQJobEditAdvCuts(wxWindow* parent)
     wxString *lng_placement = FFQL()->GetStringArray(SID_JOBEDIT_ADV_CUTS_CFG_PLACEMENT, 3);
 
 	//(*Initialize(FFQJobEditAdvCuts)
-	wxStaticBoxSizer* SBS1;
-	wxFlexGridSizer* FlexGridSizer4;
-	wxStaticBoxSizer* SBS3;
-	wxStaticBoxSizer* SBS5;
-	wxFlexGridSizer* FlexGridSizer10;
-	wxFlexGridSizer* FlexGridSizer3;
-	wxFlexGridSizer* FlexGridSizer9;
-	wxFlexGridSizer* FlexGridSizer2;
-	wxBoxSizer* BoxSizer2;
-	wxFlexGridSizer* FlexGridSizer7;
-	wxFlexGridSizer* FlexGridSizer15;
 	wxFlexGridSizer* FlexGridSizer8;
-	wxStaticText* ST1;
-	wxPanel* P1;
-	wxStaticBoxSizer* SBS4;
-	wxBoxSizer* BoxSizer1;
-	wxFlexGridSizer* FlexGridSizer6;
 	wxFlexGridSizer* FlexGridSizer1;
-	wxPanel* P2;
-	wxFlexGridSizer* FlexGridSizer11;
+	wxStaticBoxSizer* SBS1;
+	wxFlexGridSizer* FlexGridSizer2;
+	wxFlexGridSizer* FlexGridSizer15;
 	wxBoxSizer* BoxSizer3;
 	wxStaticBoxSizer* SBS2;
+	wxStaticBoxSizer* SBS4;
+	wxFlexGridSizer* FlexGridSizer11;
+	wxStaticText* ST1;
+	wxFlexGridSizer* FlexGridSizer7;
+	wxBoxSizer* BoxSizer2;
+	wxPanel* P2;
+	wxFlexGridSizer* FlexGridSizer4;
+	wxStaticBoxSizer* SBS3;
+	wxFlexGridSizer* FlexGridSizer9;
+	wxFlexGridSizer* FlexGridSizer6;
+	wxFlexGridSizer* FlexGridSizer3;
+	wxPanel* P1;
+	wxFlexGridSizer* FlexGridSizer10;
+	wxBoxSizer* BoxSizer1;
+	wxStaticBoxSizer* SBS5;
 
 	Create(parent, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE, _T("wxID_ANY"));
 	SetTitle(FFQS(SID_JOBEDIT_ADV_CUTS_TITLE));
@@ -128,7 +128,7 @@ FFQJobEditAdvCuts::FFQJobEditAdvCuts(wxWindow* parent)
 	FlexGridSizer4->AddGrowableCol(0);
 	FlexGridSizer4->AddGrowableRow(0);
 	CutList = new wxListBox(this, ID_CUTLIST, wxDefaultPosition, wxSize(-1,150), 0, 0, wxLB_EXTENDED, wxDefaultValidator, _T("ID_CUTLIST"));
-	FlexGridSizer4->Add(CutList, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
+	FlexGridSizer4->Add(CutList, 1, wxALL|wxEXPAND, 0);
 	FlexGridSizer15 = new wxFlexGridSizer(2, 2, 0, 0);
 	ST4 = new wxStaticText(this, wxID_ANY, _T("Cm"), wxDefaultPosition, wxDefaultSize, 0, _T("wxID_ANY"));
 	SBS1->GetStaticBox()->SetLabel(FFQS(SID_JOBEDIT_ADV_CUTS_LIST_TITLE));
@@ -145,7 +145,7 @@ FFQJobEditAdvCuts::FFQJobEditAdvCuts(wxWindow* parent)
 	P1->SetSizer(BoxSizer1);
 	BoxSizer1->Fit(P1);
 	BoxSizer1->SetSizeHints(P1);
-	FlexGridSizer15->Add(P1, 1, wxLEFT|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+	FlexGridSizer15->Add(P1, 1, wxLEFT|wxEXPAND, 5);
 	ST11 = new wxStaticText(this, wxID_ANY, _T("Fp"), wxDefaultPosition, wxDefaultSize, 0, _T("wxID_ANY"));
 	ST11->SetLabel(lng_placement[0]);
 	FlexGridSizer15->Add(ST11, 1, wxTOP|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
@@ -160,10 +160,10 @@ FFQJobEditAdvCuts::FFQJobEditAdvCuts(wxWindow* parent)
 	P2->SetSizer(BoxSizer3);
 	BoxSizer3->Fit(P2);
 	BoxSizer3->SetSizeHints(P2);
-	FlexGridSizer15->Add(P2, 1, wxTOP|wxLEFT|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-	FlexGridSizer4->Add(FlexGridSizer15, 1, wxTOP|wxBOTTOM|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-	SBS1->Add(FlexGridSizer4, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
-	FlexGridSizer8->Add(SBS1, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+	FlexGridSizer15->Add(P2, 1, wxTOP|wxLEFT|wxEXPAND, 5);
+	FlexGridSizer4->Add(FlexGridSizer15, 1, wxTOP|wxBOTTOM|wxEXPAND, 5);
+	SBS1->Add(FlexGridSizer4, 1, wxALL|wxEXPAND, 0);
+	FlexGridSizer8->Add(SBS1, 1, wxALL|wxEXPAND, 3);
 	SBS2 = new wxStaticBoxSizer(wxHORIZONTAL, this, _T("T"));
 	FlexGridSizer6 = new wxFlexGridSizer(4, 1, 0, 0);
 	FlexGridSizer6->AddGrowableCol(0);
@@ -175,23 +175,23 @@ FFQJobEditAdvCuts::FFQJobEditAdvCuts(wxWindow* parent)
 	ST1->SetLabel(FFQS(SID_JOBEDIT_ADV_CUTS_FROM));
 	FlexGridSizer2->Add(ST1, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
 	FromTime = new wxTextCtrl(this, ID_FROMTIME, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER|wxTE_RIGHT, wxDefaultValidator, _T("ID_FROMTIME"));
-	FlexGridSizer2->Add(FromTime, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+	FlexGridSizer2->Add(FromTime, 1, wxALL|wxEXPAND, 3);
 	ST2 = new wxStaticText(this, wxID_ANY, _T("T"), wxDefaultPosition, wxDefaultSize, 0, _T("wxID_ANY"));
 	ST2->SetLabel(FFQS(SID_JOBEDIT_ADV_CUTS_TO));
 	FlexGridSizer2->Add(ST2, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
 	ToTime = new wxTextCtrl(this, ID_TOTIME, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER|wxTE_RIGHT, wxDefaultValidator, _T("ID_TOTIME"));
-	FlexGridSizer2->Add(ToTime, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+	FlexGridSizer2->Add(ToTime, 1, wxALL|wxEXPAND, 3);
 	AddCut = new wxButton(this, ID_ADDCUT, _T("+"), wxDefaultPosition, wxSize(50,-1), 0, wxDefaultValidator, _T("ID_ADDCUT"));
 	FlexGridSizer2->Add(AddCut, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
 	RemoveCut = new wxButton(this, ID_REMOVECUT, _T("-"), wxDefaultPosition, wxSize(50,-1), 0, wxDefaultValidator, _T("ID_REMOVECUT"));
 	FlexGridSizer2->Add(RemoveCut, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
-	FlexGridSizer6->Add(FlexGridSizer2, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
+	FlexGridSizer6->Add(FlexGridSizer2, 1, wxALL|wxEXPAND, 0);
 	FrameConv = new wxCheckBox(this, ID_FRAMECONV, _T("FRC"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_FRAMECONV"));
 	FrameConv->SetValue(false);
 	FrameConv->SetLabel(FFQS(SID_JOBEDIT_ADV_CUTS_FRAME_CONV));
 	FlexGridSizer6->Add(FrameConv, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
 	SBS2->Add(FlexGridSizer6, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
-	FlexGridSizer8->Add(SBS2, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+	FlexGridSizer8->Add(SBS2, 1, wxALL|wxEXPAND, 3);
 	SBS3 = new wxStaticBoxSizer(wxHORIZONTAL, this, _T("Inf"));
 	FlexGridSizer11 = new wxFlexGridSizer(2, 1, 0, 0);
 	FlexGridSizer11->AddGrowableCol(0);
@@ -206,13 +206,13 @@ FFQJobEditAdvCuts::FFQJobEditAdvCuts(wxWindow* parent)
 	TimePreview = new wxButton(this, ID_TIMEPREVIEW, _T("Td"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_TIMEPREVIEW"));
 	TimePreview->SetLabel(FFQS(SID_COMMON_PREVIEW));
 	FlexGridSizer3->Add(TimePreview, 1, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 3);
-	FlexGridSizer11->Add(FlexGridSizer3, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
+	FlexGridSizer11->Add(FlexGridSizer3, 1, wxALL|wxEXPAND, 0);
 	DurationLab = new wxStaticText(this, wxID_ANY, _T("Dur"), wxDefaultPosition, wxDefaultSize, 0, _T("wxID_ANY"));
 	DurationLab->SetForegroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_GRAYTEXT));
-	FlexGridSizer11->Add(DurationLab, 1, wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
-	SBS3->Add(FlexGridSizer11, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
-	FlexGridSizer8->Add(SBS3, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
-	FlexGridSizer7->Add(FlexGridSizer8, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 2);
+	FlexGridSizer11->Add(DurationLab, 1, wxALL|wxEXPAND, 3);
+	SBS3->Add(FlexGridSizer11, 1, wxALL|wxEXPAND, 0);
+	FlexGridSizer8->Add(SBS3, 1, wxALL|wxEXPAND, 3);
+	FlexGridSizer7->Add(FlexGridSizer8, 1, wxALL|wxEXPAND, 2);
 	FlexGridSizer9 = new wxFlexGridSizer(3, 1, 0, 0);
 	FlexGridSizer9->AddGrowableCol(0);
 	FlexGridSizer9->AddGrowableRow(0);
@@ -226,7 +226,7 @@ FFQJobEditAdvCuts::FFQJobEditAdvCuts(wxWindow* parent)
 	PreviewSizer1->Add(FrameView, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
 	FrameSlider = new wxSlider(this, ID_FRAMESLIDER, 0, 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_TOP, wxDefaultValidator, _T("ID_FRAMESLIDER"));
 	FrameSlider->SetPageSize(25);
-	PreviewSizer1->Add(FrameSlider, 1, wxBOTTOM|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+	PreviewSizer1->Add(FrameSlider, 1, wxBOTTOM|wxEXPAND, 3);
 	FlexGridSizer10 = new wxFlexGridSizer(0, 5, 0, 0);
 	FlexGridSizer10->AddGrowableCol(4);
 	FlexGridSizer10->AddGrowableRow(0);
@@ -241,10 +241,10 @@ FFQJobEditAdvCuts::FFQJobEditAdvCuts(wxWindow* parent)
 	SetTo->SetLabel(FFQS(SID_JOBEDIT_ADV_CUTS_SET_TO));
 	FlexGridSizer10->Add(SetTo, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
 	FramePos = new wxStaticText(this, wxID_ANY, _T("Pos"), wxDefaultPosition, wxDefaultSize, 0, _T("wxID_ANY"));
-	FlexGridSizer10->Add(FramePos, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
-	PreviewSizer1->Add(FlexGridSizer10, 1, wxTOP|wxLEFT|wxRIGHT|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+	FlexGridSizer10->Add(FramePos, 1, wxALL|wxEXPAND, 3);
+	PreviewSizer1->Add(FlexGridSizer10, 1, wxTOP|wxLEFT|wxRIGHT|wxEXPAND, 3);
 	SBS4->Add(PreviewSizer1, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
-	FlexGridSizer9->Add(SBS4, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+	FlexGridSizer9->Add(SBS4, 1, wxALL|wxEXPAND, 3);
 	SBS5 = new wxStaticBoxSizer(wxHORIZONTAL, this, _T("Cfg"));
 	PreviewSizer2 = new wxFlexGridSizer(2, 4, 0, 0);
 	PreviewSizer2->AddGrowableCol(2);
@@ -256,7 +256,7 @@ FFQJobEditAdvCuts::FFQJobEditAdvCuts(wxWindow* parent)
 	ST6->SetLabel(lng_accuracy[1]);
 	PreviewSizer2->Add(ST6, 1, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 5);
 	CfgAccuracy = new wxSlider(this, wxID_ANY, 2, 0, 20, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("wxID_ANY"));
-	PreviewSizer2->Add(CfgAccuracy, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
+	PreviewSizer2->Add(CfgAccuracy, 1, wxALL|wxEXPAND, 0);
 	ST7 = new wxStaticText(this, wxID_ANY, _T("H"), wxDefaultPosition, wxDefaultSize, 0, _T("wxID_ANY"));
 	ST7->SetLabel(lng_accuracy[2]);
 	PreviewSizer2->Add(ST7, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
@@ -267,12 +267,12 @@ FFQJobEditAdvCuts::FFQJobEditAdvCuts(wxWindow* parent)
 	ST9->SetLabel(lng_delay[1]);
 	PreviewSizer2->Add(ST9, 1, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 5);
 	CfgDelay = new wxSlider(this, wxID_ANY, 3, 0, 20, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("wxID_ANY"));
-	PreviewSizer2->Add(CfgDelay, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
+	PreviewSizer2->Add(CfgDelay, 1, wxALL|wxEXPAND, 0);
 	ST10 = new wxStaticText(this, wxID_ANY, _T("H"), wxDefaultPosition, wxDefaultSize, 0, _T("wxID_ANY"));
 	ST10->SetLabel(lng_delay[2]);
 	PreviewSizer2->Add(ST10, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
 	SBS5->Add(PreviewSizer2, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
-	FlexGridSizer9->Add(SBS5, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+	FlexGridSizer9->Add(SBS5, 1, wxALL|wxEXPAND, 3);
 	BoxSizer2 = new wxBoxSizer(wxHORIZONTAL);
 	BoxSizer2->Add(-1,-1,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
 	BoxSizer2->Add(-1,-1,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
@@ -283,9 +283,9 @@ FFQJobEditAdvCuts::FFQJobEditAdvCuts(wxWindow* parent)
 	CancelButton = new wxButton(this, ID_CANCELBUTTON, _T("N"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CANCELBUTTON"));
 	CancelButton->SetLabel(FFQS(SID_COMMON_CANCEL));
 	BoxSizer2->Add(CancelButton, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
-	FlexGridSizer9->Add(BoxSizer2, 1, wxTOP|wxBOTTOM|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 10);
-	FlexGridSizer7->Add(FlexGridSizer9, 1, wxTOP|wxBOTTOM|wxRIGHT|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 2);
-	FlexGridSizer1->Add(FlexGridSizer7, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
+	FlexGridSizer9->Add(BoxSizer2, 1, wxTOP|wxBOTTOM|wxEXPAND, 10);
+	FlexGridSizer7->Add(FlexGridSizer9, 1, wxTOP|wxBOTTOM|wxRIGHT|wxEXPAND, 2);
+	FlexGridSizer1->Add(FlexGridSizer7, 1, wxALL|wxEXPAND, 0);
 	SetSizer(FlexGridSizer1);
 	FrameTimer.SetOwner(this, ID_FRAMETIMER);
 	FrameTimer.Start(250, true);
@@ -450,7 +450,7 @@ bool FFQJobEditAdvCuts::Execute(FFQ_CUTS &cuts, wxString file_path, FFProbeInfoP
         {
 
             //Store cuts
-            for (size_t i = 0; i < CutList->GetCount(); i++)
+            for (unsigned int i = 0; i < CutList->GetCount(); i++)
             {
 
                 wxString cut = CutList->GetString(i);
@@ -695,7 +695,7 @@ void FFQJobEditAdvCuts::ShowTimePreview(TIME_VALUE &at_time)
 
     //Calculate subtitle interval (5ms as minimum, 10ms as default)
     double siv = (m_VidRate <= 0) ? 10.0 : (1000.0 / m_VidRate);
-    size_t srt_iv = (siv < 5) ? 5 : (size_t)froundi(siv), sttl_idx = 0;
+    unsigned int srt_iv = (siv < 5) ? 5 : (unsigned int)froundi(siv), sttl_idx = 0;
     wxString sttl, ft, tt;
 
     //Remove any existing subtitle file, and create a new one
@@ -712,7 +712,7 @@ void FFQJobEditAdvCuts::ShowTimePreview(TIME_VALUE &at_time)
         tt = cur.ToString(true, true, ',');
 
         //Make subtitle string and write it to file as ascii
-        sttl.Printf("%i\r\n%s --> %s\r\n%s\r\n\r\n", ++sttl_idx, ft, tt, print.ToString());
+        sttl.Printf("%u\r\n%s --> %s\r\n%s\r\n\r\n", SIZEFMT(++sttl_idx), ft, tt, print.ToString());
         wxScopedCharBuffer scb = sttl.ToAscii();
         ffile.Write(scb.data(), scb.length());
 
@@ -798,7 +798,7 @@ void FFQJobEditAdvCuts::UpdateControls()
 {
 
     bool sel = false;
-    for(size_t i = 0; i < CutList->GetCount(); i++)
+    for(unsigned int i = 0; i < CutList->GetCount(); i++)
         if (CutList->IsSelected(i)) { sel=true; break; }
 
     //AddCut->Enable(true);
@@ -849,7 +849,7 @@ void FFQJobEditAdvCuts::ActionClick(wxCommandEvent& event)
 
         //Remove cuts
         CutList->Freeze();
-        size_t idx = 0;
+        unsigned int idx = 0;
         while (idx < CutList->GetCount())
         {
             if (CutList->IsSelected(idx)) CutList->Delete(idx);

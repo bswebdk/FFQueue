@@ -26,7 +26,7 @@
 
 #include "FilterBasePanel.h"
 
-extern const size_t BAND_WIDTH_TYPE_COUNT;
+extern const unsigned int BAND_WIDTH_TYPE_COUNT;
 extern const wxString WIDTH_TYPES[];
 
 class HighLowBandPass : public FilterBasePanel

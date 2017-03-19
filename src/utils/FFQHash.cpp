@@ -240,6 +240,6 @@ void SHA1_ToHex(SHA1_Context* sha1, wxString &hex)
     hex.clear();
     wxString s;
     unsigned char* hash = (unsigned char*)sha1->hash;
-    for (size_t i = 0; i < sizeof(sha1->hash); i++) hex += wxString::Format("%02x", hash[i]);
+    for (unsigned int i = 0; i < sizeof(sha1->hash); i++) hex += wxString::Format("%02x", hash[i]);
 
 }

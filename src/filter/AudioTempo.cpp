@@ -92,7 +92,7 @@ bool AudioTempo::GetFilter(LPFFMPEG_FILTER fltr)
 
     fltr->ff_filter.Printf("%satempo=%.2f%s", FILTER_AUDIO_IN, v, FILTER_AUDIO_OUT);
 
-    fltr->editable.Printf("%u", m_Tempo->GetValue());
+    fltr->editable.Printf("%i", m_Tempo->GetValue());
 
     return true;
 

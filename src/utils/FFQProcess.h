@@ -41,7 +41,7 @@ class FFQProcess : public wxEvtHandler
         bool Abort(bool send_quit, int wait_timeout = -1);
         void Execute(bool wait, bool redirect);
         void ExecuteAndWait();
-        bool ExtractFrameFromFile(wxString file_name, TIME_VALUE frame_time, wxImage *img, size_t timeout = 0, size_t accuracy = 0, wxSize fit_to = wxDefaultSize);
+        bool ExtractFrameFromFile(wxString file_name, TIME_VALUE frame_time, wxImage *img, unsigned int timeout = 0, unsigned int accuracy = 0, wxSize fit_to = wxDefaultSize);
         void FFProbe(wxString input_file);
         uint64_t GetRunningTimeMillis();
         uint64_t GetStartTimeMillis();
@@ -58,7 +58,7 @@ class FFQProcess : public wxEvtHandler
         void SetCommand(bool probe, wxString args);
         void SetCommand(wxString command, wxString args);
         bool TransactPipes(bool in = true, bool err = true);
-        bool WaitFor(size_t timeout = 0);
+        bool WaitFor(unsigned int timeout = 0);
         bool WasAborted();
 
     protected:

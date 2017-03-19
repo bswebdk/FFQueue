@@ -26,6 +26,7 @@
 #include "FFQLangEdit.h"
 #include "FFQPresetMgr.h"
 #include "utils/FFQConfig.h"
+#include "utils/FFQConst.h"
 #include "utils/FFQMisc.h"
 #include "utils/FFQBuildCmd.h"
 #include "utils/FFQStaticJob.h"
@@ -34,6 +35,8 @@
 
 #ifdef DEBUG
     #include "utils/FFQDebugUtils.h"
+    #include "utils/FFQCodecInfo.h"
+    #include <wx/cmdline.h>
     //#include "utils/FFQNvpList.h"
     //#include "FFQFilterEdit.h"
 #endif // DEBUG
@@ -51,11 +54,11 @@
 #endif // __WINDOWS__
 
 //(*InternalHeaders(FFQMain)
-#include <wx/bitmap.h>
-#include <wx/font.h>
-#include <wx/intl.h>
-#include <wx/image.h>
 #include <wx/string.h>
+#include <wx/intl.h>
+#include <wx/font.h>
+#include <wx/bitmap.h>
+#include <wx/image.h>
 //*)
 
 //helper functions
@@ -118,6 +121,7 @@ const long FFQMain::ID_TOOLTHUMBS = wxNewId();
 const long FFQMain::ID_TOOLSLIDESHOW = wxNewId();
 const long FFQMain::ID_TOOLCONCAT = wxNewId();
 const long FFQMain::ID_TOOLVIDSTAB = wxNewId();
+const long FFQMain::ID_TOOLVID2GIF = wxNewId();
 //*)
 
 #ifdef DEBUG
@@ -140,7 +144,7 @@ const double GAUGE_MAX = 10000.0;
 
 //---------------------------------------------------------------------------------------
 
-void PtrToBitmap(void* ptr, size_t len, wxBitmap &bmp)
+void PtrToBitmap(void* ptr, unsigned int len, wxBitmap &bmp)
 {
     wxMemoryInputStream *ms = new wxMemoryInputStream(ptr, len);
 	bmp = wxBitmap(wxImage(*ms, wxBITMAP_TYPE_PNG));
@@ -203,11 +207,11 @@ FFQMain::FFQMain(wxWindow* parent, wxWindowID id)
     FlexGridSizer1->AddGrowableRow(0);
     TextCtrl = new wxTextCtrl(BottomPan, ID_TEXTCTRL, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_READONLY|wxTE_RICH|wxTE_DONTWRAP|wxNO_BORDER, wxDefaultValidator, _T("ID_TEXTCTRL"));
     TextCtrl->SetMinSize(wxSize(800,100));
-    wxFont TextCtrlFont(10,wxMODERN,wxFONTSTYLE_NORMAL,wxNORMAL,false,wxEmptyString,wxFONTENCODING_DEFAULT);
+    wxFont TextCtrlFont(10,wxFONTFAMILY_TELETYPE,wxFONTSTYLE_NORMAL,wxFONTWEIGHT_NORMAL,false,_T("Monospace"),wxFONTENCODING_DEFAULT);
     TextCtrl->SetFont(TextCtrlFont);
-    FlexGridSizer1->Add(TextCtrl, 0, wxEXPAND|wxALIGN_LEFT|wxALIGN_TOP, 5);
+    FlexGridSizer1->Add(TextCtrl, 0, wxEXPAND, 5);
     Gauge = new wxGauge(BottomPan, ID_GAUGE, 100, wxDefaultPosition, wxSize(673,15), 0, wxDefaultValidator, _T("ID_GAUGE"));
-    FlexGridSizer1->Add(Gauge, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
+    FlexGridSizer1->Add(Gauge, 1, wxALL|wxEXPAND, 0);
     BottomPan->SetSizer(FlexGridSizer1);
     FlexGridSizer1->Fit(BottomPan);
     FlexGridSizer1->SetSizeHints(BottomPan);
@@ -271,6 +275,8 @@ FFQMain::FFQMain(wxWindow* parent, wxWindowID id)
     ToolsMenu.Append(ConcatItem);
     VidStabItem = new wxMenuItem((&ToolsMenu), ID_TOOLVIDSTAB, _("4"), wxEmptyString, wxITEM_NORMAL);
     ToolsMenu.Append(VidStabItem);
+    Vid2GifItem = new wxMenuItem((&ToolsMenu), ID_TOOLVID2GIF, _("5"), wxEmptyString, wxITEM_NORMAL);
+    ToolsMenu.Append(Vid2GifItem);
     Center();
 
     Connect(ID_LISTVIEW,wxEVT_COMMAND_LIST_ITEM_SELECTED,(wxObjectEventFunction)&FFQMain::OnListViewItemSelection);
@@ -304,6 +310,7 @@ FFQMain::FFQMain(wxWindow* parent, wxWindowID id)
     Connect(ID_TOOLSLIDESHOW,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&FFQMain::OnToolBarButtonClick);
     Connect(ID_TOOLCONCAT,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&FFQMain::OnToolBarButtonClick);
     Connect(ID_TOOLVIDSTAB,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&FFQMain::OnToolBarButtonClick);
+    Connect(ID_TOOLVID2GIF,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&FFQMain::OnToolBarButtonClick);
     Connect(wxID_ANY,wxEVT_CLOSE_WINDOW,(wxObjectEventFunction)&FFQMain::OnClose);
     Connect(wxEVT_SIZE,(wxObjectEventFunction)&FFQMain::OnFrameResize);
     //*)
@@ -358,6 +365,7 @@ FFQMain::FFQMain(wxWindow* parent, wxWindowID id)
     SlideshowItem->SetItemLabel(FFQS(SID_MAINFRAME_TM_SLIDESHOWTOOL));
     ConcatItem->SetItemLabel(FFQS(SID_MAINFRAME_TM_CONCATTOOL));
     VidStabItem->SetItemLabel(FFQS(SID_VIDSTAB_TITLE) + "...");
+    Vid2GifItem->SetItemLabel(FFQS(SID_VIDEO2GIF_TITLE) + "...");
 
     Bind(wxEVT_CHAR_HOOK, &FFQMain::OnChar, this);
 
@@ -379,6 +387,7 @@ FFQMain::FFQMain(wxWindow* parent, wxWindowID id)
     OptionsDlg = NULL;
     ConcatDlg = NULL;
     VidStabDlg = NULL;
+    Video2Gif = NULL;
     Console = new FFQConsole(TextCtrl);
 
     m_PtrList = new wxArrayPtrVoid();
@@ -600,7 +609,7 @@ void FFQMain::PresetChanged(LPFFQ_PRESET pst)
             item->queue_flags |= QUEUE_FLAG_PRESET_CHANGED;
 
             //Define
-            DefineItem(i, item, dsNOSELECT);
+            DefineItem(i, item, dsNOSELECT, false);
 
         }
 
@@ -659,7 +668,7 @@ void FFQMain::AfterItemProcessing()
     }
 
     //Update list
-    DefineItem(IndexOfItem(m_CurrentItem), m_CurrentItem, dsNOSELECT);
+    DefineItem(IndexOfItem(m_CurrentItem), m_CurrentItem, dsNOSELECT, false);
 
     //Log status
     LogCurrentItemStatus(false);
@@ -736,7 +745,7 @@ bool FFQMain::BeforeItemProcessing()
 
     }
     //Not started: Update list
-    else DefineItem(IndexOfItem(m_CurrentItem), m_CurrentItem, dsNOSELECT);
+    else DefineItem(IndexOfItem(m_CurrentItem), m_CurrentItem, dsNOSELECT, false);
 
     //Return success|not
     return start;
@@ -909,7 +918,7 @@ bool FFQMain::OverwritePrompt(bool selected_only)
     //m_OverwriteAllowed = false;
 
     //Counters and lists
-    size_t cnt = 0;
+    unsigned int cnt = 0;
     wxString files = "", s;
 
     //Clear pointers
@@ -932,6 +941,7 @@ bool FFQMain::OverwritePrompt(bool selected_only)
                 case qtJOB: fn = ((LPFFQ_JOB)item)->out; break;
                 case qtCONCAT_JOB: fn = ((LPFFQ_CONCAT_JOB)item)->out; break;
                 case qtVIDSTAB_JOB: fn = ((LPFFQ_VIDSTAB_JOB)item)->out; break;
+                case qtVID2GIF_JOB: fn = ((LPFFQ_VID2GIF_JOB)item)->out; break;
                 case qtSTATIC_JOB:
                 case qtTHUMB_JOB: break;
                 default:
@@ -970,7 +980,7 @@ bool FFQMain::OverwritePrompt(bool selected_only)
         //Update overwrite allowed
         //m_OverwriteAllowed = (res == wxYES);
 
-        for (size_t i = 0; i < m_PtrList->Count(); i++)
+        for (unsigned int i = 0; i < m_PtrList->Count(); i++)
         {
 
             //Set / unset individual overwrite allowed
@@ -1010,7 +1020,7 @@ bool FFQMain::ProcessNext()
 
         //Update item in the list
         long item_index = IndexOfItem(m_CurrentItem);
-        DefineItem(item_index, m_CurrentItem, dsNOSELECT);
+        DefineItem(item_index, m_CurrentItem, dsNOSELECT, false);
 
         //Log what is about to be done
         LogCurrentItemStatus(first_cmd);
@@ -1090,9 +1100,12 @@ void FFQMain::FinishQueue()
     //Update controls
     UpdateControls();
 
-    //Prompt the user
-    if (aborted) ShowInfo(ListView, FFQS(SID_TASK_ABORTED));
-    else ShowInfo(ListView, FFQS(SID_QUEUE_COMPLETED));
+    //Prompt the user if not silent finish
+    if (!FFQCFG()->silent_qfinish)
+    {
+        if (aborted) ShowInfo(ListView, FFQS(SID_TASK_ABORTED));
+        else ShowInfo(ListView, FFQS(SID_QUEUE_COMPLETED));
+    }
 
 }
 
@@ -1120,12 +1133,12 @@ void FFQMain::StartQueue(bool selected_only)
 
     //Prepare items
     ListView->Freeze();
-    for (size_t i = 0; i < m_PtrList->Count(); i++)
+    for (unsigned int i = 0; i < m_PtrList->Count(); i++)
     {
 
         LPFFQ_QUEUE_ITEM item = (LPFFQ_QUEUE_ITEM)m_PtrList->Item(i);
         item->status = qsQUEUED;
-        DefineItem(IndexOfItem(item), item, dsNOSELECT);
+        DefineItem(IndexOfItem(item), item, dsNOSELECT, false);
 
     }
     ListView->Thaw();
@@ -1156,7 +1169,7 @@ void FFQMain::StopQueue(bool selected_only)
         if (item->status == qsQUEUED)
         {
             item->status = qsDORMANT;
-            DefineItem(i, item, dsNOSELECT);
+            DefineItem(i, item, dsNOSELECT, false);
         }
         else if (item->IsActive()) abort = true;
     }
@@ -1180,11 +1193,16 @@ void FFQMain::BatchMakeJobs(wxArrayString *files, bool releaseFilesPtr)
         BatchMaker->SetFiles(files);
         if (BatchMaker->Execute())
         {
+
             ListView->Freeze();
             for (long i = 0; i < ListView->GetItemCount(); i++) ListView->Select(i, false);
-            for (size_t i = 0; i < BatchMaker->GetJobCount(); i++) DefineItem(-1, (LPFFQ_JOB)BatchMaker->GetJob(i), dsAPPEND);
+            for (unsigned int i = 0; i < BatchMaker->GetJobCount(); i++) DefineItem(-1, (LPFFQ_JOB)BatchMaker->GetJob(i), dsAPPEND, false);
             ListView->Thaw();
             BatchMaker->Clear();
+
+            //Save items if required
+            if (!FFQCFG()->save_on_modify) SaveItems();
+
         }
     }
 
@@ -1196,7 +1214,7 @@ void FFQMain::BatchMakeJobs(wxArrayString *files, bool releaseFilesPtr)
 
 //---------------------------------------------------------------------------------------
 
-void FFQMain::DefineItem(long index, LPFFQ_QUEUE_ITEM item, DEFINE_SELECT select)
+void FFQMain::DefineItem(long index, LPFFQ_QUEUE_ITEM item, DEFINE_SELECT select, bool save_if_required)
 {
 
     //Reset input
@@ -1236,6 +1254,8 @@ void FFQMain::DefineItem(long index, LPFFQ_QUEUE_ITEM item, DEFINE_SELECT select
 
         else if (item->GetItemType() == qtVIDSTAB_JOB) s = FFQSF(SID_TOOL_JOB, FFQS(SID_VIDSTAB_TITLE));
 
+        else if (item->GetItemType() == qtVID2GIF_JOB) s = FFQSF(SID_TOOL_JOB, FFQS(SID_VIDEO2GIF_TITLE));
+
         else if (item->GetItemType() == qtCONCAT_JOB)
         {
 
@@ -1264,6 +1284,9 @@ void FFQMain::DefineItem(long index, LPFFQ_QUEUE_ITEM item, DEFINE_SELECT select
         ListView->EnsureVisible(index);
         ListView->Focus(index);
     }
+
+    //Save items if required
+    if (save_if_required && (!FFQCFG()->save_on_modify)) SaveItems();
 
 }
 
@@ -1325,7 +1348,7 @@ void FFQMain::EditJob(long index, wxString forFileName, LPFFQ_QUEUE_ITEM clone)
         }
 
         //Edit the job
-        if (JobEdit->Execute(job)) DefineItem(-1, job, dsUNIQUE); //Success
+        if (JobEdit->Execute(job)) DefineItem(-1, job, dsUNIQUE, true); //Success
         else delete job; //Canceled, delete the job
 
     }
@@ -1340,7 +1363,7 @@ void FFQMain::EditJob(long index, wxString forFileName, LPFFQ_QUEUE_ITEM clone)
         if (item->GetItemType() != qtJOB) return;
 
         //Launch editor and define as required
-        if (JobEdit->Execute((LPFFQ_JOB)item)) DefineItem(index, item, dsNOSELECT); //Success
+        if (JobEdit->Execute((LPFFQ_JOB)item)) DefineItem(index, item, dsNOSELECT, true);
 
     }
 
@@ -1363,11 +1386,11 @@ void FFQMain::LoadItems()
 
         ListView->Freeze();
 
-        for (size_t i = 0; i < as->Count(); i++)
+        for (unsigned int i = 0; i < as->Count(); i++)
         {
 
             LPFFQ_QUEUE_ITEM item = FFQ_QUEUE_ITEM::Parse(StrFromBase64(as->Item(i)));
-            DefineItem(-1, item, dsNOSELECT);
+            DefineItem(-1, item, dsNOSELECT, false);
 
         }
 
@@ -1419,7 +1442,7 @@ void FFQMain::ValidateItems()
 
         //Check all input files for the job
         missing = "";
-        for (size_t fidx = 0; fidx < item->inputs.Count(); fidx++)
+        for (unsigned int fidx = 0; fidx < item->inputs.Count(); fidx++)
         {
 
             s = item->GetInput(fidx).path;
@@ -1466,6 +1489,9 @@ void FFQMain::MoveItems(bool up)
     }
     ListView->Thaw();
 
+    //Save if required
+    if (!FFQCFG()->save_on_modify) SaveItems();
+
 }
 
 //---------------------------------------------------------------------------------------
@@ -1478,9 +1504,9 @@ void FFQMain::SwapItems(int a, int b)
                      qib = (LPFFQ_QUEUE_ITEM)ListView->GetItemData(b);
     bool sa = ListView->IsSelected(a),
          sb = ListView->IsSelected(b);
-    DefineItem(a, qib, dsNOSELECT);
+    DefineItem(a, qib, dsNOSELECT, false);
     ListView->Select(a, sb);
-    DefineItem(b, qia, dsNOSELECT);
+    DefineItem(b, qia, dsNOSELECT, false);
     ListView->Select(b, sa);
     ListView->Thaw();
 
@@ -1576,10 +1602,10 @@ void FFQMain::ShowFFMpegVersion(bool langInfo)
     if (langInfo)
     {
         FFQLang *l = FFQL();
-        size_t skip = l->GetNumberOfSkippedStringsInFile(),
-               scnt = l->GetCount(),
-               snew = scnt - l->GetFlagCount(SF_STORED),
-               smod = l->GetFlagCount(SF_MODIFIED);
+        unsigned int skip = l->GetNumberOfSkippedStringsInFile(),
+                     scnt = l->GetCount(),
+                     snew = scnt - l->GetFlagCount(SF_STORED),
+                     smod = l->GetFlagCount(SF_MODIFIED);
         //if ( (skip == 0) && (snew == scnt) ) //Check if internal language is used
         //{
             //Not internal
@@ -1633,7 +1659,7 @@ void FFQMain::ShowFFProbeInfo(LPFFQ_QUEUE_ITEM item)
     try
     {
 
-        for (size_t fidx = 0; fidx < item->inputs.Count(); fidx++)
+        for (unsigned int fidx = 0; fidx < item->inputs.Count(); fidx++)
         {
 
             fn = item->GetInput(fidx).path;
@@ -1671,7 +1697,9 @@ void FFQMain::UpdateControls()
 
     bool sel_active = false,
          can_start = false, sel_can_start = false,
-         sel_can_stop = false;
+         sel_can_stop = false,
+         sel_can_preview = false;
+
     int sel_count = 0, all_count = ListView->GetItemCount();
 
     for (long i = 0; i < all_count; i++)
@@ -1688,6 +1716,7 @@ void FFQMain::UpdateControls()
             sel_active = sel_active || is_active;
             sel_can_start = sel_can_start || ((!is_active) && (cur->status != qsQUEUED));
             sel_can_stop = sel_can_stop || is_active || (cur->status == qsQUEUED);
+            sel_can_preview = sel_can_start && cur->CanPreview();
 
         }
 
@@ -1696,7 +1725,7 @@ void FFQMain::UpdateControls()
     ToolBar->EnableTool(ID_TOOLBARREMOVE, (sel_count > 0) && (!sel_active));
     ToolBar->EnableTool(ID_TOOLBAREDIT, (sel_count == 1) && (!sel_active));
 
-    ToolBar->EnableTool(ID_TOOLBARPREVIEW, sel_count == 1);
+    ToolBar->EnableTool(ID_TOOLBARPREVIEW, (sel_count == 1) && sel_can_preview);
 
     ToolBar->EnableTool(ID_TOOLBARSTART, can_start);
     ToolBar->EnableTool(ID_TOOLBARSTOP, m_EncodingProcess != NULL);
@@ -1725,12 +1754,12 @@ void FFQMain::UpdateControls()
 
 //---------------------------------------------------------------------------------------
 
-void FFQMain::UpdateProgress(size_t pos)
+void FFQMain::UpdateProgress(unsigned int pos)
 {
     Gauge->SetValue(pos);
     if (pos == 0) Gauge->UnsetToolTip();
-    else Gauge->SetToolTip(ToStr((size_t)round(pos / GAUGE_MAX * 100.0)) + "%");
-    FFQCFG()->GetTaskBar()->SetTaskBarProgress(pos, (size_t)GAUGE_MAX);
+    else Gauge->SetToolTip(ToStr((unsigned int)round(pos / GAUGE_MAX * 100.0)) + "%");
+    FFQCFG()->GetTaskBar()->SetTaskBarProgress(pos, (unsigned int)GAUGE_MAX);
 }
 
 //---------------------------------------------------------------------------------------
@@ -1798,10 +1827,10 @@ void FFQMain::UpdateStatus()
 
 
     //typedef enum QUEUE_STATUS { qsQUEUED, qsACTIVE, qsPASS1, qsPASS2, qsDONE, qsFAILED, qsABORTED, qsSKIPPED } QUEUE_STATUS;
-    int cnt[QUEUE_STATUS_COUNT], items = ListView->GetItemCount();
+    unsigned int cnt[QUEUE_STATUS_COUNT], items = ListView->GetItemCount();
     memset(&cnt, 0, sizeof(cnt));
 
-    for (int i = 0; i < items; i++)
+    for (unsigned int i = 0; i < items; i++)
     {
         LPFFQ_JOB job = (LPFFQ_JOB)ListView->GetItemData(i);
         cnt[job->status]++;
@@ -1827,7 +1856,7 @@ wxString FFQMain::GetWindowPos()
 
     //Get the restored window position as a string that can be saved to cfg
 
-    return wxString::Format("%u,%u,%u,%u,%u,%u",
+    return wxString::Format("%i,%i,%i,%i,%i,%i",
                             m_RestoredRect.x, m_RestoredRect.y, m_RestoredRect.width, m_RestoredRect.height,
                             (int)IsMaximized(), SplitterWindow->GetSashPosition()
                            );
@@ -1884,7 +1913,7 @@ bool FFQMain::LaunchTool(short ToolID, long edit_index, LPFFQ_QUEUE_ITEM edit_it
         {
 
             //Define the item
-            DefineItem(edit_index, job, dsUNIQUE);
+            DefineItem(edit_index, job, dsUNIQUE, true);
             return true;
 
         }
@@ -1909,7 +1938,7 @@ bool FFQMain::LaunchTool(short ToolID, long edit_index, LPFFQ_QUEUE_ITEM edit_it
         }
         if (ConcatDlg->Execute(job))
         {
-            DefineItem(edit_index, job, dsUNIQUE);
+            DefineItem(edit_index, job, dsUNIQUE, true);
             return true;
         }
         if (edit_item == NULL) delete job;
@@ -1925,7 +1954,24 @@ bool FFQMain::LaunchTool(short ToolID, long edit_index, LPFFQ_QUEUE_ITEM edit_it
         LPFFQ_VIDSTAB_JOB job = (edit_item == NULL) ? new FFQ_VIDSTAB_JOB() : (LPFFQ_VIDSTAB_JOB)edit_item;
         if (VidStabDlg->Execute(job))
         {
-            DefineItem(edit_index, job, dsUNIQUE);
+            DefineItem(edit_index, job, dsUNIQUE, true);
+            return true;
+        }
+        if (edit_item == NULL) delete job;
+
+
+    }
+
+    else if (ToolID == ID_TOOLVID2GIF)
+    {
+
+        //Video to GIF
+        if ((edit_item != NULL) && (edit_item->GetItemType() != qtVID2GIF_JOB)) return false;
+        if (!Video2Gif) Video2Gif = new FFQVideoToGIF(this);
+        LPFFQ_VID2GIF_JOB job = (edit_item == NULL) ? new FFQ_VID2GIF_JOB() : (LPFFQ_VID2GIF_JOB)edit_item;
+        if (Video2Gif->Execute(job))
+        {
+            DefineItem(edit_index, job, dsUNIQUE, true);
             return true;
         }
         if (edit_item == NULL) delete job;
@@ -1978,6 +2024,7 @@ void FFQMain::OnToolBarButtonClick(wxCommandEvent& event)
     if (evtId == ID_TOOLBARADD)
     {
 
+        //Edit a new job
         EditJob(-1);
 
     }
@@ -2013,6 +2060,9 @@ void FFQMain::OnToolBarButtonClick(wxCommandEvent& event)
 
             ListView->Thaw();
 
+            //Save items if required
+            if (!FFQCFG()->save_on_modify) SaveItems();
+
         }
 
     }
@@ -2029,6 +2079,7 @@ void FFQMain::OnToolBarButtonClick(wxCommandEvent& event)
             case qtCONCAT_JOB: LaunchTool(ID_TOOLCONCAT, ListView->GetFirstSelected(), item); break;
             case qtTHUMB_JOB: LaunchTool(ID_TOOLTHUMBS, ListView->GetFirstSelected(), item); break;
             case qtVIDSTAB_JOB: LaunchTool(ID_TOOLVIDSTAB, ListView->GetFirstSelected(), item); break;
+            case qtVID2GIF_JOB: LaunchTool(ID_TOOLVID2GIF, ListView->GetFirstSelected(), item); break;
             default: ShowError(FFQS(SID_ITEM_CANNOT_BE_EDITED)); return;
 
         }
@@ -2076,11 +2127,15 @@ void FFQMain::OnToolBarButtonClick(wxCommandEvent& event)
     else if (evtId == ID_TOOLBARPREVIEW)
     {
 
-        LPFFQ_JOB job = (LPFFQ_JOB)GetSelectedItem();
+        LPFFQ_QUEUE_ITEM item = GetSelectedItem();
+        wxString cmd = item->GetPreviewCommand();
+        if (cmd.Len() > 0) PreviewCommand(cmd, m_EncodingProcess == NULL);
+
+        /*LPFFQ_JOB job = (LPFFQ_JOB)GetSelectedItem();
         if (job == NULL) return;
         long ep = 0;
         wxString cmd = BuildCommandLine(job, ep, true);
-        if (cmd.Len() > 0) PreviewCommand(cmd, m_EncodingProcess == NULL);
+        if (cmd.Len() > 0) PreviewCommand(cmd, m_EncodingProcess == NULL);*/
 
     }
 
@@ -2118,6 +2173,7 @@ void FFQMain::OnToolBarButtonClick(wxCommandEvent& event)
     else if (evtId == ID_TOOLSLIDESHOW) LaunchTool(ID_TOOLSLIDESHOW);
     else if (evtId == ID_TOOLCONCAT) LaunchTool(ID_TOOLCONCAT);
     else if (evtId == ID_TOOLVIDSTAB) LaunchTool(ID_TOOLVIDSTAB);
+    else if (evtId == ID_TOOLVID2GIF) LaunchTool(ID_TOOLVID2GIF);
 
     else if (evtId == ID_TOOLBARPRESETS) FFQPresetMgr::Get()->Execute();
 
@@ -2167,11 +2223,42 @@ void FFQMain::OnToolBarButtonClick(wxCommandEvent& event)
 
         //Handler used to test all sorts of madness
 
-        wxString tag = "[0:0]";
+        /*FFQ_VID2GIF_JOB v2gj;
+        FFQVideoToGIF *v2g = new FFQVideoToGIF(this);
+        while (v2g->Execute(&v2gj))
+        {
+
+            //Console->AppendLine(v2gj.ToString(), COLOR_BLACK);
+
+            v2gj.PrepareProcessing();
+            wxString cmd;
+            while (v2gj.GetNextCommand(cmd)) Console->AppendLine(cmd, COLOR_BLACK);
+            Console->AppendBlankLine();
+
+        }
+        delete v2g;*/
+
+        /*FFQ_INPUT_FILE inf;
+        inf.path = "/path/to/video.flv";
+        FFQ_VID2GIF_JOB v2g;
+        v2g.inputs.Add(inf.ToString());
+        v2g.width = 200;
+        v2g.height = 0;
+        v2g.fps = 10;
+        v2g.start_time = TIME_VALUE(85743);
+        v2g.limit_len = TIME_VALUE(5000);
+        v2g.out = "/path/to/result.gif";
+        v2g.PrepareProcessing();
+        wxString cmd;
+        while (v2g.GetNextCommand(cmd)) Console->AppendLine(cmd, COLOR_BLACK);
+        */
+
+
+        /*wxString tag = "[0:0]";
         FFQ_CUTS cuts("1,40;0:0:10;0:0:20;0:0:30;0:0:39");
         int fid = 0;
         FormatCuts(cuts, tag, true, TIME_VALUE("0:0:40"), fid);
-        Console->AppendLine(cuts.ToString(), COLOR_BLACK);
+        Console->AppendLine(cuts.ToString(), COLOR_BLACK);*/
 
         /*
         LPFFQ_QUEUE_ITEM item = GetSelectedItem();
@@ -2466,7 +2553,10 @@ void FFQMain::OnClose(wxCloseEvent& event)
     }
 
 
-    SaveItems();
+    //Save jobs?
+    if (FFQCFG()->save_on_exit) SaveItems();
+
+    //Delete all items
     DeleteItem(-1);
 
     event.Skip();
