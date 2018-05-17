@@ -221,6 +221,8 @@
 		<Unit filename="src/filter/Custom.h" />
 		<Unit filename="src/filter/Decimate.cpp" />
 		<Unit filename="src/filter/Decimate.h" />
+		<Unit filename="src/filter/Deflicker.cpp" />
+		<Unit filename="src/filter/Deflicker.h" />
 		<Unit filename="src/filter/Deinterlace.cpp" />
 		<Unit filename="src/filter/Deinterlace.h" />
 		<Unit filename="src/filter/Dejudder.cpp" />
@@ -415,6 +417,7 @@
 					<wxDialog wxs="wxsmith/FFQJobEditAdvPopup.wxs" src="src/FFQJobEditAdvPopup.cpp" hdr="src/FFQJobEditAdvPopup.h" fwddecl="0" i18n="0" name="FFQJobEditAdvPopup" language="CPP" />
 					<wxDialog wxs="wxsmith/FFQJobEditAdvCuts.wxs" src="src/FFQJobEditAdvCuts.cpp" hdr="src/FFQJobEditAdvCuts.h" fwddecl="0" i18n="0" name="FFQJobEditAdvCuts" language="CPP" />
 					<wxDialog wxs="wxsmith/FFQVideoToGIF.wxs" src="src/tools/FFQVideoToGIF.cpp" hdr="src/tools/FFQVideoToGIF.h" fwddecl="0" i18n="1" name="FFQVideoToGIF" language="CPP" />
+					<wxPanel wxs="wxsmith/DummyPanel.wxs" src="src/DummyPanel.cpp" hdr="src/DummyPanel.h" fwddecl="0" i18n="1" name="DummyPanel" language="CPP" />
 				</resources>
 			</wxsmith>
 		</Extensions>

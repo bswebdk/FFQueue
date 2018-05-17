@@ -41,6 +41,7 @@
 #endif
 //(*Headers(FFQBatchMake)
 #include "FFQPresetPanel.h"
+#include <wx/statline.h>
 //*)
 
 #include "utils/FFQProbing.h"
@@ -64,23 +65,31 @@ class FFQBatchMake: public wxDialog
 		//(*Declarations(FFQBatchMake)
 		wxButton* CancelButton;
 		wxComboBox* OutputFormat;
+		wxStaticLine* StaticLine2;
 		wxButton* BrowseButton;
 		wxTextCtrl* OutputPath;
+		wxCheckBox* AudInverse;
 		wxStaticText* ST2;
 		wxStaticText* ST1;
 		wxCheckBox* IncludeAudio;
 		wxStaticText* ST5;
 		wxGauge* Gauge;
+		wxStaticLine* StaticLine1;
 		wxStaticText* ST4;
 		FFQPresetPanel* Preset;
 		wxCheckBox* IncludeSubs;
+		wxStaticLine* StaticLine3;
 		wxCheckBox* IncludeVideo;
 		wxComboBox* PrefAudio;
 		wxStaticText* ST3;
+		wxButton* DryRunButton;
 		wxDirDialog* DestPathDlg;
 		wxButton* MakeButton;
+		wxCheckBox* SubsInverse;
 		wxStaticText* JobInfo;
+		wxComboBox* PrefSubs;
 		wxFlexGridSizer* MainSizer;
+		wxStaticText* ST6;
 		//*)
 
 	protected:
@@ -91,8 +100,15 @@ class FFQBatchMake: public wxDialog
 		static const long ID_INCLUDEVIDEO;
 		static const long ID_INCLUDEAUDIO;
 		static const long ID_INCLUDESUBS;
+		static const long ID_STATICLINE1;
 		static const long ID_ST2;
 		static const long ID_PREFAUDIO;
+		static const long ID_AUDINVERSE;
+		static const long ID_STATICLINE2;
+		static const long ID_ST6;
+		static const long ID_PREFSUBS;
+		static const long ID_SUBSINVERSE;
+		static const long ID_STATICLINE3;
 		static const long ID_ST3;
 		static const long ID_OUTPUTFORMAT;
 		static const long ID_ST4;
@@ -100,6 +116,7 @@ class FFQBatchMake: public wxDialog
 		static const long ID_BROWSEBUTTON;
 		static const long ID_ST5;
 		static const long ID_PRESET;
+		static const long ID_DRYRUNBUTTON;
 		static const long ID_MAKEBUTTON;
 		static const long ID_CANCELBUTTON;
 		static const long ID_GAUGE;
@@ -115,12 +132,21 @@ class FFQBatchMake: public wxDialog
 		wxArrayString* m_Files;
 		wxVector<void*> m_Jobs;
 		bool m_ClearLog, m_Making, m_Abort, m_DoIdleTask;
+		long m_VidIdx, m_AudIdx, m_SubsIdx;
+		std::vector<LPFFPROBE_STREAM_INFO> m_StreamInf;
+		wxString m_FindAud, m_FindSubs;
 		FFProbeInfoParser m_PIPS[PIP_COUNT];
 
 		bool FindJobForDest(wxString dest);
+		//wxString GetStreamMapping(FFProbeInfoParser *pip, unsigned int file_id);
+		void GetStreamsFromParser(FFProbeInfoParser *pip, unsigned int file_id, wxString &stream_map);
+		//bool HasStreamFromParser(LPFFPROBE_STREAM_INFO si);
+        bool IncludeAudioStream(LPFFPROBE_STREAM_INFO si);
+        bool IncludeSubtitleStream(LPFFPROBE_STREAM_INFO si);
 		void LogLine(wxString line, unsigned int color);
-		void MakeJobs();
+		void MakeJobs(bool dry_run);
 		void SaveConfig();
+		void UpdateControls();
 
 		void OnIdle(wxIdleEvent &event);
 

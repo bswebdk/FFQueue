@@ -34,7 +34,7 @@
 					<object class="sizeritem">
 						<object class="wxFlexGridSizer" variable="FlexGridSizer3" member="no">
 							<cols>1</cols>
-							<rows>5</rows>
+							<rows>11</rows>
 							<growablecols>0</growablecols>
 							<object class="sizeritem">
 								<object class="wxFlexGridSizer" variable="FlexGridSizer4" member="no">
@@ -54,6 +54,7 @@
 										<object class="wxCheckBox" name="ID_INCLUDEVIDEO" variable="IncludeVideo" member="yes">
 											<label>V</label>
 											<extra_code>IncludeVideo-&gt;SetLabel(FFQS(SID__COMMON__VIDEO));</extra_code>
+											<handler function="OnAction" entry="EVT_CHECKBOX" />
 										</object>
 										<flag>wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL</flag>
 										<option>1</option>
@@ -62,6 +63,7 @@
 										<object class="wxCheckBox" name="ID_INCLUDEAUDIO" variable="IncludeAudio" member="yes">
 											<label>A</label>
 											<extra_code>IncludeAudio-&gt;SetLabel(FFQS(SID__COMMON__AUDIO));</extra_code>
+											<handler function="OnAction" entry="EVT_CHECKBOX" />
 										</object>
 										<flag>wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL</flag>
 										<option>1</option>
@@ -70,12 +72,21 @@
 										<object class="wxCheckBox" name="ID_INCLUDESUBS" variable="IncludeSubs" member="yes">
 											<label>S</label>
 											<extra_code>IncludeSubs-&gt;SetLabel(FFQS(SID__COMMON__SUBTITLES));</extra_code>
+											<handler function="OnAction" entry="EVT_CHECKBOX" />
 										</object>
 										<flag>wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL</flag>
 										<option>1</option>
 									</object>
 								</object>
 								<flag>wxALL|wxEXPAND</flag>
+								<border>3</border>
+								<option>1</option>
+							</object>
+							<object class="sizeritem">
+								<object class="wxStaticLine" name="ID_STATICLINE1" variable="StaticLine1" member="yes">
+									<size>10,-1</size>
+								</object>
+								<flag>wxTOP|wxBOTTOM|wxEXPAND</flag>
 								<border>3</border>
 								<option>1</option>
 							</object>
@@ -96,19 +107,84 @@
 									<object class="sizeritem">
 										<object class="wxComboBox" name="ID_PREFAUDIO" variable="PrefAudio" member="yes">
 											<content>
-												<item>ac3</item>
 												<item>aac</item>
 												<item>eac3</item>
 												<item>mp2</item>
 												<item>mp3</item>
 											</content>
 											<selection>0</selection>
+											<handler function="OnAction" entry="EVT_TEXT" />
 										</object>
 										<flag>wxALL|wxEXPAND</flag>
 										<option>1</option>
 									</object>
 								</object>
 								<flag>wxALL|wxEXPAND</flag>
+								<border>3</border>
+								<option>1</option>
+							</object>
+							<object class="sizeritem">
+								<object class="wxCheckBox" name="ID_AUDINVERSE" variable="AudInverse" member="yes">
+									<label>AI</label>
+									<extra_code>AudInverse-&gt;SetLabel(FFQS(SID__BATCHMAKE__MATCH__INVERSE));</extra_code>
+									<handler function="OnAction" entry="EVT_CHECKBOX" />
+								</object>
+								<flag>wxLEFT|wxRIGHT|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+								<border>3</border>
+								<option>1</option>
+							</object>
+							<object class="sizeritem">
+								<object class="wxStaticLine" name="ID_STATICLINE2" variable="StaticLine2" member="yes">
+									<size>10,-1</size>
+								</object>
+								<flag>wxTOP|wxBOTTOM|wxEXPAND</flag>
+								<border>3</border>
+								<option>1</option>
+							</object>
+							<object class="sizeritem">
+								<object class="wxFlexGridSizer" variable="FlexGridSizer8" member="no">
+									<cols>2</cols>
+									<growablecols>1</growablecols>
+									<object class="sizeritem">
+										<object class="wxStaticText" name="ID_ST6" variable="ST6" member="yes">
+											<label>PrefS</label>
+											<extra_code>ST6-&gt;SetLabel(FFQS(SID__BATCHMAKE__PREF__SUBS__CODEC));</extra_code>
+										</object>
+										<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+										<border>3</border>
+										<option>1</option>
+									</object>
+									<object class="sizeritem">
+										<object class="wxComboBox" name="ID_PREFSUBS" variable="PrefSubs" member="yes">
+											<content>
+												<item>dvb_subtitle</item>
+												<item>dan</item>
+												<item>eng</item>
+											</content>
+											<handler function="OnAction" entry="EVT_TEXT" />
+										</object>
+										<flag>wxALL|wxEXPAND</flag>
+										<option>1</option>
+									</object>
+								</object>
+								<flag>wxALL|wxEXPAND</flag>
+								<border>3</border>
+								<option>1</option>
+							</object>
+							<object class="sizeritem">
+								<object class="wxCheckBox" name="ID_SUBSINVERSE" variable="SubsInverse" member="yes">
+									<label>SI</label>
+									<extra_code>SubsInverse-&gt;SetLabel(FFQS(SID__BATCHMAKE__MATCH__INVERSE));</extra_code>
+								</object>
+								<flag>wxLEFT|wxRIGHT|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+								<border>3</border>
+								<option>1</option>
+							</object>
+							<object class="sizeritem">
+								<object class="wxStaticLine" name="ID_STATICLINE3" variable="StaticLine3" member="yes">
+									<size>10,-1</size>
+								</object>
+								<flag>wxTOP|wxBOTTOM|wxEXPAND</flag>
 								<border>3</border>
 								<option>1</option>
 							</object>
@@ -213,7 +289,8 @@
 								<option>1</option>
 							</object>
 						</object>
-						<flag>wxALL|wxEXPAND</flag>
+						<flag>wxTOP|wxEXPAND</flag>
+						<border>5</border>
 						<option>1</option>
 					</object>
 				</object>
@@ -224,6 +301,16 @@
 			<object class="sizeritem">
 				<object class="wxBoxSizer" variable="BoxSizer1" member="no">
 					<object class="spacer">
+						<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<border>5</border>
+						<option>1</option>
+					</object>
+					<object class="sizeritem">
+						<object class="wxButton" name="ID_DRYRUNBUTTON" variable="DryRunButton" member="yes">
+							<label>D</label>
+							<extra_code>DryRunButton-&gt;SetLabel(FFQS(SID__COMMON__DRY__RUN));</extra_code>
+							<handler function="OnAction" entry="EVT_BUTTON" />
+						</object>
 						<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
 						<border>5</border>
 						<option>1</option>

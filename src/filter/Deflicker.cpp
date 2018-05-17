@@ -2,7 +2,7 @@
 *                                                                        *
 *  Copyright (c) 2014 Torben Bruchhaus                                   *
 *  http://ffqueue.bruchhaus.dk/                                          *
-*  File: Flip.cpp                                                        *
+*  File: Deflicker.cpp                                                   *
 *                                                                        *
 *  This file is part of FFQueue.                                         *
 *                                                                        *
@@ -21,83 +21,75 @@
 *                                                                        *
 *************************************************************************/
 
-#include "Flip.h"
+#include "Deflicker.h"
 
-Flip::Flip(wxWindow* parent) : FilterBasePanel(parent)
+const int NUM_MODES = 7;
+const wxString MODES[] = { "am", "gm", "hm", "qm", "cm", "pm", "median" };
+
+Deflicker::Deflicker(wxWindow* parent) : FilterBasePanel(parent)
 {
 
-    wxBoxSizer *bs;
+    wxFlexGridSizer *fgs = new wxFlexGridSizer(2, 3, 0, 0);
 
-    bs = new wxBoxSizer(wxVERTICAL);
+    MakeLabel(FFQS(SID_DEFLICKER_SAMPLE_COUNT), fgs, wxALL|wxALIGN_LEFT|wxALIGN_CENTRE_VERTICAL);
+    m_Size = new wxSlider(this, wxID_ANY, 5, 2, 129, wxDefaultPosition, wxSize(250, -1));
+    fgs->Add(m_Size, 1, wxALL|wxEXPAND, 10);
+    m_SliderText = MakeLabel("000", fgs, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL);
 
-    m_Horz = new wxCheckBox(this, wxID_ANY, FFQS(SID_FLIP_HORZ), wxDefaultPosition, wxDefaultSize, 0);
-    bs->Add(m_Horz, 1, wxALL|wxALIGN_LEFT, 10);
+    MakeLabel(FFQS(SID_DEFLICKER_AVG_MODE), fgs, wxALL|wxALIGN_LEFT|wxALIGN_CENTRE_VERTICAL);
+    m_Mode = new wxChoice(this, wxID_ANY);
+    wxString *as = FFQL()->GetStringArray(SID_DEFLICKER_AVG_MODES, NUM_MODES);
+    for (int i = 0; i < NUM_MODES; i++) m_Mode->Append(as[i]);
+    m_Mode->SetSelection(0);
+    delete[] as;
+    fgs->Add(m_Mode, 1, wxALL|wxEXPAND, 10);
 
-    m_Vert = new wxCheckBox(this, wxID_ANY, FFQS(SID_FLIP_VERT), wxDefaultPosition, wxDefaultSize, 0);
-    bs->Add(m_Vert, 1, wxALL|wxALIGN_LEFT, 10);
+    SetSizer(fgs);
+    fgs->Fit(this);
+    fgs->SetSizeHints(this);
 
-    SetSizer(bs);
-    bs->Fit(this);
-    bs->SetSizeHints(this);
+    m_Size->Bind(wxEVT_SLIDER, &Deflicker::OnSliderChange, this);
 
 }
 
 //---------------------------------------------------------------------------------------
 
-Flip::~Flip()
+Deflicker::~Deflicker()
 {
 
 }
 
 //---------------------------------------------------------------------------------------
 
-void Flip::SetFilter(LPFFMPEG_FILTER fltr)
+void Deflicker::SetFilter(LPFFMPEG_FILTER fltr)
 {
 
     wxString fs = fltr->editable;
-
-    if (fs.Len() > 0)
-    {
-
-        //Load values from filter string
-        m_Horz->SetValue(GetToken(fs, ',') == STR_YES);
-        m_Vert->SetValue(GetToken(fs, ',') == STR_YES);
-
-    }
-
-    else
-    {
-
-        //Default values
-        m_Horz->SetValue(false);
-        m_Vert->SetValue(true);
-
-    }
+    m_Size->SetValue( Str2Long(GetToken(fs, ","), m_Size->GetValue()) );
+    m_Mode->SetSelection( Str2Long(fs, m_Mode->GetSelection()) );
+    wxCommandEvent dummy;
+    OnSliderChange(dummy);
 
 }
 
 //---------------------------------------------------------------------------------------
 
-bool Flip::GetFilter(LPFFMPEG_FILTER fltr)
+bool Deflicker::GetFilter(LPFFMPEG_FILTER fltr)
 {
 
-    fltr->type = ftFLIP;
+    fltr->type = ftDEFLICKER;
 
-    if ((!m_Horz->GetValue()) && (!m_Vert->GetValue())) return ShowError(FFQS(SID_FLIP_ERROR));
-
-    wxString h = BOOLSTR(m_Horz->GetValue()), v = BOOLSTR(m_Vert->GetValue()),
-             f = m_Horz->GetValue() ? "hflip" : "";
-
-    if (m_Vert->GetValue())
-    {
-        if (f.Len() > 0) f += ",";
-        f += "vflip";
-    }
-
-    fltr->friendly = FFQSF(SID_FLIP_USERFRIENDLY, FFQL()->FILTER_NAMES[fltr->type], h, v);
+    fltr->friendly = FFQSF(SID_DEFLICKER_USERFRIENDLY, FFQL()->FILTER_NAMES[fltr->type], m_Size->GetValue(), m_Mode->GetStringSelection());
+    wxString f = wxString::Format("deflicker=s=%u:m=%s", m_Size->GetValue(), MODES[m_Mode->GetSelection()]);
     fltr->ff_filter.Printf("%s%s%s", FILTER_VIDEO_IN, f, FILTER_VIDEO_OUT);
-    fltr->editable.Printf("%s,%s", h, v);
+    fltr->editable.Printf("%u,%u", m_Size->GetValue(), m_Mode->GetSelection());
 
     return true;
 
 }
+
+void Deflicker::OnSliderChange(wxCommandEvent &event)
+{
+    m_SliderText->SetLabel(wxString::Format("%i", m_Size->GetValue()));
+}
+

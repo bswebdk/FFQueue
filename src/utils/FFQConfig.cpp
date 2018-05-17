@@ -76,6 +76,7 @@ const wxString CFG_SAVE_LOG = "save_log";
 const wxString CFG_SILENT_QFINISH = "silent_qfinish";
 const wxString CFG_SAVED_COMMANDS = "saved_commands";
 const wxString CFG_SAVE_ON_MODIFY = "save_on_modify";
+const wxString CFG_SUBS_CHARENC = "subs_charenc";
 
 //---------------------------------------------------------------------------------------
 
@@ -349,6 +350,7 @@ void FFQConfig::DefaultOptions()
     silent_qfinish = false;
     save_on_modify = false;
     saved_commands = "";
+    subs_charenc = "";
 
 	//Private config
     if (m_CodecInfo) delete m_CodecInfo;
@@ -937,6 +939,8 @@ void FFQConfig::LoadConfig()
                     else if (name == CFG_SILENT_QFINISH) silent_qfinish = STRBOOL(line);
                     else if (name == CFG_SAVED_COMMANDS) saved_commands = line;
                     else if (name == CFG_SAVE_ON_MODIFY) save_on_modify = STRBOOL(line);
+                    else if (name == CFG_SUBS_CHARENC) subs_charenc = line;
+
 
                 }
 
@@ -1081,6 +1085,7 @@ void FFQConfig::SaveConfig()
         cfg.AddLine(CFG_SILENT_QFINISH + "=" + BOOLSTR(silent_qfinish));
         cfg.AddLine(CFG_SAVED_COMMANDS + "=" + saved_commands);
         cfg.AddLine(CFG_SAVE_ON_MODIFY + "=" + BOOLSTR(save_on_modify));
+        cfg.AddLine(CFG_SUBS_CHARENC + "=" + subs_charenc);
 
         //Empty line to separate codec_info's
         cfg.AddLine("");
@@ -1324,6 +1329,7 @@ bool FFQConfig::ValidateFFMpegPath(wxString path, bool set_config_path_if_valid)
 
             //Yup! Add to formats
             st = StrTrim(GetToken(t, " "));
+            if (st.Find(',') > 0) st = st.BeforeFirst(','); //Remove alternate format names (eg. stream_segment,ssegment)
             m_Formats += st + " - " + StrTrim(t) + "\n";
 
         }

@@ -281,6 +281,9 @@ bool MakeKeyframeArguments(wxString &kf)
     v = Str2Long(GetToken(kf, ","), 0);
     if (v > 0) res += "-refs " + ToStr(v - 1) + " ";
 
+    //Use closed GOP
+    if (GetToken(kf, ",") == STR_YES) res += "-flags +cgop ";
+
     //Set result and return success
     kf = res;
     return kf.Len() > 0;
@@ -359,7 +362,13 @@ wxString MakeSubtitleBurninFilter(wxString sub_in, int sub_stream_idx, wxString 
 
         //Choose the correct filter type
         if ( ((ext == "ssa") || (ext == "ass")) && (sub_stream_idx == 0) && (!rs) ) res.Printf("ass=%s", sub_src_file);
-        else res.Printf("subtitles=%s", sub_src_file);
+        else
+        {
+            res.Printf("subtitles=%s", sub_src_file);
+
+            //Character encoding - subtitles filter only!
+            if (preset->subtitles.charenc.Len() > 0) res += ":charenc=" + preset->subtitles.charenc;
+        }
 
         if (rs)
         {
@@ -517,6 +526,10 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
 
     //If preset is used and preset uses two-pass EncodingPass must be incremented (0 for new job)
     if ((!for_preview) && (pst != NULL) && pst->two_pass) encoding_pass++;
+
+    //Do we need to add segmenting arguments?
+    //Segmenting is only performed when not previewing and for single pass / second pass
+    bool segment = (!for_preview) && ((encoding_pass==0) || (encoding_pass==2)) && (pst != NULL) && (pst->segmenting.length > 0);
 
     //Create stream mapping for command line
     STREAM_MAPPING smap;
@@ -850,6 +863,9 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
             //Video sync
             if (pst->video_sync.Len() > 0) preset += "-vsync " + pst->video_sync + " ";
 
+            //Closed GOP when segmenting - this should be a user choice in a future release
+            //if (segment) preset += "-flags +cgop ";
+
         }
 
         //Audio codec
@@ -878,7 +894,22 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
         if (has_subs && (pst->subtitles.codec.Len() > 0) && (pst->subtitles.codec != CODEC_SUBS_BURNIN))
             preset += "-c:s " + pst->subtitles.codec + " ";
 
-        if (pst->mf_faststart) preset += "-movflags faststart ";
+        //Segmenting - note that "faststart" needs to be set different when segmenting
+        if (segment)
+        {
+            uint64_t st = pst->segmenting.length * 1000;
+            if (pst->segmenting.length_type > 0) st *= 60;
+            if (pst->segmenting.length_type > 1) st *= 60;
+            TIME_VALUE sl(st);
+            preset += "-segment_time " + sl.ToShortString() + " ";
+            preset += "-break_non_keyframes " + wxString(pst->segmenting.break_bframes ? "1" : "0") + " ";
+            preset += "-increment_tc " + wxString(pst->segmenting.incremental_tc ? "1" : "0") + " ";
+            preset += "-reset_timestamps " + wxString(pst->segmenting.reset_ts ? "1" : "0") + " ";
+            if (pst->mf_faststart) preset += "-segment_format_options movflags=+faststart ";
+        }
+
+        //No segmenting, use default faststart
+        else if (pst->mf_faststart) preset += "-movflags faststart ";
 
         if (target_ext == "avi")
         {
@@ -959,7 +990,7 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
 
     //For convenience
     bool two_pass_null = false;
-    wxString fmt = pst->output_format;
+    wxString fmt = pst ? pst->output_format : "";
 
     if ((!for_preview) && (encoding_pass == 1))
     {
@@ -989,11 +1020,40 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
     else
     {
 
-        //Output format
-        if (fmt.Len() > 0) t += "-f " + fmt + " ";
+        //Get output name
+        wxString out_name = job->out;
+
+        //Output format - different arguments when segmenting
+        if (segment)
+        {
+
+            //Segmenting format
+            t += "-f ";
+            if (pst->segmenting.streaming) t += "s";
+            t += "segment ";
+
+            //Container format
+            if (fmt.Len() > 0) t += "-segment_format " + fmt + " ";
+
+            //Segmenting list file name
+            if (pst->segmenting.list_file > 0)
+            {
+                const wxString lft[] = {"flat", "csv", "ffconcat", "m3u8"};
+                wxString list_file = out_name.BeforeLast('.') + "." + lft[pst->segmenting.list_file - 1];
+                EnsureUniquePath(list_file);
+                t += "-segment_list \"" + FormatFileName(list_file) + "\" ";
+            }
+
+            //Segmenting numbering - this probably need a makeover at some point
+            out_name = out_name.BeforeLast('.') + " %03d." + out_name.AfterLast('.');
+
+        }
+
+        //Regular container format selection
+        else if (fmt.Len() > 0) t += "-f " + fmt + " ";
 
         //Add either NULL_FILENAME or output filename
-        t += two_pass_null ? NULL_FILENAME : "-y \"" + FormatFileName(job->out) + "\"";
+        t += two_pass_null ? NULL_FILENAME : "-y \"" + FormatFileName(out_name) + "\"";
 
     }
 

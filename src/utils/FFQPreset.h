@@ -80,11 +80,23 @@ typedef struct FFQ_PRESET
               scale; //Scale subtitles (only for bitmap based subs)
         wxString width, //Custom width (size_type == 2)
                  height, //Custom height (size_type == 2)
-                 codec; //Subtitle codec
+                 codec, //Subtitle codec
+                 charenc; //Character encoding
 
         //wxString ToString();
 
     } subtitles;
+
+    //Segmenting settings
+    struct segmenting {
+        unsigned int length; //Length of each segment, 0 = segmenting disabled
+        uint8_t length_type; //0=Seconds, 1=Minutes, 2=Hours
+        uint8_t list_file; //0=None, 1=Flat, 2=CSV, 3=FFconcat, 4=M3U8
+        bool break_bframes; //Break B-frames
+        bool incremental_tc; //Use incremental time code
+        bool streaming; //Make streaming format
+        bool reset_ts; //Reset time stamps
+    } segmenting;
 
     //Settings for thumbs
     THUMBS_AND_TILES thumbs;

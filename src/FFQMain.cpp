@@ -132,6 +132,8 @@ const long FFQMain::ID_DEBUG_ABOUT = wxNewId();
 #endif
 
 const long FFQMain::ID_MENU_STOPSEL = wxNewId();
+FFQMain* FFQMain::m_Instance = NULL;
+
 
 BEGIN_EVENT_TABLE(FFQMain,wxFrame)
     //(*EventTable(FFQMain)
@@ -405,6 +407,8 @@ FFQMain::FFQMain(wxWindow* parent, wxWindowID id)
 
     m_JobsFileName = FFQCFG()->app_name.Lower() + ".job";
     SetTitle(FFQCFG()->app_name);
+
+    FFQMain::m_Instance = this;
 
     #ifdef __WINDOWS__
     SetIcon(wxIcon("aaaa", wxBITMAP_TYPE_ICO_RESOURCE));
@@ -2222,6 +2226,13 @@ void FFQMain::OnToolBarButtonClick(wxCommandEvent& event)
     {
 
         //Handler used to test all sorts of madness
+        wxArrayString as;
+        as.Add("kjh");
+        as.Add("kjh");
+        FFQBatchMake *bm = new FFQBatchMake(this);
+        bm->SetFiles(&as);
+        bm->Execute();
+        delete bm;
 
         /*FFQ_VID2GIF_JOB v2gj;
         FFQVideoToGIF *v2g = new FFQVideoToGIF(this);
@@ -2281,18 +2292,18 @@ void FFQMain::OnToolBarButtonClick(wxCommandEvent& event)
         delete jea;
         */
 
-        /*
-        FFQFilterEdit *fe = new FFQFilterEdit(this);
+
+        /*FFQFilterEdit *fe = new FFQFilterEdit(this);
         FFMPEG_FILTER fltr = FFMPEG_FILTER();
-        fltr.type = ftDYNAUDNORM;
+        fltr.type = ftDEFLICKER;
         bool ok = true;
         while (ok)
         {
             ok = fe->Execute(&fltr);
             if (ok) ok = (wxMessageBox(fltr.ToString(), "Info", wxYES_NO) == wxYES);
         }
-        delete fe;
-        */
+        delete fe;*/
+
 
     }
 

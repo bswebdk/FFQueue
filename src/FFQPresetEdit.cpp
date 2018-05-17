@@ -37,6 +37,14 @@
 //(*InternalHeaders(FFQPresetEdit)
 //*)
 
+// The following crappy workaround is to prevent problems with
+// Code::Block using the old event name without the ending D.
+#ifndef wxEVT_GRID_CELL_CHANGE
+#define wxEVT_GRID_CELL_CHANGE wxEVT_GRID_CELL_CHANGED
+#endif // wxEVT_GRID_CELL_CHANGE
+
+#define SUBS_CHARENC_SEP ' '
+
 //(*IdInit(FFQPresetEdit)
 const long FFQPresetEdit::ID_PRESETNAME = wxNewId();
 const long FFQPresetEdit::ID_PRESETTEMP = wxNewId();
@@ -73,6 +81,7 @@ const long FFQPresetEdit::ID_KEYFRAMEMAXP = wxNewId();
 const long FFQPresetEdit::ID_MOTIONESTIMATION = wxNewId();
 const long FFQPresetEdit::ID_USESCENECHANGESENSITIVITY = wxNewId();
 const long FFQPresetEdit::ID_SCENECHANGESENS = wxNewId();
+const long FFQPresetEdit::ID_USECLOSEDGOP = wxNewId();
 const long FFQPresetEdit::ID_KEYFRAMESPAGE = wxNewId();
 const long FFQPresetEdit::ID_OST3 = wxNewId();
 const long FFQPresetEdit::ID_VIDEOSYNC = wxNewId();
@@ -114,6 +123,8 @@ const long FFQPresetEdit::ID_SUBSWIDTH = wxNewId();
 const long FFQPresetEdit::ID_STATICTEXT11 = wxNewId();
 const long FFQPresetEdit::ID_SUBSHEIGHT = wxNewId();
 const long FFQPresetEdit::ID_SUBSSIZEPAN = wxNewId();
+const long FFQPresetEdit::wxID_NONE = wxNewId();
+const long FFQPresetEdit::ID_SUBSCHARENC = wxNewId();
 const long FFQPresetEdit::ID_SUBSLAB1 = wxNewId();
 const long FFQPresetEdit::ID_SUBSSCALE = wxNewId();
 const long FFQPresetEdit::ID_STATICTEXT8 = wxNewId();
@@ -140,12 +151,19 @@ const long FFQPresetEdit::ID_CST1 = wxNewId();
 const long FFQPresetEdit::ID_CUSTOMARGS = wxNewId();
 const long FFQPresetEdit::ID_CST2 = wxNewId();
 const long FFQPresetEdit::ID_CUSTOMARGS2 = wxNewId();
+const long FFQPresetEdit::ID_SEGMENTLEN = wxNewId();
+const long FFQPresetEdit::ID_SEGMENTLENTYPE = wxNewId();
+const long FFQPresetEdit::ID_SEGMENTLISTTYPE = wxNewId();
+const long FFQPresetEdit::ID_SEGMENTRESETTS = wxNewId();
+const long FFQPresetEdit::ID_SEGMENTINCTIME = wxNewId();
+const long FFQPresetEdit::ID_SEGMENTSTREAMING = wxNewId();
+const long FFQPresetEdit::ID_SEGMENTBREAKB = wxNewId();
 const long FFQPresetEdit::ID_STATICTEXT13 = wxNewId();
 const long FFQPresetEdit::ID_ASPECT = wxNewId();
 const long FFQPresetEdit::ID_OUTPUTFORMAT = wxNewId();
 const long FFQPresetEdit::ID_MF_FASTSTART = wxNewId();
 const long FFQPresetEdit::ID_KEEPFILETIME = wxNewId();
-const long FFQPresetEdit::ID_MISCPANEL = wxNewId();
+const long FFQPresetEdit::ID_MISCPAGE = wxNewId();
 const long FFQPresetEdit::ID_PAGES = wxNewId();
 const long FFQPresetEdit::ID_OKBUTTON = wxNewId();
 const long FFQPresetEdit::ID_CANCELBUTTON = wxNewId();
@@ -176,12 +194,15 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 	//(*Initialize(FFQPresetEdit)
 	wxStaticBoxSizer* SBS52;
 	wxFlexGridSizer* FlexGridSizer21;
+	wxFlexGridSizer* FlexGridSizer28;
+	wxStaticBoxSizer* SegmentingSizer;
 	wxFlexGridSizer* FlexGridSizer8;
 	wxFlexGridSizer* FlexGridSizer1;
 	wxStaticBoxSizer* SBS1;
 	wxFlexGridSizer* FlexGridSizer2;
 	wxFlexGridSizer* FlexGridSizer25;
 	wxFlexGridSizer* FlexGridSizer15;
+	wxFlexGridSizer* FlexGridSizer17;
 	wxFlexGridSizer* FlexGridSizer11;
 	wxFlexGridSizer* FlexGridSizer19;
 	wxStaticBoxSizer* SBS51;
@@ -197,6 +218,7 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 	wxFlexGridSizer* FlexGridSizer27;
 	wxFlexGridSizer* FlexGridSizer3;
 	wxFlexGridSizer* FlexGridSizer22;
+	wxFlexGridSizer* FlexGridSizer100;
 	wxFlexGridSizer* FlexGridSizer16;
 	wxFlexGridSizer* FlexGridSizer23;
 	wxFlexGridSizer* FlexGridSizer10;
@@ -322,7 +344,7 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 	VideoQualitySizer->Fit(QualityPage);
 	VideoQualitySizer->SetSizeHints(QualityPage);
 	KeyFramesPage = new wxPanel(VideoPages, ID_KEYFRAMESPAGE, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, _T("ID_KEYFRAMESPAGE"));
-	KeyFrameSizer = new wxFlexGridSizer(3, 1, 0, 0);
+	KeyFrameSizer = new wxFlexGridSizer(4, 1, 0, 0);
 	KeyFrameSizer->AddGrowableCol(0);
 	FlexGridSizer4 = new wxFlexGridSizer(4, 3, 0, 0);
 	KST1 = new wxStaticText(KeyFramesPage, wxID_ANY, _T("KfMin"), wxDefaultPosition, wxDefaultSize, 0, _T("wxID_ANY"));
@@ -393,6 +415,12 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 	ScSensInfo = new wxStaticText(KeyFramesPage, wxID_ANY, _T("ScsI"), wxDefaultPosition, wxDefaultSize, 0, _T("wxID_ANY"));
 	FlexGridSizer19->Add(ScSensInfo, 1, wxLEFT|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 10);
 	KeyFrameSizer->Add(FlexGridSizer19, 0, wxALL|wxEXPAND, 3);
+	FlexGridSizer17 = new wxFlexGridSizer(1, 1, 0, 0);
+	UseClosedGOP = new wxCheckBox(KeyFramesPage, ID_USECLOSEDGOP, _T("Cgop"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_USECLOSEDGOP"));
+	UseClosedGOP->SetValue(false);
+	UseClosedGOP->SetLabel(FFQS(SID_PRESET_USE_CLOSED_GOP));
+	FlexGridSizer17->Add(UseClosedGOP, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
+	KeyFrameSizer->Add(FlexGridSizer17, 1, wxALL|wxEXPAND, 3);
 	KeyFramesPage->SetSizer(KeyFrameSizer);
 	KeyFrameSizer->Fit(KeyFramesPage);
 	KeyFrameSizer->SetSizeHints(KeyFramesPage);
@@ -547,7 +575,7 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 	SSBS1->Add(FlexGridSizer6, 1, wxALL|wxEXPAND, 0);
 	FlexGridSizer24->Add(SSBS1, 1, wxALL|wxEXPAND, 5);
 	SSBS2 = new wxStaticBoxSizer(wxVERTICAL, SubtitlesPage, _T("Burn"));
-	FlexGridSizer8 = new wxFlexGridSizer(3, 2, 0, 0);
+	FlexGridSizer8 = new wxFlexGridSizer(4, 2, 0, 0);
 	FlexGridSizer8->AddGrowableCol(1);
 	ST53 = new wxStaticText(SubtitlesPage, ID_ST53, _T("St"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_ST53"));
 	ST53->SetLabel(FFQS(SID_PRESET_SUBTITLE_TYPE));
@@ -590,6 +618,11 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 	SubsSizer3->Fit(SubsSizePan);
 	SubsSizer3->SetSizeHints(SubsSizePan);
 	FlexGridSizer8->Add(SubsSizePan, 1, wxALL|wxEXPAND, 3);
+	SubsLab4 = new wxStaticText(SubtitlesPage, wxID_NONE, _T("Sce"), wxDefaultPosition, wxDefaultSize, 0, _T("wxID_NONE"));
+	SubsLab4->SetLabel(FFQS(SID_PRESET_SUBTITLE_CHARENC));
+	FlexGridSizer8->Add(SubsLab4, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
+	SubsCharEnc = new wxComboBox(SubtitlesPage, ID_SUBSCHARENC, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, 0, wxCB_SORT, wxDefaultValidator, _T("ID_SUBSCHARENC"));
+	FlexGridSizer8->Add(SubsCharEnc, 1, wxALL|wxEXPAND, 3);
 	SubsLab1 = new wxStaticText(SubtitlesPage, ID_SUBSLAB1, _T("Sc"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_SUBSLAB1"));
 	SubsLab1->SetLabel(FFQS(SID_PRESET_SUBTITLE_SCALE));
 	FlexGridSizer8->Add(SubsLab1, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
@@ -685,7 +718,7 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 	ThumbsPage->SetSizer(FlexGridSizer11);
 	FlexGridSizer11->Fit(ThumbsPage);
 	FlexGridSizer11->SetSizeHints(ThumbsPage);
-	MiscPage = new wxPanel(Pages, ID_MISCPANEL, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, _T("ID_MISCPANEL"));
+	MiscPage = new wxPanel(Pages, ID_MISCPAGE, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, _T("ID_MISCPAGE"));
 	FlexGridSizer14 = new wxFlexGridSizer(4, 1, 0, 0);
 	FlexGridSizer14->AddGrowableCol(0);
 	FourCCSizer = new wxStaticBoxSizer(wxHORIZONTAL, MiscPage, _T("Fcc"));
@@ -705,7 +738,7 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 	FOURCC_Aud->SetMaxLength(4);
 	FlexGridSizer15->Add(FOURCC_Aud, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 0);
 	FlexGridSizer15->Add(-1,-1,1, wxALL|wxEXPAND, 0);
-	FourCCSizer->Add(FlexGridSizer15, 1, wxALL|wxEXPAND, 3);
+	FourCCSizer->Add(FlexGridSizer15, 1, wxALL|wxEXPAND, 0);
 	FlexGridSizer14->Add(FourCCSizer, 1, wxALL|wxEXPAND, 5);
 	SBS52 = new wxStaticBoxSizer(wxHORIZONTAL, MiscPage, _T("CArgs"));
 	FlexGridSizer20 = new wxFlexGridSizer(2, 2, 0, 0);
@@ -724,11 +757,47 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 	FlexGridSizer20->Add(CustomArgs2, 1, wxALL|wxEXPAND, 3);
 	SBS52->Add(FlexGridSizer20, 1, wxALL|wxEXPAND, 0);
 	FlexGridSizer14->Add(SBS52, 1, wxALL|wxEXPAND, 5);
+	SegmentingSizer = new wxStaticBoxSizer(wxVERTICAL, MiscPage, _T("Seg"));
+	FlexGridSizer100 = new wxFlexGridSizer(1, 5, 0, 0);
+	FlexGridSizer100->AddGrowableCol(1);
+	SegST1 = new wxStaticText(MiscPage, wxID_ANY, _T("SLen"), wxDefaultPosition, wxDefaultSize, 0, _T("wxID_ANY"));
+	SegmentingSizer->GetStaticBox()->SetLabel(FFQS(SID_PRESET_SEGMENTING));
+	SegST1->SetLabel(FFQS(SID_PRESET_SEGMENTING_LEN));
+	FlexGridSizer100->Add(SegST1, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
+	SegmentLen = new wxTextCtrl(MiscPage, ID_SEGMENTLEN, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_SEGMENTLEN"));
+	FlexGridSizer100->Add(SegmentLen, 1, wxALL|wxEXPAND, 3);
+	SegmentLenType = new wxChoice(MiscPage, ID_SEGMENTLENTYPE, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator, _T("ID_SEGMENTLENTYPE"));
+	FlexGridSizer100->Add(SegmentLenType, 1, wxRIGHT|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 10);
+	SegST2 = new wxStaticText(MiscPage, wxID_ANY, _T("Lf"), wxDefaultPosition, wxDefaultSize, 0, _T("wxID_ANY"));
+	SegST2->SetLabel(FFQS(SID_PRESET_SEGMENTING_LIST_FILE));
+	FlexGridSizer100->Add(SegST2, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
+	SegmentListType = new wxChoice(MiscPage, ID_SEGMENTLISTTYPE, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator, _T("ID_SEGMENTLISTTYPE"));
+	FlexGridSizer100->Add(SegmentListType, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+	SegmentingSizer->Add(FlexGridSizer100, 1, wxALL|wxEXPAND, 0);
+	FlexGridSizer2 = new wxFlexGridSizer(1, 4, 0, 0);
+	SegmentResetTS = new wxCheckBox(MiscPage, ID_SEGMENTRESETTS, _T("RsTS"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_SEGMENTRESETTS"));
+	SegmentResetTS->SetValue(false);
+	SegmentResetTS->SetLabel(FFQS(SID_PRESET_SEGMENTING_RESET_TIME));
+	FlexGridSizer2->Add(SegmentResetTS, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+	SegmentIncTime = new wxCheckBox(MiscPage, ID_SEGMENTINCTIME, _T("Itc"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_SEGMENTINCTIME"));
+	SegmentIncTime->SetValue(false);
+	SegmentIncTime->SetLabel(FFQS(SID_PRESET_SEGMENTING_INCREMENT_TIME));
+	FlexGridSizer2->Add(SegmentIncTime, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+	SegmentStreaming = new wxCheckBox(MiscPage, ID_SEGMENTSTREAMING, _T("Str"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_SEGMENTSTREAMING"));
+	SegmentStreaming->SetValue(false);
+	SegmentStreaming->SetLabel(FFQS(SID_PRESET_SEGMENTING_STREAMING));
+	FlexGridSizer2->Add(SegmentStreaming, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+	SegmentBreakB = new wxCheckBox(MiscPage, ID_SEGMENTBREAKB, _T("Bnkf"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_SEGMENTBREAKB"));
+	SegmentBreakB->SetValue(false);
+	SegmentBreakB->SetLabel(FFQS(SID_PRESET_SEGMENTING_BREAK_BFRAMES));
+	FlexGridSizer2->Add(SegmentBreakB, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+	SegmentingSizer->Add(FlexGridSizer2, 1, wxALL|wxEXPAND, 0);
+	FlexGridSizer14->Add(SegmentingSizer, 1, wxALL|wxEXPAND, 5);
 	SBS51 = new wxStaticBoxSizer(wxVERTICAL, MiscPage, _T("Ot"));
-	FlexGridSizer2 = new wxFlexGridSizer(2, 1, 0, 0);
-	FlexGridSizer2->AddGrowableCol(0);
-	FlexGridSizer2->AddGrowableRow(0);
-	FlexGridSizer2->AddGrowableRow(1);
+	FlexGridSizer28 = new wxFlexGridSizer(2, 1, 0, 0);
+	FlexGridSizer28->AddGrowableCol(0);
+	FlexGridSizer28->AddGrowableRow(0);
+	FlexGridSizer28->AddGrowableRow(1);
 	FlexGridSizer26 = new wxFlexGridSizer(2, 2, 0, 0);
 	FlexGridSizer26->AddGrowableCol(1);
 	ST55 = new wxStaticText(MiscPage, ID_STATICTEXT13, _T("Ar"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT13"));
@@ -749,18 +818,18 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 	FlexGridSizer26->Add(ST56, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
 	OutputFormat = new wxComboBox(MiscPage, ID_OUTPUTFORMAT, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator, _T("ID_OUTPUTFORMAT"));
 	FlexGridSizer26->Add(OutputFormat, 1, wxALL|wxEXPAND, 3);
-	FlexGridSizer2->Add(FlexGridSizer26, 1, wxALL|wxEXPAND, 3);
+	FlexGridSizer28->Add(FlexGridSizer26, 1, wxALL|wxEXPAND, 0);
 	BoxSizer2 = new wxBoxSizer(wxVERTICAL);
 	MF_FastStart = new wxCheckBox(MiscPage, ID_MF_FASTSTART, _T("Fs"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_MF_FASTSTART"));
 	MF_FastStart->SetValue(false);
 	MF_FastStart->SetLabel(FFQS(SID_PRESET_MOVFLAGS_FASTSTART));
-	BoxSizer2->Add(MF_FastStart, 1, wxALL|wxALIGN_LEFT, 3);
+	BoxSizer2->Add(MF_FastStart, 1, wxLEFT|wxRIGHT|wxALIGN_LEFT, 3);
 	KeepFileTime = new wxCheckBox(MiscPage, ID_KEEPFILETIME, _T("Kft"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_KEEPFILETIME"));
 	KeepFileTime->SetValue(false);
 	KeepFileTime->SetLabel(FFQS(SID_PRESET_KEEP_FILETIME));
-	BoxSizer2->Add(KeepFileTime, 1, wxALL|wxALIGN_LEFT, 3);
-	FlexGridSizer2->Add(BoxSizer2, 1, wxALL|wxEXPAND, 3);
-	SBS51->Add(FlexGridSizer2, 1, wxALL|wxEXPAND, 0);
+	BoxSizer2->Add(KeepFileTime, 1, wxLEFT|wxRIGHT|wxALIGN_LEFT, 3);
+	FlexGridSizer28->Add(BoxSizer2, 1, wxALL|wxEXPAND, 0);
+	SBS51->Add(FlexGridSizer28, 1, wxALL|wxEXPAND, 0);
 	FlexGridSizer14->Add(SBS51, 1, wxALL|wxEXPAND, 5);
 	MiscPage->SetSizer(FlexGridSizer14);
 	FlexGridSizer14->Fit(MiscPage);
@@ -826,7 +895,7 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 	Connect(ID_FILTERUPBUTTON,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&FFQPresetEdit::OnButtonClick);
 	Connect(ID_FILTERDOWNBUTTON,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&FFQPresetEdit::OnButtonClick);
 	Connect(ID_FILTERPREVIEWBUTTON,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&FFQPresetEdit::OnButtonClick);
-	Connect(ID_METADATA,wxEVT_GRID_CELL_CHANGED,(wxObjectEventFunction)&FFQPresetEdit::OnMetaDataCellChange);
+	Connect(ID_METADATA,wxEVT_GRID_CELL_CHANGE,(wxObjectEventFunction)&FFQPresetEdit::OnMetaDataCellChange);
 	Connect(ID_PAGES,wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGED,(wxObjectEventFunction)&FFQPresetEdit::OnNotebookPageChanged);
 	Connect(ID_OKBUTTON,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&FFQPresetEdit::OnButtonClick);
 	Connect(ID_CANCELBUTTON,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&FFQPresetEdit::OnButtonClick);
@@ -901,21 +970,29 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 
     FilterEditor = NULL;
 
-	wxIntegerValidator<unsigned int> nVal;
+	m_UIntVal.SetRange(0, 99999);
+	m_UIntVal.SetStyle(wxNUM_VAL_ZERO_AS_BLANK);
 
-	nVal.SetRange(0, 99999);
-	nVal.SetStyle(wxNUM_VAL_ZERO_AS_BLANK);
+	KeyFrameMin->SetValidator(m_UIntVal);
+	KeyFrameMax->SetValidator(m_UIntVal);
 
-	KeyFrameMin->SetValidator(nVal);
-	KeyFrameMax->SetValidator(nVal);
+	AudioChannels->SetValidator(m_UIntVal);
 
-	AudioChannels->SetValidator(nVal);
-
-	SubsWidth->SetValidator(nVal);
-	SubsHeight->SetValidator(nVal);
+	SubsWidth->SetValidator(m_UIntVal);
+	SubsHeight->SetValidator(m_UIntVal);
+	wxString ce = FFQConfig::GetInstance()->subs_charenc;
+	while (ce.Len() > 0) SubsCharEnc->Append(GetToken(ce, SUBS_CHARENC_SEP));
 
 	MetaData->SetMaxSize(MetaData->GetSize());
 	FilterList->SetMaxSize(FilterList->GetSize());
+
+	SegmentLen->SetValidator(m_UIntVal);
+	as = FFQL()->GetStringArray(SID_PRESET_SEGMENTING_LEN_TYPE, 3);
+    for (unsigned int i = 0; i < 3; i++) SegmentLenType->Append(as[i]);
+    delete[] as;
+	as = FFQL()->GetStringArray(SID_PRESET_SEGMENTING_LIST_TYPE, 5);
+    for (unsigned int i = 0; i < 5; i++) SegmentListType->Append(as[i]);
+    delete[] as;
 
 }
 
@@ -988,6 +1065,7 @@ bool FFQPresetEdit::Execute(LPFFQ_PRESET preset)
     SceneChangeSens->SetValue(Str2Long(GetToken(s, ","), 40));
     KeyFrameMaxB->SetSelection(Str2Long(GetToken(s, ","), 0));
     KeyFrameMaxP->SetSelection(Str2Long(GetToken(s, ","), 0));
+    UseClosedGOP->SetValue(GetToken(s, ",") == STR_YES);
 
     //Other video settings
     VideoSync->SetSelection(0);
@@ -1046,6 +1124,7 @@ bool FFQPresetEdit::Execute(LPFFQ_PRESET preset)
     SubsSizeCust->SetValue(preset->subtitles.size_type == 2);
     SubsWidth->SetValue(preset->subtitles.width);
     SubsHeight->SetValue(preset->subtitles.height);
+    SubsCharEnc->SetValue(preset->subtitles.charenc);
 
 
     //Filter settings
@@ -1080,15 +1159,29 @@ bool FFQPresetEdit::Execute(LPFFQ_PRESET preset)
     OutputFormat->Clear();
     s = FFQCFG()->GetFFMpegFormats();
     int sel = -1;
+    m_CanSegment = false;
+    m_CanSSegment = false;
     while (s.Len() > 0)
     {
         t = GetLine(s, true);
-        if ( (preset->output_format.Len() > 0) && t.StartsWith(preset->output_format)) sel = OutputFormat->GetCount();
-        OutputFormat->Append(t);
+        if (t == "segment") m_CanSegment = true;
+        else if (t == "stream_segment") m_CanSSegment = true;
+        else
+        {
+            if ( (preset->output_format.Len() > 0) && t.StartsWith(preset->output_format + " ")) sel = OutputFormat->GetCount();
+            OutputFormat->Append(t);
+        }
     }
     if (sel >= 0) OutputFormat->SetSelection(sel);
     else OutputFormat->SetValue(preset->output_format);
 
+    SegmentLen->SetValue(wxString::Format("%u", preset->segmenting.length));
+    SegmentLenType->SetSelection(preset->segmenting.length_type);
+    SegmentListType->SetSelection(preset->segmenting.list_file);
+    SegmentBreakB->SetValue(preset->segmenting.break_bframes);
+    SegmentIncTime->SetValue(preset->segmenting.incremental_tc);
+    SegmentStreaming->SetValue(preset->segmenting.streaming);
+    SegmentResetTS->SetValue(preset->segmenting.reset_ts);
 
     //Thumbs settings
     ThumbsPanel->SetValues(preset->thumbs);
@@ -1143,7 +1236,8 @@ bool FFQPresetEdit::Execute(LPFFQ_PRESET preset)
         preset->key_frames += BOOLSTR(UseSceneChangeSens->GetValue()) + ",";
         preset->key_frames += ToStr(SceneChangeSens->GetValue()) + ",";
         preset->key_frames += ToStr(KeyFrameMaxB->GetSelection()) + ",";
-        preset->key_frames += ToStr(KeyFrameMaxP->GetSelection());
+        preset->key_frames += ToStr(KeyFrameMaxP->GetSelection()) + ",";
+        preset->key_frames += BOOLSTR(UseClosedGOP->GetValue());
 
         //Other video settings
         unsigned int sel = VideoSync->GetSelection();
@@ -1178,6 +1272,15 @@ bool FFQPresetEdit::Execute(LPFFQ_PRESET preset)
         else preset->subtitles.size_type = 0; //Default
         preset->subtitles.width = SubsWidth->GetValue();
         preset->subtitles.height = SubsHeight->GetValue();
+        preset->subtitles.charenc = SubsCharEnc->GetValue();//StringSelection();
+        if (SubsCharEnc->FindString(preset->subtitles.charenc) == wxNOT_FOUND)
+        {
+            SubsCharEnc->Append(preset->subtitles.charenc);
+            wxString ce = "";
+            for (unsigned int i = 0; i < SubsCharEnc->GetCount(); i++) ce += SubsCharEnc->GetString(i) + SUBS_CHARENC_SEP;
+            FFQConfig::GetInstance()->subs_charenc = ce.BeforeLast(SUBS_CHARENC_SEP);
+            FFQConfig::GetInstance()->SaveConfig();
+        }
 
         //Filters
         preset->filters.Clear();
@@ -1201,6 +1304,13 @@ bool FFQPresetEdit::Execute(LPFFQ_PRESET preset)
         preset->keep_filetime = KeepFileTime->GetValue();
         s = OutputFormat->GetValue();
         preset->output_format = GetToken(s, " ");
+        preset->segmenting.length = Str2Long(SegmentLen->GetValue(), 0);
+        preset->segmenting.length_type = SegmentLenType->GetSelection();
+        preset->segmenting.list_file = SegmentListType->GetSelection();
+        preset->segmenting.break_bframes = SegmentBreakB->GetValue();
+        preset->segmenting.incremental_tc = SegmentIncTime->GetValue();
+        preset->segmenting.streaming = SegmentStreaming->GetValue();
+        preset->segmenting.reset_ts = SegmentResetTS->GetValue();
 
     }
 
@@ -1539,6 +1649,8 @@ void FFQPresetEdit::UpdateControls(bool sizers)
             b = SubsBitmap->GetValue();
             EnableSizer(SubsSizer2, b);
             SubsLab1->Enable(b);
+            SubsLab4->Enable(!b);
+            SubsCharEnc->Enable(!b);
 
             b = true; //use "original_size" for text based subtitles
             EnableSizer(SubsSizer3, b);
@@ -1933,7 +2045,8 @@ void FFQPresetEdit::OnButtonClick(wxCommandEvent& event)
 
         //Confirm that the preset can be saved
         bool can_modify = true;
-        if (((FFQMain*)this->GetGrandParent())->IsPresetActive(m_Preset, &can_modify) && (!can_modify))
+
+        if (FFQMain::getInstance()->IsPresetActive(m_Preset, &can_modify) && (!can_modify))
         {
             ShowError(this, FFQS(SID_PRESET_MODIFY_ACTIVE_ERROR));
             return;

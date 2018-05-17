@@ -65,6 +65,8 @@ class FFQMain: public wxFrame
 {
     public:
 
+        static FFQMain* getInstance() { return m_Instance; }
+
         FFQMain(wxWindow* parent, wxWindowID id = -1);
         virtual ~FFQMain();
 
@@ -86,6 +88,8 @@ class FFQMain: public wxFrame
         static const long ID_DEBUG_ABOUT;
         wxMenu *m_DebugPopupMenu;
         #endif
+
+        static FFQMain* m_Instance;
 
         wxImageList *m_ImageList;
         wxArrayPtrVoid *m_PtrList;

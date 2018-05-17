@@ -233,6 +233,12 @@ bool FFQPresetMgr::EditPreset(LPFFQ_PRESET pst)
     //Create editor if needed
     if (m_Editor == NULL) m_Editor = new FFQPresetEdit(this);
 
+    #ifndef __WIN32__
+    //Select the correct parent to use when showing the editor
+    if (IsShown()) m_Editor->Reparent(this);
+    else m_Editor->Reparent(GetParent());
+    #endif
+
     //Execute the editor
     ok = m_Editor->Execute(pst);
 
@@ -280,6 +286,7 @@ bool FFQPresetMgr::Execute(wxChoice* forChoice)
     } catch (...) {}
 
     UpdateControls();
+    CenterOnParent();
     ShowModal();
 
     if (m_Changes > 0)

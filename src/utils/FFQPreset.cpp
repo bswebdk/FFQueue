@@ -62,6 +62,7 @@ const wxString PRESET_FOURCC = "fourcc";
 const wxString PRESET_THUMBS = "thumbs";
 const wxString PRESET_FILTER = "filter";
 const wxString PRESET_FINGER_PRINT = "finger_print";
+const wxString PRESET_SEGMENTING = "segmenting";
 
 
 //---------------------------------------------------------------------------------------
@@ -141,7 +142,8 @@ FFQ_PRESET::FFQ_PRESET(wxString &preset)
             if (Str2Long(subtitles.width, -1) < 0) subtitles.width.Clear(); //Validate bad-values (might have been set as codec)
             subtitles.height = GetToken(v, ',');
             if (Str2Long(subtitles.height, -1) < 0) subtitles.height.Clear(); //Same as width
-            subtitles.codec = v;
+            subtitles.codec = GetToken(v, ',');
+            subtitles.charenc = v;
 
         }
         else if (n == PRESET_FOURCC)
@@ -150,6 +152,19 @@ FFQ_PRESET::FFQ_PRESET(wxString &preset)
             //FourCC settings
             fourcc.vids = GetToken(v, ',');
             fourcc.auds = v;
+
+        }
+        else if (n == PRESET_SEGMENTING)
+        {
+
+            //Segmenting settings
+            segmenting.length = Str2Long(GetToken(v, ','), 0);
+            segmenting.length_type = Str2Long(GetToken(v, ','), 0);
+            segmenting.list_file = Str2Long(GetToken(v, ','), 0);
+            segmenting.break_bframes = GetToken(v, ',') == STR_YES;
+            segmenting.incremental_tc = GetToken(v, ',') == STR_YES;
+            segmenting.streaming = GetToken(v, ',') == STR_YES;
+            segmenting.reset_ts = GetToken(v, ',') == STR_YES;
 
         }
         else if (n == PRESET_THUMBS) thumbs = THUMBS_AND_TILES(v);
@@ -233,6 +248,10 @@ void FFQ_PRESET::Reset(bool new_preset)
     subtitles.width = "";
     subtitles.height = "";
     subtitles.codec = "copy";
+    subtitles.charenc = "";
+
+    //Nullify segmenting
+    memset(&segmenting, 0, sizeof(segmenting));
 
     thumbs = THUMBS_AND_TILES();
 
@@ -246,9 +265,9 @@ wxString FFQ_PRESET::SubsString()
     //Pack subtitle values to string
     wxString res;
     res.Printf(
-        "%s,%i,%i,%s,%s,%s",
+        "%s,%i,%i,%s,%s,%s,%s",
         BOOLSTR(subtitles.bitmap), (int)subtitles.size_type, (int)subtitles.scale,
-        subtitles.width, subtitles.height, subtitles.codec
+        subtitles.width, subtitles.height, subtitles.codec, subtitles.charenc
     );
 
     //Return the packed values
@@ -263,7 +282,7 @@ wxString FFQ_PRESET::ToString()
     //Pack the values of the preset to a string
 
     //Handy variables
-    wxString res, subs, tbs;
+    wxString res, subs, segm, tbs;
 
     //Used to test the preset for default values
     FFQ_PRESET default_pst = FFQ_PRESET();
@@ -272,6 +291,17 @@ wxString FFQ_PRESET::ToString()
     subs = SubsString();
     //If subtitle settings are default they are dismissed
     if (subs == default_pst.SubsString()) subs.Clear();
+
+    //Segmenting
+    segm.Printf("%u,%u,%u,%s,%s,%s,%s",
+        segmenting.length,
+        segmenting.length_type,
+        segmenting.list_file,
+        BOOLSTR(segmenting.break_bframes),
+        BOOLSTR(segmenting.incremental_tc),
+        BOOLSTR(segmenting.streaming),
+        BOOLSTR(segmenting.reset_ts)
+    );
 
     //Get the thumb settings
     tbs = thumbs.ToString();
@@ -310,6 +340,7 @@ wxString FFQ_PRESET::ToString()
     if (custom_args_2.Len() > 0) res += PRESET_CUSTOM_ARGS_2 + "=" + custom_args_2 + CRLF;
     if (finger_print.Len() > 0) res += PRESET_FINGER_PRINT + "=" + finger_print + CRLF;
     if (subs.Len() > 0) res += PRESET_SUBTITLE + "=" + subs + CRLF;
+    if (segm.Len() > 0) res += PRESET_SEGMENTING + "=" + segm + CRLF;
     if (fourcc.vids.Len() + fourcc.auds.Len() > 0) res += PRESET_FOURCC + "=" + fourcc.vids + "," + fourcc.auds + CRLF;
     if (tbs.Len() > 0) res += PRESET_THUMBS + "=" + tbs + CRLF;
 

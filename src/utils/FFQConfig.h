@@ -85,6 +85,7 @@ class FFQConfig
 	    wxString temp_path;
 	    wxString thumb_settings;
 	    wxString second_file_extensions;
+	    wxString subs_charenc;
 	    wxString window_position;
 	    wxString vidstab_settings;
 	    wxString saved_commands;

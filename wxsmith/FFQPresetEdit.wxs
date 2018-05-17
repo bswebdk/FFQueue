@@ -334,7 +334,7 @@
 											<object class="wxPanel" name="ID_KEYFRAMESPAGE" variable="KeyFramesPage" member="yes">
 												<object class="wxFlexGridSizer" variable="KeyFrameSizer" member="yes">
 													<cols>1</cols>
-													<rows>3</rows>
+													<rows>4</rows>
 													<growablecols>0</growablecols>
 													<object class="sizeritem">
 														<object class="wxFlexGridSizer" variable="FlexGridSizer4" member="no">
@@ -541,6 +541,24 @@
 														</object>
 														<flag>wxALL|wxEXPAND</flag>
 														<border>3</border>
+													</object>
+													<object class="sizeritem">
+														<object class="wxFlexGridSizer" variable="FlexGridSizer17" member="no">
+															<cols>1</cols>
+															<rows>1</rows>
+															<object class="sizeritem">
+																<object class="wxCheckBox" name="ID_USECLOSEDGOP" variable="UseClosedGOP" member="yes">
+																	<label>Cgop</label>
+																	<extra_code>UseClosedGOP-&gt;SetLabel(FFQS(SID__PRESET__USE__CLOSED__GOP));</extra_code>
+																</object>
+																<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+																<border>3</border>
+																<option>1</option>
+															</object>
+														</object>
+														<flag>wxALL|wxEXPAND</flag>
+														<border>3</border>
+														<option>1</option>
 													</object>
 												</object>
 											</object>
@@ -935,7 +953,7 @@
 										<object class="sizeritem">
 											<object class="wxFlexGridSizer" variable="FlexGridSizer8" member="no">
 												<cols>2</cols>
-												<rows>3</rows>
+												<rows>4</rows>
 												<growablecols>1</growablecols>
 												<object class="sizeritem">
 													<object class="wxStaticText" name="ID_ST53" variable="ST53" member="yes">
@@ -1047,6 +1065,23 @@
 																<option>1</option>
 															</object>
 														</object>
+													</object>
+													<flag>wxALL|wxEXPAND</flag>
+													<border>3</border>
+													<option>1</option>
+												</object>
+												<object class="sizeritem">
+													<object class="wxStaticText" name="wxID_NONE" variable="SubsLab4" member="yes">
+														<label>Sce</label>
+														<extra_code>SubsLab4-&gt;SetLabel(FFQS(SID__PRESET__SUBTITLE__CHARENC));</extra_code>
+													</object>
+													<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+													<border>3</border>
+													<option>1</option>
+												</object>
+												<object class="sizeritem">
+													<object class="wxComboBox" name="ID_SUBSCHARENC" variable="SubsCharEnc" member="yes">
+														<style>wxCB_SORT</style>
 													</object>
 													<flag>wxALL|wxEXPAND</flag>
 													<border>3</border>
@@ -1309,7 +1344,7 @@
 						<label>Tbs</label>
 					</object>
 					<object class="notebookpage">
-						<object class="wxPanel" name="ID_MISCPANEL" variable="MiscPage" member="yes">
+						<object class="wxPanel" name="ID_MISCPAGE" variable="MiscPage" member="yes">
 							<object class="wxFlexGridSizer" variable="FlexGridSizer14" member="no">
 								<cols>1</cols>
 								<rows>4</rows>
@@ -1363,7 +1398,6 @@
 												</object>
 											</object>
 											<flag>wxALL|wxEXPAND</flag>
-											<border>3</border>
 											<option>1</option>
 										</object>
 									</object>
@@ -1421,11 +1455,113 @@
 									<option>1</option>
 								</object>
 								<object class="sizeritem">
+									<object class="wxStaticBoxSizer" variable="SegmentingSizer" member="no">
+										<label>Seg</label>
+										<orient>wxVERTICAL</orient>
+										<object class="sizeritem">
+											<object class="wxFlexGridSizer" variable="FlexGridSizer100" member="no">
+												<cols>5</cols>
+												<rows>1</rows>
+												<growablecols>1</growablecols>
+												<object class="sizeritem">
+													<object class="wxStaticText" name="wxID_ANY" variable="SegST1" member="yes">
+														<label>SLen</label>
+														<extra_code>SegmentingSizer-&gt;GetStaticBox()-&gt;SetLabel(FFQS(SID__PRESET__SEGMENTING));&#x0A;SegST1-&gt;SetLabel(FFQS(SID__PRESET__SEGMENTING__LEN));</extra_code>
+													</object>
+													<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+													<border>3</border>
+													<option>1</option>
+												</object>
+												<object class="sizeritem">
+													<object class="wxTextCtrl" name="ID_SEGMENTLEN" variable="SegmentLen" member="yes" />
+													<flag>wxALL|wxEXPAND</flag>
+													<border>3</border>
+													<option>1</option>
+												</object>
+												<object class="sizeritem">
+													<object class="wxChoice" name="ID_SEGMENTLENTYPE" variable="SegmentLenType" member="yes">
+														<selection>0</selection>
+													</object>
+													<flag>wxRIGHT|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<border>10</border>
+													<option>1</option>
+												</object>
+												<object class="sizeritem">
+													<object class="wxStaticText" name="wxID_ANY" variable="SegST2" member="yes">
+														<label>Lf</label>
+														<extra_code>SegST2-&gt;SetLabel(FFQS(SID__PRESET__SEGMENTING__LIST__FILE));</extra_code>
+													</object>
+													<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+													<border>3</border>
+													<option>1</option>
+												</object>
+												<object class="sizeritem">
+													<object class="wxChoice" name="ID_SEGMENTLISTTYPE" variable="SegmentListType" member="yes">
+														<selection>0</selection>
+													</object>
+													<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<border>3</border>
+													<option>1</option>
+												</object>
+											</object>
+											<flag>wxALL|wxEXPAND</flag>
+											<option>1</option>
+										</object>
+										<object class="sizeritem">
+											<object class="wxFlexGridSizer" variable="FlexGridSizer2" member="no">
+												<cols>4</cols>
+												<rows>1</rows>
+												<object class="sizeritem">
+													<object class="wxCheckBox" name="ID_SEGMENTRESETTS" variable="SegmentResetTS" member="yes">
+														<label>RsTS</label>
+														<extra_code>SegmentResetTS-&gt;SetLabel(FFQS(SID__PRESET__SEGMENTING__RESET__TIME));</extra_code>
+													</object>
+													<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<border>5</border>
+													<option>1</option>
+												</object>
+												<object class="sizeritem">
+													<object class="wxCheckBox" name="ID_SEGMENTINCTIME" variable="SegmentIncTime" member="yes">
+														<label>Itc</label>
+														<extra_code>SegmentIncTime-&gt;SetLabel(FFQS(SID__PRESET__SEGMENTING__INCREMENT__TIME));</extra_code>
+													</object>
+													<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<border>3</border>
+													<option>1</option>
+												</object>
+												<object class="sizeritem">
+													<object class="wxCheckBox" name="ID_SEGMENTSTREAMING" variable="SegmentStreaming" member="yes">
+														<label>Str</label>
+														<extra_code>SegmentStreaming-&gt;SetLabel(FFQS(SID__PRESET__SEGMENTING__STREAMING));</extra_code>
+													</object>
+													<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<border>3</border>
+													<option>1</option>
+												</object>
+												<object class="sizeritem">
+													<object class="wxCheckBox" name="ID_SEGMENTBREAKB" variable="SegmentBreakB" member="yes">
+														<label>Bnkf</label>
+														<extra_code>SegmentBreakB-&gt;SetLabel(FFQS(SID__PRESET__SEGMENTING__BREAK__BFRAMES));</extra_code>
+													</object>
+													<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<border>3</border>
+													<option>1</option>
+												</object>
+											</object>
+											<flag>wxALL|wxEXPAND</flag>
+											<option>1</option>
+										</object>
+									</object>
+									<flag>wxALL|wxEXPAND</flag>
+									<border>5</border>
+									<option>1</option>
+								</object>
+								<object class="sizeritem">
 									<object class="wxStaticBoxSizer" variable="SBS51" member="no">
 										<label>Ot</label>
 										<orient>wxVERTICAL</orient>
 										<object class="sizeritem">
-											<object class="wxFlexGridSizer" variable="FlexGridSizer2" member="no">
+											<object class="wxFlexGridSizer" variable="FlexGridSizer28" member="no">
 												<cols>1</cols>
 												<rows>2</rows>
 												<growablecols>0</growablecols>
@@ -1477,7 +1613,6 @@
 														</object>
 													</object>
 													<flag>wxALL|wxEXPAND</flag>
-													<border>3</border>
 													<option>1</option>
 												</object>
 												<object class="sizeritem">
@@ -1488,7 +1623,7 @@
 																<label>Fs</label>
 																<extra_code>MF__FastStart-&gt;SetLabel(FFQS(SID__PRESET__MOVFLAGS__FASTSTART));</extra_code>
 															</object>
-															<flag>wxALL|wxALIGN_LEFT</flag>
+															<flag>wxLEFT|wxRIGHT|wxALIGN_LEFT</flag>
 															<border>3</border>
 															<option>1</option>
 														</object>
@@ -1497,13 +1632,12 @@
 																<label>Kft</label>
 																<extra_code>KeepFileTime-&gt;SetLabel(FFQS(SID__PRESET__KEEP__FILETIME));</extra_code>
 															</object>
-															<flag>wxALL|wxALIGN_LEFT</flag>
+															<flag>wxLEFT|wxRIGHT|wxALIGN_LEFT</flag>
 															<border>3</border>
 															<option>1</option>
 														</object>
 													</object>
 													<flag>wxALL|wxEXPAND</flag>
-													<border>3</border>
 													<option>1</option>
 												</object>
 											</object>

@@ -412,6 +412,7 @@ FFQLang::FFQLang(bool loadFile)
     SetString(SID_COMMON_OUTPUT,                "Output");
     SetString(SID_COMMON_DEFAULTS,              "Defaults");
     SetString(SID_COMMON_UPDATE,                "Update");
+    SetString(SID_COMMON_DRY_RUN,               "Dry run...");
 
 
     //Main frame UI strings
@@ -450,11 +451,13 @@ FFQLang::FFQLang(bool loadFile)
     SetString(SID_BATCHMAKE_TITLE,             "Batch make");
     SetString(SID_BATCHMAKE_DEFINE_PROPERTIES, "Please define properties for the jobs");
     SetString(SID_BATCHMAKE_SEL_CONTENT,       "Select the content to include:");
-    SetString(SID_BATCHMAKE_PREF_AUDIO_CODEC,  "Define preferred audio codec to include:");
+    SetString(SID_BATCHMAKE_PREF_AUDIO_CODEC,  "Preferred audio codec(s):");
     SetString(SID_BATCHMAKE_DEST_FORMAT,       "Destination format for output files:");
     SetString(SID_BATCHMAKE_SELECT_PRESET,     "Select a preset for the jobs:");
     SetString(SID_BATCHMAKE_MAKE_JOBS,         "Make jobs...");
     SetString(SID_BATCHMAKE_MAKE_JOBS_FOR,     "Make jobs for %u files");
+    SetString(SID_BATCHMAKE_MATCH_INVERSE,     "Inverse matching: Exclude matching streams");
+    SetString(SID_BATCHMAKE_PREF_SUBS_CODEC,   "Preferred subtitle codec(s) / language(s):");
 
     //Job editor UI strings
     SetString(SID_JOBEDIT_TITLE,                "Edit job");
@@ -637,6 +640,17 @@ FFQLang::FFQLang(bool loadFile)
     SetString(SID_PRESET_OUTPUT_FORMAT,                 "Output format:");
     SetString(SID_PRESET_MODIFY_ACTIVE_ERROR,           "This operation cannot be performed because a job depends on the preset!");
     SetString(SID_PRESET_KEEP_FILETIME,                 "Set file time of output file to file time of (first) input file");
+    SetString(SID_PRESET_SUBTITLE_CHARENC,              "Character encoding:");
+    SetString(SID_PRESET_SEGMENTING,                    "Segmenting");
+    SetString(SID_PRESET_SEGMENTING_LEN,                "Make segments with the length:");
+    SetString(SID_PRESET_SEGMENTING_LEN_TYPE,           "Seconds|Minutes|Hours");
+    SetString(SID_PRESET_SEGMENTING_LIST_FILE,          "List file:");
+    SetString(SID_PRESET_SEGMENTING_LIST_TYPE,          "None|Flat|CSV|FFconcat|M3U8");
+    SetString(SID_PRESET_SEGMENTING_BREAK_BFRAMES,      "Break non-keyframes");
+    SetString(SID_PRESET_SEGMENTING_INCREMENT_TIME,     "Incremental time code");
+    SetString(SID_PRESET_SEGMENTING_STREAMING,          "For streaming");
+    SetString(SID_PRESET_SEGMENTING_RESET_TIME,         "Reset timestamps");
+    SetString(SID_PRESET_USE_CLOSED_GOP,                "Closed GOP (Group Of Pictures)");
 
 
     //Video sync mode strings
@@ -1211,6 +1225,12 @@ FFQLang::FFQLang(bool loadFile)
     SetString(SID_DYNAUDNORM_BOUNDARY_MODE,         "Enable boundary mode");
     SetString(SID_DYNAUDNORM_COMPRESS_FACTOR,       "Compress factor");
 
+    //DeflickerFilterPanel
+    SetString(SID_DEFLICKER_USERFRIENDLY,           "%s=%u mode:%s");
+    SetString(SID_DEFLICKER_SAMPLE_COUNT,           "Filter size (frames)");
+    SetString(SID_DEFLICKER_AVG_MODE,               "Averaging mode");
+    SetString(SID_DEFLICKER_AVG_MODES,              "Arithmetic mean|Geometric mean|Harmonic mean|Quadratic mean|Cubic mean|Power mean|Median");
+
     //SetString(, "");
 
     //Filter display names
@@ -1260,6 +1280,7 @@ FFQLang::FFQLang(bool loadFile)
     SetString(SID_FILTER_NAME_BASE + ftPERSPECTIVE,         "Perspective");
     SetString(SID_FILTER_NAME_BASE + ftTRANSPOSE,           "Transpose");
     SetString(SID_FILTER_NAME_BASE + ftDYNAUDNORM,          "Normalization");
+    SetString(SID_FILTER_NAME_BASE + ftDEFLICKER,           "Remove flicker");
 
 
     m_Description = "FFQueue integrated English by Torben Bruchhaus";

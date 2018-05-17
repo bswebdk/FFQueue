@@ -50,8 +50,15 @@ const long FFQBatchMake::ID_ST1 = wxNewId();
 const long FFQBatchMake::ID_INCLUDEVIDEO = wxNewId();
 const long FFQBatchMake::ID_INCLUDEAUDIO = wxNewId();
 const long FFQBatchMake::ID_INCLUDESUBS = wxNewId();
+const long FFQBatchMake::ID_STATICLINE1 = wxNewId();
 const long FFQBatchMake::ID_ST2 = wxNewId();
 const long FFQBatchMake::ID_PREFAUDIO = wxNewId();
+const long FFQBatchMake::ID_AUDINVERSE = wxNewId();
+const long FFQBatchMake::ID_STATICLINE2 = wxNewId();
+const long FFQBatchMake::ID_ST6 = wxNewId();
+const long FFQBatchMake::ID_PREFSUBS = wxNewId();
+const long FFQBatchMake::ID_SUBSINVERSE = wxNewId();
+const long FFQBatchMake::ID_STATICLINE3 = wxNewId();
 const long FFQBatchMake::ID_ST3 = wxNewId();
 const long FFQBatchMake::ID_OUTPUTFORMAT = wxNewId();
 const long FFQBatchMake::ID_ST4 = wxNewId();
@@ -59,6 +66,7 @@ const long FFQBatchMake::ID_OUTPUTPATH = wxNewId();
 const long FFQBatchMake::ID_BROWSEBUTTON = wxNewId();
 const long FFQBatchMake::ID_ST5 = wxNewId();
 const long FFQBatchMake::ID_PRESET = wxNewId();
+const long FFQBatchMake::ID_DRYRUNBUTTON = wxNewId();
 const long FFQBatchMake::ID_MAKEBUTTON = wxNewId();
 const long FFQBatchMake::ID_CANCELBUTTON = wxNewId();
 const long FFQBatchMake::ID_GAUGE = wxNewId();
@@ -78,6 +86,7 @@ const wxString PATH_TOKEN = "\"*?*\""; //Just something that is forbidden in pat
 FFQBatchMake::FFQBatchMake(wxWindow* parent,wxWindowID id)
 {
 	//(*Initialize(FFQBatchMake)
+	wxFlexGridSizer* FlexGridSizer8;
 	wxFlexGridSizer* FlexGridSizer1;
 	wxStaticBoxSizer* SBS1;
 	wxFlexGridSizer* FlexGridSizer2;
@@ -99,7 +108,7 @@ FFQBatchMake::FFQBatchMake(wxWindow* parent,wxWindowID id)
 	FlexGridSizer2->Add(JobInfo, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	MainSizer->Add(FlexGridSizer2, 1, wxALL|wxEXPAND, 5);
 	SBS1 = new wxStaticBoxSizer(wxHORIZONTAL, this, _T("Props"));
-	FlexGridSizer3 = new wxFlexGridSizer(5, 1, 0, 0);
+	FlexGridSizer3 = new wxFlexGridSizer(11, 1, 0, 0);
 	FlexGridSizer3->AddGrowableCol(0);
 	FlexGridSizer4 = new wxFlexGridSizer(1, 4, 0, 0);
 	FlexGridSizer4->AddGrowableCol(1);
@@ -122,19 +131,43 @@ FFQBatchMake::FFQBatchMake(wxWindow* parent,wxWindowID id)
 	IncludeSubs->SetLabel(FFQS(SID_COMMON_SUBTITLES));
 	FlexGridSizer4->Add(IncludeSubs, 1, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 0);
 	FlexGridSizer3->Add(FlexGridSizer4, 1, wxALL|wxEXPAND, 3);
+	StaticLine1 = new wxStaticLine(this, ID_STATICLINE1, wxDefaultPosition, wxSize(10,-1), wxLI_HORIZONTAL, _T("ID_STATICLINE1"));
+	FlexGridSizer3->Add(StaticLine1, 1, wxTOP|wxBOTTOM|wxEXPAND, 3);
 	FlexGridSizer1 = new wxFlexGridSizer(1, 2, 0, 0);
 	FlexGridSizer1->AddGrowableCol(1);
 	ST2 = new wxStaticText(this, ID_ST2, _T("PrefA"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_ST2"));
 	ST2->SetLabel(FFQS(SID_BATCHMAKE_PREF_AUDIO_CODEC));
 	FlexGridSizer1->Add(ST2, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
 	PrefAudio = new wxComboBox(this, ID_PREFAUDIO, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator, _T("ID_PREFAUDIO"));
-	PrefAudio->SetSelection( PrefAudio->Append(_T("ac3")) );
-	PrefAudio->Append(_T("aac"));
+	PrefAudio->SetSelection( PrefAudio->Append(_T("aac")) );
 	PrefAudio->Append(_T("eac3"));
 	PrefAudio->Append(_T("mp2"));
 	PrefAudio->Append(_T("mp3"));
 	FlexGridSizer1->Add(PrefAudio, 1, wxALL|wxEXPAND, 0);
 	FlexGridSizer3->Add(FlexGridSizer1, 1, wxALL|wxEXPAND, 3);
+	AudInverse = new wxCheckBox(this, ID_AUDINVERSE, _T("AI"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_AUDINVERSE"));
+	AudInverse->SetValue(false);
+	AudInverse->SetLabel(FFQS(SID_BATCHMAKE_MATCH_INVERSE));
+	FlexGridSizer3->Add(AudInverse, 1, wxLEFT|wxRIGHT|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
+	StaticLine2 = new wxStaticLine(this, ID_STATICLINE2, wxDefaultPosition, wxSize(10,-1), wxLI_HORIZONTAL, _T("ID_STATICLINE2"));
+	FlexGridSizer3->Add(StaticLine2, 1, wxTOP|wxBOTTOM|wxEXPAND, 3);
+	FlexGridSizer8 = new wxFlexGridSizer(0, 2, 0, 0);
+	FlexGridSizer8->AddGrowableCol(1);
+	ST6 = new wxStaticText(this, ID_ST6, _T("PrefS"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_ST6"));
+	ST6->SetLabel(FFQS(SID_BATCHMAKE_PREF_SUBS_CODEC));
+	FlexGridSizer8->Add(ST6, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+	PrefSubs = new wxComboBox(this, ID_PREFSUBS, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator, _T("ID_PREFSUBS"));
+	PrefSubs->Append(_T("dvb_subtitle"));
+	PrefSubs->Append(_T("dan"));
+	PrefSubs->Append(_T("eng"));
+	FlexGridSizer8->Add(PrefSubs, 1, wxALL|wxEXPAND, 0);
+	FlexGridSizer3->Add(FlexGridSizer8, 1, wxALL|wxEXPAND, 3);
+	SubsInverse = new wxCheckBox(this, ID_SUBSINVERSE, _T("SI"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_SUBSINVERSE"));
+	SubsInverse->SetValue(false);
+	SubsInverse->SetLabel(FFQS(SID_BATCHMAKE_MATCH_INVERSE));
+	FlexGridSizer3->Add(SubsInverse, 1, wxLEFT|wxRIGHT|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
+	StaticLine3 = new wxStaticLine(this, ID_STATICLINE3, wxDefaultPosition, wxSize(10,-1), wxLI_HORIZONTAL, _T("ID_STATICLINE3"));
+	FlexGridSizer3->Add(StaticLine3, 1, wxTOP|wxBOTTOM|wxEXPAND, 3);
 	FlexGridSizer5 = new wxFlexGridSizer(1, 2, 0, 0);
 	FlexGridSizer5->AddGrowableCol(1);
 	ST3 = new wxStaticText(this, ID_ST3, _T("DestFmt"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_ST3"));
@@ -170,10 +203,13 @@ FFQBatchMake::FFQBatchMake(wxWindow* parent,wxWindowID id)
 	Preset = new FFQPresetPanel(this);
 	FlexGridSizer6->Add(Preset, 1, wxALL|wxEXPAND, 0);
 	FlexGridSizer3->Add(FlexGridSizer6, 1, wxALL|wxEXPAND, 3);
-	SBS1->Add(FlexGridSizer3, 1, wxALL|wxEXPAND, 0);
+	SBS1->Add(FlexGridSizer3, 1, wxTOP|wxEXPAND, 5);
 	MainSizer->Add(SBS1, 1, wxALL|wxEXPAND, 5);
 	BoxSizer1 = new wxBoxSizer(wxHORIZONTAL);
 	BoxSizer1->Add(-1,-1,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+	DryRunButton = new wxButton(this, ID_DRYRUNBUTTON, _T("D"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_DRYRUNBUTTON"));
+	DryRunButton->SetLabel(FFQS(SID_COMMON_DRY_RUN));
+	BoxSizer1->Add(DryRunButton, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	MakeButton = new wxButton(this, ID_MAKEBUTTON, _T("M"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_MAKEBUTTON"));
 	MakeButton->SetDefault();
 	MakeButton->SetLabel(FFQS(SID_BATCHMAKE_MAKE_JOBS));
@@ -189,7 +225,14 @@ FFQBatchMake::FFQBatchMake(wxWindow* parent,wxWindowID id)
 	MainSizer->Fit(this);
 	MainSizer->SetSizeHints(this);
 
+	Connect(ID_INCLUDEVIDEO,wxEVT_COMMAND_CHECKBOX_CLICKED,(wxObjectEventFunction)&FFQBatchMake::OnAction);
+	Connect(ID_INCLUDEAUDIO,wxEVT_COMMAND_CHECKBOX_CLICKED,(wxObjectEventFunction)&FFQBatchMake::OnAction);
+	Connect(ID_INCLUDESUBS,wxEVT_COMMAND_CHECKBOX_CLICKED,(wxObjectEventFunction)&FFQBatchMake::OnAction);
+	Connect(ID_PREFAUDIO,wxEVT_COMMAND_TEXT_UPDATED,(wxObjectEventFunction)&FFQBatchMake::OnAction);
+	Connect(ID_AUDINVERSE,wxEVT_COMMAND_CHECKBOX_CLICKED,(wxObjectEventFunction)&FFQBatchMake::OnAction);
+	Connect(ID_PREFSUBS,wxEVT_COMMAND_TEXT_UPDATED,(wxObjectEventFunction)&FFQBatchMake::OnAction);
 	Connect(ID_BROWSEBUTTON,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&FFQBatchMake::OnAction);
+	Connect(ID_DRYRUNBUTTON,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&FFQBatchMake::OnAction);
 	Connect(ID_MAKEBUTTON,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&FFQBatchMake::OnAction);
 	Connect(ID_CANCELBUTTON,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&FFQBatchMake::OnAction);
 	Connect(wxID_ANY,wxEVT_CLOSE_WINDOW,(wxObjectEventFunction)&FFQBatchMake::OnClose);
@@ -205,11 +248,15 @@ FFQBatchMake::FFQBatchMake(wxWindow* parent,wxWindowID id)
 
     SetTitle(FFQS(SID_BATCHMAKE_TITLE));
 
-    CancelButton->Enable(true);
-    MakeButton->Enable(true);
-
 	m_Files = NULL;
 	m_DoIdleTask = false;
+
+	/*wxString cc = FFQCFG()->GetFFMpegCodecs(ctAUDIO);
+	while (cc.Len() > 0)
+    {
+        wxString c = GetToken(cc, "\n", true);
+        PrefAudio->Append(GetToken(c, " ", false));
+    }*/
 
 }
 
@@ -255,8 +302,9 @@ bool FFQBatchMake::Execute()
 	//MainSizer->SetSizeHints(this);
 
     Gauge->SetValue(0);
-    CancelButton->Enable(true);
+    DryRunButton->Enable(true);
     MakeButton->Enable(true);
+    CancelButton->Enable(true);
     m_Making = false;
 
 	//Load options
@@ -265,13 +313,17 @@ bool FFQBatchMake::Execute()
     IncludeAudio->SetValue(GetToken(cfg, ',') == STR_YES);
     IncludeSubs->SetValue(GetToken(cfg, ',') == STR_YES);
     PrefAudio->SetValue(GetToken(cfg, ','));
+    Preset->FillAndSelect(GetToken(cfg, ','));
+    AudInverse->SetValue(GetToken(cfg, ',') == STR_YES);
+    PrefSubs->SetValue(GetToken(cfg, ','));
+    SubsInverse->SetValue(GetToken(cfg, ',') == STR_YES);
+
+    //Global preferences we can use here
     OutputFormat->SetValue(FFQCFG()->preferred_format);
     OutputPath->SetValue(FFQCFG()->preferred_path);
 
-    //Keep previous selection
-    Preset->FillAndSelect(cfg);
-
     CenterOnParent();
+    UpdateControls();
 
     bool res = (ShowModal() == wxOK);
 
@@ -317,7 +369,7 @@ void FFQBatchMake::OnAction(wxCommandEvent& event)
 
     }
 
-    else if (evtId == ID_MAKEBUTTON)
+    else if ((evtId == ID_MAKEBUTTON) || (evtId == ID_DRYRUNBUTTON))
     {
 
         if ((!IncludeVideo->GetValue()) && (!IncludeAudio->GetValue()) && (!IncludeSubs->GetValue()))
@@ -340,9 +392,11 @@ void FFQBatchMake::OnAction(wxCommandEvent& event)
         }
 
         MakeButton->Enable(false);
-        MakeJobs();
+        DryRunButton->Enable(false);
 
-        if (m_Abort) EndModal(wxCANCEL);
+        MakeJobs(evtId == ID_DRYRUNBUTTON);
+
+        if (m_Abort || (evtId == ID_DRYRUNBUTTON)) EndModal(wxCANCEL);
 
         else
         {
@@ -359,6 +413,8 @@ void FFQBatchMake::OnAction(wxCommandEvent& event)
         else EndModal(wxCANCEL);
 
     }
+
+    UpdateControls();
 
 }
 
@@ -381,6 +437,138 @@ bool FFQBatchMake::FindJobForDest(wxString dest)
 
 //---------------------------------------------------------------------------------------
 
+/*wxString FFQBatchMake::GetStreamMapping(FFProbeInfoParser *pip, unsigned int file_id)
+{
+
+    //Create a stream mapping for the file
+    wxString res = "";
+
+    for (unsigned int sidx = 0; sidx < pip->GetStreamCount(); sidx++)
+    {
+
+        LPFFPROBE_STREAM_INFO si = pip->GetStreamInfo(sidx);
+        STREAM_MAPPING smap;
+        smap.checked = HasStreamFromParser(si);
+        smap.codec_type = si->codec_type;
+        smap.file_id = file_id;
+        smap.stream_id = si->index;
+        res += smap.ToString() + STREAM_MAPPING_SEPERATOR;
+
+    }
+
+    return res.Len() > 0 ? res.BeforeLast(STREAM_MAPPING_SEPERATOR) : "";
+
+}*/
+
+//---------------------------------------------------------------------------------------
+
+void FFQBatchMake::GetStreamsFromParser(FFProbeInfoParser *pip, unsigned int file_id, wxString &stream_map)
+{
+
+    //Extract the streams from "pip" which should be included in the job
+    unsigned int used = 0;
+
+    for (unsigned int sidx = 0; sidx < pip->GetStreamCount(); sidx++)
+    {
+
+        LPFFPROBE_STREAM_INFO si = pip->GetStreamInfo(sidx);
+
+        STREAM_MAPPING smap;
+        smap.codec_type = si->codec_type;
+        smap.file_id    = file_id;
+        smap.stream_id  = si->index;
+        smap.checked    = false;
+
+        if (IncludeVideo->GetValue() && (si->codec_type == CODEC_TYPE_VIDEO) && (m_VidIdx < 0))
+        {
+
+            m_VidIdx = m_StreamInf.size();
+            m_StreamInf.push_back(si);
+            smap.checked = true;
+            used++;
+
+        }
+
+        else if (IncludeAudio->GetValue() && (si->codec_type == CODEC_TYPE_AUDIO) && IncludeAudioStream(si))
+        {
+
+            if (m_AudIdx < 0) m_AudIdx = m_StreamInf.size();
+            m_StreamInf.push_back(si);
+            smap.checked = true;
+            used++;
+
+        }
+
+        else if (IncludeSubs->GetValue() && (si->codec_type == CODEC_TYPE_SUBTITLE) && (!si->IsTeleText()) && IncludeSubtitleStream(si))
+        {
+
+            if (m_SubsIdx < 0) m_SubsIdx = m_StreamInf.size();
+            m_StreamInf.push_back(si);
+            smap.checked = true;
+            used++;
+
+        }
+
+        stream_map += smap.ToString() + STREAM_MAPPING_SEPERATOR;
+
+    }
+
+    //If nothing was used, clear stream map
+    if (used == 0) stream_map = "";
+
+    //Else remove last separator
+    else stream_map = stream_map.BeforeLast(STREAM_MAPPING_SEPERATOR);
+
+}
+
+//---------------------------------------------------------------------------------------
+
+/*bool FFQBatchMake::HasStreamFromParser(LPFFPROBE_STREAM_INFO si)
+{
+    for (std::vector<LPFFPROBE_STREAM_INFO>::const_iterator ite = m_StreamInf.begin(); ite != m_StreamInf.end(); ite++)
+        if (*ite == si) return true;
+    return false;
+}*/
+
+//---------------------------------------------------------------------------------------
+
+bool FFQBatchMake::IncludeAudioStream(LPFFPROBE_STREAM_INFO si)
+{
+
+    //Test is an audio stream can be included
+    if (m_FindAud.Len() == 0) return true; //!AudInverse->GetValue();
+    bool match = false;
+    wxString s = m_FindAud, t;
+    while ((!match) && (s.Len() > 0))
+    {
+        t = GetToken(s, " ");
+        match = (si->codec_name.Lower().Find(t) >= 0) || (si->codec_long_name.Lower().Find(t) >= 0);
+    }
+    if (AudInverse->GetValue()) return !match;
+    return match;
+
+}
+
+//---------------------------------------------------------------------------------------
+
+bool FFQBatchMake::IncludeSubtitleStream(LPFFPROBE_STREAM_INFO si)
+{
+    //Test if a subtitle stream can be included
+    if (m_FindSubs.Len() == 0) return true;
+    bool match = false;
+    FFQ_NVP_LIST *nvp = si->items->Find("tag:language", false);
+    wxString v = nvp ? nvp->value : "", s = m_FindSubs, t;
+    while ((!match) && (s.Len() > 0))
+    {
+        t = GetToken(s, " ");
+        match = ((v.Lower().Find(t) >= 0) || (si->codec_name.Lower().Find(t) >= 0) || (si->codec_long_name.Lower().Find(t) >= 0));
+    }
+    if (SubsInverse->GetValue()) return !match;
+    return match;
+}
+
+//---------------------------------------------------------------------------------------
+
 void FFQBatchMake::LogLine(wxString line, unsigned int color)
 {
 
@@ -391,15 +579,17 @@ void FFQBatchMake::LogLine(wxString line, unsigned int color)
 
 //---------------------------------------------------------------------------------------
 
-bool StreamInfoMatch(LPFFPROBE_STREAM_INFO si, wxString &findStr)
+/*bool StreamInfoMatch(LPFFPROBE_STREAM_INFO si, wxString &findStr, bool inverse = false)
 {
     if (findStr.Len() == 0) return true;
-    return (si->codec_name.Lower().Find(findStr) >= 0) || (si->codec_long_name.Lower().Find(findStr) >= 0);
-}
+    bool match = (si->codec_name.Lower().Find(findStr) >= 0) || (si->codec_long_name.Lower().Find(findStr) >= 0);
+    if (inverse) return !match;
+    return match;
+}*/
 
 //---------------------------------------------------------------------------------------
 
-LPFFPROBE_STREAM_INFO FindStreamInfo(FFProbeInfoParser *PIPs, CODEC_TYPE ct, wxString findStr = "")
+/*LPFFPROBE_STREAM_INFO FindStreamInfo(FFProbeInfoParser *PIPs, CODEC_TYPE ct, wxString findStr = "", wxVector<LPFFPROBE_STREAM_INFO> *dest = NULL)
 {
 
     findStr.LowerCase(); //Always search for lowercase string
@@ -428,11 +618,11 @@ LPFFPROBE_STREAM_INFO FindStreamInfo(FFProbeInfoParser *PIPs, CODEC_TYPE ct, wxS
     }
 
     return NULL;
-}
+}*/
 
 //---------------------------------------------------------------------------------------
 
-wxString MakeStreamMapping(LPFFPROBE_STREAM_INFO sinf, int fileID, bool chk)
+/*wxString MakeStreamMapping(LPFFPROBE_STREAM_INFO sinf, int fileID, bool chk)
 {
     STREAM_MAPPING smap;
     smap.checked = chk;
@@ -440,35 +630,36 @@ wxString MakeStreamMapping(LPFFPROBE_STREAM_INFO sinf, int fileID, bool chk)
     smap.file_id = fileID;
     smap.stream_id = sinf->index;
     return smap.ToString();
-}
+}*/
 
 //---------------------------------------------------------------------------------------
 
-void FFQBatchMake::MakeJobs()
+void FFQBatchMake::MakeJobs(bool dry_run)
 {
 
     m_Making = true;
     m_Abort = false;
 
+    //Grab the search string used for audio streams
+    m_FindAud = StrTrim(PrefAudio->GetValue());
+    m_FindAud.LowerCase();
+    m_FindSubs = StrTrim(PrefSubs->GetValue());
+    m_FindSubs.LowerCase();
+
     LPFFQ_JOB job;
     FFQ_INPUT_FILE in1, in2;
-    STREAM_MAPPING smap;
-    LPFFPROBE_STREAM_INFO v_inf, a_inf, s_inf, si;
+    //STREAM_MAPPING smap;
+    //LPFFPROBE_STREAM_INFO v_inf, a_inf, s_inf, si;
 
     unsigned int fileCount = m_Files->Count();
     wxString cur, sub_path;
     long idx, pt_pos;
     LPFFQ_PRESET preset = Preset->GetSelectedPreset();
-    bool vid = IncludeVideo->GetValue(), aud = IncludeAudio->GetValue(), sub = IncludeSubs->GetValue();
+    //bool vid = IncludeVideo->GetValue(), aud = IncludeAudio->GetValue(), sub = IncludeSubs->GetValue();
 
     FFQMain* main = (FFQMain*)GetParent();
     FFQProcess* proc = new FFQProcess();
     //FFProbeInfoParser* pip = new FFProbeInfoParser();
-
-    //For convenient creation of output names
-    //wxString cfg_fmt = FFQCFG()->preferred_format, cfg_path = FFQCFG()->preferred_path;
-    //FFQCFG()->preferred_format = StrTrim(OutputFormat->GetValue());
-    //FFQCFG()->preferred_path = StrTrim(OutputPath->GetValue());
 
     for (unsigned int i = 0; i < fileCount; i++)
     {
@@ -516,7 +707,87 @@ void FFQBatchMake::MakeJobs()
                 if (m_PIPS[1].GetStreamCount() == 0) in2.path = ""; //File 2 was invalid
             }
 
-            v_inf = vid ? FindStreamInfo(m_PIPS, ctVIDEO) : NULL;
+            //Clear values before searching for streams
+            m_StreamInf.clear();
+		    m_VidIdx = -1;
+		    m_AudIdx = -1;
+		    m_SubsIdx = -1;
+
+            //Find streams and create a stream map
+            wxString smap1, smap2;
+            GetStreamsFromParser(&m_PIPS[0], 1, smap1);
+            GetStreamsFromParser(&m_PIPS[1], 2, smap2);
+
+            if ((m_VidIdx < 0) && IncludeVideo->GetValue()) LogLine("\t" + FFQSF(SID_LOG_CONTENT_NOT_FOUND, FFQS(SID_COMMON_VIDEO)), COLOR_RED);
+            else if ((m_AudIdx < 0) && IncludeAudio->GetValue()) LogLine("\t" + FFQSF(SID_LOG_CONTENT_NOT_FOUND, FFQS(SID_COMMON_AUDIO)), COLOR_RED);
+            else if ((m_SubsIdx < 0) && IncludeSubs->GetValue()) LogLine("\t" + FFQSF(SID_LOG_CONTENT_NOT_FOUND, FFQS(SID_COMMON_SUBTITLES)), COLOR_RED);
+            else
+            {
+
+                //Initialize default command line
+                job->cmd_line = CMD_DEFAULT;
+
+                //Get values for in1
+                m_PIPS[0].GetDuration(in1.duration);
+                m_PIPS[0].GetVideoDimension(in1.width, in1.height);
+
+                //Get values for in2 - if possible
+                if (smap2.Len() > 0)
+                {
+                    m_PIPS[1].GetDuration(in2.duration);
+                    m_PIPS[1].GetVideoDimension(in2.width, in2.height);
+                }
+
+                //Name of output file
+                job->out = StrTrim(OutputPath->GetValue());
+                if (job->out.Len() == 0)
+                {
+                    //No output path = use source path
+                    job->out = in1.path.BeforeLast('.') + "." + StrTrim(OutputFormat->GetValue());
+                }
+                else
+                {
+                    //Add sub_path to output path
+                    if (job->out[job->out.Len() - 1] != wxFileName::GetPathSeparator()) job->out += wxFileName::GetPathSeparator();
+                    job->out += sub_path.BeforeLast('.') + "." + StrTrim(OutputFormat->GetValue());
+                }
+
+                //Make sure that source and destination are not equal
+                if (in1.path.Lower() == job->out.Lower()) LogLine("\t" + FFQSF(SID_SOURCE_EQUALS_OUTPUT, job->out), COLOR_RED);
+
+                //Make sure that no jobs has already been created with the destination
+                else if (FindJobForDest(job->out)) LogLine("\t" + FFQSF(SID_DUPLICATE_JOB_FOR_OUTPUT, job->out), COLOR_RED);
+
+                else
+                {
+
+                    //Preset to use
+                    job->preset_id = preset->preset_id;
+
+                    //Print included streams
+                    for (std::vector<LPFFPROBE_STREAM_INFO>::const_iterator ite = m_StreamInf.begin(); ite != m_StreamInf.end(); ite++)
+                        LogLine("\t" + (*ite)->codec_type + " : " + (*ite)->codec_long_name, COLOR_GREEN);
+
+                    //All streams has to be implemented to prevent job-editor from sorting streams wrong
+                    job->stream_map = smap1;
+                    if (smap2.Len() > 0) job->stream_map += STREAM_MAPPING_SEPERATOR + smap2;
+
+                    //Add input files
+                    job->inputs.Add(in1.ToString());
+                    if (smap2.Len() > 0) job->inputs.Add(in2.ToString());
+
+                    if (!dry_run)
+                    {
+                        //Add to list and set pointer to NULL to prevent deletion
+                        m_Jobs.push_back(job);
+                        job = NULL;
+                    }
+
+                }
+
+            }
+
+            /*v_inf = vid ? FindStreamInfo(m_PIPS, ctVIDEO) : NULL;
             a_inf = aud ? FindStreamInfo(m_PIPS, ctAUDIO, StrTrim(PrefAudio->GetValue())) : NULL;
             bool pref_aud = (a_inf != NULL);
             if ((!pref_aud) && aud) a_inf = FindStreamInfo(m_PIPS, ctAUDIO); //Take first stream
@@ -607,9 +878,11 @@ void FFQBatchMake::MakeJobs()
                     job = NULL;
 
                 }
-            }
 
-            if (job != NULL) delete job; //Free unused pointer
+            }*/
+
+            //Free unused pointer
+            if (job != NULL) delete job;
 
         }
 
@@ -649,18 +922,41 @@ void FFQBatchMake::MakeJobs()
 void FFQBatchMake::SaveConfig()
 {
     LPFFQ_PRESET pst = Preset->GetSelectedPreset();
-    wxString s;
+
+    wxString s, pa = StrTrim(PrefAudio->GetValue()), ps = StrTrim(PrefSubs->GetValue());
+    pa.Replace(",", " ");
+    ps.Replace(",", " ");
     s.Printf(
-        "%s,%s,%s,%s,%s",
+        "%s,%s,%s,%s,%s,%s,%s,%s",
         BOOLSTR(IncludeVideo->GetValue()),
         BOOLSTR(IncludeAudio->GetValue()),
         BOOLSTR(IncludeSubs->GetValue()),
-        StrTrim(PrefAudio->GetValue()),
-        pst->preset_id.ToString()
+        pa,
+        pst->preset_id.ToString(),
+        BOOLSTR(AudInverse->GetValue()),
+        ps,
+        BOOLSTR(SubsInverse->GetValue())
     );
     bool save = FFQCFG()->batch_config != s;
     FFQCFG()->batch_config = s;
     FFQCFG()->SetPreferredAndSave(StrTrim(OutputFormat->GetValue()), StrTrim(OutputPath->GetValue()), save);
+}
+
+//---------------------------------------------------------------------------------------
+
+void FFQBatchMake::UpdateControls()
+{
+
+    //Enable audio controls
+    ST2->Enable(IncludeAudio->GetValue());
+    PrefAudio->Enable(IncludeAudio->GetValue());
+    AudInverse->Enable(IncludeAudio->GetValue() && (StrTrim(PrefAudio->GetValue()).Len() > 0));
+
+    //Enable subtitle controls
+    ST6->Enable(IncludeSubs->GetValue());
+    PrefSubs->Enable(IncludeSubs->GetValue());
+    SubsInverse->Enable(IncludeSubs->GetValue() && (StrTrim(PrefSubs->GetValue()).Len() > 0));
+
 }
 
 //---------------------------------------------------------------------------------------

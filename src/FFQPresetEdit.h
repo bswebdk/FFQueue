@@ -82,15 +82,18 @@ class FFQPresetEdit: public wxDialog
 		wxStaticText* KST8;
 		wxStaticText* QMaxVal;
 		wxFlexGridSizer* VideoOtherSizer;
+		wxTextCtrl* SegmentLen;
 		wxStaticText* CST1;
 		wxStaticBoxSizer* SSBS2;
 		wxButton* RemoveFilterButton;
 		wxPanel* SubtitlesPage;
 		wxStaticText* SubsLab1;
+		wxCheckBox* SegmentStreaming;
 		wxFlexGridSizer* VidSizer1;
 		wxSlider* QMax;
 		wxStaticText* AST1;
 		wxFlexGridSizer* KeyFrameSizer;
+		wxCheckBox* UseClosedGOP;
 		wxStaticText* FilterTip;
 		wxStaticText* OST1;
 		wxTextCtrl* CustomArgs1;
@@ -104,8 +107,10 @@ class FFQPresetEdit: public wxDialog
 		wxFlexGridSizer* SubsSizer2;
 		wxStaticText* OST7;
 		wxStaticText* KST3;
+		wxCheckBox* SegmentIncTime;
 		wxTextCtrl* KeyFrameMin;
 		wxTextCtrl* KeyFrameMax;
+		wxChoice* SegmentListType;
 		wxFileDialog* OpenFileDlg;
 		wxTextCtrl* SubsWidth;
 		wxChoice* AudioCodec;
@@ -124,6 +129,7 @@ class FFQPresetEdit: public wxDialog
 		wxTextCtrl* FOURCC_Aud;
 		wxCheckBox* UseQDiff;
 		FFQBitRatePanel* VideoBitRate;
+		wxStaticText* SubsLab4;
 		wxStaticText* OST6;
 		wxPanel* FilterPage;
 		wxChoice* VideoCodec;
@@ -137,6 +143,7 @@ class FFQPresetEdit: public wxDialog
 		wxStaticText* QST1;
 		wxStaticText* OST4;
 		wxComboBox* SpeedPreset;
+		wxChoice* SegmentLenType;
 		wxFlexGridSizer* AudioQScaleSizer;
 		wxFlexGridSizer* VideoBitRateSizer;
 		wxStaticText* AudioQScaleVal;
@@ -150,6 +157,7 @@ class FFQPresetEdit: public wxDialog
 		wxSlider* VideoQScale;
 		wxPanel* MiscPage;
 		wxStaticText* KST6;
+		wxCheckBox* SegmentBreakB;
 		wxPanel* AudioPage;
 		wxStaticText* KST7;
 		wxStaticText* ST56;
@@ -157,6 +165,7 @@ class FFQPresetEdit: public wxDialog
 		wxFlexGridSizer* VideoQualitySizer;
 		wxStaticText* ST51;
 		wxPanel* QualityPage;
+		wxStaticText* SegST2;
 		wxStaticText* KST5;
 		wxTextCtrl* PresetName;
 		wxTextCtrl* AudioChannels;
@@ -166,6 +175,7 @@ class FFQPresetEdit: public wxDialog
 		wxCheckBox* TwoPass;
 		wxChoice* VideoSync;
 		wxCheckBox* TwoPassNull;
+		wxComboBox* SubsCharEnc;
 		wxSlider* MinConstRate;
 		wxSlider* ConstRate;
 		wxFlexGridSizer* SubsSizer3;
@@ -177,8 +187,10 @@ class FFQPresetEdit: public wxDialog
 		wxMenu AddFilterMenu;
 		wxStaticText* OST3;
 		wxStaticText* AST2;
+		wxStaticText* SegST1;
 		wxStaticBoxSizer* FourCCSizer;
 		wxButton* EditFilterButton;
+		wxCheckBox* SegmentResetTS;
 		wxPanel* VideoPage;
 		wxStaticText* VideoQScaleVal;
 		wxStaticText* ST52;
@@ -245,6 +257,7 @@ class FFQPresetEdit: public wxDialog
 		static const long ID_MOTIONESTIMATION;
 		static const long ID_USESCENECHANGESENSITIVITY;
 		static const long ID_SCENECHANGESENS;
+		static const long ID_USECLOSEDGOP;
 		static const long ID_KEYFRAMESPAGE;
 		static const long ID_OST3;
 		static const long ID_VIDEOSYNC;
@@ -286,6 +299,8 @@ class FFQPresetEdit: public wxDialog
 		static const long ID_STATICTEXT11;
 		static const long ID_SUBSHEIGHT;
 		static const long ID_SUBSSIZEPAN;
+		static const long wxID_NONE;
+		static const long ID_SUBSCHARENC;
 		static const long ID_SUBSLAB1;
 		static const long ID_SUBSSCALE;
 		static const long ID_STATICTEXT8;
@@ -312,12 +327,19 @@ class FFQPresetEdit: public wxDialog
 		static const long ID_CUSTOMARGS;
 		static const long ID_CST2;
 		static const long ID_CUSTOMARGS2;
+		static const long ID_SEGMENTLEN;
+		static const long ID_SEGMENTLENTYPE;
+		static const long ID_SEGMENTLISTTYPE;
+		static const long ID_SEGMENTRESETTS;
+		static const long ID_SEGMENTINCTIME;
+		static const long ID_SEGMENTSTREAMING;
+		static const long ID_SEGMENTBREAKB;
 		static const long ID_STATICTEXT13;
 		static const long ID_ASPECT;
 		static const long ID_OUTPUTFORMAT;
 		static const long ID_MF_FASTSTART;
 		static const long ID_KEEPFILETIME;
-		static const long ID_MISCPANEL;
+		static const long ID_MISCPAGE;
 		static const long ID_PAGES;
 		static const long ID_OKBUTTON;
 		static const long ID_CANCELBUTTON;
@@ -339,8 +361,10 @@ class FFQPresetEdit: public wxDialog
 		FFQFilterEdit *FilterEditor;
 		wxString m_MetaData, m_PreviewFile;
 		CODEC_INFO m_VidCodecInfo, m_AudCodecInfo;
-		bool m_ShowPreviewDlg;
+		bool m_ShowPreviewDlg, m_CanSegment, m_CanSSegment;
 		LPFFQ_PRESET m_Preset;
+	    wxIntegerValidator<unsigned int> m_UIntVal;
+
 
 
 		bool EditFilter(LPFFMPEG_FILTER filter);

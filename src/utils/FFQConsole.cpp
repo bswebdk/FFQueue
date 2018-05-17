@@ -590,7 +590,7 @@ bool FFQConsole::IsLineStatistics(wxString Line, TIME_VALUE &Time, unsigned int 
     //frame=  214 fps= 53 q=27.0 size=    5538kB time=00:00:07.87 bitrate=5762.6kbits/s dup=28 drop=0
 
     //Following is probably redundant - but just in case..
-    if ((Line.Find("size=") < 0) || (Line.Find("bitrate=") < 0)) return false;
+    if ((Line.Find("size=") < 0) || (Line.Find("bitrate=") < 0) || Line.StartsWith("[") /*(Line.Find("no timecode metadata") > 0)*/) return false;
 
     int pos;
 

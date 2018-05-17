@@ -63,6 +63,7 @@
 #include "Perspective.h"
 #include "Transpose.h"
 #include "DynAudNorm.h"
+#include "Deflicker.h"
 
 FilterBasePanel::FilterBasePanel(wxWindow* parent) : wxPanel(parent)
 {
@@ -143,6 +144,7 @@ FilterBasePanel* FilterBasePanel::GetFilterPanel(wxWindow* parent, FILTER_TYPE f
         case (ftPERSPECTIVE) : return new Perspective(parent); break;
         case (ftTRANSPOSE) : return new Transpose(parent); break;
         case (ftDYNAUDNORM) : return new DynAudNorm(parent); break;
+        case (ftDEFLICKER) : return new Deflicker(parent); break;
         default: return NULL;
     }
 
