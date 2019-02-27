@@ -28,14 +28,14 @@
 
 #ifndef WX_PRECOMP
 	//(*HeadersPCH(FFQConfigEdit)
+	#include <wx/button.h>
 	#include <wx/checklst.h>
 	#include <wx/dialog.h>
-	#include <wx/sizer.h>
-	#include <wx/button.h>
 	#include <wx/dirdlg.h>
-	#include <wx/radiobut.h>
 	#include <wx/filedlg.h>
 	#include <wx/panel.h>
+	#include <wx/radiobut.h>
+	#include <wx/sizer.h>
 	#include <wx/textctrl.h>
 	//*)
 #endif
@@ -51,24 +51,24 @@ class FFQConfigEdit: public wxDialog
 		bool Execute();
 
 		//(*Declarations(FFQConfigEdit)
-		wxButton* CancelButton;
-		wxCheckListBox* CheckList;
-		wxRadioButton* TP_Custom;
+		wxButton* BrowseCustPlayer;
 		wxButton* BrowseFFMpeg;
-		wxFileDialog* OpenDialog;
+		wxButton* BrowseTemp;
+		wxButton* CancelButton;
+		wxButton* LangButton;
+		wxButton* OKButton;
+		wxCheckListBox* CheckList;
 		wxDirDialog* DirDlg;
+		wxFileDialog* OpenDialog;
 		wxPanel* TempPathRadioPanel;
-		wxTextCtrl* SecondFileExts;
+		wxRadioButton* TP_Custom;
+		wxRadioButton* TP_Dest;
+		wxRadioButton* TP_System;
 		wxTextCtrl* ConsoleCmd;
 		wxTextCtrl* CustPlayer;
-		wxRadioButton* TP_Dest;
-		wxButton* BrowseCustPlayer;
-		wxButton* LangButton;
-		wxRadioButton* TP_System;
 		wxTextCtrl* CustomTemp;
-		wxButton* OKButton;
-		wxButton* BrowseTemp;
 		wxTextCtrl* FFMpegPath;
+		wxTextCtrl* SecondFileExts;
 		//*)
 
 	protected:

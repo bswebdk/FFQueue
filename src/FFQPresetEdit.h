@@ -28,26 +28,26 @@
 
 #ifndef WX_PRECOMP
 	//(*HeadersPCH(FFQPresetEdit)
-	#include <wx/combobox.h>
-	#include <wx/checkbox.h>
-	#include <wx/dialog.h>
-	#include <wx/sizer.h>
 	#include <wx/button.h>
-	#include <wx/menu.h>
-	#include <wx/radiobut.h>
+	#include <wx/checkbox.h>
+	#include <wx/choice.h>
+	#include <wx/combobox.h>
+	#include <wx/dialog.h>
 	#include <wx/filedlg.h>
+	#include <wx/listbox.h>
+	#include <wx/menu.h>
 	#include <wx/panel.h>
+	#include <wx/radiobut.h>
+	#include <wx/sizer.h>
 	#include <wx/slider.h>
 	#include <wx/stattext.h>
 	#include <wx/textctrl.h>
-	#include <wx/choice.h>
-	#include <wx/listbox.h>
 	//*)
 #endif
 //(*Headers(FFQPresetEdit)
-#include <wx/grid.h>
-#include "tools/FFQThumbPanel.h"
 #include "FFQBitRatePanel.h"
+#include "tools/FFQThumbPanel.h"
+#include <wx/grid.h>
 #include <wx/notebook.h>
 //*)
 
@@ -66,157 +66,167 @@ class FFQPresetEdit: public wxDialog
 		bool Execute(LPFFQ_PRESET preset);
 
 		//(*Declarations(FFQPresetEdit)
-		wxCheckBox* UseAudioQScale;
-		wxStaticText* SubsLab3;
-		wxRadioButton* SubsSizeCust;
-		wxButton* CancelButton;
-		wxListBox* FilterList;
-		wxSlider* QDiff;
-		wxPanel* SubsSizePan;
-		wxStaticText* KST1;
-		wxStaticBoxSizer* ASBS4;
-		wxPanel* BitRatePage;
-		wxStaticBoxSizer* ASBS3;
-		wxComboBox* VideoThreads;
-		wxComboBox* OutputFormat;
-		wxStaticText* KST8;
-		wxStaticText* QMaxVal;
-		wxFlexGridSizer* VideoOtherSizer;
-		wxTextCtrl* SegmentLen;
-		wxStaticText* CST1;
-		wxStaticBoxSizer* SSBS2;
-		wxButton* RemoveFilterButton;
-		wxPanel* SubtitlesPage;
-		wxStaticText* SubsLab1;
-		wxCheckBox* SegmentStreaming;
-		wxFlexGridSizer* VidSizer1;
-		wxSlider* QMax;
-		wxStaticText* AST1;
-		wxFlexGridSizer* KeyFrameSizer;
-		wxCheckBox* UseClosedGOP;
-		wxStaticText* FilterTip;
-		wxStaticText* OST1;
-		wxTextCtrl* CustomArgs1;
-		wxGrid* MetaData;
-		wxCheckBox* AudioFiltersComplex;
-		wxStaticText* OST2;
-		wxSlider* SceneChangeSens;
-		wxStaticText* OST5;
-		wxTextCtrl* FOURCC_Vid;
-		wxButton* FilterDownButton;
-		wxFlexGridSizer* SubsSizer2;
-		wxStaticText* OST7;
-		wxStaticText* KST3;
-		wxCheckBox* SegmentIncTime;
-		wxTextCtrl* KeyFrameMin;
-		wxTextCtrl* KeyFrameMax;
-		wxChoice* SegmentListType;
-		wxFileDialog* OpenFileDlg;
-		wxTextCtrl* SubsWidth;
-		wxChoice* AudioCodec;
-		wxStaticText* QDiffVal;
-		wxCheckBox* PresetTemp;
-		wxStaticText* ST55;
-		wxRadioButton* SubsSizeDef;
-		wxStaticText* SubsLab2;
-		wxComboBox* AudioProfile;
-		wxChoice* Trellis;
-		wxRadioButton* SubsText;
-		wxStaticText* QMinVal;
-		wxStaticText* KST2;
-		wxNotebook* Pages;
-		wxRadioButton* SubsBitmap;
-		wxTextCtrl* FOURCC_Aud;
-		wxCheckBox* UseQDiff;
-		FFQBitRatePanel* VideoBitRate;
-		wxStaticText* SubsLab4;
-		wxStaticText* OST6;
-		wxPanel* FilterPage;
-		wxChoice* VideoCodec;
-		wxStaticText* KST4;
-		wxStaticText* ConstRateVal;
-		wxStaticText* QST2;
-		wxStaticText* SubsScaleLab;
-		wxButton* FilterPreviewButton;
-		wxFlexGridSizer* SceneChangeSizer;
-		wxStaticText* ST53;
-		wxStaticText* QST1;
-		wxStaticText* OST4;
-		wxComboBox* SpeedPreset;
-		wxChoice* SegmentLenType;
-		wxFlexGridSizer* AudioQScaleSizer;
-		wxFlexGridSizer* VideoBitRateSizer;
-		wxStaticText* AudioQScaleVal;
-		wxStaticText* ScSensInfo;
-		wxCheckBox* UseVideoQScale;
-		wxStaticText* AST4;
-		wxChoice* KeyFrameMaxB;
-		wxPanel* MetaDataPage;
-		wxCheckBox* UseQMin;
-		wxComboBox* MotionEstimation;
-		wxSlider* VideoQScale;
-		wxPanel* MiscPage;
-		wxStaticText* KST6;
-		wxCheckBox* SegmentBreakB;
-		wxPanel* AudioPage;
-		wxStaticText* KST7;
-		wxStaticText* ST56;
-		wxCheckBox* UseQMax;
-		wxFlexGridSizer* VideoQualitySizer;
-		wxStaticText* ST51;
-		wxPanel* QualityPage;
-		wxStaticText* SegST2;
-		wxStaticText* KST5;
-		wxTextCtrl* PresetName;
-		wxTextCtrl* AudioChannels;
-		wxStaticText* CST2;
-		wxSlider* QMin;
-		wxStaticText* MinConstRateVal;
-		wxCheckBox* TwoPass;
-		wxChoice* VideoSync;
-		wxCheckBox* TwoPassNull;
-		wxComboBox* SubsCharEnc;
-		wxSlider* MinConstRate;
-		wxSlider* ConstRate;
-		wxFlexGridSizer* SubsSizer3;
-		wxCheckBox* UseMinConstRate;
-		wxCheckBox* KeepFileTime;
-		wxComboBox* Aspect;
-		wxButton* AddFilterButton;
-		wxPanel* KeyFramesPage;
-		wxMenu AddFilterMenu;
-		wxStaticText* OST3;
-		wxStaticText* AST2;
-		wxStaticText* SegST1;
-		wxStaticBoxSizer* FourCCSizer;
-		wxButton* EditFilterButton;
-		wxCheckBox* SegmentResetTS;
-		wxPanel* VideoPage;
-		wxStaticText* VideoQScaleVal;
-		wxStaticText* ST52;
-		wxButton* OKButton;
-		wxFlexGridSizer* FilterSizer;
-		wxPanel* OtherPage;
-		wxChoice* SubsCodec;
-		wxTextCtrl* FrameRate;
-		FFQThumbPanel* ThumbsPanel;
-		wxSlider* AudioQScale;
-		wxStaticBoxSizer* ASBS2;
-		wxCheckBox* UseConstRate;
-		wxTextCtrl* CustomArgs2;
-		wxTextCtrl* SubsHeight;
 		FFQBitRatePanel* AudioBitRate;
-		wxCheckBox* UseSceneChangeSens;
-		wxPanel* ThumbsPage;
-		wxSlider* SubsScale;
-		wxRadioButton* SubsSizePAL;
-		wxStaticText* AST5;
-		wxChoice* KeyFrameMaxP;
-		wxStaticText* KST9;
-		wxCheckBox* MF_FastStart;
+		FFQBitRatePanel* VideoBitRate;
+		FFQThumbPanel* ThumbsPanel;
+		wxButton* AddFilterButton;
+		wxButton* CancelButton;
+		wxButton* EditFilterButton;
+		wxButton* FilterDownButton;
+		wxButton* FilterPreviewButton;
 		wxButton* FilterUpButton;
+		wxButton* OKButton;
+		wxButton* RemoveFilterButton;
+		wxCheckBox* AudioFiltersComplex;
+		wxCheckBox* KeepFileTime;
+		wxCheckBox* MF_FastStart;
+		wxCheckBox* PresetTemp;
+		wxCheckBox* SegmentBreakB;
+		wxCheckBox* SegmentIncTime;
+		wxCheckBox* SegmentResetTS;
+		wxCheckBox* SegmentStreaming;
+		wxCheckBox* TwoPass;
+		wxCheckBox* TwoPassNull;
+		wxCheckBox* UseAudioQScale;
+		wxCheckBox* UseClosedGOP;
+		wxCheckBox* UseConstRate;
+		wxCheckBox* UseMinConstRate;
+		wxCheckBox* UseQDiff;
+		wxCheckBox* UseQMax;
+		wxCheckBox* UseQMin;
+		wxCheckBox* UseSceneChangeSens;
+		wxCheckBox* UseVideoQScale;
+		wxChoice* AudioCodec;
+		wxChoice* HWD_Accel;
+		wxChoice* KeyFrameMaxB;
+		wxChoice* KeyFrameMaxP;
+		wxChoice* SegmentLenType;
+		wxChoice* SegmentListType;
+		wxChoice* SubsCodec;
+		wxChoice* Trellis;
+		wxChoice* VideoCodec;
+		wxChoice* VideoSync;
+		wxComboBox* Aspect;
+		wxComboBox* AudioProfile;
+		wxComboBox* HWD_Codec;
+		wxComboBox* MotionEstimation;
+		wxComboBox* OutputFormat;
 		wxComboBox* PixFmt;
+		wxComboBox* SpeedPreset;
+		wxComboBox* SubsCharEnc;
+		wxComboBox* VideoThreads;
+		wxFileDialog* OpenFileDlg;
+		wxFlexGridSizer* AudioQScaleSizer;
+		wxFlexGridSizer* FilterSizer;
+		wxFlexGridSizer* KeyFrameSizer;
+		wxFlexGridSizer* SceneChangeSizer;
+		wxFlexGridSizer* SubsSizer2;
+		wxFlexGridSizer* SubsSizer3;
+		wxFlexGridSizer* VidSizer1;
+		wxFlexGridSizer* VideoBitRateSizer;
+		wxFlexGridSizer* VideoHWDecodeSizer;
+		wxFlexGridSizer* VideoOtherSizer;
+		wxFlexGridSizer* VideoQualitySizer;
+		wxGrid* MetaData;
+		wxListBox* FilterList;
+		wxMenu AddFilterMenu;
+		wxNotebook* Pages;
 		wxNotebook* VideoPages;
+		wxPanel* AudioPage;
+		wxPanel* BitRatePage;
+		wxPanel* FilterPage;
+		wxPanel* HWDecodePage;
+		wxPanel* KeyFramesPage;
+		wxPanel* MetaDataPage;
+		wxPanel* MiscPage;
+		wxPanel* OtherPage;
+		wxPanel* QualityPage;
+		wxPanel* SubsSizePan;
+		wxPanel* SubtitlesPage;
+		wxPanel* ThumbsPage;
+		wxPanel* VideoPage;
+		wxRadioButton* SubsBitmap;
+		wxRadioButton* SubsSizeCust;
+		wxRadioButton* SubsSizeDef;
+		wxRadioButton* SubsSizePAL;
+		wxRadioButton* SubsText;
+		wxSlider* AudioQScale;
+		wxSlider* ConstRate;
+		wxSlider* MinConstRate;
+		wxSlider* QDiff;
+		wxSlider* QMax;
+		wxSlider* QMin;
+		wxSlider* SceneChangeSens;
+		wxSlider* SubsScale;
+		wxSlider* VideoQScale;
+		wxStaticBoxSizer* ASBS2;
+		wxStaticBoxSizer* ASBS3;
+		wxStaticBoxSizer* ASBS4;
+		wxStaticBoxSizer* FourCCSizer;
+		wxStaticBoxSizer* SSBS2;
+		wxStaticText* AST1;
+		wxStaticText* AST2;
+		wxStaticText* AST4;
+		wxStaticText* AST5;
+		wxStaticText* AudioQScaleVal;
+		wxStaticText* CST1;
+		wxStaticText* CST2;
+		wxStaticText* ConstRateVal;
+		wxStaticText* FilterTip;
+		wxStaticText* HWD1;
+		wxStaticText* HWD2;
+		wxStaticText* HWD3;
+		wxStaticText* HWD4;
+		wxStaticText* KST1;
+		wxStaticText* KST2;
+		wxStaticText* KST3;
+		wxStaticText* KST4;
+		wxStaticText* KST5;
+		wxStaticText* KST6;
+		wxStaticText* KST7;
+		wxStaticText* KST8;
+		wxStaticText* KST9;
+		wxStaticText* MinConstRateVal;
+		wxStaticText* OST1;
+		wxStaticText* OST2;
+		wxStaticText* OST3;
+		wxStaticText* OST4;
+		wxStaticText* OST5;
+		wxStaticText* OST6;
+		wxStaticText* OST7;
+		wxStaticText* QDiffVal;
+		wxStaticText* QMaxVal;
+		wxStaticText* QMinVal;
+		wxStaticText* QST1;
+		wxStaticText* QST2;
+		wxStaticText* ST51;
+		wxStaticText* ST52;
+		wxStaticText* ST53;
+		wxStaticText* ST55;
+		wxStaticText* ST56;
+		wxStaticText* ScSensInfo;
+		wxStaticText* SegST1;
+		wxStaticText* SegST2;
+		wxStaticText* SubsLab1;
+		wxStaticText* SubsLab2;
+		wxStaticText* SubsLab3;
+		wxStaticText* SubsLab4;
+		wxStaticText* SubsScaleLab;
+		wxStaticText* VideoQScaleVal;
+		wxTextCtrl* AudioChannels;
+		wxTextCtrl* CustomArgs1;
+		wxTextCtrl* CustomArgs2;
+		wxTextCtrl* FOURCC_Aud;
+		wxTextCtrl* FOURCC_Vid;
+		wxTextCtrl* FrameRate;
+		wxTextCtrl* HWD_Device;
+		wxTextCtrl* HWD_DeviceInit;
+		wxTextCtrl* KeyFrameMax;
+		wxTextCtrl* KeyFrameMin;
+		wxTextCtrl* PresetName;
+		wxTextCtrl* SegmentLen;
+		wxTextCtrl* SubsHeight;
+		wxTextCtrl* SubsWidth;
 		//*)
 
 	protected:
@@ -273,6 +283,11 @@ class FFQPresetEdit: public wxDialog
 		static const long ID_OST5;
 		static const long ID_VIDEOTHREADS;
 		static const long ID_OTHERPAGE;
+		static const long ID_HWD_ACCEL;
+		static const long ID_HWD_CODEC;
+		static const long ID_HWD_DEVICE;
+		static const long ID_HWD_DEVICEINIT;
+		static const long ID_HWDECODEPAGE;
 		static const long ID_VIDEOPAGES;
 		static const long ID_VIDEOPAGE;
 		static const long ID_AUDIOCODEC;
@@ -324,9 +339,9 @@ class FFQPresetEdit: public wxDialog
 		static const long ID_ST52;
 		static const long ID_FOURCC_AUD;
 		static const long ID_CST1;
-		static const long ID_CUSTOMARGS;
+		static const long ID_CUSTOM_ARGS_1;
 		static const long ID_CST2;
-		static const long ID_CUSTOMARGS2;
+		static const long ID_CUSTOM_ARGS_2;
 		static const long ID_SEGMENTLEN;
 		static const long ID_SEGMENTLENTYPE;
 		static const long ID_SEGMENTLISTTYPE;
@@ -375,7 +390,7 @@ class FFQPresetEdit: public wxDialog
 
 		//bool GetBitrate(wxTextCtrl* br, wxChoice* brt, wxString &rate, bool validate);
 		//void SetBitrate(wxTextCtrl* br, wxChoice* brt, wxString &rate);
-		void SetChoiceItems(wxChoice* ch, wxString &items, wxString &select);
+		void SetItems(wxItemContainer* ch, wxString &items, wxString &select, bool is_codec = true);
 		bool GetMetaData(wxString &data);
 		void SetMetaData(wxString data);
 		//void SetNumberValue(wxTextCtrl* ctrl, wxString val, wxString noVal = "0");

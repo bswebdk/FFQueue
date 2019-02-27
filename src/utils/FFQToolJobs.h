@@ -130,13 +130,15 @@ typedef struct FFQ_CONCAT_JOB : FFQ_QUEUE_ITEM
 
     unsigned int pad_color, //Padding color for slide show
                  img_first, //Start number of the first slide show image
-                 img_count; //Number of images in a slide show
+                 img_count, //Number of images in a slide show
+                 map_streams; //Bits used for explicit mapping
 
     wxString out, //Destination file
              img_pattern, //The image pattern to use for slide show
              merge_filter, //Pre-build merge filter for audio + video
              merge_smap, //A simple [audio],[video] stream mapping
              merge_padding; //A filter used for padding
+
 
     UNIQUE_ID preset; //Preset for encoding
 

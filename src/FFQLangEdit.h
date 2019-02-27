@@ -105,6 +105,9 @@ class FFQLangEdit: public wxFrame
 		bool m_SkipEvents;
 		unsigned int m_EditListSize;
 
+		void ExportTranslationFile();
+		void ImportTranslationFile(wxString file_name = wxEmptyString);
+
 		void LoadEditStr(bool internal = false);
 		bool SaveEditStr(bool force, bool clear = true);
 		bool SavePwdAndDesc();

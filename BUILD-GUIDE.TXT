@@ -1,74 +1,80 @@
 [Version]
-Build guide V1.0, 7th of January 2017, Copyright © 2017 Torben Bruchhaus.
+The build guide is Copyright © 2017 Torben Bruchhaus. Version history:
+- 1.0: 7th of January 2017
+- 1.1: 23rd of Frebruary 2019
 
 [General]
-Sorry, there is no automake so we have to do this the fun way :)
-
-FFQueue has been created using Code::Blocks IDE and wxWidgets V3.0.2. It has been
-compiled using GCC 4.8.4 for Linux Mint 17.3 / Ubuntu 14.04 - both 64bit and MinGW
-4.8.1 (32bit version from: http://www.mingw.org/) for Windows. This guide will
-focus on reproducing the build steps for those tools.
-
 All make commands uses the argument "-j?" which is invalid. You must replace the "?"
-with the number of threads supported by your CPU, eg. for 4 threads use: "-j4" in order
-to optimize the build process.
+with the number of threads supported by your CPU, eg. for 4 threads use "-j4" in order
+to optimize the build process. Using multi-threaded make may cause problems and if it
+does use "-j1".
 
-This guide will use $ROOT as a synonym to the root folder used for the work covered
-in this guid. You can make this folder wherever you like.
+$BASE is used as a synonym for the base folder in where all work is done. You can make
+this folder wherever you like.
 
-[wxWidgets]
-It is up to you to decide which version of wxWidgets you use, and this guide will not
-instruct you how to build and/or tweak your wx. But the steps I've used to create the
-wx build used by official FFQueue releases has been made by:
 
-  {Common}
+[Prerequisities]
+In order to build FFQueue you need the G++ compiler, wxWidgets version 3.0.* (or newer)
+development files and FFQueue source code.
+
+  {G++ - Windows}
+  Download and install MinGW or MinGW-W64. FFQueue has been build using MinGW 32bit, other
+  compilers may cause issues or require other steps than the ones covered in this guide.
+
+  {wxWidgets - Windows}
   Download wxWidgets as an archive from https://www.wxwidgets.org/downloads/ and
-  extract it to $ROOT/wxWidgets. I use version 3.1.0 for Linux and 3.0.2 for Windows.
+  extract it to $BASE/wxWidgets. Change working directory to $BASE\wxWidgets\build\msw\
+  and execute the command "C:\path\to\mingw\bin\mingw32-make SHELL=CMD.exe -j? -f
+  makefile.gcc BUILD=release SHARED=0 MONOLITHIC=0 UNICODE=1
+  CXXFLAGS=-fno-keep-inline-dllexport".
 
-  {Linux}
-  Create folder $(ROOT)wxWidgets/gtk-build and change working directory to the created
-  folder and execute command: "../configure --enable-unicode --disable-shared --with-libpng".
-  When the configuration has completed, build it with "make -j? SHARED=0 BUILD=release".
+  {G++ - Linux}
+  Install package "g++" or "gcc".
 
-  {Windows}
-  Change working directory to $(ROOT)\wxWidgets\build\msw\ and execute the command:
-  "C:\path\to\mingw\bin\mingw32-make SHELL=CMD.exe -j? -f makefile.gcc BUILD=release
-  SHARED=0 MONOLITHIC=0 UNICODE=1 CXXFLAGS=-fno-keep-inline-dllexport".
-  
-  NOTE: I've had issues with multi-threaded make on windows (-j8). If make bugs out
-  on you, try to use -j1 for single-threaded make.
+  {wxWidgets - Linux}
+  Install package "libwxgtk3.0-dev" - this will only allow dynamically linked executables
+  to be generated. If you want a statically linked (stand-alone) executable you will need
+  to download wxWidgets source code, extract it to "$BASE/wxWidgets" and build wxWidgets
+  with the commands:
 
-[Source code]
-If you have GIT, the easiest way to get the FFQueue source code is to run the command:
-"$(ROOT)/git clone https://github.com/bswebdk/FFQueue" which will download the source
-and store it in the folder "$(ROOT)/FFQueue/*". You can also download the source code as
-an archive from http://ffqueue.bruchhaus.dk/ - you must extract the archive to
-"$(ROOT)/FFQueue/*".
+  > cd $BASE/wxWidgets
+  > mkdir gtk-build
+  > cd gtk-build
+  > ../configure --enable-unicode --disable-shared --with-libpng
+  > make -j? SHARED=0 BUILD=release
 
-[Code::Blocks]
-If you have a working Code::Blocks development environment with GCC compiler and wxWidgets
-the best sollution is to simply open the FFQueue.cbp project file, select a build target,
-and click the build button. Selecting the right build target should be obvious, but:
+  {FFQueue source}
+  If you have GIT, the easiest way to get the FFQueue source code is to run the commands:
 
-Release_Win : Release build for Windows.
-Debug_Win   : Debug build for Windows (*).
-Release_Lin : Release build for Linux.
-Debug_Lin   : Debug build for Linux (*).
+  > cd $BASE
+  > git clone https://github.com/bswebdk/FFQueue
 
-The project file depends on a global variable (C::B menu Settings->Global variables...)
-named "wx" which must point to the root of wxWidgets (not the build folder). Depending
-on your system you may need to tweak some compiler/linker settings: Have a blast! :)
+  Please note that GIT may put the source code into a directory named "FFQueue-master"
+  instead of "FFQueue". You can also download the source code as an archive from
+  http://ffqueue.bruchhaus.dk/ - you must extract the archive to "$BASE/FFQueue/*".
 
-Code::Blocks uses $(ROOT)/FFQueue/bin/Release/ as output folder for release binaries.
 
-(*): Debug builds contains extra functions like create makefiles, binary resources,
-testing etc. These functions are available through a dropdown menu triggered by the
-About button. You are hereby encouraged not to release debug builds to the end user,
-would make no sense.
+[AutoTools]
+This section is only useful for Linux users. You need to make sure that "wx-config" can
+be found by the shell. You can test it by executing the command "wx-config --version",
+this should give you a version number like "3.0.4". After this is done, execute the
+following commands in a terminal:
+
+> cd $BASE/FFQueue
+> autoreconf --install
+> mkdir build
+> cd build
+> ../configure
+> make -j?
+> sudo make install
+
+NOTE: Step 2 is only required if the version of AutoTools on the build system differs
+from the one on the development system.
+
 
 [Makefile]
-FFQueue has two makefiles which are both generated by the FFQueue debug build with
-build config extracted from the FFQueue.cbp project file:
+FFQueue has two makefiles which are both generated by the FFQueue debug build. Both
+makefiles are based on the build config in the Code::Blocks project file:
 
 Makefile.win : Based on the Release_Win build target and used for Windows.
 Makefile.lin : Based on the Release_Lin build target and used for Linux.
@@ -77,15 +83,38 @@ You may need to modify the makefiles in order to make sure that the paths to the
 comiler (CXX:=???), linker (LINKER:=???), windres (WINDRES:=???) and wxWidgets (WX:=???)
 are valid.
 
-The following commands expects the current working directory to be "$(ROOT)/FFQueue" in
+The following commands expects the current working directory to be "$BASE/FFQueue" in
 which the makefiles are located. When this is done you must execute:
 
-Linux:> make -f Makefile.lin -j?
-Windows:> mingw32-make -f Makefile.win -j?
+Linux    > make -f Makefile.lin -j?
+Windows  > mingw32-make -f Makefile.win -j?
 
 The windows build requires the path to the MinGW binaries to be added to the global
 search path. If it is not, then you must modify the line with "CXX:=" in Makefile.win
 to the full path to mingw32-g++.exe and you must specify the full path to mingw32-make
 in the command above.
 
-Makefiles uses $(ROOT)/FFQueue/build/ as output folder for binaries.
+Makefiles uses $BASE/FFQueue/build/ as output folder for binaries.
+
+
+[Code::Blocks]
+If you have a working Code::Blocks development environment with GCC/MinGW compiler and
+wxWidgets, the easiest sollution is to simply open the FFQueue.cbp project file, select
+a build target, and click the build button. Selecting the right build target should be
+obvious, but:
+
+Release_Win : Release build for Windows.
+Debug_Win   : Debug build for Windows (*).
+Release_Lin : Release build for Linux.
+Debug_Lin   : Debug build for Linux (*).
+
+The project file depends on a global variable (C::B menu Settings->Global variables...)
+named "wx" which must point to the root of wxWidgets (not the build folder). Depending
+on your system you may need to tweak some compiler/linker settings: Have a blast! :-)
+
+Code::Blocks uses $BASE/FFQueue/bin/Release/ as output folder for release binaries.
+
+(*): Debug builds contains extra functions for creating makefiles, binary resources,
+testing etc. These functions are available through a dropdown menu triggered by the
+About button. You are hereby encouraged not to release debug builds to the end user,
+since it would make no sense.

@@ -133,6 +133,7 @@ const FFQ_SID SID_INVALID_INPUT_NOT_ALLOWED         = SID_BASIC_BASE + 90;
 const FFQ_SID SID_NOTHING_QUEUED                    = SID_BASIC_BASE + 91;
 const FFQ_SID SID_INVALID_CONSOLE_COMMAND           = SID_BASIC_BASE + 92;
 const FFQ_SID SID_CANNOT_SAVE_ACTIVE_QUEUE_ITEM     = SID_BASIC_BASE + 93;
+const FFQ_SID SID_INLINE_SHELL_CODE_WARNING         = SID_BASIC_BASE + 94;
 
 
 
@@ -253,6 +254,7 @@ const FFQ_SID SID_BATCHMAKE_MAKE_JOBS               = SID_BATCHMAKE_BASE + 6;
 const FFQ_SID SID_BATCHMAKE_MAKE_JOBS_FOR           = SID_BATCHMAKE_BASE + 7;
 const FFQ_SID SID_BATCHMAKE_MATCH_INVERSE           = SID_BATCHMAKE_BASE + 8;
 const FFQ_SID SID_BATCHMAKE_PREF_SUBS_CODEC         = SID_BATCHMAKE_BASE + 9;
+const FFQ_SID SID_BATCHMAKE_NOFAIL_CONTENT          = SID_BATCHMAKE_BASE + 10;
 
 
 
@@ -349,6 +351,7 @@ const FFQ_SID SID_CONCAT_SIMPLE                     = SID_CONCAT_BASE + 31;
 const FFQ_SID SID_CONCAT_UNEQUAL_FILES              = SID_CONCAT_BASE + 32;
 const FFQ_SID SID_CONCAT_PADDING                    = SID_CONCAT_BASE + 33;
 const FFQ_SID SID_CONCAT_LOOP_ERROR                 = SID_CONCAT_BASE + 34;
+const FFQ_SID SID_CONCAT_EXPLICIT_MAP               = SID_CONCAT_BASE + 35;
 
 
 //Preset editor UI
@@ -453,6 +456,12 @@ const FFQ_SID SID_PRESET_SEGMENTING_INCREMENT_TIME  = SID_PRESET_BASE + 97;
 const FFQ_SID SID_PRESET_SEGMENTING_STREAMING       = SID_PRESET_BASE + 98;
 const FFQ_SID SID_PRESET_SEGMENTING_RESET_TIME      = SID_PRESET_BASE + 99;
 const FFQ_SID SID_PRESET_USE_CLOSED_GOP             = SID_PRESET_BASE + 100;
+const FFQ_SID SID_PRESET_HWDECODE                   = SID_PRESET_BASE + 101;
+const FFQ_SID SID_PRESET_HWDECODE_ACCEL             = SID_PRESET_BASE + 102;
+const FFQ_SID SID_PRESET_HWDECODE_CODEC             = SID_PRESET_BASE + 103;
+const FFQ_SID SID_PRESET_HWDECODE_DEVICE            = SID_PRESET_BASE + 104;
+const FFQ_SID SID_PRESET_HWDECODE_DEVICE_INIT       = SID_PRESET_BASE + 105;
+const FFQ_SID SID_PRESET_ERROR_NO_COMMA_ALLOWED     = SID_PRESET_BASE + 106;
 
 
 //Video sync modes
@@ -494,6 +503,7 @@ const FFQ_SID SID_OPTIONS_KEEP_CONSOLE_OPEN     = SID_OPTIONS_BASE + 16;
 const FFQ_SID SID_OPTIONS_CUSTOM_CONSOLE_CMD    = SID_OPTIONS_BASE + 17;
 const FFQ_SID SID_OPTIONS_SILENT_QUEUE_FINISH   = SID_OPTIONS_BASE + 18;
 const FFQ_SID SID_OPTIONS_SAVE_JOBS_ON_MODIFY   = SID_OPTIONS_BASE + 19;
+const FFQ_SID SID_OPTIONS_VALIDATE_ON_LOAD      = SID_OPTIONS_BASE + 20;
 
 
 //Thumb maker UI
@@ -1082,11 +1092,13 @@ class FFQLang
         void LibAVify(wxString &str);
         void ChangePassword(wxString pwd);
         bool CheckPassword(wxString pwd);
+        LPFFQ_STRING FindString(FFQ_SID sid);
         const wxString& GetAtIndex(unsigned int index);
         LPFFQ_STRING GetPtrAtIndex(unsigned int index);
         const unsigned int GetCount();
         const wxString& GetDescription();
         const unsigned int GetFlagCount(STR_FLAG flag);
+        const wxString& GetLoadedFileName();
         const unsigned int GetNumberOfSkippedStringsInFile();
         wxString* GetStringArray(FFQ_SID sid, unsigned int requiredSize, wxUniChar separator = '|');
         const wxString& GetString(FFQ_SID sid);
@@ -1106,9 +1118,8 @@ class FFQLang
         unsigned int m_SkipCount;
         STR_HASH m_PasswordHash;
         wxVector<LPFFQ_STRING> *m_Strings;
-        wxString m_Description, m_Temp, m_DateTimeFmt, m_BadStrID, m_FileName;
+        wxString m_Description, m_Temp, m_DateTimeFmt, m_BadStrID, m_LoadName;
 
-        LPFFQ_STRING FindString(FFQ_SID sid);
         void InitStringVars();
         void ValidateStrings();
 

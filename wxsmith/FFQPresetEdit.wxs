@@ -708,6 +708,76 @@
 											</object>
 											<label>Ot</label>
 										</object>
+										<object class="notebookpage">
+											<object class="wxPanel" name="ID_HWDECODEPAGE" variable="HWDecodePage" member="yes">
+												<object class="wxFlexGridSizer" variable="VideoHWDecodeSizer" member="yes">
+													<cols>2</cols>
+													<rows>4</rows>
+													<growablecols>1</growablecols>
+													<object class="sizeritem">
+														<object class="wxStaticText" name="wxID_ANY" variable="HWD1" member="yes">
+															<label>Dc</label>
+															<extra_code>HWD1-&gt;SetLabel(FFQS(SID__PRESET__HWDECODE__ACCEL));</extra_code>
+														</object>
+														<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+														<border>5</border>
+														<option>1</option>
+													</object>
+													<object class="sizeritem">
+														<object class="wxChoice" name="ID_HWD_ACCEL" variable="HWD_Accel" member="yes" />
+														<flag>wxALL|wxEXPAND</flag>
+														<border>3</border>
+														<option>1</option>
+													</object>
+													<object class="sizeritem">
+														<object class="wxStaticText" name="wxID_ANY" variable="HWD2" member="yes">
+															<label>Cd</label>
+															<extra_code>HWD2-&gt;SetLabel(FFQS(SID__PRESET__HWDECODE__CODEC));</extra_code>
+														</object>
+														<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+														<border>5</border>
+														<option>1</option>
+													</object>
+													<object class="sizeritem">
+														<object class="wxComboBox" name="ID_HWD_CODEC" variable="HWD_Codec" member="yes" />
+														<flag>wxALL|wxEXPAND</flag>
+														<border>3</border>
+														<option>1</option>
+													</object>
+													<object class="sizeritem">
+														<object class="wxStaticText" name="wxID_ANY" variable="HWD3" member="yes">
+															<label>Dev</label>
+															<extra_code>HWD3-&gt;SetLabel(FFQS(SID__PRESET__HWDECODE__DEVICE));</extra_code>
+														</object>
+														<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+														<border>5</border>
+														<option>1</option>
+													</object>
+													<object class="sizeritem">
+														<object class="wxTextCtrl" name="ID_HWD_DEVICE" variable="HWD_Device" member="yes" />
+														<flag>wxALL|wxEXPAND</flag>
+														<border>3</border>
+														<option>1</option>
+													</object>
+													<object class="sizeritem">
+														<object class="wxStaticText" name="wxID_ANY" variable="HWD4" member="yes">
+															<label>Init</label>
+															<extra_code>HWD4-&gt;SetLabel(FFQS(SID__PRESET__HWDECODE__DEVICE__INIT));</extra_code>
+														</object>
+														<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+														<border>5</border>
+														<option>1</option>
+													</object>
+													<object class="sizeritem">
+														<object class="wxTextCtrl" name="ID_HWD_DEVICEINIT" variable="HWD_DeviceInit" member="yes" />
+														<flag>wxALL|wxEXPAND</flag>
+														<border>3</border>
+														<option>1</option>
+													</object>
+												</object>
+											</object>
+											<label>HWD</label>
+										</object>
 									</object>
 									<flag>wxALL|wxEXPAND</flag>
 									<border>3</border>
@@ -1301,7 +1371,6 @@
 														<rows>5</rows>
 														<labelcolwidth>1</labelcolwidth>
 														<extra_code>MetaData-&gt;SetColLabelValue(0, FFQS(SID__PRESET__METADATA__KEY));&#x0A;MetaData-&gt;SetColLabelValue(1, FFQS(SID__PRESET__METADATA__VALUE));&#x0A;SBS31-&gt;GetStaticBox()-&gt;SetLabel(FFQS(SID__PRESET__METADATA__DEFINE));</extra_code>
-														<handler function="OnMetaDataCellChange" entry="EVT_CMD_GRID_CELL_CHANGE" />
 													</object>
 													<flag>wxALL|wxEXPAND</flag>
 													<border>3</border>
@@ -1423,7 +1492,7 @@
 													<option>1</option>
 												</object>
 												<object class="sizeritem">
-													<object class="wxTextCtrl" name="ID_CUSTOMARGS" variable="CustomArgs1" member="yes">
+													<object class="wxTextCtrl" name="ID_CUSTOM_ARGS_1" variable="CustomArgs1" member="yes">
 														<extra_code>SBS52-&gt;GetStaticBox()-&gt;SetLabel(FFQS(SID__PRESET__CUSTOM__CMDLINE__ARGS));</extra_code>
 													</object>
 													<flag>wxALL|wxEXPAND</flag>
@@ -1440,7 +1509,7 @@
 													<option>1</option>
 												</object>
 												<object class="sizeritem">
-													<object class="wxTextCtrl" name="ID_CUSTOMARGS2" variable="CustomArgs2" member="yes" />
+													<object class="wxTextCtrl" name="ID_CUSTOM_ARGS_2" variable="CustomArgs2" member="yes" />
 													<flag>wxALL|wxEXPAND</flag>
 													<border>3</border>
 													<option>1</option>
@@ -1674,7 +1743,7 @@
 						<object class="wxButton" name="ID_OKBUTTON" variable="OKButton" member="yes">
 							<label>O</label>
 							<default>1</default>
-							<size>100,25</size>
+							<size>100,-1</size>
 							<extra_code>OKButton-&gt;SetLabel(FFQS(SID__COMMON__OK));</extra_code>
 							<handler function="OnButtonClick" entry="EVT_BUTTON" />
 						</object>
@@ -1685,7 +1754,7 @@
 					<object class="sizeritem">
 						<object class="wxButton" name="ID_CANCELBUTTON" variable="CancelButton" member="yes">
 							<label>C</label>
-							<size>100,25</size>
+							<size>100,-1</size>
 							<extra_code>CancelButton-&gt;SetLabel(FFQS(SID__COMMON__CANCEL));</extra_code>
 							<handler function="OnButtonClick" entry="EVT_BUTTON" />
 						</object>

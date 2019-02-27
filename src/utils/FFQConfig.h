@@ -55,7 +55,9 @@ class FFQConfig
 {
     public:
 
+        //static wxString GetAppName(wxString *path = NULL);
         static FFQConfig* GetInstance();
+        //static wxString GetUserDataDir();
         static void Release();
 
         ~FFQConfig();
@@ -75,6 +77,7 @@ class FFQConfig
 	    bool save_log;
 	    bool silent_qfinish;
 	    bool save_on_modify;
+	    bool validate_on_load;
 
 	    wxString app_name;
 	    wxString batch_config;
@@ -89,6 +92,8 @@ class FFQConfig
 	    wxString window_position;
 	    wxString vidstab_settings;
 	    wxString saved_commands;
+	    wxString user_locale;
+	    wxString share_data_dir;
 
 		//Methods to access options not stored in public vars
 		bool            AreFiltersAvailable(wxString filter_list);
@@ -106,10 +111,12 @@ class FFQConfig
 		wxString        GetFFMpegFilters();
 		wxString        GetFFMpegFormats();
 		wxString        GetFFMpegVersion(bool shortVersion);
+		wxString        GetHWAccelerators();
+		wxString        GetHWDecoders();
 		LPPIXEL_FORMAT  GetPixelFormats();
 		wxString        GetPreferredOutputName(wxString for_input_file/*, bool ensure_unique = false, bool keep_input_path = false*/);
 		wxWindow*       GetPresetManager();
-		FFQTaskBar* GetTaskBar();
+		FFQTaskBar*     GetTaskBar();
 		wxString        GetTmpPath(wxString dest_path, bool make_sub_folder = false, wxString temp_file_extension = "");
 		void            InitPresetManager(wxWindow *parent);
 	    wxArrayString*  LoadArrayString(wxString filename);
@@ -126,7 +133,7 @@ class FFQConfig
 
         static FFQConfig* m_Instance; //Static singleton reference
 
-	    LPCODEC_INFO m_CodecInfo; //List with codec informations
+	    LPCODEC_INFO m_CodecInfo; //List with codec information
 	    LPPIXEL_FORMAT m_PixelFormats; //List of supported pixel formats
 	    wxWindow* m_PresetManager; //Instance of preset manager
 	    FFQTaskBar* m_TaskBar; //Pointer to task bar object (windows only)
@@ -141,6 +148,8 @@ class FFQConfig
 	    wxString m_Formats; //Supported formats for muxing
 	    wxString m_SubtitleCodecs; //List of supported subtitle codecs
 	    wxString m_VideoCodecs; //List of supported video codecs
+	    wxString m_HWAccels; //List of supported hardware accelerators
+	    wxString m_HWDecoders; //List of hardware decoders
 
         FFQConfig(); //Private constructor to prevent instantiation.
         bool TryLocateFFMpeg();

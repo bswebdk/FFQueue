@@ -577,6 +577,7 @@ FFQ_CONCAT_JOB::FFQ_CONCAT_JOB(const FFQ_CONCAT_JOB &copy_from) : FFQ_QUEUE_ITEM
     pad_color = copy_from.pad_color;
     img_first = copy_from.img_first;
     img_count = copy_from.img_count;
+    map_streams = copy_from.map_streams;
 
     out = copy_from.out;
     img_pattern = copy_from.img_pattern;
@@ -642,14 +643,14 @@ wxString FFQ_CONCAT_JOB::ToString()
 
     wxString s;
 
-    s.Printf("%s,%s,%s,%s,%s,%s,%s,%s,%g,%u,%u,%u",
+    s.Printf("%s,%s,%s,%s,%s,%s,%s,%s,%g,%u,%u,%u,%u",
 
              BOOLSTR(slideshow), BOOLSTR(scale_pad), BOOLSTR(force), BOOLSTR(loop_frames),
              BOOLSTR(simple_concat), BOOLSTR(concat_vid), BOOLSTR(concat_aud), BOOLSTR(concat_subs),
 
              frame_time,
 
-             pad_color, img_first, img_count
+             pad_color, img_first, img_count, map_streams
 
             );
 
@@ -784,7 +785,14 @@ wxString FFQ_CONCAT_JOB::MakeConcatCmd()
     }
 
     //Create the command
-    s = TIME_VALUE(cmd_len).ToString() + ",-f concat -safe 0 -i \"" + FormatFileName(m_TempPath) + "\" -c:v copy -c:a copy ";
+    s = TIME_VALUE(cmd_len).ToString() + ",-f concat -safe 0 -i \"" + FormatFileName(m_TempPath) + "\" -c copy ";
+    //"-c copy" used to be "-c:v copy -c:a copy", if simple concat is broke, that's probably why!
+
+    if (map_streams > 0)
+    {
+        for (int i = 0; i < 32; i++) if ((map_streams & (1 << i)) != 0) s+= wxString::Format("-map 0:%i ", i);
+    }
+
     if (!limit_len.IsUndefined()) s += "-t " + limit_len.ToString() + " ";
     s += "-y \"" + FormatFileName(out) + "\"";
 
@@ -1017,6 +1025,7 @@ void FFQ_CONCAT_JOB::Reset(bool load)
     pad_color = 0;
     img_first = 0;
     img_count = 0;
+    map_streams = 0;
 
     out.Clear();
     img_pattern.Clear();

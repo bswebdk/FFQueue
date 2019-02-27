@@ -53,6 +53,8 @@ const wxString ENCODER_PRESETS[ENCODER_PRESET_COUNT] = {
 
 };
 
+bool IsPreviewSafe = true;
+
 //---------------------------------------------------------------------------------------
 //Private helper functions
 //---------------------------------------------------------------------------------------
@@ -473,6 +475,67 @@ void MakeInputFileArgs(wxArrayString &src, wxArrayString &dst)
 }
 
 //---------------------------------------------------------------------------------------
+
+wxString MakeHWDecodeArgs(wxString from)
+{
+    wxString hwd = from, res = wxEmptyString, t;
+    t = GetToken(hwd, ",", true);
+    if (t.Len() == 0) return wxEmptyString;
+    res = "-hwaccel " + t;
+    t = GetToken(hwd, ",", true);
+    if (t.Len() > 0) res += " -c:v " + t;
+    t = GetToken(hwd, ",", true);
+    if (t.Len() > 0) res = "-hwaccel_device " + t + " " + res;
+    if (hwd.Len() > 0) res = "-init_hw_device " + hwd + " " + res;
+    res += " ";
+    return res;
+}
+
+//---------------------------------------------------------------------------------------
+
+bool IsCommandSafe(wxString cmd)
+{
+
+    //This will test if any malicious code may be present in the command / list of arguments
+    size_t pos = 0;
+    wxUniChar quote = '.';
+    while (pos < cmd.Len())
+    {
+        wxUniChar cc = cmd.at(pos);
+        wxUniChar nc = (pos < cmd.Len() - 1) ? cmd.at(pos + 1) : '\0';
+
+        #ifdef __WINDOWS__
+
+            //Code required for windows?
+
+        #else
+
+            if (cc == '\\') pos++; //Skip escaped character
+            else if ((cc == '\'') || (cc == '\"'))
+            {
+                //In or out of single / double quotes
+                if (quote == '.') quote = cc;
+                else if (quote == cc) quote = '.';
+            }
+            else if ((quote == '.') && ((cc == '&') || (cc == '|') || (cc == '`') || ((cc == '$') && (nc == '('))))
+            {
+                //Unsafe code may be present
+                return false;
+            }
+
+        #endif // __WINDOWS__
+
+        pos++;
+
+    }
+
+    //Command seems safe
+    return true;
+}
+
+
+
+//---------------------------------------------------------------------------------------
 //Public functions
 //---------------------------------------------------------------------------------------
 
@@ -503,7 +566,7 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
     bool preset_only = job->skip_in_files >= 0; //job->in1.Len() == 0;
 
     //Handy variables
-    wxString s, t;
+    wxString s, t, input_args;
 
     //List of input files and their arguments
     wxArrayString input_list;
@@ -523,6 +586,9 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
 
     //Find the preset to be used for this job
     LPFFQ_PRESET pst = (job->preset_ptr != NULL) ? (LPFFQ_PRESET)job->preset_ptr : FFQPresetMgr::Get()->GetPreset(job->preset_id.ToString());
+
+    //Create input arguments for HW decoding
+    input_args = (pst == NULL) ? "" : MakeHWDecodeArgs(pst->hw_decode);
 
     //If preset is used and preset uses two-pass EncodingPass must be incremented (0 for new job)
     if ((!for_preview) && (pst != NULL) && pst->two_pass) encoding_pass++;
@@ -928,9 +994,20 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
         if (has_video && (pst->aspect_ratio.Len() > 0)) preset += "-aspect " + pst->aspect_ratio + " ";
 
         //Append the proper custom arguments
-        if (for_preview && (pst->custom_args_1.Len() > 0)) preset += pst->custom_args_1 + " ";
-        else if ((encoding_pass < 2) && (pst->custom_args_1.Len() > 0)) preset += pst->custom_args_1 + " ";
-        else if ((encoding_pass > 1) && (pst->custom_args_2.Len() > 0)) preset += pst->custom_args_2 + " ";
+        if (for_preview && (pst->custom_args_1.Len() > 0)) s = pst->custom_args_1;
+        else if ((encoding_pass < 2) && (pst->custom_args_1.Len() > 0)) s = pst->custom_args_1;
+        else if ((encoding_pass > 1) && (pst->custom_args_2.Len() > 0)) s = pst->custom_args_2;
+
+        //Split into input_args and args added to preset
+        int p = s.Find("||");
+        if (p == 0) s.Remove(0, 2);
+        else if (p >= 0)
+        {
+            input_args += s.SubString(0, p - 1) + " ";
+            s.Remove(0, p + 2);
+        }
+
+        preset += s + " ";
 
     }
 
@@ -952,7 +1029,7 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
     if (preset_only) t = CMD_INPUTS + t;
 
     //Insert inputs & mapping to command line
-    CommandLineReplace(s, CMD_INPUTS, t + mapping);
+    CommandLineReplace(s, CMD_INPUTS, input_args + t + mapping);
 
     //Insert preset
     CommandLineReplace(s, CMD_PRESET, preset);
@@ -1006,6 +1083,9 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
 
     if (for_preview)
     {
+
+        //Is the command safe for previewing?
+        IsPreviewSafe = IsCommandSafe(preset);
 
         //Add the pipe commands for ffmpeg > ffplay using the matroska container
         PLAYER_TYPE ptype;

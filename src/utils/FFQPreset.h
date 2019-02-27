@@ -49,6 +49,7 @@ typedef struct FFQ_PRESET
              video_sync, //video synchronization
              video_quality, //Video quality settings
              key_frames, //Key frame detection settings
+             hw_decode, //Settings for hardware decoding of video
              audio_codec, //Audio codec
              audio_rate, //Audio bit rate settings
              audio_quality, //Audio quality settings

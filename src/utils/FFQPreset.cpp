@@ -37,6 +37,7 @@ const wxString PRESET_VIDEO_SYNC = "video_sync";
 const wxString PRESET_VIDEO_QUALITY = "video_quality";
 const wxString PRESET_FRAME_RATE = "frame_rate";
 const wxString PRESET_KEY_FRAMES = "key_frames";
+const wxString PRESET_HW_DECODE = "hw_decode";
 const wxString PRESET_TWO_PASS = "two_pass";
 const wxString PRESET_TWO_PASS_NULL = "two_pass_null";
 const wxString PRESET_TRELLIS = "trellis";
@@ -108,6 +109,7 @@ FFQ_PRESET::FFQ_PRESET(wxString &preset)
         else if (n == PRESET_VIDEO_RATE) video_rate = v;
         else if (n == PRESET_FRAME_RATE) frame_rate = v;
         else if (n == PRESET_KEY_FRAMES) key_frames = v;
+        else if (n == PRESET_HW_DECODE) hw_decode = v;
         else if (n == PRESET_VIDEO_SYNC) video_sync = v;
         else if (n == PRESET_VIDEO_QUALITY) video_quality = v;
         else if (n == PRESET_TWO_PASS) two_pass = (v == STR_YES);
@@ -221,6 +223,7 @@ void FFQ_PRESET::Reset(bool new_preset)
     video_sync = "";
     video_quality = "";
     key_frames = "";
+    hw_decode = "";
     audio_codec = new_preset ? "mp3" : "";
     audio_rate = new_preset ? "128,1" : "";
     audio_quality = "";
@@ -317,6 +320,7 @@ wxString FFQ_PRESET::ToString()
     if (video_rate.Len() > 0) res += PRESET_VIDEO_RATE + "=" + video_rate + CRLF;
     if (frame_rate.Len() > 0) res += PRESET_FRAME_RATE + "=" + frame_rate + CRLF;
     if (key_frames.Len() > 0) res += PRESET_KEY_FRAMES + "=" + key_frames + CRLF;
+    if (hw_decode.Len() > 0) res += PRESET_HW_DECODE + "=" + hw_decode + CRLF;
     if (video_sync.Len() > 0) res += PRESET_VIDEO_SYNC + "=" + video_sync + CRLF;
     if (video_quality.Len() > 0) res += PRESET_VIDEO_QUALITY + "=" + video_quality + CRLF;
     if (two_pass) res += PRESET_TWO_PASS + "=" + STR_YES + CRLF;

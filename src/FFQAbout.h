@@ -28,14 +28,14 @@
 
 #ifndef WX_PRECOMP
 	//(*HeadersPCH(FFQAbout)
-	#include <wx/dialog.h>
-	#include <wx/sizer.h>
 	#include <wx/button.h>
+	#include <wx/dialog.h>
 	#include <wx/hyperlink.h>
 	#include <wx/panel.h>
+	#include <wx/sizer.h>
+	#include <wx/statbmp.h>
 	#include <wx/stattext.h>
 	#include <wx/textctrl.h>
-	#include <wx/statbmp.h>
 	//*)
 #endif
 //(*Headers(FFQAbout)
@@ -54,13 +54,13 @@ class FFQAbout: public wxDialog
 		void Execute();
 
 		//(*Declarations(FFQAbout)
-		wxStaticText* Info;
-		wxPanel* AnimPanel;
-		wxTextCtrl* TextCtrl;
 		wxButton* CloseButton;
-		wxStaticText* Hdr;
-		wxStaticText* Bacon;
+		wxPanel* AnimPanel;
 		wxStaticBitmap* StaticBitmap;
+		wxStaticText* Bacon;
+		wxStaticText* Hdr;
+		wxStaticText* Info;
+		wxTextCtrl* TextCtrl;
 		//*)
 
 	protected:

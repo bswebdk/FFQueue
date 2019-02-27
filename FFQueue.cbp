@@ -129,12 +129,12 @@
 				<Option compiler="gcc" />
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
-					<Add option="`$(#wx)/gtk-build/wx-config --version=3.1 --static=yes --unicode=yes --debug=yes --cflags`" />
 					<Add option="-g" />
+					<Add option="`$(#wx)/gtk-build/wx-config --static=yes --unicode=yes --debug=yes --cflags`" />
 					<Add option="-DDEBUG" />
 				</Compiler>
 				<Linker>
-					<Add option="`$(#wx)/gtk-build/wx-config --version=3.1 --static=yes --debug=yes --libs`" />
+					<Add option="`$(#wx)/gtk-build/wx-config --static=yes --debug=yes --libs`" />
 					<Add directory="$(#wx)/gtk-build/lib" />
 				</Linker>
 			</Target>
@@ -145,21 +145,22 @@
 				<Option compiler="gcc" />
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
-					<Add option="`$(#wx)/gtk-build/wx-config --version=3.1 --static=yes --unicode=yes --debug=no --cflags`" />
 					<Add option="-O2" />
+					<Add option="`$(#wx)/gtk-build/wx-config --static=yes --unicode=yes --debug=no --cflags`" />
 					<Add option="-DNDEBUG" />
 				</Compiler>
 				<Linker>
-					<Add option="`$(#wx)/gtk-build/wx-config --version=3.1 --static=yes --debug=no --libs`" />
 					<Add option="-s" />
-					<Add option="-static-libgcc" />
 					<Add option="-static-libstdc++" />
+					<Add option="-static-libgcc" />
+					<Add option="`$(#wx)/gtk-build/wx-config --static=yes --debug=no --libs`" />
 					<Add directory="$(#wx)/gtk-build/lib" />
 				</Linker>
 			</Target>
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
+			<Add option="-fPIC" />
 			<Add option="-std=gnu++11" />
 			<Add option="-Winvalid-pch" />
 			<Add option="-include wx_pch.h" />
@@ -315,12 +316,10 @@
 		<Unit filename="src/utils/FFQDebugUtils.cpp">
 			<Option target="Debug_Win" />
 			<Option target="Debug_Lin" />
-			<Option target="Debug_Lin_wx310" />
 		</Unit>
 		<Unit filename="src/utils/FFQDebugUtils.h">
 			<Option target="Debug_Win" />
 			<Option target="Debug_Lin" />
-			<Option target="Debug_Lin_wx310" />
 		</Unit>
 		<Unit filename="src/utils/FFQFilter.cpp" />
 		<Unit filename="src/utils/FFQFilter.h" />

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=FFQueue
+Comment=Graphical user interface for FFmpeg
+Exec=ffqueue
+Icon=ffqueue
+Terminal=false
+Categories=AudioVideo;AudioVideoEditing;

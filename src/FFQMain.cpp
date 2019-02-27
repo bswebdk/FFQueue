@@ -37,6 +37,7 @@
     #include "utils/FFQDebugUtils.h"
     #include "utils/FFQCodecInfo.h"
     #include <wx/cmdline.h>
+    #include <wx/stdpaths.h>
     //#include "utils/FFQNvpList.h"
     //#include "FFQFilterEdit.h"
 #endif // DEBUG
@@ -47,7 +48,7 @@
 #ifdef __WINDOWS__
     #include <windows.h>
 #else
-    #include "res/MainIcon32.xpm"
+    #include "../res/MainIcon32.xpm"
     //It may be nescessary to uncomment the following lines if 16x16 and/or 64x64 icons are required
     //#include "res/MainIcon16.xpm"
     //#include "res/MainIcon64.xpm"
@@ -639,6 +640,7 @@ bool FFQMain::PreviewCommand(wxString cmd, bool add_to_console)
     */
 
     cmd = FFQCFG()->GetConsoleCommand(FFQCFG()->GetFFMpegCommand(), cmd);
+    if (cmd.Len() == 0) return false;
 
     //Only add command to console when queue is passive
     if (add_to_console) Console->AppendLine(CRLF + FFQSF(SID_LOG_EXEC_PREVIEW_CMD, cmd), COLOR_GRAY);
@@ -1205,7 +1207,7 @@ void FFQMain::BatchMakeJobs(wxArrayString *files, bool releaseFilesPtr)
             BatchMaker->Clear();
 
             //Save items if required
-            if (!FFQCFG()->save_on_modify) SaveItems();
+            if (FFQCFG()->save_on_modify) SaveItems();
 
         }
     }
@@ -1290,7 +1292,8 @@ void FFQMain::DefineItem(long index, LPFFQ_QUEUE_ITEM item, DEFINE_SELECT select
     }
 
     //Save items if required
-    if (save_if_required && (!FFQCFG()->save_on_modify)) SaveItems();
+    //if (save_if_required && (!FFQCFG()->save_on_modify)) SaveItems();
+    if (save_if_required && FFQCFG()->save_on_modify) SaveItems();
 
 }
 
@@ -1494,7 +1497,7 @@ void FFQMain::MoveItems(bool up)
     ListView->Thaw();
 
     //Save if required
-    if (!FFQCFG()->save_on_modify) SaveItems();
+    if (FFQCFG()->save_on_modify) SaveItems();
 
 }
 
@@ -2133,7 +2136,11 @@ void FFQMain::OnToolBarButtonClick(wxCommandEvent& event)
 
         LPFFQ_QUEUE_ITEM item = GetSelectedItem();
         wxString cmd = item->GetPreviewCommand();
-        if (cmd.Len() > 0) PreviewCommand(cmd, m_EncodingProcess == NULL);
+        if (cmd.Len() > 0)
+        {
+            if (IsPreviewSafe || (wxMessageBox(FFQS(SID_INLINE_SHELL_CODE_WARNING), FFQS(SID_WARNING), wxICON_WARNING|wxYES_NO) == wxYES))
+                PreviewCommand(cmd, m_EncodingProcess == NULL);
+        }
 
         /*LPFFQ_JOB job = (LPFFQ_JOB)GetSelectedItem();
         if (job == NULL) return;
@@ -2465,9 +2472,13 @@ void FFQMain::OnShow(wxShowEvent &event)
         FFQCFG()->LoadConfig();
         ShowFFMpegVersion(true);
         LoadItems();
-        ValidateItems();
+        if (FFQCFG()->validate_on_load) ValidateItems();
         UpdateControls();
         if (FFQCFG()->save_window_pos) SetWindowPos(FFQCFG()->window_position);
+
+        #ifdef DEBUG
+
+        #endif // DEBUG
 
     }
 

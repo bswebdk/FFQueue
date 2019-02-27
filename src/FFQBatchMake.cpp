@@ -50,6 +50,9 @@ const long FFQBatchMake::ID_ST1 = wxNewId();
 const long FFQBatchMake::ID_INCLUDEVIDEO = wxNewId();
 const long FFQBatchMake::ID_INCLUDEAUDIO = wxNewId();
 const long FFQBatchMake::ID_INCLUDESUBS = wxNewId();
+const long FFQBatchMake::ID_NOFAILVIDEO = wxNewId();
+const long FFQBatchMake::ID_NOFAILAUDIO = wxNewId();
+const long FFQBatchMake::ID_NOFAILSUBS = wxNewId();
 const long FFQBatchMake::ID_STATICLINE1 = wxNewId();
 const long FFQBatchMake::ID_ST2 = wxNewId();
 const long FFQBatchMake::ID_PREFAUDIO = wxNewId();
@@ -86,16 +89,16 @@ const wxString PATH_TOKEN = "\"*?*\""; //Just something that is forbidden in pat
 FFQBatchMake::FFQBatchMake(wxWindow* parent,wxWindowID id)
 {
 	//(*Initialize(FFQBatchMake)
-	wxFlexGridSizer* FlexGridSizer8;
-	wxFlexGridSizer* FlexGridSizer1;
-	wxStaticBoxSizer* SBS1;
-	wxFlexGridSizer* FlexGridSizer2;
-	wxFlexGridSizer* FlexGridSizer7;
-	wxFlexGridSizer* FlexGridSizer4;
-	wxFlexGridSizer* FlexGridSizer6;
-	wxFlexGridSizer* FlexGridSizer3;
 	wxBoxSizer* BoxSizer1;
+	wxFlexGridSizer* FlexGridSizer1;
+	wxFlexGridSizer* FlexGridSizer2;
+	wxFlexGridSizer* FlexGridSizer3;
+	wxFlexGridSizer* FlexGridSizer4;
 	wxFlexGridSizer* FlexGridSizer5;
+	wxFlexGridSizer* FlexGridSizer6;
+	wxFlexGridSizer* FlexGridSizer7;
+	wxFlexGridSizer* FlexGridSizer8;
+	wxStaticBoxSizer* SBS1;
 
 	Create(parent, id, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE, _T("id"));
 	MainSizer = new wxFlexGridSizer(4, 1, 0, 0);
@@ -110,14 +113,14 @@ FFQBatchMake::FFQBatchMake(wxWindow* parent,wxWindowID id)
 	SBS1 = new wxStaticBoxSizer(wxHORIZONTAL, this, _T("Props"));
 	FlexGridSizer3 = new wxFlexGridSizer(11, 1, 0, 0);
 	FlexGridSizer3->AddGrowableCol(0);
-	FlexGridSizer4 = new wxFlexGridSizer(1, 4, 0, 0);
+	FlexGridSizer4 = new wxFlexGridSizer(2, 4, 0, 0);
 	FlexGridSizer4->AddGrowableCol(1);
 	FlexGridSizer4->AddGrowableCol(2);
 	FlexGridSizer4->AddGrowableCol(3);
-	ST1 = new wxStaticText(this, ID_ST1, _T("SelC:"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_ST1"));
+	ST1 = new wxStaticText(this, ID_ST1, _T("SelC"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_ST1"));
 	ST1->SetLabel(FFQS(SID_BATCHMAKE_SEL_CONTENT));
 	SBS1->GetStaticBox()->SetLabel(FFQS(SID_BATCHMAKE_DEFINE_PROPERTIES));
-	FlexGridSizer4->Add(ST1, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+	FlexGridSizer4->Add(ST1, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
 	IncludeVideo = new wxCheckBox(this, ID_INCLUDEVIDEO, _T("V"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_INCLUDEVIDEO"));
 	IncludeVideo->SetValue(false);
 	IncludeVideo->SetLabel(FFQS(SID_COMMON_VIDEO));
@@ -130,6 +133,21 @@ FFQBatchMake::FFQBatchMake(wxWindow* parent,wxWindowID id)
 	IncludeSubs->SetValue(false);
 	IncludeSubs->SetLabel(FFQS(SID_COMMON_SUBTITLES));
 	FlexGridSizer4->Add(IncludeSubs, 1, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 0);
+	ST7 = new wxStaticText(this, wxID_ANY, _T("NoFa"), wxDefaultPosition, wxDefaultSize, 0, _T("wxID_ANY"));
+	ST7->SetLabel(FFQS(SID_BATCHMAKE_NOFAIL_CONTENT));
+	FlexGridSizer4->Add(ST7, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
+	NoFailVideo = new wxCheckBox(this, ID_NOFAILVIDEO, _T("V"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_NOFAILVIDEO"));
+	NoFailVideo->SetValue(false);
+	NoFailVideo->SetLabel(FFQS(SID_COMMON_VIDEO));
+	FlexGridSizer4->Add(NoFailVideo, 1, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 0);
+	NoFailAudio = new wxCheckBox(this, ID_NOFAILAUDIO, _T("A"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_NOFAILAUDIO"));
+	NoFailAudio->SetValue(false);
+	NoFailAudio->SetLabel(FFQS(SID_COMMON_AUDIO));
+	FlexGridSizer4->Add(NoFailAudio, 1, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 0);
+	NoFailSubs = new wxCheckBox(this, ID_NOFAILSUBS, _T("S"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_NOFAILSUBS"));
+	NoFailSubs->SetValue(false);
+	NoFailSubs->SetLabel(FFQS(SID_COMMON_SUBTITLES));
+	FlexGridSizer4->Add(NoFailSubs, 1, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 0);
 	FlexGridSizer3->Add(FlexGridSizer4, 1, wxALL|wxEXPAND, 3);
 	StaticLine1 = new wxStaticLine(this, ID_STATICLINE1, wxDefaultPosition, wxSize(10,-1), wxLI_HORIZONTAL, _T("ID_STATICLINE1"));
 	FlexGridSizer3->Add(StaticLine1, 1, wxTOP|wxBOTTOM|wxEXPAND, 3);
@@ -718,9 +736,9 @@ void FFQBatchMake::MakeJobs(bool dry_run)
             GetStreamsFromParser(&m_PIPS[0], 1, smap1);
             GetStreamsFromParser(&m_PIPS[1], 2, smap2);
 
-            if ((m_VidIdx < 0) && IncludeVideo->GetValue()) LogLine("\t" + FFQSF(SID_LOG_CONTENT_NOT_FOUND, FFQS(SID_COMMON_VIDEO)), COLOR_RED);
-            else if ((m_AudIdx < 0) && IncludeAudio->GetValue()) LogLine("\t" + FFQSF(SID_LOG_CONTENT_NOT_FOUND, FFQS(SID_COMMON_AUDIO)), COLOR_RED);
-            else if ((m_SubsIdx < 0) && IncludeSubs->GetValue()) LogLine("\t" + FFQSF(SID_LOG_CONTENT_NOT_FOUND, FFQS(SID_COMMON_SUBTITLES)), COLOR_RED);
+            if ((m_VidIdx < 0) && (!NoFailVideo->GetValue()) && IncludeVideo->GetValue()) LogLine("\t" + FFQSF(SID_LOG_CONTENT_NOT_FOUND, FFQS(SID_COMMON_VIDEO)), COLOR_RED);
+            else if ((m_AudIdx < 0) && (!NoFailAudio->GetValue()) && IncludeAudio->GetValue()) LogLine("\t" + FFQSF(SID_LOG_CONTENT_NOT_FOUND, FFQS(SID_COMMON_AUDIO)), COLOR_RED);
+            else if ((m_SubsIdx < 0) && (!NoFailSubs->GetValue()) && IncludeSubs->GetValue()) LogLine("\t" + FFQSF(SID_LOG_CONTENT_NOT_FOUND, FFQS(SID_COMMON_SUBTITLES)), COLOR_RED);
             else
             {
 
@@ -956,6 +974,11 @@ void FFQBatchMake::UpdateControls()
     ST6->Enable(IncludeSubs->GetValue());
     PrefSubs->Enable(IncludeSubs->GetValue());
     SubsInverse->Enable(IncludeSubs->GetValue() && (StrTrim(PrefSubs->GetValue()).Len() > 0));
+
+    //Enable no-fail controls
+    NoFailVideo->Enable(IncludeVideo->GetValue());
+    NoFailAudio->Enable(IncludeAudio->GetValue());
+    NoFailSubs->Enable(IncludeSubs->GetValue());
 
 }
 

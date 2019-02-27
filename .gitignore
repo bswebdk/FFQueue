@@ -1,6 +1,8 @@
+# Project
 bin/*
 obj/*
 build/*
+build2/*
 junk/*
 res/org/*
 res/junk/*
@@ -8,3 +10,18 @@ res/junk/*
 *.depend
 *.save
 .copykit
+FFQueue.cfg
+ffqueue.cfg
+Makefile
+locale/*
+
+# AutoTools
+autom4te.cache/*
+config.status
+config.log
+
+# CMake
+.deps/*
+CMakeFiles
+CMakeCache.txt
+cmake_install.cmake

@@ -27,6 +27,7 @@
 //#include "../FFQApp.h"
 #include <wx/app.h>
 #include <wx/file.h>
+#include <wx/filefn.h>
 #include <wx/dir.h>
 #include <wx/filename.h>
 #include <wx/base64.h>

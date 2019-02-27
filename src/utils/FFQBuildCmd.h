@@ -39,6 +39,9 @@ extern const wxString CODEC_SUBS_BURNIN;
 extern const unsigned int ENCODER_PRESET_COUNT;
 extern const wxString ENCODER_PRESETS[];
 
+//Used to flag if previewing a command is safe
+extern bool IsPreviewSafe;
+
 //Function interfaces
 void CommandLineReplace(wxString &cmd, const wxString old_str, const wxString new_str);
 wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview = false, bool audio_filters_complex = false);

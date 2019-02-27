@@ -97,6 +97,11 @@ const long FFQPresetEdit::ID_SPEEDPRESET = wxNewId();
 const long FFQPresetEdit::ID_OST5 = wxNewId();
 const long FFQPresetEdit::ID_VIDEOTHREADS = wxNewId();
 const long FFQPresetEdit::ID_OTHERPAGE = wxNewId();
+const long FFQPresetEdit::ID_HWD_ACCEL = wxNewId();
+const long FFQPresetEdit::ID_HWD_CODEC = wxNewId();
+const long FFQPresetEdit::ID_HWD_DEVICE = wxNewId();
+const long FFQPresetEdit::ID_HWD_DEVICEINIT = wxNewId();
+const long FFQPresetEdit::ID_HWDECODEPAGE = wxNewId();
 const long FFQPresetEdit::ID_VIDEOPAGES = wxNewId();
 const long FFQPresetEdit::ID_VIDEOPAGE = wxNewId();
 const long FFQPresetEdit::ID_AUDIOCODEC = wxNewId();
@@ -148,9 +153,9 @@ const long FFQPresetEdit::ID_FOURCC_VID = wxNewId();
 const long FFQPresetEdit::ID_ST52 = wxNewId();
 const long FFQPresetEdit::ID_FOURCC_AUD = wxNewId();
 const long FFQPresetEdit::ID_CST1 = wxNewId();
-const long FFQPresetEdit::ID_CUSTOMARGS = wxNewId();
+const long FFQPresetEdit::ID_CUSTOM_ARGS_1 = wxNewId();
 const long FFQPresetEdit::ID_CST2 = wxNewId();
-const long FFQPresetEdit::ID_CUSTOMARGS2 = wxNewId();
+const long FFQPresetEdit::ID_CUSTOM_ARGS_2 = wxNewId();
 const long FFQPresetEdit::ID_SEGMENTLEN = wxNewId();
 const long FFQPresetEdit::ID_SEGMENTLENTYPE = wxNewId();
 const long FFQPresetEdit::ID_SEGMENTLISTTYPE = wxNewId();
@@ -192,45 +197,45 @@ const long FFQPresetEdit::ID_ADD_FILTER_MENU_BASE = wxNewId();
 FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 {
 	//(*Initialize(FFQPresetEdit)
-	wxStaticBoxSizer* SBS52;
-	wxFlexGridSizer* FlexGridSizer21;
-	wxFlexGridSizer* FlexGridSizer28;
-	wxStaticBoxSizer* SegmentingSizer;
-	wxFlexGridSizer* FlexGridSizer8;
-	wxFlexGridSizer* FlexGridSizer1;
-	wxStaticBoxSizer* SBS1;
-	wxFlexGridSizer* FlexGridSizer2;
-	wxFlexGridSizer* FlexGridSizer25;
-	wxFlexGridSizer* FlexGridSizer15;
-	wxFlexGridSizer* FlexGridSizer17;
-	wxFlexGridSizer* FlexGridSizer11;
-	wxFlexGridSizer* FlexGridSizer19;
-	wxStaticBoxSizer* SBS51;
-	wxStaticBoxSizer* SSBS1;
-	wxStaticBoxSizer* VSBS1;
-	wxFlexGridSizer* FlexGridSizer7;
-	wxBoxSizer* BoxSizer2;
-	wxFlexGridSizer* FlexGridSizer4;
-	wxFlexGridSizer* FlexGridSizer26;
-	wxFlexGridSizer* FlexGridSizer9;
-	wxFlexGridSizer* FlexGridSizer14;
-	wxFlexGridSizer* FlexGridSizer6;
-	wxFlexGridSizer* FlexGridSizer27;
-	wxFlexGridSizer* FlexGridSizer3;
-	wxFlexGridSizer* FlexGridSizer22;
-	wxFlexGridSizer* FlexGridSizer100;
-	wxFlexGridSizer* FlexGridSizer16;
-	wxFlexGridSizer* FlexGridSizer23;
-	wxFlexGridSizer* FlexGridSizer10;
 	wxBoxSizer* BoxSizer1;
-	wxFlexGridSizer* FlexGridSizer13;
-	wxFlexGridSizer* FlexGridSizer18;
+	wxBoxSizer* BoxSizer2;
+	wxFlexGridSizer* FlexGridSizer100;
+	wxFlexGridSizer* FlexGridSizer10;
+	wxFlexGridSizer* FlexGridSizer11;
 	wxFlexGridSizer* FlexGridSizer12;
-	wxStaticBoxSizer* ASBS1;
-	wxFlexGridSizer* FlexGridSizer5;
-	wxStaticBoxSizer* SBS31;
-	wxFlexGridSizer* FlexGridSizer24;
+	wxFlexGridSizer* FlexGridSizer13;
+	wxFlexGridSizer* FlexGridSizer14;
+	wxFlexGridSizer* FlexGridSizer15;
+	wxFlexGridSizer* FlexGridSizer16;
+	wxFlexGridSizer* FlexGridSizer17;
+	wxFlexGridSizer* FlexGridSizer18;
+	wxFlexGridSizer* FlexGridSizer19;
+	wxFlexGridSizer* FlexGridSizer1;
 	wxFlexGridSizer* FlexGridSizer20;
+	wxFlexGridSizer* FlexGridSizer21;
+	wxFlexGridSizer* FlexGridSizer22;
+	wxFlexGridSizer* FlexGridSizer23;
+	wxFlexGridSizer* FlexGridSizer24;
+	wxFlexGridSizer* FlexGridSizer25;
+	wxFlexGridSizer* FlexGridSizer26;
+	wxFlexGridSizer* FlexGridSizer27;
+	wxFlexGridSizer* FlexGridSizer28;
+	wxFlexGridSizer* FlexGridSizer2;
+	wxFlexGridSizer* FlexGridSizer3;
+	wxFlexGridSizer* FlexGridSizer4;
+	wxFlexGridSizer* FlexGridSizer5;
+	wxFlexGridSizer* FlexGridSizer6;
+	wxFlexGridSizer* FlexGridSizer7;
+	wxFlexGridSizer* FlexGridSizer8;
+	wxFlexGridSizer* FlexGridSizer9;
+	wxStaticBoxSizer* ASBS1;
+	wxStaticBoxSizer* SBS1;
+	wxStaticBoxSizer* SBS31;
+	wxStaticBoxSizer* SBS51;
+	wxStaticBoxSizer* SBS52;
+	wxStaticBoxSizer* SSBS1;
+	wxStaticBoxSizer* SegmentingSizer;
+	wxStaticBoxSizer* VSBS1;
 
 	Create(parent, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE, _T("wxID_ANY"));
 	FlexGridSizer1 = new wxFlexGridSizer(3, 1, 0, 0);
@@ -482,10 +487,37 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 	OtherPage->SetSizer(VideoOtherSizer);
 	VideoOtherSizer->Fit(OtherPage);
 	VideoOtherSizer->SetSizeHints(OtherPage);
+	HWDecodePage = new wxPanel(VideoPages, ID_HWDECODEPAGE, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, _T("ID_HWDECODEPAGE"));
+	VideoHWDecodeSizer = new wxFlexGridSizer(4, 2, 0, 0);
+	VideoHWDecodeSizer->AddGrowableCol(1);
+	HWD1 = new wxStaticText(HWDecodePage, wxID_ANY, _T("Dc"), wxDefaultPosition, wxDefaultSize, 0, _T("wxID_ANY"));
+	HWD1->SetLabel(FFQS(SID_PRESET_HWDECODE_ACCEL));
+	VideoHWDecodeSizer->Add(HWD1, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
+	HWD_Accel = new wxChoice(HWDecodePage, ID_HWD_ACCEL, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator, _T("ID_HWD_ACCEL"));
+	VideoHWDecodeSizer->Add(HWD_Accel, 1, wxALL|wxEXPAND, 3);
+	HWD2 = new wxStaticText(HWDecodePage, wxID_ANY, _T("Cd"), wxDefaultPosition, wxDefaultSize, 0, _T("wxID_ANY"));
+	HWD2->SetLabel(FFQS(SID_PRESET_HWDECODE_CODEC));
+	VideoHWDecodeSizer->Add(HWD2, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
+	HWD_Codec = new wxComboBox(HWDecodePage, ID_HWD_CODEC, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator, _T("ID_HWD_CODEC"));
+	VideoHWDecodeSizer->Add(HWD_Codec, 1, wxALL|wxEXPAND, 3);
+	HWD3 = new wxStaticText(HWDecodePage, wxID_ANY, _T("Dev"), wxDefaultPosition, wxDefaultSize, 0, _T("wxID_ANY"));
+	HWD3->SetLabel(FFQS(SID_PRESET_HWDECODE_DEVICE));
+	VideoHWDecodeSizer->Add(HWD3, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
+	HWD_Device = new wxTextCtrl(HWDecodePage, ID_HWD_DEVICE, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_HWD_DEVICE"));
+	VideoHWDecodeSizer->Add(HWD_Device, 1, wxALL|wxEXPAND, 3);
+	HWD4 = new wxStaticText(HWDecodePage, wxID_ANY, _T("Init"), wxDefaultPosition, wxDefaultSize, 0, _T("wxID_ANY"));
+	HWD4->SetLabel(FFQS(SID_PRESET_HWDECODE_DEVICE_INIT));
+	VideoHWDecodeSizer->Add(HWD4, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
+	HWD_DeviceInit = new wxTextCtrl(HWDecodePage, ID_HWD_DEVICEINIT, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_HWD_DEVICEINIT"));
+	VideoHWDecodeSizer->Add(HWD_DeviceInit, 1, wxALL|wxEXPAND, 3);
+	HWDecodePage->SetSizer(VideoHWDecodeSizer);
+	VideoHWDecodeSizer->Fit(HWDecodePage);
+	VideoHWDecodeSizer->SetSizeHints(HWDecodePage);
 	VideoPages->AddPage(BitRatePage, _T("Br"), false);
 	VideoPages->AddPage(QualityPage, _T("Q"), false);
 	VideoPages->AddPage(KeyFramesPage, _T("Kf"), false);
 	VideoPages->AddPage(OtherPage, _T("Ot"), false);
+	VideoPages->AddPage(HWDecodePage, _T("HWD"), false);
 	FlexGridSizer13->Add(VideoPages, 1, wxALL|wxEXPAND, 3);
 	VideoPage->SetSizer(FlexGridSizer13);
 	FlexGridSizer13->Fit(VideoPage);
@@ -747,13 +779,13 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 	SBS52->GetStaticBox()->SetLabel(FFQS(SID_PRESET_CUSTOM_CMDLINE_ARGS));
 	CST1->SetLabel(FFQS(SID_PRESET_CUSTOM_ARGS_PASS_1));
 	FlexGridSizer20->Add(CST1, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
-	CustomArgs1 = new wxTextCtrl(MiscPage, ID_CUSTOMARGS, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CUSTOMARGS"));
+	CustomArgs1 = new wxTextCtrl(MiscPage, ID_CUSTOM_ARGS_1, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CUSTOM_ARGS_1"));
 	SBS52->GetStaticBox()->SetLabel(FFQS(SID_PRESET_CUSTOM_CMDLINE_ARGS));
 	FlexGridSizer20->Add(CustomArgs1, 1, wxALL|wxEXPAND, 3);
 	CST2 = new wxStaticText(MiscPage, ID_CST2, _T("P2"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_CST2"));
 	CST2->SetLabel(FFQS(SID_PRESET_CUSTOM_ARGS_PASS_2));
 	FlexGridSizer20->Add(CST2, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
-	CustomArgs2 = new wxTextCtrl(MiscPage, ID_CUSTOMARGS2, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CUSTOMARGS2"));
+	CustomArgs2 = new wxTextCtrl(MiscPage, ID_CUSTOM_ARGS_2, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CUSTOM_ARGS_2"));
 	FlexGridSizer20->Add(CustomArgs2, 1, wxALL|wxEXPAND, 3);
 	SBS52->Add(FlexGridSizer20, 1, wxALL|wxEXPAND, 0);
 	FlexGridSizer14->Add(SBS52, 1, wxALL|wxEXPAND, 5);
@@ -845,11 +877,11 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 	BoxSizer1 = new wxBoxSizer(wxHORIZONTAL);
 	BoxSizer1->Add(-1,-1,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	BoxSizer1->Add(-1,-1,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-	OKButton = new wxButton(this, ID_OKBUTTON, _T("O"), wxDefaultPosition, wxSize(100,25), 0, wxDefaultValidator, _T("ID_OKBUTTON"));
+	OKButton = new wxButton(this, ID_OKBUTTON, _T("O"), wxDefaultPosition, wxSize(100,-1), 0, wxDefaultValidator, _T("ID_OKBUTTON"));
 	OKButton->SetDefault();
 	OKButton->SetLabel(FFQS(SID_COMMON_OK));
 	BoxSizer1->Add(OKButton, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-	CancelButton = new wxButton(this, ID_CANCELBUTTON, _T("C"), wxDefaultPosition, wxSize(100,25), 0, wxDefaultValidator, _T("ID_CANCELBUTTON"));
+	CancelButton = new wxButton(this, ID_CANCELBUTTON, _T("C"), wxDefaultPosition, wxSize(100,-1), 0, wxDefaultValidator, _T("ID_CANCELBUTTON"));
 	CancelButton->SetLabel(FFQS(SID_COMMON_CANCEL));
 	BoxSizer1->Add(CancelButton, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	FlexGridSizer1->Add(BoxSizer1, 1, wxALL|wxEXPAND, 5);
@@ -895,7 +927,6 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 	Connect(ID_FILTERUPBUTTON,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&FFQPresetEdit::OnButtonClick);
 	Connect(ID_FILTERDOWNBUTTON,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&FFQPresetEdit::OnButtonClick);
 	Connect(ID_FILTERPREVIEWBUTTON,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&FFQPresetEdit::OnButtonClick);
-	Connect(ID_METADATA,wxEVT_GRID_CELL_CHANGE,(wxObjectEventFunction)&FFQPresetEdit::OnMetaDataCellChange);
 	Connect(ID_PAGES,wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGED,(wxObjectEventFunction)&FFQPresetEdit::OnNotebookPageChanged);
 	Connect(ID_OKBUTTON,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&FFQPresetEdit::OnButtonClick);
 	Connect(ID_CANCELBUTTON,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&FFQPresetEdit::OnButtonClick);
@@ -916,6 +947,7 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 	VideoPages->SetPageText(VideoPages->FindPage(QualityPage), FFQS(SID_PRESET_QUALITY));
 	VideoPages->SetPageText(VideoPages->FindPage(KeyFramesPage), FFQS(SID_PRESET_KEYFRAMES));
 	VideoPages->SetPageText(VideoPages->FindPage(OtherPage), FFQS(SID_PRESET_OTHER));
+	VideoPages->SetPageText(VideoPages->FindPage(HWDecodePage), FFQS(SID_PRESET_HWDECODE));
 
 	wxMenu *vid = new wxMenu(), *aud = new wxMenu(), *cur = vid;
 
@@ -1027,7 +1059,7 @@ bool FFQPresetEdit::Execute(LPFFQ_PRESET preset)
 
     //Video options
     wxString s = FFQCFG()->GetFFMpegCodecs(ctVIDEO), t;
-    SetChoiceItems(VideoCodec, s, preset->video_codec);
+    SetItems(VideoCodec, s, preset->video_codec);
     TwoPass->SetValue(preset->two_pass);
     TwoPassNull->SetValue(preset->two_pass_null);
 
@@ -1094,11 +1126,22 @@ bool FFQPresetEdit::Execute(LPFFQ_PRESET preset)
     SpeedPreset->SetValue(preset->speed_preset);
     VideoThreads->SetValue(preset->threads);
 
+    //HW Decode settings
+    wxString hwd = preset->hw_decode;
+    s = FFQCFG()->GetHWAccelerators();
+    t = GetToken(hwd, ",", true);
+    SetItems(HWD_Accel, s, t, false);
+    s = FFQCFG()->GetHWDecoders();
+    t = GetToken(hwd, ",", true);
+    SetItems(HWD_Codec, s, t, false);
+    HWD_Device->SetValue(GetToken(hwd, ",", true));
+    HWD_DeviceInit->SetValue(hwd);
+
 
     //Audio settings
     //Codec
     s = FFQCFG()->GetFFMpegCodecs(ctAUDIO);
-    SetChoiceItems(AudioCodec, s, preset->audio_codec);
+    SetItems(AudioCodec, s, preset->audio_codec);
 
     //Bit rate
     AudioBitRate->SetValues(preset->audio_rate);
@@ -1115,7 +1158,7 @@ bool FFQPresetEdit::Execute(LPFFQ_PRESET preset)
 
     //Subtitles settings
     s = FFQCFG()->GetFFMpegCodecs(ctSUBTITLE);
-    SetChoiceItems(SubsCodec, s, preset->subtitles.codec);
+    SetItems(SubsCodec, s, preset->subtitles.codec);
     SubsText->SetValue(!preset->subtitles.bitmap);
     SubsBitmap->SetValue(preset->subtitles.bitmap);
     SubsScale->SetValue(preset->subtitles.scale);
@@ -1249,6 +1292,12 @@ bool FFQPresetEdit::Execute(LPFFQ_PRESET preset)
         preset->speed_preset = StrTrim(SpeedPreset->GetValue());
         preset->threads = StrTrim(VideoThreads->GetValue());
 
+        //HW Decode settings
+        preset->hw_decode = HWD_Accel->GetString(HWD_Accel->GetSelection()) + ",";
+        s = HWD_Codec->GetValue();
+        preset->hw_decode += GetToken(s, " ", false) + ",";
+        preset->hw_decode += HWD_Device->GetValue() + "," + HWD_DeviceInit->GetValue();
+
 
         //Audio settings
         preset->audio_codec = AudioCodec->GetStringSelection().BeforeFirst(' ');
@@ -1355,13 +1404,15 @@ void FFQPresetEdit::PreviewFilters()
 
     if (m_PreviewFile.Len() == 0)
     {
-        wxWindow *p = GetParent();
+        /*wxWindow *p = GetParent();
         if (p) while (p->GetParent()) p = p->GetParent();
         if (p)
         {
             LPFFQ_QUEUE_ITEM item = ((FFQMain*)p)->GetSelectedItem();
             if (item) m_PreviewFile = item->GetInput(0).path;
-        }
+        }*/
+        LPFFQ_QUEUE_ITEM item = FFQMain::getInstance()->GetSelectedItem();
+        if (item) m_PreviewFile = item->GetInput(0).path;
     }
 
     if (m_ShowPreviewDlg)
@@ -1403,79 +1454,100 @@ void FFQPresetEdit::PreviewFilters()
 
 //---------------------------------------------------------------------------------------
 
-void FFQPresetEdit::SetChoiceItems(wxChoice* ch, wxString &items, wxString &select)
+void FFQPresetEdit::SetItems(wxItemContainer* ch, wxString &items, wxString &select, bool is_codec)
 {
-
-    //Set items in a (codec)choice and select the codec from the preset
-
-    //Clear old items
-    ch->Freeze();
+    //Freeze and clear
+    if (dynamic_cast<wxChoice*>(ch)) ((wxChoice*)ch)->Freeze();
+    if (dynamic_cast<wxComboBox*>(ch)) ((wxComboBox*)ch)->Freeze();
     ch->Clear();
 
-    //Copy as first item
-    ch->Append("copy - Copy unmodifed source stream");
+    //Selection for later
+    unsigned int sel = 0;
 
-    wxString cur, codec;
-    unsigned int sel = 0, pref = 1, idx = 0;
-    LPCODEC_INFO cinfo = FFQCFG()->GetCodecInfo(), ci;
-    bool subs = (ch == SubsCodec), selected, showAll = FFQCFG()->full_codec_listings || subs;
-
-    if (subs)
+    if (is_codec)
     {
-        //If subtitles then the second item is BURN-IN
-        ch->Append(CODEC_SUBS_BURNIN + " - Burn subtitles onto video");
-        if (select == CODEC_SUBS_BURNIN) sel = 1;
-    }
+        //Set items in a (codec)choice and select the codec from the preset
 
-    while (items.Len() > 0)
-    {
+        //Copy as first item
+        ch->Append("copy - Copy unmodifed source stream");
 
-        //Get current codec from list
-        cur = GetToken(items, '\n');
-        codec = cur.BeforeFirst(' ');
+        wxString cur, codec;
+        unsigned int pref = 1, idx = 0;
+        LPCODEC_INFO cinfo = FFQCFG()->GetCodecInfo(), ci;
+        bool subs = (ch == SubsCodec), selected, showAll = FFQCFG()->full_codec_listings || subs;
 
-        //Get codec info
-        ci = cinfo->Find(codec);
+        if (subs)
+        {
+            //If subtitles then the second item is BURN-IN
+            ch->Append(CODEC_SUBS_BURNIN + " - Burn subtitles onto video");
+            if (select == CODEC_SUBS_BURNIN) sel = 1;
+        }
 
-        //Is the current codec selected?
-        selected = (codec == select);
-
-        //Insert or append if needed
-        if (showAll || selected || ((ci != NULL) && ci->friendly))
+        while (items.Len() > 0)
         {
 
-            if (ci != NULL)
+            //Get current codec from list
+            cur = GetToken(items, '\n');
+            codec = cur.BeforeFirst(' ');
+
+            //Get codec info
+            ci = cinfo->Find(codec);
+
+            //Is the current codec selected?
+            selected = (codec == select);
+
+            //Insert or append if needed
+            if (showAll || selected || ((ci != NULL) && ci->friendly))
             {
 
-                //Preferred codecs are listed in the top
-                idx = ch->Insert(cur, pref);
-                pref++;
+                if (ci != NULL)
+                {
+
+                    //Preferred codecs are listed in the top
+                    idx = ch->Insert(cur, pref);
+                    pref++;
+
+                }
+                else idx = ch->Append(cur); //Non-preferred codecs are just appended as they are thrown out from ffmpeg
+
+                //Adjust selection
+                if (selected) sel = idx;
+                else if (sel >= idx) sel++;
 
             }
-            else idx = ch->Append(cur); //Non-preferred codecs are just appended as they are thrown out from ffmpeg
-
-            //Adjust selection
-            if (selected) sel = idx;
-            else if (sel >= idx) sel++;
 
         }
 
-    }
-
-    if ((sel == 0) && (select.Len() > 0))
-    {
-        //Find codec in another way (this might not work with user-friendly lists)
-        wxString sl = "(codec " + select + ")";
-        for (unsigned int i = 0; i < ch->GetCount(); i++) if (ch->GetString(i).Find(sl) > 0)
+        if ((sel == 0) && (select.Len() > 0))
         {
-            sel = i;
-            break;
+            //Find codec in another way (this might not work with user-friendly lists)
+            wxString sl = "(codec " + select + ")";
+            for (unsigned int i = 0; i < ch->GetCount(); i++) if (ch->GetString(i).Find(sl) > 0)
+            {
+                sel = i;
+                break;
+            }
         }
+    }
+    else
+    {
+
+        //Set items and select
+        wxString s;
+        ch->Append("");
+        while (items.Len() > 0)
+        {
+            s = GetLine(items, true);
+            if (select == s.BeforeFirst(' ')) sel = ch->GetCount();
+            ch->Append(s);
+        }
+
     }
 
     //Select and thaw
     ch->SetSelection(sel);
-    ch->Thaw();
+    if (dynamic_cast<wxChoice*>(ch)) ((wxChoice*)ch)->Thaw();
+    if (dynamic_cast<wxComboBox*>(ch)) ((wxComboBox*)ch)->Thaw();
 
 }
 
@@ -2090,6 +2162,15 @@ void FFQPresetEdit::OnButtonClick(wxCommandEvent& event)
             ShowError(FrameRate, FFQS(SID_PRESET_INVALID_FRAME_RATE));
             return;
 
+        }
+
+        //Validate HW Decode
+        if (HWD_Device->GetValue().Find(",") >= 0)
+        {
+            Pages->SetSelection(Pages->FindPage(VideoPage));
+            VideoPages->SetSelection(VideoPages->FindPage(HWDecodePage));
+            ShowError(HWD_Device, FFQS(SID_PRESET_ERROR_NO_COMMA_ALLOWED));
+            return;
         }
 
         if (vCopy || aCopy)

@@ -27,7 +27,7 @@
 #include "utils/FFQConst.h"
 #include "utils/FFQMisc.h"
 #include "bin_res.h"
-#include "version.h"
+#include "../version.h"
 
 #include <wx/hyperlink.h>
 #include <wx/mstream.h>
@@ -94,13 +94,13 @@ FFQAbout::FFQAbout(wxWindow* parent,wxWindowID id)
     GUI_5 = GetToken(txt, BR);
 
 	//(*Initialize(FFQAbout)
-	wxHyperlinkCtrl* Link;
+	wxBoxSizer* BoxSizer1;
 	wxFlexGridSizer* FlexGridSizer1;
 	wxFlexGridSizer* FlexGridSizer2;
-	wxFlexGridSizer* FlexGridSizer4;
 	wxFlexGridSizer* FlexGridSizer3;
-	wxBoxSizer* BoxSizer1;
+	wxFlexGridSizer* FlexGridSizer4;
 	wxFlexGridSizer* FlexGridSizer5;
+	wxHyperlinkCtrl* Link;
 
 	Create(parent, id, _("About FFQueue"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE, _T("id"));
 	FlexGridSizer1 = new wxFlexGridSizer(3, 1, 0, 0);

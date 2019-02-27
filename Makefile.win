@@ -9,17 +9,17 @@ LINKER:=$(CXX)
 # You may need to specify the full path to windres.exe in the following line:
 WINDRES:=windres.exe
 
-# You may need to change the location to the wxWidgets root folder in the following line:
+# You may need to change the location to wxWidgets root / build folder in the following line:
 WX:=..\wxWidgets
 
-# If you want to change the default build folder you can do it in the following line:
+# If you want to change the default build / output folder you can do it in the following line:
 MAKEROOT:=build
 
 # If you want to change the name of the linked binary, you can do it in the following line:
 MAKEBINARY:=$(MAKEROOT)\FFQueue.exe
 
 # Compiler settings
-COMPVARS:=-mwindows -O2 -Wfatal-errors -DNDEBUG -pipe -mthreads -D__GNUWIN32__ -D__WXMSW__ -DwxUSE_UNICODE -Wall -std=gnu++11 -Winvalid-pch -include wx_pch.h
+COMPVARS:=-mwindows -O2 -Wfatal-errors -DNDEBUG -pipe -mthreads -D__GNUWIN32__ -D__WXMSW__ -DwxUSE_UNICODE -Wall -fPIC -std=gnu++11 -Winvalid-pch -include wx_pch.h
 
 # Compiler search directories
 COMPDIRS:=-I. -I"$(WX)\lib\gcc_lib\mswu" -I"$(WX)\include" -I"$(WX)\src\zlib"
@@ -63,6 +63,7 @@ OBJECTS:=\
 	$(MAKEROOT)\obj\filter\Curves.o\
 	$(MAKEROOT)\obj\filter\Custom.o\
 	$(MAKEROOT)\obj\filter\Decimate.o\
+	$(MAKEROOT)\obj\filter\Deflicker.o\
 	$(MAKEROOT)\obj\filter\Deinterlace.o\
 	$(MAKEROOT)\obj\filter\Dejudder.o\
 	$(MAKEROOT)\obj\filter\Delogo.o\
@@ -236,6 +237,9 @@ $(MAKEROOT)\obj\filter\Custom.o:
 
 $(MAKEROOT)\obj\filter\Decimate.o:
 	$(CXX) $(COMPVARS) $(COMPDIRS) -c "src\filter\Decimate.cpp" -o $@
+
+$(MAKEROOT)\obj\filter\Deflicker.o:
+	$(CXX) $(COMPVARS) $(COMPDIRS) -c "src\filter\Deflicker.cpp" -o $@
 
 $(MAKEROOT)\obj\filter\Deinterlace.o:
 	$(CXX) $(COMPVARS) $(COMPDIRS) -c "src\filter\Deinterlace.cpp" -o $@

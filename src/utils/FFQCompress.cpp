@@ -23,7 +23,7 @@
 
 #include "FFQCompress.h"
 #include "FFQMisc.h"
-#include "zlib.h"
+#include <zlib.h>
 #include <wx/base64.h>
 
 //The pack pragma's are important! Do not remove or change them!

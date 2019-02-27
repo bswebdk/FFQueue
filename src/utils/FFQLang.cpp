@@ -25,6 +25,7 @@
 #include "FFQMisc.h"
 #include "FFQFilter.h"
 #include "FFQConst.h"
+#include "FFQConfig.h"
 #include "FFQJob.h"
 #include "FFQHash.h"
 
@@ -60,6 +61,10 @@ const STR_HASH NO_PASSWORD_HASH = {
 
 //Buffer size used for loading and saving
 const unsigned int BUFFER_SIZE = 20480;
+
+//---------------------------------------------------------------------------------------
+
+const wxString DEFAULT_LANGUAGE_EXT = ".lng";
 
 //---------------------------------------------------------------------------------------
 
@@ -249,7 +254,7 @@ FFQLang::FFQLang(bool loadFile)
     //Default constructor
 
     //Language file name
-    m_FileName = wxStandardPaths::Get().GetExecutablePath().BeforeLast(wxFileName::GetPathSeparator()) + wxFileName::GetPathSeparator() + "FFQueue.lng";
+    //m_LoadName = wxStandardPaths::Get().GetExecutablePath().BeforeLast(wxFileName::GetPathSeparator()) + wxFileName::GetPathSeparator() + "FFQueue.lng";
 
     //Create default strings
     m_Strings = new wxVector<LPFFQ_STRING>();
@@ -349,6 +354,8 @@ FFQLang::FFQLang(bool loadFile)
     SetString(SID_NOTHING_QUEUED,               "Nothing was queued; If you want to force jobs to be queued you must right click and start selected.");
     SetString(SID_INVALID_CONSOLE_COMMAND,      "The console command seems invalid, following would be valid: executable -arg1 '%s'||executable -arg1 -arg2 '%s'");
     SetString(SID_CANNOT_SAVE_ACTIVE_QUEUE_ITEM,"The item cannot be saved because it is active!");
+    SetString(SID_INLINE_SHELL_CODE_WARNING,    "The command you are about to execute seems to contain inline shell code which may be harmful for your system. Are you sure that you want to take the risk?");
+
 
     //Log related messages
     SetString(SID_LOG_FILE_ERROR,               "Unable to create log file");
@@ -458,6 +465,7 @@ FFQLang::FFQLang(bool loadFile)
     SetString(SID_BATCHMAKE_MAKE_JOBS_FOR,     "Make jobs for %u files");
     SetString(SID_BATCHMAKE_MATCH_INVERSE,     "Inverse matching: Exclude matching streams");
     SetString(SID_BATCHMAKE_PREF_SUBS_CODEC,   "Preferred subtitle codec(s) / language(s):");
+    SetString(SID_BATCHMAKE_NOFAIL_CONTENT,    "Do not fail on missing:");
 
     //Job editor UI strings
     SetString(SID_JOBEDIT_TITLE,                "Edit job");
@@ -548,6 +556,7 @@ FFQLang::FFQLang(bool loadFile)
     SetString(SID_CONCAT_UNEQUAL_FILES,         "Simple concatenation requires the source files to be of identical format and video dimensions");
     SetString(SID_CONCAT_PADDING,               "Use padding rather than stretching");
     SetString(SID_CONCAT_LOOP_ERROR,            "This job will encode forever; you must disable loop frames, specify an audio track or limit the length of the output to prevent this.");
+    SetString(SID_CONCAT_EXPLICIT_MAP,          "Explicitly map all streams");
 
 
     //Preset editor UI strings
@@ -651,6 +660,12 @@ FFQLang::FFQLang(bool loadFile)
     SetString(SID_PRESET_SEGMENTING_STREAMING,          "For streaming");
     SetString(SID_PRESET_SEGMENTING_RESET_TIME,         "Reset timestamps");
     SetString(SID_PRESET_USE_CLOSED_GOP,                "Closed GOP (Group Of Pictures)");
+    SetString(SID_PRESET_HWDECODE,                      "HW Decoding");
+    SetString(SID_PRESET_HWDECODE_ACCEL,                "Accelerator:");
+    SetString(SID_PRESET_HWDECODE_CODEC,                "Codec:");
+    SetString(SID_PRESET_HWDECODE_DEVICE,               "Device:");
+    SetString(SID_PRESET_HWDECODE_DEVICE_INIT,          "Device initializer:");
+    SetString(SID_PRESET_ERROR_NO_COMMA_ALLOWED,        "Comma is not allowed in this field!");
 
 
     //Video sync mode strings
@@ -691,6 +706,7 @@ FFQLang::FFQLang(bool loadFile)
     SetString(SID_OPTIONS_CUSTOM_CONSOLE_CMD,       "Custom console command");
     SetString(SID_OPTIONS_SILENT_QUEUE_FINISH,      "Silent queue finish");
     SetString(SID_OPTIONS_SAVE_JOBS_ON_MODIFY,      "Save jobs whenever they are modified");
+    SetString(SID_OPTIONS_VALIDATE_ON_LOAD,         "Remove jobs with non-existing input files during startup");
 
 
     //Thumb maker UI strings
@@ -1288,6 +1304,7 @@ FFQLang::FFQLang(bool loadFile)
     m_DateTimeFmt = "";
     m_BadStrID = "";
     m_SkipCount = 0;
+    m_LoadName = "";
     memcpy(&m_PasswordHash, &NO_PASSWORD_HASH, sizeof(NO_PASSWORD_HASH));
     QUEUE_STATUS_NAMES = NULL;
     FILTER_NAMES = NULL;
@@ -1387,6 +1404,24 @@ bool FFQLang::CheckPassword(wxString pwd)
 
 //---------------------------------------------------------------------------------------
 
+LPFFQ_STRING FFQLang::FindString(FFQ_SID sid)
+{
+
+    //Find the string with the corresponding string id
+
+    for (wxVector<LPFFQ_STRING>::const_iterator ite = m_Strings->begin(); ite != m_Strings->end(); ite++)
+    {
+        LPFFQ_STRING ffqs = *ite;
+        if (ffqs->sid == sid) return ffqs; //Found - return it
+    }
+
+    //Not found - return NULL
+    return NULL;
+
+}
+
+//---------------------------------------------------------------------------------------
+
 const wxString& FFQLang::GetAtIndex(unsigned int index)
 {
 
@@ -1453,6 +1488,13 @@ const unsigned int FFQLang::GetFlagCount(STR_FLAG flag)
     //Return the result
     return res;
 
+}
+
+//---------------------------------------------------------------------------------------
+
+const wxString& FFQLang::GetLoadedFileName()
+{
+    return m_LoadName;
 }
 
 //---------------------------------------------------------------------------------------
@@ -1569,16 +1611,46 @@ bool FFQLang::HasPassword()
 bool FFQLang::LoadLanguage()
 {
 
-    //Load language from file
+    //Try ConfigPath with lower-case
+    m_LoadName = FFQCFG()->GetConfigPath(FFQCFG()->app_name.Lower() + DEFAULT_LANGUAGE_EXT);
+    if (!wxFileExists(m_LoadName))
+    {
+
+        //Try ConfigPath with camel-case
+        m_LoadName = FFQCFG()->GetConfigPath(FFQCFG()->app_name + DEFAULT_LANGUAGE_EXT);
+        if (!wxFileExists(m_LoadName))
+        {
+
+            //Try the shared data directory, if available
+            m_LoadName = FFQCFG()->share_data_dir;
+            if (m_LoadName.Len() > 0)
+            {
+
+                //Try user selected locale
+                if ((FFQCFG()->user_locale.Len() > 0) && wxFileExists(m_LoadName + FFQCFG()->user_locale))
+                    m_LoadName += FFQCFG()->user_locale;
+
+                //Try system locale
+                else if (wxFileExists(m_LoadName + wxLocale::GetLanguageCanonicalName(wxLocale::GetSystemLanguage())))
+                    m_LoadName += wxLocale::GetLanguageCanonicalName(wxLocale::GetSystemLanguage());
+
+                //Nope, nothing available
+                else m_LoadName.Clear();
+
+            }
+
+        }
+
+    }
 
     m_SkipCount = 0;
-    bool ok = !wxFileExists(m_FileName);
+    bool res = false;
 
-    if (!ok) try
+    if (m_LoadName.Len() > 0) try
     {
 
         //Open the file
-        wxFile *file = new wxFile(m_FileName, wxFile::read);
+        wxFile *file = new wxFile(m_LoadName, wxFile::read);
 
         //Create a buffer
         uint8_t *buffer = new uint8_t[BUFFER_SIZE];
@@ -1644,9 +1716,10 @@ bool FFQLang::LoadLanguage()
         delete file;
 
         //Set result
-        ok = true;
+        res = true;
 
-    } catch (std::exception &err1)
+    }
+    catch (std::exception &err1)
     {
 
         #ifdef DEBUG
@@ -1659,7 +1732,7 @@ bool FFQLang::LoadLanguage()
     InitStringVars();
 
     //Return result
-    return ok;
+    return res;
 
 }
 
@@ -1670,13 +1743,16 @@ bool FFQLang::SaveLanguage()
 
     //Save the language to a file
 
-    bool ok = false;
+    bool res = false;
 
     try
     {
 
+        //Language is always stored in the same location as config files:
+        wxString path = FFQCFG()->GetConfigPath(FFQCFG()->app_name.Lower() + DEFAULT_LANGUAGE_EXT);
+
         //Delete existing file and create new
-        if (wxFileExists(m_FileName)) wxRemoveFile(m_FileName);
+        if (wxFileExists(path)) wxRemoveFile(path);
 
         //Get the number of stored strings
         uint32_t cnt = GetFlagCount(SF_STORED);
@@ -1684,7 +1760,7 @@ bool FFQLang::SaveLanguage()
         //If there are no stored strings, we are finished
         if (cnt == 0) return true;
 
-        wxFile *file = new wxFile(m_FileName, wxFile::write);
+        wxFile *file = new wxFile(path, wxFile::write);
 
         //Write header
         file->Write((void*)&LANG_FILE_HEADER_10, sizeof(LANG_FILE_HEADER_10));
@@ -1738,7 +1814,7 @@ bool FFQLang::SaveLanguage()
         delete file;
 
         //Set result
-        ok = true;
+        res = true;
 
     } catch (std::exception &err1)
     {
@@ -1749,7 +1825,7 @@ bool FFQLang::SaveLanguage()
 
     }
 
-    return ok;
+    return res;
 
 }
 
@@ -1793,24 +1869,6 @@ void FFQLang::SetString(FFQ_SID sid, wxString str)
     //Found = update string
     ffqs->str = str;
     ffqs->str.Shrink();
-
-}
-
-//---------------------------------------------------------------------------------------
-
-LPFFQ_STRING FFQLang::FindString(FFQ_SID sid)
-{
-
-    //Find the string with the corresponding string id
-
-    for (wxVector<LPFFQ_STRING>::const_iterator ite = m_Strings->begin(); ite != m_Strings->end(); ite++)
-    {
-        LPFFQ_STRING ffqs = *ite;
-        if (ffqs->sid == sid) return ffqs; //Found - return it
-    }
-
-    //Not found - return NULL
-    return NULL;
 
 }
 

@@ -43,7 +43,7 @@
 														</object>
 														<object class="sizeritem">
 															<object class="wxTextCtrl" name="ID_IMGSRC" variable="SSSource" member="yes" />
-															<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+															<flag>wxALL|wxEXPAND</flag>
 															<border>3</border>
 															<option>1</option>
 														</object>
@@ -58,7 +58,7 @@
 															<option>1</option>
 														</object>
 														<object class="spacer">
-															<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+															<flag>wxALL|wxEXPAND</flag>
 															<option>1</option>
 														</object>
 														<object class="sizeritem">
@@ -71,11 +71,11 @@
 															<option>1</option>
 														</object>
 														<object class="spacer">
-															<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+															<flag>wxALL|wxEXPAND</flag>
 															<option>1</option>
 														</object>
 													</object>
-													<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<flag>wxALL|wxEXPAND</flag>
 													<border>3</border>
 													<option>1</option>
 												</object>
@@ -148,7 +148,7 @@
 																	<object class="wxColourPickerCtrl" name="ID_SSPADDING" variable="SSPadding" member="yes">
 																		<colour>#000000</colour>
 																	</object>
-																	<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+																	<flag>wxALL|wxEXPAND</flag>
 																	<border>3</border>
 																	<option>1</option>
 																</object>
@@ -212,16 +212,16 @@
 															<option>1</option>
 														</object>
 													</object>
-													<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<flag>wxALL|wxEXPAND</flag>
 													<border>3</border>
 													<option>1</option>
 												</object>
 											</object>
-											<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<flag>wxALL|wxEXPAND</flag>
 											<option>1</option>
 										</object>
 									</object>
-									<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+									<flag>wxALL|wxEXPAND</flag>
 									<border>5</border>
 									<option>1</option>
 								</object>
@@ -236,7 +236,7 @@
 												<growablecols>0</growablecols>
 												<object class="sizeritem">
 													<object class="wxTextCtrl" name="ID_SSAUDIO" variable="SSAudio" member="yes" />
-													<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<flag>wxALL|wxEXPAND</flag>
 													<border>3</border>
 													<option>1</option>
 												</object>
@@ -251,7 +251,7 @@
 													<option>1</option>
 												</object>
 											</object>
-											<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<flag>wxALL|wxEXPAND</flag>
 											<option>1</option>
 										</object>
 										<object class="sizeritem">
@@ -259,12 +259,12 @@
 												<label>Loop</label>
 												<extra_code>SSLoopFrames-&gt;SetLabel(FFQS(SID__CONCAT__LOOP__FRAMES));&#x0A;SBS2-&gt;GetStaticBox()-&gt;SetLabel(FFQS(SID__CONCAT__AUDIO__TRACK));</extra_code>
 											</object>
-											<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+											<flag>wxALL|wxALIGN_LEFT</flag>
 											<border>5</border>
 											<option>1</option>
 										</object>
 									</object>
-									<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+									<flag>wxALL|wxEXPAND</flag>
 									<border>5</border>
 									<option>1</option>
 								</object>
@@ -285,7 +285,7 @@
 										<object class="sizeritem">
 											<object class="wxFlexGridSizer" variable="FlexGridSizer4" member="no">
 												<cols>1</cols>
-												<rows>6</rows>
+												<rows>7</rows>
 												<growablecols>0</growablecols>
 												<growablerows>0</growablerows>
 												<object class="sizeritem">
@@ -302,7 +302,7 @@
 																<handler function="OnAction" entry="EVT_LISTBOX" />
 																<handler function="OnCCSrcDblClick" entry="EVT_LISTBOX_DCLICK" />
 															</object>
-															<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+															<flag>wxALL|wxEXPAND</flag>
 															<border>3</border>
 															<option>1</option>
 														</object>
@@ -333,7 +333,7 @@
 																	<option>1</option>
 																</object>
 																<object class="spacer">
-																	<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+																	<flag>wxALL|wxEXPAND</flag>
 																	<option>1</option>
 																	<size>-1,10</size>
 																</object>
@@ -358,12 +358,12 @@
 																	<option>1</option>
 																</object>
 															</object>
-															<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+															<flag>wxALL|wxEXPAND</flag>
 															<border>3</border>
 															<option>1</option>
 														</object>
 													</object>
-													<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<flag>wxALL|wxEXPAND</flag>
 													<option>1</option>
 												</object>
 												<object class="sizeritem">
@@ -374,6 +374,30 @@
 													</object>
 													<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
 													<border>3</border>
+													<option>1</option>
+												</object>
+												<object class="sizeritem">
+													<object class="wxFlexGridSizer" variable="FlexGridSizer6" member="no">
+														<cols>2</cols>
+														<rows>1</rows>
+														<growablecols>1</growablecols>
+														<growablerows>0</growablerows>
+														<object class="spacer">
+															<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+															<option>1</option>
+															<size>20,10</size>
+														</object>
+														<object class="sizeritem">
+															<object class="wxCheckBox" name="ID_CCEXPLICITMAP" variable="CCExplicitMap" member="yes">
+																<label>XM</label>
+																<extra_code>CCExplicitMap-&gt;SetLabel(FFQS(SID__CONCAT__EXPLICIT__MAP));</extra_code>
+															</object>
+															<flag>wxALL</flag>
+															<border>3</border>
+															<option>1</option>
+														</object>
+													</object>
+													<flag>wxALL|wxEXPAND</flag>
 													<option>1</option>
 												</object>
 												<object class="sizeritem">
@@ -403,7 +427,7 @@
 														<object class="spacer">
 															<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
 															<option>1</option>
-															<size>20,-1</size>
+															<size>20,10</size>
 														</object>
 														<object class="sizeritem">
 															<object class="wxRadioButton" name="ID_CCUSEPADCOLOR" variable="CCUsePadColor" member="yes">
@@ -419,13 +443,13 @@
 															<object class="wxColourPickerCtrl" name="ID_CCPADCOLOR" variable="CCPadColor" member="yes">
 																<colour>#000000</colour>
 															</object>
-															<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+															<flag>wxALL|wxEXPAND</flag>
 															<option>1</option>
 														</object>
 														<object class="spacer">
 															<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
 															<option>1</option>
-															<size>20,-1</size>
+															<size>20,10</size>
 														</object>
 														<object class="sizeritem">
 															<object class="wxRadioButton" name="ID_CCUSEPADBLUR" variable="CCUsePadBlur" member="yes">
@@ -457,7 +481,7 @@
 																		<max>10</max>
 																		<size>-1,20</size>
 																	</object>
-																	<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+																	<flag>wxALL|wxEXPAND</flag>
 																	<option>1</option>
 																</object>
 																<object class="sizeritem">
@@ -469,11 +493,11 @@
 																	<option>1</option>
 																</object>
 															</object>
-															<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+															<flag>wxALL|wxEXPAND</flag>
 															<option>1</option>
 														</object>
 													</object>
-													<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<flag>wxALL|wxEXPAND</flag>
 													<option>1</option>
 												</object>
 												<object class="sizeritem">
@@ -519,15 +543,15 @@
 															<option>1</option>
 														</object>
 													</object>
-													<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<flag>wxALL|wxEXPAND</flag>
 													<option>1</option>
 												</object>
 											</object>
-											<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+											<flag>wxALL|wxEXPAND</flag>
 											<option>1</option>
 										</object>
 									</object>
-									<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+									<flag>wxALL|wxEXPAND</flag>
 									<border>5</border>
 									<option>1</option>
 								</object>
@@ -536,7 +560,7 @@
 						<label>CC</label>
 					</object>
 				</object>
-				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<flag>wxALL|wxEXPAND</flag>
 				<border>5</border>
 				<option>1</option>
 			</object>
@@ -561,7 +585,7 @@
 							</object>
 							<object class="sizeritem">
 								<object class="wxTextCtrl" name="ID_DESTFILE" variable="DestFile" member="yes" />
-								<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<flag>wxALL|wxEXPAND</flag>
 								<border>3</border>
 								<option>1</option>
 							</object>
@@ -576,7 +600,7 @@
 								<option>1</option>
 							</object>
 						</object>
-						<flag>wxBOTTOM|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<flag>wxBOTTOM|wxEXPAND</flag>
 						<border>2</border>
 						<option>1</option>
 					</object>
@@ -598,16 +622,16 @@
 							<object class="sizeritem">
 								<object class="Custom" name="ID_PRESET" subclass="FFQPresetPanel" variable="Preset" member="yes">
 									<creating_code>$(THIS) = new $(CLASS)($(PARENT));</creating_code>
-									<include_file>FFQPresetPanel.h</include_file>
+									<include_file>../FFQPresetPanel.h</include_file>
 									<local_include>1</local_include>
 									<style></style>
 								</object>
-								<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<flag>wxALL|wxEXPAND</flag>
 								<border>3</border>
 								<option>1</option>
 							</object>
 						</object>
-						<flag>wxBOTTOM|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<flag>wxBOTTOM|wxEXPAND</flag>
 						<border>2</border>
 						<option>1</option>
 					</object>
@@ -627,7 +651,7 @@
 								<option>1</option>
 							</object>
 						</object>
-						<flag>wxBOTTOM|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<flag>wxBOTTOM|wxEXPAND</flag>
 						<border>2</border>
 						<option>1</option>
 					</object>
@@ -636,12 +660,12 @@
 							<label>Log</label>
 							<extra_code>SaveLog-&gt;SetLabel(FFQS(SID__COMMON__SAVE__LOG));</extra_code>
 						</object>
-						<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+						<flag>wxALL|wxALIGN_LEFT</flag>
 						<border>5</border>
 						<option>1</option>
 					</object>
 				</object>
-				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<flag>wxALL|wxEXPAND</flag>
 				<border>5</border>
 				<option>1</option>
 			</object>
@@ -674,7 +698,7 @@
 						<option>1</option>
 					</object>
 				</object>
-				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<flag>wxALL|wxEXPAND</flag>
 				<border>5</border>
 				<option>1</option>
 			</object>

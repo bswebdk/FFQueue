@@ -39,14 +39,14 @@
 							<object class="sizeritem">
 								<object class="wxFlexGridSizer" variable="FlexGridSizer4" member="no">
 									<cols>4</cols>
-									<rows>1</rows>
+									<rows>2</rows>
 									<growablecols>1,2,3</growablecols>
 									<object class="sizeritem">
 										<object class="wxStaticText" name="ID_ST1" variable="ST1" member="yes">
-											<label>SelC:</label>
+											<label>SelC</label>
 											<extra_code>ST1-&gt;SetLabel(FFQS(SID__BATCHMAKE__SEL__CONTENT));&#x0A;SBS1-&gt;GetStaticBox()-&gt;SetLabel(FFQS(SID__BATCHMAKE__DEFINE__PROPERTIES));</extra_code>
 										</object>
-										<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+										<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
 										<border>3</border>
 										<option>1</option>
 									</object>
@@ -73,6 +73,39 @@
 											<label>S</label>
 											<extra_code>IncludeSubs-&gt;SetLabel(FFQS(SID__COMMON__SUBTITLES));</extra_code>
 											<handler function="OnAction" entry="EVT_CHECKBOX" />
+										</object>
+										<flag>wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL</flag>
+										<option>1</option>
+									</object>
+									<object class="sizeritem">
+										<object class="wxStaticText" name="wxID_ANY" variable="ST7" member="yes">
+											<label>NoFa</label>
+											<extra_code>ST7-&gt;SetLabel(FFQS(SID__BATCHMAKE__NOFAIL__CONTENT));</extra_code>
+										</object>
+										<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+										<border>3</border>
+										<option>1</option>
+									</object>
+									<object class="sizeritem">
+										<object class="wxCheckBox" name="ID_NOFAILVIDEO" variable="NoFailVideo" member="yes">
+											<label>V</label>
+											<extra_code>NoFailVideo-&gt;SetLabel(FFQS(SID__COMMON__VIDEO));</extra_code>
+										</object>
+										<flag>wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL</flag>
+										<option>1</option>
+									</object>
+									<object class="sizeritem">
+										<object class="wxCheckBox" name="ID_NOFAILAUDIO" variable="NoFailAudio" member="yes">
+											<label>A</label>
+											<extra_code>NoFailAudio-&gt;SetLabel(FFQS(SID__COMMON__AUDIO));</extra_code>
+										</object>
+										<flag>wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL</flag>
+										<option>1</option>
+									</object>
+									<object class="sizeritem">
+										<object class="wxCheckBox" name="ID_NOFAILSUBS" variable="NoFailSubs" member="yes">
+											<label>S</label>
+											<extra_code>NoFailSubs-&gt;SetLabel(FFQS(SID__COMMON__SUBTITLES));</extra_code>
 										</object>
 										<flag>wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL</flag>
 										<option>1</option>

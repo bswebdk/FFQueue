@@ -1,6 +1,6 @@
 Application version %s © by Torben Bruchhaus
 Language: %s%s
-Options: %s
+Config: %s
 This @pp is truely non-commercial freeware!
 
 %u%% internal, %u%%

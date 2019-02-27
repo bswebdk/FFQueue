@@ -28,13 +28,13 @@
 
 #ifndef WX_PRECOMP
 	//(*HeadersPCH(FFQBatchMake)
-	#include <wx/gauge.h>
-	#include <wx/combobox.h>
-	#include <wx/checkbox.h>
-	#include <wx/dialog.h>
-	#include <wx/sizer.h>
 	#include <wx/button.h>
+	#include <wx/checkbox.h>
+	#include <wx/combobox.h>
+	#include <wx/dialog.h>
 	#include <wx/dirdlg.h>
+	#include <wx/gauge.h>
+	#include <wx/sizer.h>
 	#include <wx/stattext.h>
 	#include <wx/textctrl.h>
 	//*)
@@ -63,33 +63,37 @@ class FFQBatchMake: public wxDialog
 		void SetFiles(wxArrayString *files);
 
 		//(*Declarations(FFQBatchMake)
-		wxButton* CancelButton;
-		wxComboBox* OutputFormat;
-		wxStaticLine* StaticLine2;
+		FFQPresetPanel* Preset;
 		wxButton* BrowseButton;
-		wxTextCtrl* OutputPath;
+		wxButton* CancelButton;
+		wxButton* DryRunButton;
+		wxButton* MakeButton;
 		wxCheckBox* AudInverse;
-		wxStaticText* ST2;
-		wxStaticText* ST1;
 		wxCheckBox* IncludeAudio;
-		wxStaticText* ST5;
+		wxCheckBox* IncludeSubs;
+		wxCheckBox* IncludeVideo;
+		wxCheckBox* NoFailAudio;
+		wxCheckBox* NoFailSubs;
+		wxCheckBox* NoFailVideo;
+		wxCheckBox* SubsInverse;
+		wxComboBox* OutputFormat;
+		wxComboBox* PrefAudio;
+		wxComboBox* PrefSubs;
+		wxDirDialog* DestPathDlg;
+		wxFlexGridSizer* MainSizer;
 		wxGauge* Gauge;
 		wxStaticLine* StaticLine1;
-		wxStaticText* ST4;
-		FFQPresetPanel* Preset;
-		wxCheckBox* IncludeSubs;
+		wxStaticLine* StaticLine2;
 		wxStaticLine* StaticLine3;
-		wxCheckBox* IncludeVideo;
-		wxComboBox* PrefAudio;
-		wxStaticText* ST3;
-		wxButton* DryRunButton;
-		wxDirDialog* DestPathDlg;
-		wxButton* MakeButton;
-		wxCheckBox* SubsInverse;
 		wxStaticText* JobInfo;
-		wxComboBox* PrefSubs;
-		wxFlexGridSizer* MainSizer;
+		wxStaticText* ST1;
+		wxStaticText* ST2;
+		wxStaticText* ST3;
+		wxStaticText* ST4;
+		wxStaticText* ST5;
 		wxStaticText* ST6;
+		wxStaticText* ST7;
+		wxTextCtrl* OutputPath;
 		//*)
 
 	protected:
@@ -100,6 +104,9 @@ class FFQBatchMake: public wxDialog
 		static const long ID_INCLUDEVIDEO;
 		static const long ID_INCLUDEAUDIO;
 		static const long ID_INCLUDESUBS;
+		static const long ID_NOFAILVIDEO;
+		static const long ID_NOFAILAUDIO;
+		static const long ID_NOFAILSUBS;
 		static const long ID_STATICLINE1;
 		static const long ID_ST2;
 		static const long ID_PREFAUDIO;

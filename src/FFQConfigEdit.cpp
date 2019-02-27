@@ -66,18 +66,18 @@ END_EVENT_TABLE()
 FFQConfigEdit::FFQConfigEdit(wxWindow* parent,wxWindowID id)
 {
 	//(*Initialize(FFQConfigEdit)
-	wxFlexGridSizer* FlexGridSizer1;
-	wxStaticBoxSizer* SBS1;
-	wxFlexGridSizer* FlexGridSizer2;
-	wxStaticBoxSizer* SBS2;
-	wxStaticBoxSizer* SBS4;
-	wxBoxSizer* BoxSizer2;
-	wxFlexGridSizer* FlexGridSizer4;
-	wxStaticBoxSizer* SBS3;
-	wxFlexGridSizer* FlexGridSizer6;
 	wxBoxSizer* BoxSizer1;
-	wxStaticBoxSizer* SBS5;
+	wxBoxSizer* BoxSizer2;
+	wxFlexGridSizer* FlexGridSizer1;
+	wxFlexGridSizer* FlexGridSizer2;
+	wxFlexGridSizer* FlexGridSizer4;
 	wxFlexGridSizer* FlexGridSizer5;
+	wxFlexGridSizer* FlexGridSizer6;
+	wxStaticBoxSizer* SBS1;
+	wxStaticBoxSizer* SBS2;
+	wxStaticBoxSizer* SBS3;
+	wxStaticBoxSizer* SBS4;
+	wxStaticBoxSizer* SBS5;
 
 	Create(parent, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE, _T("wxID_ANY"));
 	FlexGridSizer1 = new wxFlexGridSizer(7, 1, 0, 0);
@@ -152,6 +152,7 @@ FFQConfigEdit::FFQConfigEdit(wxWindow* parent,wxWindowID id)
 	CheckList->Append(FFQS(SID_OPTIONS_SAVE_JOBS_ON_EXIT));
 	CheckList->Append(FFQS(SID_OPTIONS_SAVE_JOBS_ON_MODIFY));
 	CheckList->Append(FFQS(SID_OPTIONS_REMOVE_FINISHED_JOBS));
+	CheckList->Append(FFQS(SID_OPTIONS_VALIDATE_ON_LOAD));
 	CheckList->Append(FFQS(SID_OPTIONS_LIMIT_STATISTICS));
 	CheckList->Append(FFQS(SID_OPTIONS_SHOW_BANNER_INFO));
 	CheckList->Append(FFQS(SID_OPTIONS_SAVE_WINDOW_POS));
@@ -224,13 +225,14 @@ bool FFQConfigEdit::Execute()
     CheckList->Check(0, FFQCFG()->save_on_exit);
     CheckList->Check(1, FFQCFG()->save_on_modify);
     CheckList->Check(2, FFQCFG()->auto_remove_jobs);
-    CheckList->Check(3, FFQCFG()->limit_statistics);
-    CheckList->Check(4, !FFQCFG()->hide_banner);
-    CheckList->Check(5, FFQCFG()->save_window_pos);
-    CheckList->Check(6, FFQCFG()->full_codec_listings);
-    CheckList->Check(7, FFQCFG()->preferred_unique);
-    CheckList->Check(8, FFQCFG()->keep_console);
-    CheckList->Check(9, FFQCFG()->silent_qfinish);
+    CheckList->Check(3, FFQCFG()->validate_on_load);
+    CheckList->Check(4, FFQCFG()->limit_statistics);
+    CheckList->Check(5, !FFQCFG()->hide_banner);
+    CheckList->Check(6, FFQCFG()->save_window_pos);
+    CheckList->Check(7, FFQCFG()->full_codec_listings);
+    CheckList->Check(8, FFQCFG()->preferred_unique);
+    CheckList->Check(9, FFQCFG()->keep_console);
+    CheckList->Check(10, FFQCFG()->silent_qfinish);
 
     //Center and update
     CenterOnParent();
@@ -254,13 +256,14 @@ bool FFQConfigEdit::Execute()
         FFQCFG()->save_on_exit = CheckList->IsChecked(0);
         FFQCFG()->save_on_modify = CheckList->IsChecked(1);
         FFQCFG()->auto_remove_jobs = CheckList->IsChecked(2);
-        FFQCFG()->limit_statistics = CheckList->IsChecked(3);
-        FFQCFG()->hide_banner = !CheckList->IsChecked(4);
-        FFQCFG()->save_window_pos = CheckList->IsChecked(5);
-        FFQCFG()->full_codec_listings = CheckList->IsChecked(6);
-        FFQCFG()->preferred_unique = CheckList->IsChecked(7);
-        FFQCFG()->keep_console = CheckList->IsChecked(8);
-        FFQCFG()->silent_qfinish = CheckList->IsChecked(9);
+        FFQCFG()->validate_on_load = CheckList->IsChecked(3);
+        FFQCFG()->limit_statistics = CheckList->IsChecked(4);
+        FFQCFG()->hide_banner = !CheckList->IsChecked(5);
+        FFQCFG()->save_window_pos = CheckList->IsChecked(6);
+        FFQCFG()->full_codec_listings = CheckList->IsChecked(7);
+        FFQCFG()->preferred_unique = CheckList->IsChecked(8);
+        FFQCFG()->keep_console = CheckList->IsChecked(9);
+        FFQCFG()->silent_qfinish = CheckList->IsChecked(10);
 
         FFQCFG()->SaveConfig();
 

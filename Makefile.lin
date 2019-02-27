@@ -6,23 +6,23 @@ CXX:=g++
 # If the linker does not equal the compiler declared above, you must modify the following line:
 LINKER:=$(CXX)
 
-# You may need to change the location to the wxWidgets root folder in the following line:
-WX:=../wxWidgets
+# You may need to change the location to wxWidgets root / build folder in the following line:
+WX:=../wxWidgets/gtk-build
 
-# If you want to change the default build folder you can do it in the following line:
+# If you want to change the default build / output folder you can do it in the following line:
 MAKEROOT:=build
 
 # If you want to change the name of the linked binary, you can do it in the following line:
 MAKEBINARY:=$(MAKEROOT)/FFQueue
 
-# Compiler settings, you may need to change "/gtk_build/" to the folder you used to build wxWidgets:
-COMPVARS:=$(shell $(WX)/gtk-build/wx-config --version=3.1 --static=yes --unicode=yes --debug=no --cflags) -O2 -DNDEBUG -Wall -std=gnu++11 -Winvalid-pch -include wx_pch.h
+# Compiler settings
+COMPVARS:=-O2 `$(WX)/wx-config --static=yes --unicode=yes --debug=no --cflags` -DNDEBUG -Wall -fPIC -std=gnu++11 -Winvalid-pch -include wx_pch.h
 
 # Compiler search directories
 COMPDIRS:=-I.
 
-# Linker settings, you may need to change "/gtk_build/" to the folder you used to build wxWidgets:
-LINKVARS:=$(shell $(WX)/gtk-build/wx-config --version=3.1 --static=yes --debug=no --libs) -s -static-libgcc -static-libstdc++
+# Linker settings
+LINKVARS:=-s -static-libstdc++ -static-libgcc `$(WX)/wx-config --static=yes --debug=no --libs`
 
 # Linker search directories
 LINKDIRS:=
@@ -60,6 +60,7 @@ OBJECTS:=\
 	$(MAKEROOT)/obj/filter/Curves.o\
 	$(MAKEROOT)/obj/filter/Custom.o\
 	$(MAKEROOT)/obj/filter/Decimate.o\
+	$(MAKEROOT)/obj/filter/Deflicker.o\
 	$(MAKEROOT)/obj/filter/Deinterlace.o\
 	$(MAKEROOT)/obj/filter/Dejudder.o\
 	$(MAKEROOT)/obj/filter/Delogo.o\
@@ -227,6 +228,9 @@ $(MAKEROOT)/obj/filter/Custom.o:
 
 $(MAKEROOT)/obj/filter/Decimate.o:
 	$(CXX) $(COMPVARS) $(COMPDIRS) -c "src/filter/Decimate.cpp" -o $@
+
+$(MAKEROOT)/obj/filter/Deflicker.o:
+	$(CXX) $(COMPVARS) $(COMPDIRS) -c "src/filter/Deflicker.cpp" -o $@
 
 $(MAKEROOT)/obj/filter/Deinterlace.o:
 	$(CXX) $(COMPVARS) $(COMPDIRS) -c "src/filter/Deinterlace.cpp" -o $@

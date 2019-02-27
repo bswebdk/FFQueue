@@ -24,6 +24,8 @@
 #include "FFQLangEdit.h"
 #include "utils/FFQMisc.h"
 #include "utils/FFQConst.h"
+#include "utils/FFQConfig.h"
+#include <wx/file.h>
 
 #ifndef WX_PRECOMP
 	//(*InternalHeadersPCH(FFQLangEdit)
@@ -197,6 +199,7 @@ void FFQLangEdit::Execute()
 {
 
     //Ask for password (if necessary)
+    bool new_lang = false;
     if (FFQL()->HasPassword())
     {
         if (!FFQL()->CheckPassword(m_Password))
@@ -204,8 +207,10 @@ void FFQLangEdit::Execute()
             m_Password = wxGetPasswordFromUser("Please enter the password to the language file", "Authentication");
             if (!FFQL()->CheckPassword(m_Password))
             {
-                ShowError("Bad password");
-                return;
+                if (DoConfirm("The password does not match! Do you want to create a new language file?")) new_lang = true;
+                else return;
+                //ShowError("Bad password");
+                //return;
             }
         }
     }
@@ -214,7 +219,7 @@ void FFQLangEdit::Execute()
     {
         //Prepare a copy of the internal language and a copy for edit
         m_OrgLang = new FFQLang(false);
-        m_EditLang = new FFQLang(true);
+        m_EditLang = new FFQLang(!new_lang);
 
         //Fill the list (only done once)
         LoadList();
@@ -224,6 +229,8 @@ void FFQLangEdit::Execute()
     if (IsIconized()) Restore();
     if (IsVisible()) Raise();
     else Show();
+
+    //ExportTranslationFile();
 
 }
 
@@ -265,6 +272,37 @@ void FFQLangEdit::SetListItem(long idx, LPFFQ_STRING ffqs)
     wxString s = ffqs->str;
     s.Replace(CRLF, "<br>");
     ListView->SetItem(idx, 2, s);
+}
+
+//---------------------------------------------------------------------------------------
+
+void FFQLangEdit::ExportTranslationFile()
+{
+    wxString s = FFQCFG()->GetConfigPath("translate.txt"), so, st;
+    if (wxFileExists(s)) wxRemoveFile(s);
+    wxFile file(s, wxFile::write);
+    if (file.Error()) return;
+    for (unsigned int i = 0; i < m_OrgLang->GetCount(); i++)
+    {
+        LPFFQ_STRING org = m_OrgLang->GetPtrAtIndex(i);
+        LPFFQ_STRING tla = m_EditLang->FindString(org->sid);
+        so = org->str;
+        st = tla->str;
+        if (st == so) st = "";
+        so.Replace("\n", "<br>");
+        st.Replace("\n", "<br>");
+        s = wxString::Format("[%u]\nI=%s\nT=%s\n\n", org->sid, so, st);
+        wxScopedCharBuffer cb = s.ToUTF8();
+        file.Write(cb.data(), cb.length());
+    }
+    file.Close();
+}
+
+//---------------------------------------------------------------------------------------
+
+void FFQLangEdit::ImportTranslationFile(wxString file_name)
+{
+
 }
 
 //---------------------------------------------------------------------------------------

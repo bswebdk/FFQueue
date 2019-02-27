@@ -170,6 +170,7 @@ const long FFQConcat::ID_CCREMOVE = wxNewId();
 const long FFQConcat::ID_CCUP = wxNewId();
 const long FFQConcat::ID_CCDOWN = wxNewId();
 const long FFQConcat::ID_CCSIMPLE = wxNewId();
+const long FFQConcat::ID_CCEXPLICITMAP = wxNewId();
 const long FFQConcat::ID_CCSETSAR = wxNewId();
 const long FFQConcat::ID_CCPADDING = wxNewId();
 const long FFQConcat::ID_CCUSEPADCOLOR = wxNewId();
@@ -203,22 +204,23 @@ END_EVENT_TABLE()
 FFQConcat::FFQConcat(wxWindow* parent)
 {
 	//(*Initialize(FFQConcat)
-	wxFlexGridSizer* FlexGridSizer8;
-	wxFlexGridSizer* FlexGridSizer1;
-	wxStaticBoxSizer* SBS1;
-	wxFlexGridSizer* FlexGridSizer2;
-	wxStaticBoxSizer* SBS2;
-	wxStaticBoxSizer* SBS4;
-	wxFlexGridSizer* FlexGridSizer7;
-	wxFlexGridSizer* FlexGridSizer4;
-	wxStaticBoxSizer* SBS3;
-	wxFlexGridSizer* FlexGridSizer9;
-	wxFlexGridSizer* FlexGridSizer3;
-	wxFlexGridSizer* FlexGridSizer10;
 	wxBoxSizer* BoxSizer1;
-	wxFlexGridSizer* FlexGridSizer13;
+	wxFlexGridSizer* FlexGridSizer10;
 	wxFlexGridSizer* FlexGridSizer12;
+	wxFlexGridSizer* FlexGridSizer13;
+	wxFlexGridSizer* FlexGridSizer1;
+	wxFlexGridSizer* FlexGridSizer2;
+	wxFlexGridSizer* FlexGridSizer3;
+	wxFlexGridSizer* FlexGridSizer4;
 	wxFlexGridSizer* FlexGridSizer5;
+	wxFlexGridSizer* FlexGridSizer6;
+	wxFlexGridSizer* FlexGridSizer7;
+	wxFlexGridSizer* FlexGridSizer8;
+	wxFlexGridSizer* FlexGridSizer9;
+	wxStaticBoxSizer* SBS1;
+	wxStaticBoxSizer* SBS2;
+	wxStaticBoxSizer* SBS3;
+	wxStaticBoxSizer* SBS4;
 
 	Create(parent, wxID_ANY, _T("Make slideshow / concat"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE, _T("wxID_ANY"));
 	FlexGridSizer1 = new wxFlexGridSizer(4, 1, 0, 0);
@@ -313,7 +315,7 @@ FFQConcat::FFQConcat(wxWindow* parent)
 	FlexGridSizer9->AddGrowableCol(0);
 	FlexGridSizer9->AddGrowableRow(0);
 	SBS4 = new wxStaticBoxSizer(wxHORIZONTAL, MergePage, _T("Src"));
-	FlexGridSizer4 = new wxFlexGridSizer(6, 1, 0, 0);
+	FlexGridSizer4 = new wxFlexGridSizer(7, 1, 0, 0);
 	FlexGridSizer4->AddGrowableCol(0);
 	FlexGridSizer4->AddGrowableRow(0);
 	FlexGridSizer3 = new wxFlexGridSizer(1, 2, 0, 0);
@@ -344,6 +346,15 @@ FFQConcat::FFQConcat(wxWindow* parent)
 	CCSimple->SetValue(false);
 	CCSimple->SetLabel(FFQS(SID_CONCAT_SIMPLE));
 	FlexGridSizer4->Add(CCSimple, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
+	FlexGridSizer6 = new wxFlexGridSizer(1, 2, 0, 0);
+	FlexGridSizer6->AddGrowableCol(1);
+	FlexGridSizer6->AddGrowableRow(0);
+	FlexGridSizer6->Add(20,10,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
+	CCExplicitMap = new wxCheckBox(MergePage, ID_CCEXPLICITMAP, _T("XM"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CCEXPLICITMAP"));
+	CCExplicitMap->SetValue(false);
+	CCExplicitMap->SetLabel(FFQS(SID_CONCAT_EXPLICIT_MAP));
+	FlexGridSizer6->Add(CCExplicitMap, 1, wxALL, 3);
+	FlexGridSizer4->Add(FlexGridSizer6, 1, wxALL|wxEXPAND, 0);
 	CCSetSar = new wxCheckBox(MergePage, ID_CCSETSAR, _T("FSAR"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CCSETSAR"));
 	CCSetSar->SetValue(false);
 	CCSetSar->SetLabel(FFQS(SID_CONCAT_FORCE_ASPECT));
@@ -354,13 +365,13 @@ FFQConcat::FFQConcat(wxWindow* parent)
 	FlexGridSizer4->Add(CCPadding, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
 	CCPadSizer = new wxFlexGridSizer(2, 3, 0, 0);
 	CCPadSizer->AddGrowableCol(2);
-	CCPadSizer->Add(20,-1,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
+	CCPadSizer->Add(20,10,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
 	CCUsePadColor = new wxRadioButton(MergePage, ID_CCUSEPADCOLOR, _T("PadC"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CCUSEPADCOLOR"));
 	CCUsePadColor->SetLabel(FFQS(SID_PAD_COLOR));
 	CCPadSizer->Add(CCUsePadColor, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
 	CCPadColor = new wxColourPickerCtrl(MergePage, ID_CCPADCOLOR, wxColour(0,0,0), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CCPADCOLOR"));
 	CCPadSizer->Add(CCPadColor, 1, wxALL|wxEXPAND, 0);
-	CCPadSizer->Add(20,-1,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
+	CCPadSizer->Add(20,10,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
 	CCUsePadBlur = new wxRadioButton(MergePage, ID_CCUSEPADBLUR, _T("PadB"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CCUSEPADBLUR"));
 	CCUsePadBlur->SetLabel(FFQS(SID_PAD_BLUR));
 	CCPadSizer->Add(CCUsePadBlur, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
@@ -563,6 +574,7 @@ bool FFQConcat::Execute(LPFFQ_CONCAT_JOB job)
 
         //Merge / concatenate videos
         CCSimple->SetValue(job->simple_concat);
+        CCExplicitMap->SetValue(job->map_streams > 0);
         CCSetSar->SetValue(job->force);
 
         //pad = [0|1],[0|1],color,blur
@@ -686,6 +698,11 @@ bool FFQConcat::Execute(LPFFQ_CONCAT_JOB job)
             {
 
                 LPCONCAT_DATA cd = (LPCONCAT_DATA)CCSources->GetClientData(i);
+                if (i == 0)
+                {
+                    if (CCExplicitMap->GetValue()) job->map_streams = cd->streams;
+                    else job->map_streams = 0;
+                }
                 inf.Reset();
                 inf.path = cd->path;
                 inf.duration = cd->duration;
@@ -972,11 +989,16 @@ bool FFQConcat::GetFileInfo(LPCONCAT_DATA cd, bool dimensionRequired)
     {
         if ((!m_PIP->GetVideoDimension(cd->width, cd->height)) && dimensionRequired) return false;
         if (!m_PIP->GetDuration(cd->duration)) return false;
+        cd->streams = 0;
         for (unsigned int i = 0; i < m_PIP->GetStreamCount(); i++)
         {
             LPFFPROBE_STREAM_INFO si = m_PIP->GetStreamInfo(i);
             if ( (cd->videoID < 0) && (si->codec_type == CODEC_TYPE_VIDEO) ) cd->videoID = i;
             else if ( (cd->audioID < 0) && (si->codec_type == CODEC_TYPE_AUDIO) ) cd->audioID = i;
+
+            //Streams are stored as bits rather than a number in order to be able
+            //to select stream types for explicit mapping in a future release
+            cd->streams |= (1 << i);
         }
         m_PIP->SetProbeOutput(""); //Free memory
         return true;
@@ -1083,6 +1105,7 @@ void FFQConcat::UpdateControls()
     //Disable preset and limit length for simple concatenation
     EnableSizer(Sizer3, !CCSimple->GetValue());
     EnableSizer(Sizer4, !CCSimple->GetValue());
+    CCExplicitMap->Enable(CCSimple->GetValue());
 
     bool can_pad = (!CCSimple->GetValue()) && CCPadding->GetValue();
     EnableSizer(CCPadSizer, can_pad);

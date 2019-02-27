@@ -76,7 +76,9 @@ const wxString CFG_SAVE_LOG = "save_log";
 const wxString CFG_SILENT_QFINISH = "silent_qfinish";
 const wxString CFG_SAVED_COMMANDS = "saved_commands";
 const wxString CFG_SAVE_ON_MODIFY = "save_on_modify";
+const wxString CFG_VALIDATE_ON_LOAD = "validate_on_load";
 const wxString CFG_SUBS_CHARENC = "subs_charenc";
+const wxString CFG_LOCALE = "locale";
 
 //---------------------------------------------------------------------------------------
 
@@ -162,6 +164,61 @@ CODEC_TYPE ParseCodec(wxString &c, bool encoders)
 
 //---------------------------------------------------------------------------------------
 
+wxString ParseHWDecoders(wxString decoders, wxString hwaccels)
+{
+
+    //For comparison
+    const wxString VAAPI = "vaapi";
+
+    //Local constant which is a list of codecs most likely supported by vaapi
+    const wxString VAAPI_CODECS = ",h264,mpeg2video,mpeg4,vc1,hevc,";
+
+    wxString l, c, s, hwa, res = "";
+
+    while (decoders.Len() > 0)
+    {
+
+        l = StrTrim(GetLine(decoders)); //Get a codec line
+
+        c = GetToken(l, " ", true); //V.....
+        c = GetToken(l, " ", true); //Codec name, "l" is now codec description
+
+        //Test if the decoder matches any hardware accelerator
+        s = hwaccels;
+        while (s.Len() > 0)
+        {
+
+            hwa = GetLine(s); //Get accelerators
+            int p = c.Find(hwa); //Test if the decoder includes the name of the accelerator
+
+            if ((p > 0) || ((hwa == VAAPI) && (VAAPI_CODECS.Find("," + c + ",") >= 0)))
+            {
+
+                //The codec either includes the name of an accelerator OR it
+                //is known to be supported by vaapi, if the latter is the case
+                //we include vaapi in the name to hint the user where it belongs.
+                if (p < 0) c += " (" + VAAPI + ")";
+
+                //Append to result
+                res += c + " - " + StrTrim(l) + "\n";
+
+                //Clear to prevent further testing with this codec
+                s.Clear();
+
+            }
+
+        }
+
+    }
+
+    //Return the mess!
+    if (res.Len() > 0) res.RemoveLast();
+    return res;
+
+}
+
+//---------------------------------------------------------------------------------------
+
 const wxString FilterDescriptionChars = ".TSC";
 bool IsFilterDescription(wxString &s)
 {
@@ -169,6 +226,28 @@ bool IsFilterDescription(wxString &s)
     for (int i = 0; i < 3; i++) if (FilterDescriptionChars.Find(s.at(i)) < 0) return false;
     return true;
 }
+
+//---------------------------------------------------------------------------------------
+
+/*wxString FFQConfig::GetAppName(wxString *path)
+{
+
+    //Get path to executable
+    wxString p = wxStandardPaths::Get().GetExecutablePath();
+
+    //Extract app name
+    wxString a = p.AfterLast(wxFileName::GetPathSeparator());
+
+    //Remove any extension
+    if (a.Find('.') > 0) a = a.BeforeLast('.');
+
+    //Extract path only if required
+    if (path) *path = p.BeforeLast(wxFileName::GetPathSeparator());
+
+    //Return the app name
+    return a;
+
+}*/
 
 //---------------------------------------------------------------------------------------
 
@@ -180,6 +259,23 @@ FFQConfig* FFQConfig::GetInstance()
     return FFQConfig::m_Instance;
 
 }
+
+//---------------------------------------------------------------------------------------
+
+/*wxString FFQConfig::GetUserDataDir()
+{
+    //Return path to users data directory
+    #ifdef __LINUX__
+        //On Linux we honor the ~/.config/appname way of life
+        wxString res = wxStandardPaths::Get().GetUserConfigDir() + wxFileName::GetPathSeparator() + ".config";
+        if (wxFileName::DirExists(res))
+        {
+            res += wxFileName::GetPathSeparator();
+            return res + GetAppName().Lower();
+        }
+    #endif // __LINUX__
+    return wxStandardPaths::Get().GetUserDataDir();
+}*/
 
 //---------------------------------------------------------------------------------------
 
@@ -349,8 +445,10 @@ void FFQConfig::DefaultOptions()
     save_log = true;
     silent_qfinish = false;
     save_on_modify = false;
+    validate_on_load = true;
     saved_commands = "";
     subs_charenc = "";
+    user_locale = "";
 
 	//Private config
     if (m_CodecInfo) delete m_CodecInfo;
@@ -369,6 +467,8 @@ void FFQConfig::DefaultOptions()
     m_Formats = "";
     m_SubtitleCodecs = "";
     m_VideoCodecs = "";
+    m_HWAccels = "";
+    m_HWDecoders = "";
 
 }
 
@@ -457,6 +557,7 @@ wxString FFQConfig::GetConsoleCommand(wxString prog, wxString args)
         res = "cmd /" + wxString(keep_console ? "k" : "c") + " \"%s\"";
         #else
         res = "xterm " + wxString(keep_console ? "-hold" : "+hold") + " -e '%s'";
+        args.Replace("'", "\\'");
         #endif
 
     }
@@ -640,6 +741,23 @@ wxString FFQConfig::GetFFMpegVersion(bool short_version)
 
 }
 
+//---------------------------------------------------------------------------------------
+
+wxString FFQConfig::GetHWAccelerators()
+{
+
+    //Return the list of supported hardware accelerators
+    return m_HWAccels;
+
+}
+
+//---------------------------------------------------------------------------------------
+
+wxString FFQConfig::GetHWDecoders()
+{
+    //Return the list of supported hardware decoders
+    return m_HWDecoders;
+}
 //---------------------------------------------------------------------------------------
 
 LPPIXEL_FORMAT FFQConfig::GetPixelFormats()
@@ -939,7 +1057,9 @@ void FFQConfig::LoadConfig()
                     else if (name == CFG_SILENT_QFINISH) silent_qfinish = STRBOOL(line);
                     else if (name == CFG_SAVED_COMMANDS) saved_commands = line;
                     else if (name == CFG_SAVE_ON_MODIFY) save_on_modify = STRBOOL(line);
+                    else if (name == CFG_VALIDATE_ON_LOAD) validate_on_load = STRBOOL(line);
                     else if (name == CFG_SUBS_CHARENC) subs_charenc = line;
+                    else if (name == CFG_LOCALE) user_locale = line;
 
 
                 }
@@ -1085,7 +1205,9 @@ void FFQConfig::SaveConfig()
         cfg.AddLine(CFG_SILENT_QFINISH + "=" + BOOLSTR(silent_qfinish));
         cfg.AddLine(CFG_SAVED_COMMANDS + "=" + saved_commands);
         cfg.AddLine(CFG_SAVE_ON_MODIFY + "=" + BOOLSTR(save_on_modify));
+        cfg.AddLine(CFG_VALIDATE_ON_LOAD + "=" + BOOLSTR(validate_on_load));
         cfg.AddLine(CFG_SUBS_CHARENC + "=" + subs_charenc);
+        cfg.AddLine(CFG_LOCALE + "=" + user_locale);
 
         //Empty line to separate codec_info's
         cfg.AddLine("");
@@ -1279,6 +1401,19 @@ bool FFQConfig::ValidateFFMpegPath(wxString path, bool set_config_path_if_valid)
 
     }
 
+    //Hardware accelerators (for decoding)
+    wxString hwacl = "";
+    s = proc->GetFFMpegOther("-hwaccels", path);
+    while (s.Len() > 0)
+    {
+        t = StrTrim(GetLine(s));
+        if (t.Find(':') < 0) hwacl += t + "\n";
+    }
+    if (hwacl.Len() > 0) hwacl.RemoveLast();
+
+    //Hardware decoders
+    wxString hwdec = (hwacl.Len() > 0) ? ParseHWDecoders(proc->GetFFMpegOther("-decoders", path), hwacl) : "";
+
     //Create a list of supported filters
     s = proc->GetFFMpegFilters(path);
 
@@ -1358,6 +1493,8 @@ bool FFQConfig::ValidateFFMpegPath(wxString path, bool set_config_path_if_valid)
     m_VideoCodecs = v_codecs;
     m_Filters = filters;
     m_SubtitleCodecs = s_codecs;
+    m_HWAccels = hwacl;
+    m_HWDecoders = hwdec;
     if (m_PixelFormats) delete m_PixelFormats;
     m_PixelFormats = pixfmts;
 
@@ -1377,38 +1514,54 @@ FFQConfig::FFQConfig()
     srand(time(NULL));
 
     //Get path to executable
-    wxString exe = wxStandardPaths::Get().GetExecutablePath();
+    wxString p = wxStandardPaths::Get().GetExecutablePath();
+
+    //Extract app name
+    app_name = p.AfterLast(wxFileName::GetPathSeparator());
+
+    //Remove any extension
+    if (app_name.Find('.') > 0) app_name = app_name.BeforeLast('.');
+
+    //Extract path only if required
+    p = p.BeforeLast(wxFileName::GetPathSeparator());
 
     //Check if we are using AVlib (avconv, avprobe, avplay)
-    use_libav = exe.AfterLast(wxFileName::GetPathSeparator()).Lower().Find("avqueue") == 0;
-
-    //Set app name
-    app_name = (use_libav ? "AV" : "FF");
-    app_name += "Queue";
-
-    //Path only for locating configuration file
-    exe = exe.BeforeLast(wxFileName::GetPathSeparator());
+    use_libav = app_name.Lower().Find("avqueue") >= 0;
 
     //Check if config exists in the same location as the program file
     wxString fn_cfg = app_name.Lower() + ".cfg";
-    m_ConfigPath = exe;
-    m_ConfigFile = GetConfigPath(fn_cfg);//FILENAME_CONFIG);
+    m_ConfigPath = p;
+    m_ConfigFile = GetConfigPath(fn_cfg);
     bool cfg_ok = wxFileExists(m_ConfigFile);
 
     if (!cfg_ok)
     {
 
-        //Check if config exists in ConfigDir
-        m_ConfigPath = wxStandardPaths::Get().GetConfigDir();
-        m_ConfigFile = GetConfigPath(fn_cfg);//FILENAME_CONFIG);
+        //Check if config exists in the typical config location
+        #ifdef __LINUX__
+            //On Linux we honor the ~/.config/appname way of life if available
+            wxString cfg_dir = wxStandardPaths::Get().GetUserConfigDir() + "/.config";
+            if (wxFileName::DirExists(cfg_dir)) cfg_dir += "/" + app_name.Lower();
+            else cfg_dir = wxStandardPaths::Get().GetUserDataDir();
+        #else
+            //For backwards compatibility we must check if ConfigDir exists and
+            //is not, we use UserDataDir in order to support per-user config
+            wxString cfg_dir = wxStandardPaths::Get().GetConfigDir();
+            if (!wxFileName::DirExists(cfg_dir)) cfg_dir = wxStandardPaths::Get().GetUserDataDir();
+        #endif // __LINUX__
+
+        m_ConfigPath = cfg_dir;
+        m_ConfigFile = GetConfigPath(fn_cfg);
         cfg_ok = wxFileExists(m_ConfigFile);
 
         if (!cfg_ok)
         {
 
             //Try to create config in same folder as program file
-            m_ConfigPath = exe;
-            m_ConfigFile = GetConfigPath(fn_cfg);//FILENAME_CONFIG);
+            m_ConfigPath = p;
+            m_ConfigFile = GetConfigPath(fn_cfg);
+
+            wxLogNull preventPeskyPopup;
 
             wxTextFile *tf = NULL;
             try
@@ -1429,7 +1582,7 @@ FFQConfig::FFQConfig()
             {
 
                 //Everything failed; revert to default config dir
-                m_ConfigPath = wxStandardPaths::Get().GetConfigDir();
+                m_ConfigPath = cfg_dir;
                 m_ConfigFile = GetConfigPath(fn_cfg);//FILENAME_CONFIG);
 
             }
@@ -1437,6 +1590,19 @@ FFQConfig::FFQConfig()
         }
 
     }
+
+    //Locate the directory for shared data
+    #ifdef __LINUX__
+        share_data_dir = "/usr/local/share/" + app_name.Lower();
+        if (!wxFileName::DirExists(share_data_dir))
+            share_data_dir = wxStandardPaths::Get().GetUserConfigDir() + "/.local/share/" + app_name.Lower();
+    #else
+        share_data_dir = wxStandardPaths::Get().GetConfigDir();
+    #endif // __LINUX__
+
+    //Either clear or terminate with separator
+    if (!wxFileName::DirExists(share_data_dir)) share_data_dir.Clear();
+    else share_data_dir += wxFileName::GetPathSeparator();
 
     //Set pointers to NULL
     m_PresetManager = NULL;
