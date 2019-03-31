@@ -28,17 +28,17 @@
 
 #ifndef WX_PRECOMP
 	//(*HeadersPCH(FFQJobEditAdvCuts)
+	#include <wx/button.h>
 	#include <wx/checkbox.h>
 	#include <wx/dialog.h>
-	#include <wx/sizer.h>
-	#include <wx/button.h>
-	#include <wx/radiobut.h>
+	#include <wx/listbox.h>
 	#include <wx/panel.h>
+	#include <wx/radiobut.h>
+	#include <wx/sizer.h>
 	#include <wx/slider.h>
 	#include <wx/stattext.h>
 	#include <wx/textctrl.h>
 	#include <wx/timer.h>
-	#include <wx/listbox.h>
 	//*)
 #endif
 //(*Headers(FFQJobEditAdvCuts)
@@ -60,43 +60,43 @@ class FFQJobEditAdvCuts: public wxDialog
 		bool Execute(FFQ_CUTS &cuts, wxString file_path, FFProbeInfoParser *probe);
 
 		//(*Declarations(FFQJobEditAdvCuts)
-		wxSlider* CfgAccuracy;
-		wxButton* CancelButton;
-		wxListBox* CutList;
-		wxStaticText* ST2;
-		wxStaticText* ST11;
-		wxStaticText* ST7;
-		wxButton* SetTo;
-		wxTextCtrl* ToTime;
 		wxButton* AddCut;
-		wxFlexGridSizer* PreviewSizer2;
-		wxStaticText* ST8;
-		wxRadioButton* FilterFirst;
-		wxStaticText* ST5;
-		wxRadioButton* FilterLast;
-		wxSlider* CfgDelay;
-		wxCheckBox* FrameConv;
-		wxPanel* FrameView;
-		wxTextCtrl* TimePreviewAt;
-		wxStaticText* ST4;
-		wxFlexGridSizer* PreviewSizer1;
-		wxSlider* FrameSlider;
+		wxButton* CancelButton;
 		wxButton* NextFrame;
-		wxStaticText* FramePos;
-		wxTextCtrl* FromTime;
-		wxButton* SetFrom;
-		wxTimer FrameTimer;
-		wxStaticText* ST10;
 		wxButton* OkButton;
 		wxButton* PrevFrame;
 		wxButton* RemoveCut;
-		wxStaticText* ST3;
-		wxStaticText* ST9;
-		wxRadioButton* RemoveCuts;
-		wxRadioButton* KeepCuts;
+		wxButton* SetFrom;
+		wxButton* SetTo;
 		wxButton* TimePreview;
+		wxCheckBox* FrameConv;
+		wxFlexGridSizer* PreviewSizer1;
+		wxFlexGridSizer* PreviewSizer2;
+		wxListBox* CutList;
+		wxPanel* FrameView;
+		wxRadioButton* FilterFirst;
+		wxRadioButton* FilterLast;
+		wxRadioButton* KeepCuts;
+		wxRadioButton* RemoveCuts;
+		wxSlider* CfgAccuracy;
+		wxSlider* CfgDelay;
+		wxSlider* FrameSlider;
 		wxStaticText* DurationLab;
+		wxStaticText* FramePos;
+		wxStaticText* ST10;
+		wxStaticText* ST11;
+		wxStaticText* ST2;
+		wxStaticText* ST3;
+		wxStaticText* ST4;
+		wxStaticText* ST5;
 		wxStaticText* ST6;
+		wxStaticText* ST7;
+		wxStaticText* ST8;
+		wxStaticText* ST9;
+		wxTextCtrl* FromTime;
+		wxTextCtrl* TimePreviewAt;
+		wxTextCtrl* ToTime;
+		wxTimer FrameTimer;
 		//*)
 
 	protected:

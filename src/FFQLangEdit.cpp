@@ -314,7 +314,9 @@ void FFQLangEdit::LoadEditStr(bool internal)
     m_EditStr = m_EditLang->GetPtrAtIndex(m_EditIndex);
     m_OrgStr = m_OrgLang->GetPtrAtIndex(m_EditIndex);
     wxString s = internal ? m_OrgStr->str : m_EditStr->str;
+    s.Replace("||", "\a"); //Added to prevent "||" from being recognized as two array separators
     m_EditListSize = s.Replace("|", CRLF) + 1;
+    s.Replace("\a", "||"); //Return "||" to the string
     StrEdit->ChangeValue(s);
     StrEdit->SetModified(false);
     ListView->EnsureVisible(m_EditIndex);
@@ -338,7 +340,9 @@ bool FFQLangEdit::SaveEditStr(bool force, bool clear)
             wxString s = StrTrim(StrEdit->GetValue());
 
             //Validate value
+            s.Replace("||", "\a");
             if (s.Find("|") >= 0) return SkipItemChange("Illegal character \"|\" found in string");
+            s.Replace("\a", "||");
 
             if ((s.Len() > 0) && (m_EditListSize > 1))
             {
@@ -522,7 +526,7 @@ void FFQLangEdit::OnKeyDown(wxKeyEvent &event)
         else if (key == WXK_RETURN)
         {
 
-            SaveEditStr(true, false);
+            if (!SaveEditStr(true, false)) return;
 
             while ((unsigned int)sel++ < m_EditLang->GetCount())
             {

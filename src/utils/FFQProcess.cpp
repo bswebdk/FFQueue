@@ -23,8 +23,10 @@
 
 #include "FFQProcess.h"
 #include <wx/mstream.h>
+#include <wx/filename.h>
 //#include <wx/thread.h>
 #include "FFQConfig.h"
+#include "FFQConsole.h"
 #include "FFQMisc.h"
 #include "FFQBuildCmd.h"
 #include "../utils/FFQLang.h"
@@ -46,6 +48,13 @@
 #define FFMPEG_FORMATS "-formats"
 #define FFMPEG_PIXFMTS "-pix_fmts"
 
+//Using pipes for extracting single frames from vids works nice on
+//Windows but not so nice on Linux, dunno why. Decaring the define
+//USE_PIPES will use pipes, otherwise temp files are used.
+#ifdef __WINDOWS__
+#define USE_PIPES
+#endif // __WINDOWS__
+
 
 //---------------------------------------------------------------------------------------
 
@@ -60,6 +69,7 @@ FFQProcess::FFQProcess()
     m_CommandLine.Clear();
     m_ErrOut.Clear();
     m_StdOut.Clear();
+    m_FrameFile.Clear();
 
     m_Process = NULL;
     m_ProcessId = wxNewId();
@@ -80,6 +90,9 @@ FFQProcess::~FFQProcess()
     //Release any occupied memory
     delete[] m_Buffer;
     m_Buffer = NULL;
+
+    //Delete any temporary files
+    if ((m_FrameFile.Len() > 0) && wxFileName::Exists(m_FrameFile)) wxRemoveFile(m_FrameFile);
 
 }
 
@@ -162,6 +175,10 @@ void FFQProcess::SetCommand(wxString command, wxString args)
     //Append any arguments
     if (args.Len() > 0) m_CommandLine += " " + args;
 
+    #ifdef DEBUG
+    //FFQConsole::Get()->AppendLine(m_CommandLine, COLOR_BLUE);
+    #endif
+
 }
 
 //---------------------------------------------------------------------------------------
@@ -241,7 +258,7 @@ bool FFQProcess::WaitFor(unsigned int timeout)
 
 //---------------------------------------------------------------------------------------
 
-void FFQProcess::Execute(bool wait, bool redirect)
+void FFQProcess::Execute(bool wait, bool redirect, bool final_transact)
 {
 
     //If already executing we fail
@@ -260,12 +277,14 @@ void FFQProcess::Execute(bool wait, bool redirect)
     //Redirect as required
     if (redirect) m_Process->Redirect();
 
+    //Set whether a final transaction should be performed
+    m_FinalTransact = final_transact;
+
     //Execute the command
     long pid = wxExecute(m_CommandLine, wxEXEC_ASYNC | wxEXEC_MAKE_GROUP_LEADER, m_Process);
 
     //Set time of start
     m_StartTime = GetTimeTickCount();
-    m_FinalTransact = true;
 
     if (pid == 0)
     {
@@ -297,7 +316,7 @@ void FFQProcess::ExecuteAndWait()
 bool FFQProcess::ExtractFrameFromFile(wxString file_name, TIME_VALUE frame_time, wxImage *img, unsigned int timeout, unsigned int accuracy, wxSize fit_to)
 {
 
-    //Extract one frame from a movie as an image;
+    //Extract one frame from a movie as an image
 
     bool success = false;
 
@@ -308,7 +327,7 @@ bool FFQProcess::ExtractFrameFromFile(wxString file_name, TIME_VALUE frame_time,
     {
 
         //Apply scaling (fit to rect)
-        vf += wxString::Format("scale='iw*min(%i/iw,%i/ih)':'ih*min(%i/iw,%i/ih)'",
+        vf += wxString::Format("scale='iw*min(%i/iw,%i/ih)':'ih*min(%i/iw,%i/ih)',",
                 fit_to.GetWidth(), fit_to.GetHeight(), fit_to.GetWidth(), fit_to.GetHeight()
               );
 
@@ -326,33 +345,45 @@ bool FFQProcess::ExtractFrameFromFile(wxString file_name, TIME_VALUE frame_time,
         }
         else frame_time.SetMilliseconds(0);
 
-        if (ft > 0) vf += ",select='gte(t\\," + TIME_VALUE(ft).ToShortString() + ")'";
+        if (ft > 0)
+        {
+            vf += "select='gte(t\\," + TIME_VALUE(ft).ToShortString() + ")',";
+        }
 
     }
 
     //Use or clear vf?
     if (vf.Right(1) == "\"") vf.Clear();
-    else vf += "\" ";
+    else vf = vf.Left(vf.Len() - 1) + "\" ";
 
-    //Create ss
-    wxString ss = (frame_time.ToMilliseconds() == 0) ? "" : "-ss " + frame_time.ToShortString() + " ";
+    //Create the rest of the command
+    wxString cmd = (frame_time.ToMilliseconds() == 0) ? "" : "-ss " + frame_time.ToShortString() + " ";
+    cmd = "-hide_banner " + cmd + "-i \"" + FormatFileName(file_name) + "\" " + vf + "-an -c:v mjpeg -vframes 1 -f mjpeg -y ";
+
+    //#define __WINDOWS__
 
     //Set the command
-    SetCommand(false, "-hide_banner " + ss + "-i \"" + FormatFileName(file_name) + "\" " + vf + "-an -c:v mjpeg -vframes 1 -f mjpeg -y pipe:1");
+    #ifdef USE_PIPES
 
-    //ShowInfo(m_CommandLine);
+      //Using pipes works nice on Windows, not so much on other platforms - dunno why..
+      SetCommand(false, cmd + "pipe:1");
+
+      //Temporary memory
+      wxMemoryOutputStream memory;
+
+    #else
+
+      //Create a temporary file name to use
+      if (m_FrameFile.Len() == 0) m_FrameFile = FFQCFG()->GetTmpPath("", false, "jpg");
+      SetCommand(false, cmd + "\"" + m_FrameFile + "\"");
+
+    #endif
 
     try
     {
 
         //Execute but not wait
-        Execute(false, true);
-
-        //Prevent final transaction
-        m_FinalTransact = false;
-
-        //Temporary memory
-        wxMemoryOutputStream memory;
+        Execute(false, true, false);
 
         //Read image data into memory
         bool tout;
@@ -360,27 +391,43 @@ bool FFQProcess::ExtractFrameFromFile(wxString file_name, TIME_VALUE frame_time,
         do
         {
 
-            //Copy data
-            if (m_Process->IsInputAvailable()) memory.Write(*m_Process->GetInputStream());
+            #ifdef USE_PIPES
+              //Copy data
+              if (m_Process->IsInputAvailable()) memory.Write(*m_Process->GetInputStream());
+              else //if (TransactPipes)
+            #endif
 
             //Empty IO-buffer for errout or yield
-            else if (!TransactPipes(false, true)) Yield_App(0);
+            if (!TransactPipes(false, true)) Yield_App(0);
 
             //Time out?
             tout = (timeout > 0) && (GetTimeTickCount() - m_StartTime >= timeout);
 
         } while ( (!tout) && (!m_Terminated) );
 
+        #ifdef USE_PIPES
+        size_t imgsize = memory.GetSize();
+        #else
+        size_t imgsize = wxFileName::GetSize(m_FrameFile).GetLo();
+        #endif
+
         //Completed ok?
-        if ((!tout) && (memory.GetSize() > 0))
+        if ((!tout) && (imgsize > 0))
         {
 
             //Yes, load image
+            #ifdef USE_PIPES
             wxMemoryInputStream imgdata(memory);
             img->LoadFile(imgdata, wxBITMAP_TYPE_JPEG);
+            #else
+            img->LoadFile(m_FrameFile, wxBITMAP_TYPE_JPEG);
+            #endif
             success = true;
 
         }
+        #ifdef DEBUG
+        else FFQConsole::Get()->AppendLine(wxString::Format("ExtractFrameError: tout=%i, mem=%u, errout:\n%s\n", (int)tout, imgsize, m_ErrOut), COLOR_RED);
+        #endif
 
     }
     catch (std::exception &err)

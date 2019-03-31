@@ -607,7 +607,7 @@ void ListBoxMoveSelectedItems(wxListBox *lb, bool up, bool is_check_list_box)
     }
     else
     {
-        for (unsigned int i = lb->GetCount() - 1; (long)i >= 0; i--)
+        for (unsigned int i = lb->GetCount() - 1; i < lb->GetCount(); i--)
         {
             if (lb->IsSelected(i)) ListBoxSwapItems(lb, i, i+1, is_check_list_box);
         }

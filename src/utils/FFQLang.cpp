@@ -1927,8 +1927,6 @@ void FFQLang::InitStringVars()
 
 //---------------------------------------------------------------------------------------
 
-const wxString i64d = "%I64d";
-
 void FFQLang::ValidateStrings()
 {
 
@@ -1936,10 +1934,21 @@ void FFQLang::ValidateStrings()
     //strings. Originally %I64d was used for 64bit integers but that
     //formatter is not portable, so..
 
+    //As of V1.7.52 %I64d is used on Windows and %lld is used on
+    //everything else. Since language file may be saved with either
+    //one of the formatters, we must replace both ways..
+    #ifdef __WINDOWS__
+      #define YEA_FMT "%I64d"
+      #define NEI_FMT "%lld"
+    #else
+      #define YEA_FMT "%lld"
+      #define NEI_FMT "%I64d"
+    #endif // __WINDOWS__
+
     LPFFQ_STRING ffqs = FindString(SID_LOG_COMPLETED_OK);
-    if (ffqs != NULL) ffqs->str.Replace(i64d, UINT64FMT);
+    if (ffqs != NULL) ffqs->str.Replace(NEI_FMT, YEA_FMT);
 
     ffqs = FindString(SID_LOG_CLIPPING_WARNING);
-    if (ffqs != NULL) ffqs->str.Replace(i64d, UINT64FMT);
+    if (ffqs != NULL) ffqs->str.Replace(NEI_FMT, YEA_FMT);
 
 }

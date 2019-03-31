@@ -90,28 +90,28 @@ FFQJobEditAdvCuts::FFQJobEditAdvCuts(wxWindow* parent)
     wxString *lng_placement = FFQL()->GetStringArray(SID_JOBEDIT_ADV_CUTS_CFG_PLACEMENT, 3);
 
 	//(*Initialize(FFQJobEditAdvCuts)
-	wxFlexGridSizer* FlexGridSizer8;
-	wxFlexGridSizer* FlexGridSizer1;
-	wxStaticBoxSizer* SBS1;
-	wxFlexGridSizer* FlexGridSizer2;
-	wxFlexGridSizer* FlexGridSizer15;
-	wxBoxSizer* BoxSizer3;
-	wxStaticBoxSizer* SBS2;
-	wxStaticBoxSizer* SBS4;
-	wxFlexGridSizer* FlexGridSizer11;
-	wxStaticText* ST1;
-	wxFlexGridSizer* FlexGridSizer7;
-	wxBoxSizer* BoxSizer2;
-	wxPanel* P2;
-	wxFlexGridSizer* FlexGridSizer4;
-	wxStaticBoxSizer* SBS3;
-	wxFlexGridSizer* FlexGridSizer9;
-	wxFlexGridSizer* FlexGridSizer6;
-	wxFlexGridSizer* FlexGridSizer3;
-	wxPanel* P1;
-	wxFlexGridSizer* FlexGridSizer10;
 	wxBoxSizer* BoxSizer1;
+	wxBoxSizer* BoxSizer2;
+	wxBoxSizer* BoxSizer3;
+	wxFlexGridSizer* FlexGridSizer10;
+	wxFlexGridSizer* FlexGridSizer11;
+	wxFlexGridSizer* FlexGridSizer15;
+	wxFlexGridSizer* FlexGridSizer1;
+	wxFlexGridSizer* FlexGridSizer2;
+	wxFlexGridSizer* FlexGridSizer3;
+	wxFlexGridSizer* FlexGridSizer4;
+	wxFlexGridSizer* FlexGridSizer6;
+	wxFlexGridSizer* FlexGridSizer7;
+	wxFlexGridSizer* FlexGridSizer8;
+	wxFlexGridSizer* FlexGridSizer9;
+	wxPanel* P1;
+	wxPanel* P2;
+	wxStaticBoxSizer* SBS1;
+	wxStaticBoxSizer* SBS2;
+	wxStaticBoxSizer* SBS3;
+	wxStaticBoxSizer* SBS4;
 	wxStaticBoxSizer* SBS5;
+	wxStaticText* ST1;
 
 	Create(parent, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE, _T("wxID_ANY"));
 	SetTitle(FFQS(SID_JOBEDIT_ADV_CUTS_TITLE));
@@ -397,9 +397,16 @@ bool FFQJobEditAdvCuts::Execute(FFQ_CUTS &cuts, wxString file_path, FFProbeInfoP
 	EnableSizer(PreviewSizer1, has_vid);
 	EnableSizer(PreviewSizer2, has_vid);
 
+	//Disable accuracy by filter if accurate_seek is enabled
+	/*CfgAccuracy->Enable(!FFQCFG()->accurate_seek);
+	ST5->Enable(CfgAccuracy->IsEnabled());
+	ST6->Enable(CfgAccuracy->IsEnabled());
+	ST7->Enable(CfgAccuracy->IsEnabled());*/
+
     //if (FrameView->IsEnabled())
     if (has_vid)
     {
+
         //Update slider max
         FrameSlider->SetValue(0);
         m_FrameTime = froundi(1000.0 / m_VidRate);
@@ -486,9 +493,7 @@ void FFQJobEditAdvCuts::ExtractFrame()
     bool ok = false;
     try
     {
-
         ok = m_Process->ExtractFrameFromFile(m_FilePath, m_FramePos, m_CurFrame, 5000, CfgAccuracy->GetValue() * 500, wxSize(m_DrawBuf->GetWidth(), m_DrawBuf->GetHeight()));
-
     }
     catch (std::exception &err)
     {
