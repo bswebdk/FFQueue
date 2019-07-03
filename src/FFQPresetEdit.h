@@ -115,10 +115,12 @@ class FFQPresetEdit: public wxDialog
 		wxComboBox* SpeedPreset;
 		wxComboBox* SubsCharEnc;
 		wxComboBox* VideoThreads;
+		wxComboBox* VideoTuning;
 		wxFileDialog* OpenFileDlg;
 		wxFlexGridSizer* AudioQScaleSizer;
 		wxFlexGridSizer* FilterSizer;
 		wxFlexGridSizer* KeyFrameSizer;
+		wxFlexGridSizer* PresetTuneSizer;
 		wxFlexGridSizer* SceneChangeSizer;
 		wxFlexGridSizer* SubsSizer2;
 		wxFlexGridSizer* SubsSizer3;
@@ -194,6 +196,7 @@ class FFQPresetEdit: public wxDialog
 		wxStaticText* OST5;
 		wxStaticText* OST6;
 		wxStaticText* OST7;
+		wxStaticText* OST8;
 		wxStaticText* QDiffVal;
 		wxStaticText* QMaxVal;
 		wxStaticText* QMinVal;
@@ -280,6 +283,8 @@ class FFQPresetEdit: public wxDialog
 		static const long ID_TRELLIS;
 		static const long ID_OST7;
 		static const long ID_SPEEDPRESET;
+		static const long ID_OST8;
+		static const long ID_VIDEOTUNING;
 		static const long ID_OST5;
 		static const long ID_VIDEOTHREADS;
 		static const long ID_OTHERPAGE;

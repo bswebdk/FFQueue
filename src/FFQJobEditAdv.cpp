@@ -84,17 +84,17 @@ END_EVENT_TABLE()
 FFQJobEditAdv::FFQJobEditAdv(wxWindow* parent)
 {
 	//(*Initialize(FFQJobEditAdv)
-	wxFlexGridSizer* FlexGridSizer1;
-	wxStaticBoxSizer* SBS1;
-	wxFlexGridSizer* FlexGridSizer2;
-	wxStaticBoxSizer* SBS2;
-	wxStaticBoxSizer* SBS4;
-	wxFlexGridSizer* FlexGridSizer7;
-	wxBoxSizer* BoxSizer2;
-	wxStaticBoxSizer* SBS3;
-	wxFlexGridSizer* FlexGridSizer6;
 	wxBoxSizer* BoxSizer1;
+	wxBoxSizer* BoxSizer2;
+	wxFlexGridSizer* FlexGridSizer1;
+	wxFlexGridSizer* FlexGridSizer2;
 	wxFlexGridSizer* FlexGridSizer5;
+	wxFlexGridSizer* FlexGridSizer6;
+	wxFlexGridSizer* FlexGridSizer7;
+	wxStaticBoxSizer* SBS1;
+	wxStaticBoxSizer* SBS2;
+	wxStaticBoxSizer* SBS3;
+	wxStaticBoxSizer* SBS4;
 
 	Create(parent, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE, _T("wxID_ANY"));
 	FlexGridSizer1 = new wxFlexGridSizer(5, 1, 0, 0);
@@ -204,6 +204,8 @@ FFQJobEditAdv::FFQJobEditAdv(wxWindow* parent)
 	Connect(ID_STREAMUP,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&FFQJobEditAdv::OnAction);
 	Connect(ID_STREAMDOWN,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&FFQJobEditAdv::OnAction);
 	Connect(ID_STREAMREFRESH,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&FFQJobEditAdv::OnAction);
+	Connect(ID_OUTPUT,wxEVT_COMMAND_TEXT_UPDATED,(wxObjectEventFunction)&FFQJobEditAdv::OnOutputTextEnter);
+	Connect(ID_OUTPUT,wxEVT_COMMAND_TEXT_ENTER,(wxObjectEventFunction)&FFQJobEditAdv::OnOutputTextEnter);
 	Connect(ID_BROWSEOUTPUT,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&FFQJobEditAdv::OnAction);
 	Connect(ID_OUTPUTLENGTH,wxEVT_COMMAND_HYPERLINK,(wxObjectEventFunction)&FFQJobEditAdv::OnAction);
 	Connect(ID_SAVEJOB,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&FFQJobEditAdv::OnAction);
@@ -285,6 +287,7 @@ bool FFQJobEditAdv::Execute(LPFFQ_JOB job)
 	//Output file and length
 	m_OutLen = job->out_len;
 	Output->ChangeValue(job->out);
+	m_AutoOutputName = job->out.Len() == 0;
 
 	//Command line and preset
 	CmdLine->ChangeValue(job->cmd_line == "" ? CMD_DEFAULT : job->cmd_line);
@@ -1183,36 +1186,53 @@ void FFQJobEditAdv::OnIdle(wxIdleEvent &event)
     }
 
 
-    //If only one valid file is available we must search for secondary files
-    //and set the preferred output file name
-    LPINPUT_CTRLS ctrls = (m_CtrlData.Count() == 1) ? GetCtrlData(0) : NULL;
+    //Get the controls from the first input file and validate
+    LPINPUT_CTRLS ctrls = GetCtrlData(0);
+
     if ((ctrls != NULL) && ctrls->valid)
     {
 
-        //Find secondary files?
-        if (m_FindSecondary)
+        if (m_CtrlData.Count() == 1)
         {
 
-            m_FindSecondary = false; //Make sure this is only done once!
-            AddSecondaryFiles(ctrls->validated_path);
+            //If only one valid file is available we must search for secondary files
+            //and set the preferred preset
+
+            //Find secondary files?
+            if (m_FindSecondary)
+            {
+
+                m_FindSecondary = false; //Make sure this is only done once!
+                AddSecondaryFiles(ctrls->validated_path);
+
+            }
+
+            //Detect preset?
+            if (m_AutoPreset)
+            {
+
+                m_AutoPreset = false; //Make sure this is only done once!
+                wxString pstFp = GetPresetFingerPrint();
+                Preset->SelectPreset(FFQPresetMgr::Get()->GetPresetByFingerPrint(pstFp));
+
+            }
 
         }
 
-        //Detect preset?
-        if (m_AutoPreset)
+        //If the first input file is valid, generate the output name for it
+        if (m_AutoOutputName)
         {
 
-            m_AutoPreset = false; //Make sure this is only done once!
-            wxString pstFp = GetPresetFingerPrint();
-            Preset->SelectPreset(FFQPresetMgr::Get()->GetPresetByFingerPrint(pstFp));
+            wxString outfn = FFQCFG()->GetPreferredOutputName(ctrls->input->GetValue(), Preset->GetSelectedPreset());
+            if (outfn != Output->GetValue()) Output->ChangeValue(outfn);
+
+            //if (Output->GetValue().Len() == 0)
+                //Output->SetValue(FFQCFG()->GetPreferredOutputName(ctrls->input->GetValue()));
 
         }
-
-        //Set output file name
-        if (Output->GetValue().Len() == 0)
-            Output->SetValue(FFQCFG()->GetPreferredOutputName(ctrls->input->GetValue()));
 
     }
+
 
     //Update controls
     UpdateControls();
@@ -1399,4 +1419,13 @@ void FFQJobEditAdv::OnStreamListChange(wxCommandEvent& event)
 
     //Controls must be updated due to selection change
     else UpdateControls();
+}
+
+//---------------------------------------------------------------------------------------
+
+void FFQJobEditAdv::OnOutputTextEnter(wxCommandEvent& event)
+{
+    //Make sure that generation of automatic output names
+    //is stopped when the user does manual modifications
+    m_AutoOutputName = false;
 }

@@ -5,7 +5,7 @@
 		<id_arg>0</id_arg>
 		<object class="wxFlexGridSizer" variable="FlexGridSizer1" member="no">
 			<cols>1</cols>
-			<rows>7</rows>
+			<rows>8</rows>
 			<growablecols>0</growablecols>
 			<growablerows>1</growablerows>
 			<object class="sizeritem">
@@ -192,6 +192,23 @@
 				<option>1</option>
 			</object>
 			<object class="sizeritem">
+				<object class="wxStaticBoxSizer" variable="SBS6" member="no">
+					<label>nmptn</label>
+					<orient>wxVERTICAL</orient>
+					<object class="sizeritem">
+						<object class="wxTextCtrl" name="ID_OUTPUTNAMEPATTERN" variable="OutputNamePattern" member="yes">
+							<extra_code>SBS6-&gt;GetStaticBox()-&gt;SetLabel(FFQS(SID__OPTIONS__OUTPUT__NAME__PATTERN));</extra_code>
+						</object>
+						<flag>wxALL|wxEXPAND</flag>
+						<border>3</border>
+						<option>1</option>
+					</object>
+				</object>
+				<flag>wxALL|wxEXPAND</flag>
+				<border>3</border>
+				<option>1</option>
+			</object>
+			<object class="sizeritem">
 				<object class="wxStaticBoxSizer" variable="SBS5" member="no">
 					<label>Ccc</label>
 					<object class="sizeritem">
@@ -210,7 +227,7 @@
 			<object class="sizeritem">
 				<object class="wxCheckListBox" name="ID_CHECKLIST" variable="CheckList" member="yes">
 					<maxsize>-1,180</maxsize>
-					<extra_code>CheckList-&gt;SetBackgroundColour(GetBackgroundColour());&#x0A;CheckList-&gt;Append(FFQS(SID__OPTIONS__SAVE__JOBS__ON__EXIT));&#x0A;CheckList-&gt;Append(FFQS(SID__OPTIONS__SAVE__JOBS__ON__MODIFY));&#x0A;CheckList-&gt;Append(FFQS(SID__OPTIONS__REMOVE__FINISHED__JOBS));&#x0A;CheckList-&gt;Append(FFQS(SID__OPTIONS__VALIDATE__ON__LOAD));&#x0A;CheckList-&gt;Append(FFQS(SID__OPTIONS__LIMIT__STATISTICS));&#x0A;CheckList-&gt;Append(FFQS(SID__OPTIONS__SHOW__BANNER__INFO));&#x0A;CheckList-&gt;Append(FFQS(SID__OPTIONS__SAVE__WINDOW__POS));&#x0A;CheckList-&gt;Append(FFQS(SID__OPTIONS__FULL__CODEC__LIST));&#x0A;CheckList-&gt;Append(FFQS(SID__OPTIONS__ALWAYS__UNIQUE__NAMES));&#x0A;CheckList-&gt;Append(FFQS(SID__OPTIONS__KEEP__CONSOLE__OPEN));&#x0A;CheckList-&gt;Append(FFQS(SID__OPTIONS__SILENT__QUEUE__FINISH));&#x0A;</extra_code>
+					<extra_code>CheckList-&gt;SetBackgroundColour(GetBackgroundColour());&#x0A;CheckList-&gt;Append(FFQS(SID__OPTIONS__SAVE__JOBS__ON__EXIT));&#x0A;CheckList-&gt;Append(FFQS(SID__OPTIONS__SAVE__JOBS__ON__MODIFY));&#x0A;CheckList-&gt;Append(FFQS(SID__OPTIONS__REMOVE__FINISHED__JOBS));&#x0A;CheckList-&gt;Append(FFQS(SID__OPTIONS__VALIDATE__ON__LOAD));&#x0A;CheckList-&gt;Append(FFQS(SID__OPTIONS__LIMIT__STATISTICS));&#x0A;CheckList-&gt;Append(FFQS(SID__OPTIONS__SHOW__BANNER__INFO));&#x0A;CheckList-&gt;Append(FFQS(SID__OPTIONS__SAVE__WINDOW__POS));&#x0A;CheckList-&gt;Append(FFQS(SID__OPTIONS__FULL__CODEC__LIST));&#x0A;CheckList-&gt;Append(FFQS(SID__OPTIONS__ALWAYS__UNIQUE__NAMES));&#x0A;CheckList-&gt;Append(FFQS(SID__OPTIONS__KEEP__CONSOLE__OPEN));&#x0A;CheckList-&gt;Append(FFQS(SID__OPTIONS__SILENT__QUEUE__FINISH));&#x0A;CheckList-&gt;Append(FFQS(SID__OPTIONS__CONFIRM__DELETE__JOBS));&#x0A;</extra_code>
 					<style>wxNO_BORDER|wxTAB_TRAVERSAL|wxVSCROLL</style>
 				</object>
 				<flag>wxALL|wxEXPAND</flag>

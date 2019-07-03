@@ -68,6 +68,7 @@ class FFQConfigEdit: public wxDialog
 		wxTextCtrl* CustPlayer;
 		wxTextCtrl* CustomTemp;
 		wxTextCtrl* FFMpegPath;
+		wxTextCtrl* OutputNamePattern;
 		wxTextCtrl* SecondFileExts;
 		//*)
 
@@ -85,6 +86,7 @@ class FFQConfigEdit: public wxDialog
 		static const long ID_CUSTOMTEMP;
 		static const long ID_BROWSETEMP;
 		static const long ID_SECONDFILEEXTS;
+		static const long ID_OUTPUTNAMEPATTERN;
 		static const long ID_CONSOLECMD;
 		static const long ID_CHECKLIST;
 		static const long ID_LANGBUTTON;

@@ -49,6 +49,7 @@ const long FFQConfigEdit::ID_TPRPANEL = wxNewId();
 const long FFQConfigEdit::ID_CUSTOMTEMP = wxNewId();
 const long FFQConfigEdit::ID_BROWSETEMP = wxNewId();
 const long FFQConfigEdit::ID_SECONDFILEEXTS = wxNewId();
+const long FFQConfigEdit::ID_OUTPUTNAMEPATTERN = wxNewId();
 const long FFQConfigEdit::ID_CONSOLECMD = wxNewId();
 const long FFQConfigEdit::ID_CHECKLIST = wxNewId();
 const long FFQConfigEdit::ID_LANGBUTTON = wxNewId();
@@ -78,9 +79,10 @@ FFQConfigEdit::FFQConfigEdit(wxWindow* parent,wxWindowID id)
 	wxStaticBoxSizer* SBS3;
 	wxStaticBoxSizer* SBS4;
 	wxStaticBoxSizer* SBS5;
+	wxStaticBoxSizer* SBS6;
 
 	Create(parent, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE, _T("wxID_ANY"));
-	FlexGridSizer1 = new wxFlexGridSizer(7, 1, 0, 0);
+	FlexGridSizer1 = new wxFlexGridSizer(8, 1, 0, 0);
 	FlexGridSizer1->AddGrowableCol(0);
 	FlexGridSizer1->AddGrowableRow(1);
 	SBS1 = new wxStaticBoxSizer(wxVERTICAL, this, _("FFP"));
@@ -141,6 +143,11 @@ FFQConfigEdit::FFQConfigEdit(wxWindow* parent,wxWindowID id)
 	SBS3->GetStaticBox()->SetLabel(FFQS(SID_OPTIONS_FIND_2ND_INPUT_EXTS));
 	SBS3->Add(SecondFileExts, 1, wxALL|wxEXPAND, 3);
 	FlexGridSizer1->Add(SBS3, 1, wxALL|wxEXPAND, 3);
+	SBS6 = new wxStaticBoxSizer(wxVERTICAL, this, _("nmptn"));
+	OutputNamePattern = new wxTextCtrl(this, ID_OUTPUTNAMEPATTERN, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_OUTPUTNAMEPATTERN"));
+	SBS6->GetStaticBox()->SetLabel(FFQS(SID_OPTIONS_OUTPUT_NAME_PATTERN));
+	SBS6->Add(OutputNamePattern, 1, wxALL|wxEXPAND, 3);
+	FlexGridSizer1->Add(SBS6, 1, wxALL|wxEXPAND, 3);
 	SBS5 = new wxStaticBoxSizer(wxHORIZONTAL, this, _("Ccc"));
 	ConsoleCmd = new wxTextCtrl(this, ID_CONSOLECMD, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CONSOLECMD"));
 	SBS5->GetStaticBox()->SetLabel(FFQS(SID_OPTIONS_CUSTOM_CONSOLE_CMD));
@@ -160,6 +167,7 @@ FFQConfigEdit::FFQConfigEdit(wxWindow* parent,wxWindowID id)
 	CheckList->Append(FFQS(SID_OPTIONS_ALWAYS_UNIQUE_NAMES));
 	CheckList->Append(FFQS(SID_OPTIONS_KEEP_CONSOLE_OPEN));
 	CheckList->Append(FFQS(SID_OPTIONS_SILENT_QUEUE_FINISH));
+	CheckList->Append(FFQS(SID_OPTIONS_CONFIRM_DELETE_JOBS));
 	FlexGridSizer1->Add(CheckList, 1, wxALL|wxEXPAND, 3);
 	BoxSizer2 = new wxBoxSizer(wxHORIZONTAL);
 	LangButton = new wxButton(this, ID_LANGBUTTON, _("Lng"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_LANGBUTTON"));
@@ -220,6 +228,7 @@ bool FFQConfigEdit::Execute()
     CustomTemp->SetValue( TP_Custom->GetValue() ? s : "");
 
     SecondFileExts->SetValue(FFQCFG()->second_file_extensions);
+    OutputNamePattern->SetValue(FFQCFG()->output_name_pattern);
     ConsoleCmd->SetValue(FFQCFG()->console_cmd);
 
     CheckList->Check(0, FFQCFG()->save_on_exit);
@@ -233,6 +242,7 @@ bool FFQConfigEdit::Execute()
     CheckList->Check(8, FFQCFG()->preferred_unique);
     CheckList->Check(9, FFQCFG()->keep_console);
     CheckList->Check(10, FFQCFG()->silent_qfinish);
+    CheckList->Check(11, FFQCFG()->confirm_delete_jobs);
 
     //Center and update
     CenterOnParent();
@@ -251,6 +261,7 @@ bool FFQConfigEdit::Execute()
         else FFQCFG()->temp_path = CustomTemp->GetValue();
 
         FFQCFG()->second_file_extensions = SecondFileExts->GetValue();
+        FFQCFG()->output_name_pattern = OutputNamePattern->GetValue();
         FFQCFG()->console_cmd = ConsoleCmd->GetValue();
 
         FFQCFG()->save_on_exit = CheckList->IsChecked(0);
@@ -264,6 +275,7 @@ bool FFQConfigEdit::Execute()
         FFQCFG()->preferred_unique = CheckList->IsChecked(8);
         FFQCFG()->keep_console = CheckList->IsChecked(9);
         FFQCFG()->silent_qfinish = CheckList->IsChecked(10);
+        FFQCFG()->confirm_delete_jobs = CheckList->IsChecked(11);
 
         FFQCFG()->SaveConfig();
 

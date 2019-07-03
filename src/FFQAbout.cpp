@@ -297,7 +297,7 @@ void FFQAbout::Execute()
 
     //Language percentages
     long pct = (long)((double)FFQL()->GetFlagCount(SF_TRANSLATED) / (double)FFQL()->GetCount() * 100.0);
-    if ((pct > 0) && (pct < 100)) s = wxString::Format(ABOUT_11, 100 - pct, pct);
+    if ((pct > 0) && (pct < 100)) s = wxString::Format(ABOUT_11, (unsigned int)(100 - pct), (unsigned int)pct);
 
     //Info about programmer, version and language
     TextCtrl->SetDefaultStyle(wxTextAttr(0xAA0000));

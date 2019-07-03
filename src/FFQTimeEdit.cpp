@@ -218,7 +218,7 @@ bool FFQTimeEdit::DoExecute(TIME_VALUE &time, SUBTRACT_TIME subtract[], int coun
 
         b = new wxButton(this, ID_SUBTRACT);
         b->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &FFQTimeEdit::OnButtonClick, this);
-        SubtractSizer->Add(b, 1, wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+        SubtractSizer->Add(b, 1, wxALL|wxEXPAND, 3);
 
     }
 

@@ -39,6 +39,10 @@ extern const wxString CODEC_SUBS_BURNIN;
 extern const unsigned int ENCODER_PRESET_COUNT;
 extern const wxString ENCODER_PRESETS[];
 
+//Video tuning
+extern const unsigned int ENCODER_TUNINGS_COUNT;
+extern const wxString ENCODER_TUNINGS[];
+
 //Used to flag if previewing a command is safe
 extern bool IsPreviewSafe;
 

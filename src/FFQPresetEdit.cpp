@@ -94,6 +94,8 @@ const long FFQPresetEdit::ID_OST6 = wxNewId();
 const long FFQPresetEdit::ID_TRELLIS = wxNewId();
 const long FFQPresetEdit::ID_OST7 = wxNewId();
 const long FFQPresetEdit::ID_SPEEDPRESET = wxNewId();
+const long FFQPresetEdit::ID_OST8 = wxNewId();
+const long FFQPresetEdit::ID_VIDEOTUNING = wxNewId();
 const long FFQPresetEdit::ID_OST5 = wxNewId();
 const long FFQPresetEdit::ID_VIDEOTHREADS = wxNewId();
 const long FFQPresetEdit::ID_OTHERPAGE = wxNewId();
@@ -470,9 +472,18 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 	OST7 = new wxStaticText(OtherPage, ID_OST7, _T("Pst"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_OST7"));
 	OST7->SetLabel(FFQS(SID_PRESET_SPEED_PRESET));
 	VideoOtherSizer->Add(OST7, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
+	PresetTuneSizer = new wxFlexGridSizer(1, 3, 0, 0);
+	PresetTuneSizer->AddGrowableCol(2);
 	SpeedPreset = new wxComboBox(OtherPage, ID_SPEEDPRESET, wxEmptyString, wxDefaultPosition, wxSize(150,-1), 0, 0, 0, wxDefaultValidator, _T("ID_SPEEDPRESET"));
 	SpeedPreset->Append(ENCODER_PRESET_COUNT, ENCODER_PRESETS);
-	VideoOtherSizer->Add(SpeedPreset, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
+	PresetTuneSizer->Add(SpeedPreset, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
+	OST8 = new wxStaticText(OtherPage, ID_OST8, _T("Tun"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_OST8"));
+	OST8->SetLabel(FFQS(SID_PRESET_VIDEO_TUNING));
+	PresetTuneSizer->Add(OST8, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
+	VideoTuning = new wxComboBox(OtherPage, ID_VIDEOTUNING, wxEmptyString, wxDefaultPosition, wxSize(150,-1), 0, 0, 0, wxDefaultValidator, _T("ID_VIDEOTUNING"));
+	VideoTuning->Append(ENCODER_TUNINGS_COUNT, ENCODER_TUNINGS);
+	PresetTuneSizer->Add(VideoTuning, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
+	VideoOtherSizer->Add(PresetTuneSizer, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 0);
 	OST5 = new wxStaticText(OtherPage, ID_OST5, _T("Td"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_OST5"));
 	OST5->SetLabel(FFQS(SID_PRESET_THREADS));
 	VideoOtherSizer->Add(OST5, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
@@ -1124,6 +1135,7 @@ bool FFQPresetEdit::Execute(LPFFQ_PRESET preset)
     PixFmt->SetValue(preset->pixel_format);
     Trellis->SetSelection(Str2Long(preset->trellis, -1) + 1);
     SpeedPreset->SetValue(preset->speed_preset);
+    VideoTuning->SetValue(preset->video_tuning);
     VideoThreads->SetValue(preset->threads);
 
     //HW Decode settings
@@ -1290,6 +1302,7 @@ bool FFQPresetEdit::Execute(LPFFQ_PRESET preset)
         sel = Trellis->GetSelection();
         preset->trellis = (sel == 0) ? "" : ToStr(sel - 1);
         preset->speed_preset = StrTrim(SpeedPreset->GetValue());
+        preset->video_tuning = StrTrim(VideoTuning->GetValue());
         preset->threads = StrTrim(VideoThreads->GetValue());
 
         //HW Decode settings

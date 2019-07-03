@@ -55,11 +55,11 @@
 #endif // __WINDOWS__
 
 //(*InternalHeaders(FFQMain)
-#include <wx/string.h>
-#include <wx/intl.h>
-#include <wx/font.h>
 #include <wx/bitmap.h>
+#include <wx/font.h>
 #include <wx/image.h>
+#include <wx/intl.h>
+#include <wx/string.h>
 //*)
 
 //helper functions
@@ -200,7 +200,6 @@ FFQMain::FFQMain(wxWindow* parent, wxWindowID id)
     SetClientSize(wxSize(800,500));
     SplitterWindow = new wxSplitterWindow(this, ID_SPLITTERWINDOW, wxPoint(184,256), wxDefaultSize, wxSP_3D|wxALWAYS_SHOW_SB, _T("ID_SPLITTERWINDOW"));
     SplitterWindow->SetMinSize(wxSize(100,100));
-    SplitterWindow->SetMinimumPaneSize(100);
     SplitterWindow->SetSashGravity(0.5);
     ListView = new wxListView(SplitterWindow, ID_LISTVIEW, wxDefaultPosition, wxDefaultSize, wxLC_REPORT|wxLC_NO_SORT_HEADER|wxNO_BORDER, wxDefaultValidator, _T("ID_LISTVIEW"));
     ListView->SetMinSize(wxSize(800,200));
@@ -287,6 +286,7 @@ FFQMain::FFQMain(wxWindow* parent, wxWindowID id)
     Connect(ID_LISTVIEW,wxEVT_COMMAND_LIST_ITEM_ACTIVATED,(wxObjectEventFunction)&FFQMain::OnListViewItemActivated);
     Connect(ID_LISTVIEW,wxEVT_COMMAND_LIST_ITEM_RIGHT_CLICK,(wxObjectEventFunction)&FFQMain::OnListViewItemRightClick);
     Connect(ID_LISTVIEW,wxEVT_COMMAND_LIST_COL_BEGIN_DRAG,(wxObjectEventFunction)&FFQMain::OnListViewColumnBeginDrag);
+    Connect(ID_LISTVIEW,wxEVT_COMMAND_LIST_COL_END_DRAG,(wxObjectEventFunction)&FFQMain::OnListViewColumnEndDrag);
     Connect(ID_TOOLBARADD,wxEVT_COMMAND_TOOL_CLICKED,(wxObjectEventFunction)&FFQMain::OnToolBarButtonClick);
     Connect(ID_TOOLBARBATCH,wxEVT_COMMAND_TOOL_CLICKED,(wxObjectEventFunction)&FFQMain::OnToolBarButtonClick);
     Connect(ID_TOOLBARREMOVE,wxEVT_COMMAND_TOOL_CLICKED,(wxObjectEventFunction)&FFQMain::OnToolBarButtonClick);
@@ -399,6 +399,7 @@ FFQMain::FFQMain(wxWindow* parent, wxWindowID id)
     m_Closed = false;
     m_RestoredRect.SetPosition(GetPosition());
     m_RestoredRect.SetSize(GetSize());
+    m_LastColumnPct = 0;
     m_LastPercentDone = 0;
 
     m_EncodingProcess = NULL;
@@ -1572,15 +1573,34 @@ void FFQMain::ProcessReadOutput()
 
 //---------------------------------------------------------------------------------------
 
-void FFQMain::ResizeColumns()
+void FFQMain::ResizeColumns(bool dragging)
 {
     //Resize the columns in the listview
     m_AllowEvents = true;
-    int csize = ListView->GetClientSize().GetX() - 350;
+    float cliw = ListView->GetClientSize().GetX() - m_StatusColumnWidth, col1pct = 40, dummy;
+    if (m_FirstShow)//(int)m_LastColumnPct == 0)
+    {
+        //Get the column percentage from config
+        dummy = Str2Float(FFQCFG()->list_columns, 0);
+        if (dummy != 0) col1pct = dummy;
+    }
+    else if (dragging)
+    {
+        col1pct = (float)(ListView->GetColumnWidth(0) * 100) / cliw;
+        FFQCFG()->list_columns = wxString::Format("%.2f", col1pct);
+        //FFQCFG()->SaveConfig();
+    }
+    else col1pct = m_LastColumnPct;
+    m_LastColumnPct = col1pct;
+    dummy = (cliw * col1pct) / 100.0f;
+    ListView->SetColumnWidth(0, (int)dummy);
+    ListView->SetColumnWidth(1, (int)cliw - (int)dummy);
+    ListView->SetColumnWidth(2, m_StatusColumnWidth);
+    /*int csize = ListView->GetClientSize().GetX() - 350;
     if (csize < 200) csize = 200;
     ListView->SetColumnWidth(0, 250);
     ListView->SetColumnWidth(1, csize);
-    ListView->SetColumnWidth(2, 100);
+    ListView->SetColumnWidth(2, 100);*/
     m_AllowEvents = false;
 }
 
@@ -2013,10 +2033,22 @@ void FFQMain::OnFrameResize(wxSizeEvent& event)
 void FFQMain::OnListViewColumnBeginDrag(wxListEvent& event)
 {
 
-    //Veto the resize if the resize is not cased by code
-    if (!m_AllowEvents) event.Veto();
-    else event.Skip();
+    //Dragging is only allowed for the first columns
+    if ((!m_AllowEvents) && (event.GetColumn() > 0)) event.Veto();
 
+    //Veto the resize if the resize is not cased by code
+    //if (!m_AllowEvents) ResizeColumns(true);
+    //if (!m_AllowEvents) event.Veto();
+    //else event.Skip();
+
+}
+
+//---------------------------------------------------------------------------------------
+
+void FFQMain::OnListViewColumnEndDrag(wxListEvent& event)
+{
+    //Re-calculate the remaining columns after dragging has ended
+    if (!m_AllowEvents) ResizeColumns(true);
 }
 
 //---------------------------------------------------------------------------------------
@@ -2053,7 +2085,7 @@ void FFQMain::OnToolBarButtonClick(wxCommandEvent& event)
     else if ((evtId == ID_TOOLBARREMOVE) || (evtId == ID_MENU_REMOVE))
     {
 
-        if (DoConfirm(ListView, FFQS(SID_DELETE_SELECTED)))
+        if ((!FFQCFG()->confirm_delete_jobs) || DoConfirm(ListView, FFQS(SID_DELETE_SELECTED)))
         {
 
             ListView->Freeze();
@@ -2453,6 +2485,8 @@ void FFQMain::OnMove(wxMoveEvent &event)
 
 //---------------------------------------------------------------------------------------
 
+#define NO_GETTEXTEXTENT
+
 void FFQMain::OnShow(wxShowEvent &event)
 {
 
@@ -2462,19 +2496,61 @@ void FFQMain::OnShow(wxShowEvent &event)
     if (m_FirstShow)
     {
 
+        try
+        {
+            //Do initial stuff for the first appearance
+            FFQCFG()->GetTaskBar()->SetWindowHandle(GetHandle());
+            //ResizeColumns();
+            FFQCFG()->InitPresetManager(this);
+            FFQCFG()->LoadConfig();
+            ShowFFMpegVersion(true);
+            LoadItems();
+            if (FFQCFG()->validate_on_load) ValidateItems();
+            UpdateControls();
+
+        #ifdef NO_GETTEXTEXTENT
+
+            //Calculate the size of the status column, the dirty way - but it seems to work
+            m_StatusColumnWidth = 0;
+            for (unsigned int i = 0; i < QUEUE_STATUS_COUNT; i++)
+            {
+                int len = (int)FFQL()->QUEUE_STATUS_NAMES[i].Len();
+                if (len > m_StatusColumnWidth) m_StatusColumnWidth = len;
+            }
+            m_StatusColumnWidth += 3; //Padding
+            m_StatusColumnWidth *= ListView->GetFont().GetPixelSize().GetX();
+
+            //Make sure that the column is at least an inch wide on screen
+            wxClientDC dc(this);
+            if (m_StatusColumnWidth < dc.GetPPI().GetX()) m_StatusColumnWidth = dc.GetPPI().GetX();
+
+        #else
+
+            //Using a DC to calculate the actual string width is borked - or at least
+            //on Linux it is not working as expected since GetTextExtent returns string
+            //widths which are much smaller than the actual size shown on screen. If
+            //anyone has a fix for this, please say so.
+            wxClientDC dc(this);
+            dc.SetFont(ListView->GetFont());
+            m_StatusColumnWidth = 0;
+            for (unsigned int i = 0; i < QUEUE_STATUS_COUNT; i++)
+            {
+                wxSize s = dc.GetTextExtent(FFQL()->QUEUE_STATUS_NAMES[i]);
+                if (s.GetWidth() > m_StatusColumnWidth) m_StatusColumnWidth = s.GetWidth();
+            }
+            m_StatusColumnWidth *= (m_StatusColumnWidth / 20); //Padding
+
+        #endif
+
+            if (FFQCFG()->save_window_pos) SetWindowPos(FFQCFG()->window_position);
+            else ResizeColumns();
+        }
+        catch (...)
+        {
+        }
+
         //Make sure this is only done once
         m_FirstShow = false;
-
-        //Do initial stuff for the first appearance
-        FFQCFG()->GetTaskBar()->SetWindowHandle(GetHandle());
-        ResizeColumns();
-        FFQCFG()->InitPresetManager(this);
-        FFQCFG()->LoadConfig();
-        ShowFFMpegVersion(true);
-        LoadItems();
-        if (FFQCFG()->validate_on_load) ValidateItems();
-        UpdateControls();
-        if (FFQCFG()->save_window_pos) SetWindowPos(FFQCFG()->window_position);
 
         #ifdef DEBUG
 
@@ -2595,3 +2671,4 @@ void FFQMain::OnListViewItemRightClick(wxListEvent& event)
     ListView->PopupMenu(&ListMenu);
 
 }
+

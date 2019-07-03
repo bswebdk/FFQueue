@@ -666,6 +666,7 @@ FFQLang::FFQLang(bool loadFile)
     SetString(SID_PRESET_HWDECODE_DEVICE,               "Device:");
     SetString(SID_PRESET_HWDECODE_DEVICE_INIT,          "Device initializer:");
     SetString(SID_PRESET_ERROR_NO_COMMA_ALLOWED,        "Comma is not allowed in this field!");
+    SetString(SID_PRESET_VIDEO_TUNING,                  "Video tuning:");
 
 
     //Video sync mode strings
@@ -707,6 +708,8 @@ FFQLang::FFQLang(bool loadFile)
     SetString(SID_OPTIONS_SILENT_QUEUE_FINISH,      "Silent queue finish");
     SetString(SID_OPTIONS_SAVE_JOBS_ON_MODIFY,      "Save jobs whenever they are modified");
     SetString(SID_OPTIONS_VALIDATE_ON_LOAD,         "Remove jobs with non-existing input files during startup");
+    SetString(SID_OPTIONS_OUTPUT_NAME_PATTERN,      "Pattern used to generate output names");
+    SetString(SID_OPTIONS_CONFIRM_DELETE_JOBS,      "Confirm removal of jobs");
 
 
     //Thumb maker UI strings

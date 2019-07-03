@@ -27,18 +27,18 @@
 //#include "wx_pch.h"
 
 //(*Headers(FFQMain)
+#include <wx/filedlg.h>
+#include <wx/frame.h>
 #include <wx/gauge.h>
-#include <wx/toolbar.h>
-#include <wx/sizer.h>
 #include <wx/listctrl.h>
 #include <wx/menu.h>
-#include <wx/filedlg.h>
 #include <wx/panel.h>
+#include <wx/sizer.h>
 #include <wx/splitter.h>
 #include <wx/statusbr.h>
-#include <wx/frame.h>
 #include <wx/textctrl.h>
 #include <wx/timer.h>
+#include <wx/toolbar.h>
 //*)
 
 #include "FFQAbout.h"
@@ -104,6 +104,8 @@ class FFQMain: public wxFrame
         FFQConsole* Console;
         wxString m_JobsFileName;
         wxRect m_RestoredRect;
+        float m_LastColumnPct;
+        int m_StatusColumnWidth; //Width of the status column, calculated with a screen DC
         bool m_AllowEvents; //Used to avoid event-filtering for programmatically triggered events
         bool m_FirstShow; //True when frame receives focus for the first time
         bool m_Closed; //Has the frame been closed?
@@ -143,7 +145,7 @@ class FFQMain: public wxFrame
 
         void ProcessReadOutput(); //Reads output from the current job
 
-        void ResizeColumns(); //Resizes the columns in the ListView when size of frame changes
+        void ResizeColumns(bool dragging = false); //Resizes the columns in the ListView when size of frame changes
         void ShowFFMpegVersion(bool langInfo); //Displays FFMpeg version in the TextCtrl used as console
         void ShowFFProbeInfo(LPFFQ_QUEUE_ITEM item = NULL); //Display ffprobe info for an item
         void UpdateControls(); //Used to enable/disable buttons according to the current state of query and listview
@@ -170,6 +172,7 @@ class FFQMain: public wxFrame
         void OnListViewItemActivated(wxListEvent& event);
         void OnClose(wxCloseEvent& event);
         void OnListViewItemRightClick(wxListEvent& event);
+        void OnListViewColumnEndDrag(wxListEvent& event);
         //*)
 
         //(*Identifiers(FFQMain)
@@ -210,43 +213,43 @@ class FFQMain: public wxFrame
         //*)
 
         //(*Declarations(FFQMain)
-        wxToolBarToolBase* ToolBarBatch;
-        wxToolBarToolBase* ToolBarAbout;
-        wxToolBar* ToolBar;
-        wxMenuItem* MenuFFCmd;
-        wxMenuItem* MenuMoveDown;
-        wxToolBarToolBase* ToolBarStop;
-        wxMenu ListMenu;
-        wxMenuItem* VidStabItem;
-        wxSplitterWindow* SplitterWindow;
-        wxMenuItem* SlideshowItem;
-        wxToolBarToolBase* ToolBarStart;
-        wxMenu ToolsMenu;
-        wxToolBarToolBase* ToolBarPreview;
-        wxMenuItem* MenuClone;
-        wxToolBarToolBase* ToolBarEdit;
-        wxMenuItem* MenuRemove;
-        wxMenuItem* MenuPreset;
-        wxToolBarToolBase* ToolBarPresets;
-        wxTextCtrl* TextCtrl;
-        wxListView* ListView;
-        wxGauge* Gauge;
-        wxMenuItem* MenuStartSel;
-        wxToolBarToolBase* ToolBarOptions;
-        wxPanel* BottomPan;
-        wxMenuItem* MenuEdit;
-        wxToolBarToolBase* ToolBarRemove;
-        wxMenuItem* MenuFFProbe;
-        wxToolBarToolBase* ToolBarTools;
-        wxTimer Timer;
         wxFileDialog* OpenFilesDlg;
-        wxToolBarToolBase* ToolBarAdd;
-        wxStatusBar* StatusBar;
-        wxMenuItem* Vid2GifItem;
-        wxMenuItem* ThumbsItem;
+        wxGauge* Gauge;
+        wxListView* ListView;
+        wxMenu ListMenu;
+        wxMenu ToolsMenu;
         wxMenuItem* ConcatItem;
+        wxMenuItem* MenuClone;
+        wxMenuItem* MenuEdit;
+        wxMenuItem* MenuFFCmd;
+        wxMenuItem* MenuFFProbe;
+        wxMenuItem* MenuMoveDown;
         wxMenuItem* MenuMoveUp;
+        wxMenuItem* MenuPreset;
+        wxMenuItem* MenuRemove;
         wxMenuItem* MenuStartAll;
+        wxMenuItem* MenuStartSel;
+        wxMenuItem* SlideshowItem;
+        wxMenuItem* ThumbsItem;
+        wxMenuItem* Vid2GifItem;
+        wxMenuItem* VidStabItem;
+        wxPanel* BottomPan;
+        wxSplitterWindow* SplitterWindow;
+        wxStatusBar* StatusBar;
+        wxTextCtrl* TextCtrl;
+        wxTimer Timer;
+        wxToolBar* ToolBar;
+        wxToolBarToolBase* ToolBarAbout;
+        wxToolBarToolBase* ToolBarAdd;
+        wxToolBarToolBase* ToolBarBatch;
+        wxToolBarToolBase* ToolBarEdit;
+        wxToolBarToolBase* ToolBarOptions;
+        wxToolBarToolBase* ToolBarPresets;
+        wxToolBarToolBase* ToolBarPreview;
+        wxToolBarToolBase* ToolBarRemove;
+        wxToolBarToolBase* ToolBarStart;
+        wxToolBarToolBase* ToolBarStop;
+        wxToolBarToolBase* ToolBarTools;
         //*)
 
         static const long ID_MENU_STOPSEL;

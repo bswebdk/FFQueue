@@ -49,6 +49,11 @@ const wxString CFG_CODEC_INFO = "[codec_info]";
 const wxString TEMP_PATH_SYST = "<sys>";
 const wxString TEMP_PATH_DEST = "<dest>";
 
+const wxString PATTERN_VAR_FILENAME = "<file_name>";
+const wxString PATTERN_VAR_FILEFMT = "<file_format>";
+const wxString PATTERN_VAR_PREFFMT = "<preferred_format>";
+const wxString PATTERN_VAR_PRESET = "<preset_name>";
+
 //---------------------------------------------------------------------------------------
 
 //Private constants for saving and loading config
@@ -67,8 +72,10 @@ const wxString CFG_CUSTOM_PLAYER = "custom_player";
 const wxString CFG_PREFERRED_FMT = "preferred_fmt";
 const wxString CFG_PREFERRED_PATH = "preferred_path";
 const wxString CFG_PREFERRED_UNIQUE = "preferred_unique";
+const wxString CFG_OUTPUT_NAME_PATTERN = "output_name_pattern";
 const wxString CFG_KEEP_CONSOLE = "keep_console";
 const wxString CFG_SAVE_WINDOW_POS = "save_pos";
+const wxString CFG_LIST_COLUMNS = "list_columns";
 const wxString CFG_FULL_CODEC_LIST = "full_codec_list";
 const wxString CFG_VIDSTAB_SETTINGS = "vidstab_settings";
 const wxString CFG_CONSOLE_CMD = "console_cmd";
@@ -77,6 +84,7 @@ const wxString CFG_SILENT_QFINISH = "silent_qfinish";
 const wxString CFG_SAVED_COMMANDS = "saved_commands";
 const wxString CFG_SAVE_ON_MODIFY = "save_on_modify";
 const wxString CFG_VALIDATE_ON_LOAD = "validate_on_load";
+const wxString CFG_CONFIRM_DELETE_JOBS = "confirm_delete_jobs";
 const wxString CFG_SUBS_CHARENC = "subs_charenc";
 const wxString CFG_LOCALE = "locale";
 
@@ -435,17 +443,20 @@ void FFQConfig::DefaultOptions()
     batch_config = "1,1,0,ac3,mp4";
     preferred_format = "mp4";
     preferred_path = "";
+    output_name_pattern = PATTERN_VAR_FILENAME + "." + PATTERN_VAR_FILEFMT;
     temp_path = TEMP_PATH_SYST;
     thumb_settings = "";
     cust_player = "";
     second_file_extensions = "srt,ass,ssa,xsub,sub,mp3,wav";
     window_position = "";
+    list_columns = "";
     vidstab_settings = "";
     console_cmd = "";
     save_log = true;
     silent_qfinish = false;
     save_on_modify = false;
     validate_on_load = true;
+    confirm_delete_jobs = true;
     saved_commands = "";
     subs_charenc = "";
     user_locale = "";
@@ -770,23 +781,34 @@ LPPIXEL_FORMAT FFQConfig::GetPixelFormats()
 
 //---------------------------------------------------------------------------------------
 
-wxString FFQConfig::GetPreferredOutputName(wxString for_input_file/*, bool ensure_unique, bool keep_input_path*/)
+wxString FFQConfig::GetPreferredOutputName(wxString for_input_file, LPFFQ_PRESET pst)
 {
 
     //Returns the preferred (estimated) file name for output files
-    //based on the name of the input file
+    //based on the name of the input file and the specified pattern
 
-    wxString p = preferred_path;
+    wxUniChar psep = wxFileName::GetPathSeparator();
+    wxString p = preferred_path, n = for_input_file.AfterLast(psep), e = n.AfterLast('.');
+    n = n.BeforeLast('.');
 
-    if ((p.Len() > 0) && wxDirExists(p))
+    wxString ptn = output_name_pattern;
+    ptn.Replace(PATTERN_VAR_FILEFMT, e);
+    ptn.Replace(PATTERN_VAR_FILENAME, n);
+    ptn.Replace(PATTERN_VAR_PREFFMT, preferred_format);
+    ptn.Replace(PATTERN_VAR_PRESET, pst == NULL ? "" : pst->preset_name);
+
+    if ((p.Len() == 0) || (!wxDirExists(p))) p = for_input_file.BeforeLast(psep);
+    if (p.Right(1) != psep) p += psep;
+    p += ptn;
+
+    /*if ((p.Len() > 0) && wxDirExists(p))
     {
 
-        //If the ast used output path exists, use it again
+        //If the last used output path exists, use it again
         wxUniChar psep = wxFileName::GetPathSeparator();
         if (p.Right(1) != psep) p += psep;
 
-        /*if (keep_input_path) p += for_input_file.BeforeLast('.') + "." + preferred_format;
-        else*/ p += for_input_file.AfterLast(psep).BeforeLast('.') + "." + preferred_format;
+        p += for_input_file.AfterLast(psep).BeforeLast('.') + "." + preferred_format;
 
     }
 
@@ -796,7 +818,7 @@ wxString FFQConfig::GetPreferredOutputName(wxString for_input_file/*, bool ensur
         //If last output path does not exists, use the input path
         p = for_input_file.BeforeLast('.') + "." + preferred_format;
 
-    }
+    }*/
 
     //Ensure unique?
     if (preferred_unique) EnsureUniquePath(p);
@@ -1037,6 +1059,7 @@ void FFQConfig::LoadConfig()
                     else if (name == CFG_PREFERRED_FMT) preferred_format = line;
                     else if (name == CFG_PREFERRED_PATH) preferred_path = line;
                     else if (name == CFG_PREFERRED_UNIQUE) preferred_unique = STRBOOL(line);
+                    else if (name == CFG_OUTPUT_NAME_PATTERN) output_name_pattern = line;
                     else if (name == CFG_KEEP_CONSOLE) keep_console = STRBOOL(line);
                     else if (name == CFG_AUTO_REMOVE) auto_remove_jobs = STRBOOL(line);
                     else if (name == CFG_FONTSCONF_CHECKED) fonts_conf_checked = STRBOOL(line);
@@ -1050,6 +1073,7 @@ void FFQConfig::LoadConfig()
                         window_position = line;
 
                     }
+                    else if (name == CFG_LIST_COLUMNS) list_columns = line;
                     else if (name == CFG_VIDSTAB_SETTINGS) vidstab_settings = line;
                     else if (name == CFG_FULL_CODEC_LIST) full_codec_listings = STRBOOL(line);
                     else if (name == CFG_CONSOLE_CMD) console_cmd = line;
@@ -1058,6 +1082,7 @@ void FFQConfig::LoadConfig()
                     else if (name == CFG_SAVED_COMMANDS) saved_commands = line;
                     else if (name == CFG_SAVE_ON_MODIFY) save_on_modify = STRBOOL(line);
                     else if (name == CFG_VALIDATE_ON_LOAD) validate_on_load = STRBOOL(line);
+                    else if (name == CFG_CONFIRM_DELETE_JOBS) confirm_delete_jobs = STRBOOL(line);
                     else if (name == CFG_SUBS_CHARENC) subs_charenc = line;
                     else if (name == CFG_LOCALE) user_locale = line;
 
@@ -1190,6 +1215,7 @@ void FFQConfig::SaveConfig()
         cfg.AddLine(CFG_PREFERRED_FMT + "=" + preferred_format);
         cfg.AddLine(CFG_PREFERRED_PATH + "=" + preferred_path);
         cfg.AddLine(CFG_PREFERRED_UNIQUE + "=" + BOOLSTR(preferred_unique));
+        cfg.AddLine(CFG_OUTPUT_NAME_PATTERN + "=" + output_name_pattern);
         cfg.AddLine(CFG_KEEP_CONSOLE + "=" + BOOLSTR(keep_console));
         cfg.AddLine(CFG_AUTO_REMOVE + "=" + BOOLSTR(auto_remove_jobs));
         cfg.AddLine(CFG_FONTSCONF_CHECKED + "=" + BOOLSTR(fonts_conf_checked));
@@ -1198,6 +1224,7 @@ void FFQConfig::SaveConfig()
         cfg.AddLine(CFG_HIDE_BANNER + "=" + BOOLSTR(hide_banner));
         if (save_window_pos) cfg.AddLine(CFG_SAVE_WINDOW_POS + "=" + STR_YES + "|" + window_position);
         else cfg.AddLine(CFG_SAVE_WINDOW_POS + "=" + STR_NO);
+        cfg.AddLine(CFG_LIST_COLUMNS + "=" + list_columns);
         cfg.AddLine(CFG_VIDSTAB_SETTINGS + "=" + vidstab_settings);
         cfg.AddLine(CFG_FULL_CODEC_LIST + "=" + BOOLSTR(full_codec_listings));
         cfg.AddLine(CFG_CONSOLE_CMD + "=" + console_cmd);
@@ -1206,6 +1233,7 @@ void FFQConfig::SaveConfig()
         cfg.AddLine(CFG_SAVED_COMMANDS + "=" + saved_commands);
         cfg.AddLine(CFG_SAVE_ON_MODIFY + "=" + BOOLSTR(save_on_modify));
         cfg.AddLine(CFG_VALIDATE_ON_LOAD + "=" + BOOLSTR(validate_on_load));
+        cfg.AddLine(CFG_CONFIRM_DELETE_JOBS + "=" + BOOLSTR(confirm_delete_jobs));
         cfg.AddLine(CFG_SUBS_CHARENC + "=" + subs_charenc);
         cfg.AddLine(CFG_LOCALE + "=" + user_locale);
 

@@ -28,21 +28,21 @@
 
 #ifndef WX_PRECOMP
 	//(*HeadersPCH(FFQJobEditAdv)
+	#include <wx/button.h>
+	#include <wx/checkbox.h>
 	#include <wx/checklst.h>
 	#include <wx/combobox.h>
-	#include <wx/checkbox.h>
 	#include <wx/dialog.h>
-	#include <wx/sizer.h>
-	#include <wx/button.h>
-	#include <wx/hyperlink.h>
 	#include <wx/filedlg.h>
+	#include <wx/hyperlink.h>
+	#include <wx/sizer.h>
 	#include <wx/stattext.h>
 	#include <wx/textctrl.h>
 	//*)
 #endif
 //(*Headers(FFQJobEditAdv)
-#include <wx/notebook.h>
 #include "FFQPresetPanel.h"
+#include <wx/notebook.h>
 //*)
 
 #include <wx/hyperlink.h>
@@ -83,28 +83,28 @@ class FFQJobEditAdv: public wxDialog
 		void ShowPopupCtrls(bool show = true, bool cancel = false);
 
 		//(*Declarations(FFQJobEditAdv)
-		wxTextCtrl* Output;
-		wxButton* CancelDlg;
-		wxCheckListBox* StreamList;
-		wxFileDialog* OpenFile;
-		wxFlexGridSizer* OutputSizer;
-		wxStaticText* ST5;
-		wxNotebook* Inputs;
-		wxCheckBox* SaveLog;
-		wxComboBox* CmdLine;
-		wxButton* StreamUp;
-		wxStaticText* ST4;
-		wxButton* AddInput;
 		FFQPresetPanel* Preset;
-		wxButton* DelInput;
-		wxHyperlinkCtrl* OutputLength;
-		wxButton* BrowseOutput;
-		wxStaticText* ST3;
-		wxButton* SaveJob;
+		wxButton* AddInput;
 		wxButton* AddSecondary;
-		wxFileDialog* SaveFile;
+		wxButton* BrowseOutput;
+		wxButton* CancelDlg;
+		wxButton* DelInput;
+		wxButton* SaveJob;
 		wxButton* StreamDown;
 		wxButton* StreamRefresh;
+		wxButton* StreamUp;
+		wxCheckBox* SaveLog;
+		wxCheckListBox* StreamList;
+		wxComboBox* CmdLine;
+		wxFileDialog* OpenFile;
+		wxFileDialog* SaveFile;
+		wxFlexGridSizer* OutputSizer;
+		wxHyperlinkCtrl* OutputLength;
+		wxNotebook* Inputs;
+		wxStaticText* ST3;
+		wxStaticText* ST4;
+		wxStaticText* ST5;
+		wxTextCtrl* Output;
 		//*)
 
 	protected:
@@ -142,7 +142,7 @@ class FFQJobEditAdv: public wxDialog
 		FFQShowText *m_ViewText;
 		FFQJobEditAdvCuts *m_CutEdit;
 		FFQJobEditAdvPopup *m_PopupCtrls;
-		bool m_FindSecondary, m_PopupValidate, m_CanCut, m_AutoPreset;
+		bool m_FindSecondary, m_PopupValidate, m_CanCut, m_AutoPreset, m_AutoOutputName;
 		TIME_VALUE m_OutLen;
 		//FFQProcess *m_Process;
 		wxString m_StreamMap;
@@ -170,6 +170,7 @@ class FFQJobEditAdv: public wxDialog
 		//(*Handlers(FFQJobEditAdv)
 		void OnAction(wxCommandEvent& event);
 		void OnStreamListChange(wxCommandEvent& event);
+		void OnOutputTextEnter(wxCommandEvent& event);
 		//*)
 
 		DECLARE_EVENT_TABLE()

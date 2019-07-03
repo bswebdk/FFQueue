@@ -43,6 +43,7 @@ const wxString PRESET_TWO_PASS_NULL = "two_pass_null";
 const wxString PRESET_TRELLIS = "trellis";
 const wxString PRESET_THREADS = "threads";
 const wxString PRESET_SPEED_PRESET = "speed_preset";
+const wxString PRESET_VIDEO_TUNING = "video_tuning";
 const wxString PRESET_AUDIO_CODEC = "audio_codec";
 const wxString PRESET_AUDIO_RATE = "audio_rate";
 const wxString PRESET_AUDIO_QUALITY = "audio_quality";
@@ -128,6 +129,7 @@ FFQ_PRESET::FFQ_PRESET(wxString &preset)
         else if (n == PRESET_TRELLIS) trellis = v;
         else if (n == PRESET_THREADS) threads = v;
         else if (n == PRESET_SPEED_PRESET) speed_preset = v;
+        else if (n == PRESET_VIDEO_TUNING) video_tuning = v;
         else if (n == PRESET_ASPECT) aspect_ratio = v;
         else if (n == PRESET_OUTPUT_FORMAT) output_format = v;
         else if (n == PRESET_CUSTOM_ARGS) custom_args_1 = v;
@@ -235,6 +237,7 @@ void FFQ_PRESET::Reset(bool new_preset)
     trellis = "";
     threads = "";
     speed_preset = "";
+    video_tuning = "";
     aspect_ratio = "";
     output_format = "";
     custom_args_1 = "";
@@ -338,6 +341,7 @@ wxString FFQ_PRESET::ToString()
     if (trellis.Len() > 0) res += PRESET_TRELLIS + "=" + trellis + CRLF;
     if (threads.Len() > 0) res += PRESET_THREADS + "=" + threads + CRLF;
     if (speed_preset.Len() > 0) res += PRESET_SPEED_PRESET + "=" + speed_preset + CRLF;
+    if (video_tuning.Len() > 0) res += PRESET_VIDEO_TUNING + "=" + video_tuning + CRLF;
     if (aspect_ratio.Len() > 0) res += PRESET_ASPECT + "=" + aspect_ratio + CRLF;
     if (output_format.Len() > 0) res += PRESET_OUTPUT_FORMAT + "=" + output_format + CRLF;
     if (custom_args_1.Len() > 0) res += PRESET_CUSTOM_ARGS + "=" + custom_args_1 + CRLF;

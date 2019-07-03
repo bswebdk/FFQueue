@@ -672,12 +672,39 @@
 														<option>1</option>
 													</object>
 													<object class="sizeritem">
-														<object class="wxComboBox" name="ID_SPEEDPRESET" variable="SpeedPreset" member="yes">
-															<size>150,-1</size>
-															<extra_code>SpeedPreset-&gt;Append(ENCODER__PRESET__COUNT, ENCODER__PRESETS);</extra_code>
+														<object class="wxFlexGridSizer" variable="PresetTuneSizer" member="yes">
+															<cols>3</cols>
+															<rows>1</rows>
+															<growablecols>2</growablecols>
+															<object class="sizeritem">
+																<object class="wxComboBox" name="ID_SPEEDPRESET" variable="SpeedPreset" member="yes">
+																	<size>150,-1</size>
+																	<extra_code>SpeedPreset-&gt;Append(ENCODER__PRESET__COUNT, ENCODER__PRESETS);</extra_code>
+																</object>
+																<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+																<border>3</border>
+																<option>1</option>
+															</object>
+															<object class="sizeritem">
+																<object class="wxStaticText" name="ID_OST8" variable="OST8" member="yes">
+																	<label>Tun</label>
+																	<extra_code>OST8-&gt;SetLabel(FFQS(SID__PRESET__VIDEO__TUNING));</extra_code>
+																</object>
+																<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+																<border>3</border>
+																<option>1</option>
+															</object>
+															<object class="sizeritem">
+																<object class="wxComboBox" name="ID_VIDEOTUNING" variable="VideoTuning" member="yes">
+																	<size>150,-1</size>
+																	<extra_code>VideoTuning-&gt;Append(ENCODER__TUNINGS__COUNT, ENCODER__TUNINGS);</extra_code>
+																</object>
+																<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+																<border>3</border>
+																<option>1</option>
+															</object>
 														</object>
 														<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
-														<border>3</border>
 														<option>1</option>
 													</object>
 													<object class="sizeritem">

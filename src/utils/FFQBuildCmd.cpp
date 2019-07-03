@@ -53,6 +53,13 @@ const wxString ENCODER_PRESETS[ENCODER_PRESET_COUNT] = {
 
 };
 
+const unsigned int ENCODER_TUNINGS_COUNT = 6;
+const wxString ENCODER_TUNINGS[ENCODER_TUNINGS_COUNT] = {
+
+    "film", "animation", "grain", "stillimage", "fastdecode", "zerolatency"
+};
+
+
 bool IsPreviewSafe = true;
 
 //---------------------------------------------------------------------------------------
@@ -915,6 +922,9 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
 
             //Video speed preset
             if (pst->speed_preset.Len() > 0) preset += "-preset:v " + pst->speed_preset + " ";
+
+            //Video tuning
+            if (pst->video_tuning.Len() > 0) preset += "-tune " + pst->video_tuning + " ";
 
             //Key frame, motion and scene change arguments
             s = pst->key_frames;

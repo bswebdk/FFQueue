@@ -27,6 +27,7 @@
 #include <wx/string.h>
 #include <wx/window.h>
 #include "FFQPixFmt.h"
+#include "FFQPreset.h"
 #include "FFQCodecInfo.h"
 #include "../utils/FFQTaskBar.h"
 
@@ -40,6 +41,12 @@ extern const wxString CFG_CODEC_INFO;
 //Temporary path variables
 extern const wxString TEMP_PATH_SYST;
 extern const wxString TEMP_PATH_DEST;
+
+//Used to define the variables used in output name pattern
+extern const wxString PATTERN_VAR_ORGNAME;
+extern const wxString PATTERN_VAR_ORGFMT;
+extern const wxString PATTERN_VAR_PREFFMT;
+extern const wxString PATTERN_VAR_PRESET;
 
 //Enumeration to define codec types (used in FFQConfig::GetFFMpegCodecs)
 typedef enum CODEC_TYPE { ctVIDEO, ctAUDIO, ctSUBTITLE, ctINVALID = 0xFF } CODEC_TYPE;
@@ -78,6 +85,7 @@ class FFQConfig
 	    bool silent_qfinish;
 	    bool save_on_modify;
 	    bool validate_on_load;
+	    bool confirm_delete_jobs;
 
 	    wxString app_name;
 	    wxString batch_config;
@@ -85,11 +93,13 @@ class FFQConfig
 	    wxString cust_player;
 	    wxString preferred_format;
 	    wxString preferred_path;
+	    wxString output_name_pattern;
 	    wxString temp_path;
 	    wxString thumb_settings;
 	    wxString second_file_extensions;
 	    wxString subs_charenc;
 	    wxString window_position;
+	    wxString list_columns;
 	    wxString vidstab_settings;
 	    wxString saved_commands;
 	    wxString user_locale;
@@ -114,7 +124,7 @@ class FFQConfig
 		wxString        GetHWAccelerators();
 		wxString        GetHWDecoders();
 		LPPIXEL_FORMAT  GetPixelFormats();
-		wxString        GetPreferredOutputName(wxString for_input_file/*, bool ensure_unique = false, bool keep_input_path = false*/);
+		wxString        GetPreferredOutputName(wxString for_input_file, LPFFQ_PRESET pst = NULL);
 		wxWindow*       GetPresetManager();
 		FFQTaskBar*     GetTaskBar();
 		wxString        GetTmpPath(wxString dest_path, bool make_sub_folder = false, wxString temp_file_extension = "");

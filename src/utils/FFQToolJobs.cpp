@@ -770,7 +770,7 @@ wxString FFQ_CONCAT_JOB::MakeConcatCmd()
     }
 
     //Save the list as ascii
-    wxScopedCharBuffer scb = s.ToAscii();
+    wxScopedCharBuffer scb = s.ToUTF8();// s.ToAscii();
     bool ok = lf->Write((void*)scb.data(), scb.length());
     lf->Close();
     delete lf;

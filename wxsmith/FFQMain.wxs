@@ -6,7 +6,6 @@
 		<handler function="OnClose" entry="EVT_CLOSE" />
 		<handler function="OnFrameResize" entry="EVT_SIZE" />
 		<object class="wxSplitterWindow" name="ID_SPLITTERWINDOW" variable="SplitterWindow" member="yes">
-			<minsize>100</minsize>
 			<pos>184,256</pos>
 			<minsize>100,100</minsize>
 			<style>wxSP_3D|wxALWAYS_SHOW_SB</style>
@@ -18,6 +17,7 @@
 				<handler function="OnListViewItemActivated" entry="EVT_LIST_ITEM_ACTIVATED" />
 				<handler function="OnListViewItemRightClick" entry="EVT_LIST_ITEM_RIGHT_CLICK" />
 				<handler function="OnListViewColumnBeginDrag" entry="EVT_LIST_COL_BEGIN_DRAG" />
+				<handler function="OnListViewColumnEndDrag" entry="EVT_LIST_COL_END_DRAG" />
 			</object>
 			<object class="wxPanel" name="ID_BOTTOMPAN" variable="BottomPan" member="yes">
 				<style>wxNO_BORDER|wxTAB_TRAVERSAL</style>
