@@ -458,7 +458,7 @@ FFQLang::FFQLang(bool loadFile)
     SetString(SID_BATCHMAKE_TITLE,             "Batch make");
     SetString(SID_BATCHMAKE_DEFINE_PROPERTIES, "Please define properties for the jobs");
     SetString(SID_BATCHMAKE_SEL_CONTENT,       "Select the content to include:");
-    SetString(SID_BATCHMAKE_PREF_AUDIO_CODEC,  "Preferred audio codec(s):");
+    SetString(SID_BATCHMAKE_PREF_AUDIO_CODEC,  "Preferred audio codec(s) / language(s):");
     SetString(SID_BATCHMAKE_DEST_FORMAT,       "Destination format for output files:");
     SetString(SID_BATCHMAKE_SELECT_PRESET,     "Select a preset for the jobs:");
     SetString(SID_BATCHMAKE_MAKE_JOBS,         "Make jobs...");
@@ -667,6 +667,10 @@ FFQLang::FFQLang(bool loadFile)
     SetString(SID_PRESET_HWDECODE_DEVICE_INIT,          "Device initializer:");
     SetString(SID_PRESET_ERROR_NO_COMMA_ALLOWED,        "Comma is not allowed in this field!");
     SetString(SID_PRESET_VIDEO_TUNING,                  "Video tuning:");
+    SetString(SID_PRESET_METADATA_FOR,                  "Set metadata for:");
+    SetString(SID_PRESET_METADATA_FOR_ITEMS,            "All (global)|Video|Audio|Subtitle");
+    SetString(SID_PRESET_DISPOSITION,                   "Dispositions");
+    SetString(SID_PRESET_DISPOSITION_UNSET,             "Un-set existing");
 
 
     //Video sync mode strings
@@ -710,6 +714,7 @@ FFQLang::FFQLang(bool loadFile)
     SetString(SID_OPTIONS_VALIDATE_ON_LOAD,         "Remove jobs with non-existing input files during startup");
     SetString(SID_OPTIONS_OUTPUT_NAME_PATTERN,      "Pattern used to generate output names");
     SetString(SID_OPTIONS_CONFIRM_DELETE_JOBS,      "Confirm removal of jobs");
+    SetString(SID_OPTIONS_PREVIEW_MAP_SUBS,         "Always map subtitles when previewing");
 
 
     //Thumb maker UI strings

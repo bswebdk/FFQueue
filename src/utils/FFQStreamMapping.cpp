@@ -35,13 +35,13 @@ STREAM_MAPPING::STREAM_MAPPING()
     file_id = -1;
     stream_id = -1;
     codec_type = "";
-    preset_id = "";
+    preset_list = "";
 
 }
 
 //---------------------------------------------------------------------------------------
 
-STREAM_MAPPING::STREAM_MAPPING(bool chk, int f_id, int s_id, wxString c_type, wxString pst_id)
+STREAM_MAPPING::STREAM_MAPPING(bool chk, int f_id, int s_id, wxString c_type, wxString pst_lst)
 {
 
     //Constructor that defines values
@@ -49,7 +49,7 @@ STREAM_MAPPING::STREAM_MAPPING(bool chk, int f_id, int s_id, wxString c_type, wx
     file_id = f_id;
     stream_id = s_id;
     codec_type = c_type;
-    preset_id = pst_id;
+    preset_list = pst_lst;
 
 }
 
@@ -81,6 +81,7 @@ bool STREAM_MAPPING::Parse(wxString &from)
         file_id = Str2Long(GetToken(from, ':'), -1);
         stream_id = Str2Long(GetToken(from, ' '), -1);
         codec_type = GetToken(from, ' ', false);
+        preset_list = "";
 
     }
 
@@ -94,7 +95,7 @@ bool STREAM_MAPPING::Parse(wxString &from)
         codec_type = GetToken(from, STREAM_MAPPING_SEPERATOR);
         if (codec_type.Find(',') > 0)
         {
-            preset_id = codec_type.After(',');
+            preset_list = codec_type.After(',');
             codec_type = codec_type.Before(',');
         }
 
@@ -116,10 +117,12 @@ wxString STREAM_MAPPING::ToString(wxString long_codec_name)
     wxString res;
 
     if (long_codec_name.Len() == 0) //Pack for use in FFQ_JOB::stream_map
-        res << BOOLSTR(checked) << "," << file_id << "," << stream_id << "," << codec_type << "," << preset_id;
+        //res << BOOLSTR(checked) << "," << file_id << "," << stream_id << "," << codec_type << "," << preset_id;
+        res.Printf("%s,%d,%d,%s,%s", BOOLSTR(checked), file_id, stream_id, codec_type, preset_list);
 
     else //Pack for visual display (in the job editor etc.)
-        res << "#" << file_id << ":" << stream_id << " " << codec_type << " {" << long_codec_name << "}";
+        //res << "#" << file_id << ":" << stream_id << " " << codec_type << " {" << long_codec_name << "}";
+        res.Printf("#%d:%d %s {%s}", file_id, stream_id, codec_type, long_codec_name);
 
     //Return the result
     return res;

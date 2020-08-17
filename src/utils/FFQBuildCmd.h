@@ -43,6 +43,10 @@ extern const wxString ENCODER_PRESETS[];
 extern const unsigned int ENCODER_TUNINGS_COUNT;
 extern const wxString ENCODER_TUNINGS[];
 
+//Disposition
+extern const unsigned int DISPOSITION_COUNT;
+extern const wxString DISPOSITIONS[];
+
 //Used to flag if previewing a command is safe
 extern bool IsPreviewSafe;
 
@@ -54,7 +58,7 @@ wxString EscapeFilterString(wxString s, bool un_escape = false);
 wxString FormatFileName(wxString fn);
 bool FormatCuts(FFQ_CUTS &cuts, wxString &stream_tag, bool video, TIME_VALUE duration, int &filter_id);
 bool FormatFilter(wxString &filter, wxString &vid_in, wxString &aud_in, wxString &sub_in, wxString &req_in, int &filter_id);
-bool FormatStreamRate(wxString &rate, bool video);
+bool FormatStreamRate(wxString &rate, bool video, wxString stream_tag = wxEmptyString);
 
 
 #endif // FFQBUILDCMD_H

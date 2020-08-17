@@ -73,6 +73,15 @@ typedef struct INPUT_CTRLS
 
 } INPUT_CTRLS, *LPINPUT_CTRLS;
 
+//Structure used to hold data for an item in the stream list
+typedef struct STREAM_DATA
+{
+
+    LPFFPROBE_STREAM_INFO si; //Info for the stream
+    wxArrayString presets; //The presets to use with the stream
+
+} STREAM_DATA, *LPSTREAM_DATA;
+
 class FFQJobEditAdv: public wxDialog
 {
 	public:
@@ -150,6 +159,7 @@ class FFQJobEditAdv: public wxDialog
 
 		void AddInputFile(LPFFQ_INPUT_FILE in_file, bool select = true);
 		int AddSecondaryFiles(wxString &for_file);
+		void ClearStreamList();
 		bool EditTime(TIME_VALUE &time, bool subtract);
 		int FindInvalidInput(bool select, bool frame_rate = false);
 		int FindInputByPath(wxString path);
@@ -166,6 +176,8 @@ class FFQJobEditAdv: public wxDialog
 		bool ValidateJob();
 
 		void OnIdle(wxIdleEvent &event);
+		void OnMenuSelected(wxCommandEvent &event);
+		void OnStreamListRightClick(wxMouseEvent &event);
 
 		//(*Handlers(FFQJobEditAdv)
 		void OnAction(wxCommandEvent& event);

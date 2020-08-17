@@ -57,8 +57,16 @@ const unsigned int ENCODER_TUNINGS_COUNT = 6;
 const wxString ENCODER_TUNINGS[ENCODER_TUNINGS_COUNT] = {
 
     "film", "animation", "grain", "stillimage", "fastdecode", "zerolatency"
+
 };
 
+const unsigned int DISPOSITION_COUNT = 15;
+const wxString DISPOSITIONS[DISPOSITION_COUNT] = {
+
+    "default", "dub", "original", "comment", "lyrics", "karaoke", "forced", "hearing_impaired", "visual_impaired",
+    "clean_effects", "attached_pic", "captions", "descriptions", "dependent", "metadata"
+
+};
 
 bool IsPreviewSafe = true;
 
@@ -66,7 +74,7 @@ bool IsPreviewSafe = true;
 //Private helper functions
 //---------------------------------------------------------------------------------------
 
-wxString BitRateToArg(long bit_rate, long br_type, wxString ff_arg, bool video)
+wxString BitRateToArg(long bit_rate, long br_type, wxString ff_arg, bool video, wxString stream_tag = wxEmptyString)
 {
 
     //This function converts a single bit rate setting into a command line argument
@@ -75,7 +83,7 @@ wxString BitRateToArg(long bit_rate, long br_type, wxString ff_arg, bool video)
     if (bit_rate <= 0) return "";
 
     //Prepare stream specifier
-    wxString av = video ? "v" : "a", rate;
+    wxString av = (video ? "v" : "a") + stream_tag, rate;
 
     //Convert bit_rate to a string that is defined by br_type
     if (br_type == 0) rate << bit_rate; // bits/sec
@@ -178,7 +186,7 @@ wxString FormatSingleQualityArg(wxString &from, const wxString cmd, float min, f
 
 //---------------------------------------------------------------------------------------
 
-bool FormatAudioQuality(wxString &aq, const wxString &codec)
+bool FormatAudioQuality(wxString &aq, const wxString &codec, const wxString stream_tag = wxEmptyString)
 {
 
     //Convert audio quality settings to command line arguments
@@ -190,7 +198,7 @@ bool FormatAudioQuality(wxString &aq, const wxString &codec)
     float val;
 
     //Oh yeah! More formatting!
-    res  = FormatSingleQualityArg(aq, "q:a", ci->min_qscale, ci->max_qscale, val, ci->qscale_float);
+    res  = FormatSingleQualityArg(aq, "q:a" + stream_tag, ci->min_qscale, ci->max_qscale, val, ci->qscale_float);
 
     //Heeeeeeeere's JOHNNY!!
     aq = res;
@@ -422,6 +430,40 @@ wxString NextFilterID(int &fid, wxString stream_tag = "")
 
 //---------------------------------------------------------------------------------------
 
+wxString MakeAudioEncoding(LPFFQ_PRESET pst, int stream_id)
+{
+
+    //Create a stream tag
+    wxString tag = stream_id >= 0 ? wxString::Format(":%d", stream_id) : "";
+
+    //Audio codec
+    wxString res = pst->audio_codec.Len() > 0 ? "-c:a" + tag + " " + pst->audio_codec + " " : "";
+
+    if (pst->audio_codec != CODEC_COPY)
+    {
+
+        //Audio rate
+        wxString s = pst->audio_rate;
+        if (FormatStreamRate(s, false, tag)) res += s;
+
+        //Audio quality
+        s = pst->audio_quality;
+        if (FormatAudioQuality(s, pst->audio_codec, tag)) res += s;
+
+        //Audio channels
+        if (pst->audio_channels.Len() > 0) res += "-ac" + tag + " " + pst->audio_channels + " ";
+
+        //Audio profile
+        if (pst->audio_profile.Len() > 0) res += "-profile:a" + tag + " " + pst->audio_profile + " ";
+
+    }
+
+    return res;
+
+}
+
+//---------------------------------------------------------------------------------------
+
 void MakeInputFileArgs(wxArrayString &src, wxArrayString &dst)
 {
 
@@ -500,6 +542,31 @@ wxString MakeHWDecodeArgs(wxString from)
 
 //---------------------------------------------------------------------------------------
 
+wxString MakeMetaData(wxString meta_data, wxString stream_tag)
+{
+    //Make a list of -metadata "meta info" tags for the specified stream
+    wxString res;
+    if (stream_tag.Len() > 0) stream_tag = ":s:" + stream_tag;
+    while (meta_data.Len() > 0) res += "-metadata" + stream_tag + " " + GetToken(meta_data, FILTER_SEPARATOR) + " ";
+    return res;
+}
+
+//---------------------------------------------------------------------------------------
+
+wxString MakeDisposition(wxString from, int index, wxString stream_tag)
+{
+    int disp = -1;
+    while ((from.Len() > 0) && (index-- >= 0)) disp = Str2Long(GetToken(from, ','), disp);
+    if (disp >= 0)
+    {
+        if (stream_tag.Len() > 0) stream_tag = ":" + stream_tag;
+        return "-disposition" + stream_tag + " " + (disp > 0 ? DISPOSITIONS[disp-1] : "0") + " ";
+    }
+    return wxEmptyString;
+}
+
+//---------------------------------------------------------------------------------------
+
 bool IsCommandSafe(wxString cmd)
 {
 
@@ -549,14 +616,16 @@ bool IsCommandSafe(wxString cmd)
 //Structure for temporarily storing info about streams (Stream Build INFO)
 typedef struct SBINFO
 {
-    int type; //Stream type 0=vid, 1=aud, 2=subs
+    int type, //Stream type 0=vid, 1=aud, 2=subs
+        index; //Index of the stream defined "per type"
     wxString tag; //The stream tag used for filtering [X:Y]
     TIME_VALUE dur; //Stream duration
     FFQ_CUTS cuts; //A list of cuts to perform
 
-    SBINFO(int type, wxString tag, FFQ_CUTS cuts, TIME_VALUE dur)
+    SBINFO(int type, int index, wxString tag, FFQ_CUTS cuts, TIME_VALUE dur)
     {
         this->type = type;
+        this->index = index;
         this->tag = tag;
         this->cuts = cuts;
         this->dur = dur;
@@ -583,10 +652,13 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
     wxArrayPtrVoid streams;
 
     //Integers that define the first entry of each stream type in the list
-    int vid_idx = -1, aud_idx = -1;
+    int first_vid_idx = -1, first_aud_idx = -1;
+
+    //Integers that define the current entry of each stream type in the list
+    int cur_vid_idx = -1, cur_aud_idx = -1, cur_sub_idx = -1;
 
     //Variables used for required inputs for filters, subtitle filter, mapping & preset
-    wxString sub_in, req_in, sub_filter, mapping, preset;
+    wxString sub_in, req_in, sub_filter, mapping, preset, aud_extra, subs_extra, metadata_extra, disposition;
 
     //Target extension
     wxString target_ext = job->out.AfterLast('.').Lower();
@@ -616,11 +688,11 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
         //When preset only is being build the streamMap only contains a
         //simple [VIDID],[AUDID] mapping
 
-        streams.Add(new SBINFO(0, GetToken(sm, ','), FFQ_CUTS(), 0));
-        vid_idx = 0;
+        streams.Add(new SBINFO(0, 0, GetToken(sm, ','), FFQ_CUTS(), 0));
+        first_vid_idx = 0;
 
-        streams.Add(new SBINFO(1, GetToken(sm, ','), FFQ_CUTS(), 0));
-        aud_idx = 1;
+        streams.Add(new SBINFO(1, 0, GetToken(sm, ','), FFQ_CUTS(), 0));
+        first_aud_idx = 1;
 
         //vid_in = GetToken(sm, ',');
         //aud_in = GetToken(sm, ',');
@@ -648,8 +720,7 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
         if (smap.checked)
         {
 
-            smcur = "";
-            smcur << smap.file_id << ":" << smap.stream_id;
+            smcur.Printf("%d:%d", smap.file_id, smap.stream_id);
 
             if (smap.codec_type == CODEC_TYPE_VIDEO)
             {
@@ -658,10 +729,10 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
                 FFQ_INPUT_FILE inf = job->GetInput(smap.file_id);
 
                 //Add stream
-                streams.Add(new SBINFO(0, "[" + smcur + "]", inf.cuts, inf.duration));
+                streams.Add(new SBINFO(0, ++cur_vid_idx, "[" + smcur + "]", inf.cuts, inf.duration));
 
                 //Set index of first video stream
-                if (vid_idx < 0) vid_idx = streams.GetCount() - 1;
+                if (first_vid_idx < 0) first_vid_idx = cur_vid_idx;
 
             }
 
@@ -670,11 +741,28 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
 
                 //As with video
                 FFQ_INPUT_FILE inf = job->GetInput(smap.file_id);
-                streams.Add(new SBINFO(1, "[" + smcur + "]", inf.cuts, inf.duration));
-                if (aud_idx < 0) aud_idx = streams.GetCount() - 1;
+                streams.Add(new SBINFO(1, ++cur_aud_idx, "[" + smcur + "]", inf.cuts, inf.duration));
+                if (first_aud_idx < 0) first_aud_idx = cur_aud_idx;
 
                 //Prevent audio from being mapped into two pass encode
                 if (encoding_pass == 1) continue;
+
+                //Since one audio-stream can be mapped multiple times with
+                //different codecs, we must handle that here:
+                while (smap.preset_list.Len() > 0)
+                {
+                    LPFFQ_PRESET p = FFQPresetMgr::Get()->GetPreset(GetToken(smap.preset_list, " "));
+                    if (p)
+                    {
+                        smcur += wxString::Format(" %d:%d", smap.file_id, smap.stream_id);
+                        aud_extra += MakeAudioEncoding(p, ++cur_aud_idx);
+                        s = wxString::Format("a:%d", cur_aud_idx);
+                        metadata_extra += MakeMetaData(p->meta_data_a, s);
+                        disposition += MakeDisposition(p->disposition, 1, s);
+                    }
+                    //Else handle invalid preset error
+                }
+
 
             }
 
@@ -699,17 +787,40 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
                         //Prevent burned-in subtitles from being mapped
                         continue;
 
-                    } //else map
+                    }
+                    else cur_sub_idx++; //else map
 
                 }
+
+                //Mapped subtitles does not work well with the preview function
+                //so if not explicitly dictated by the user they are not mapped
+                if (for_preview && !FFQCFG()->preview_map_subs) continue;
+
+                //As with audio, subtitles may be mapped multiple times with different codecs
+                while (smap.preset_list.Len() > 0)
+                {
+
+                    LPFFQ_PRESET p = FFQPresetMgr::Get()->GetPreset(GetToken(smap.preset_list, " "));
+                    if (p && (p->subtitles.codec != CODEC_SUBS_BURNIN))
+                    {
+                        smcur += wxString::Format(" %d:%d", smap.file_id, smap.stream_id);
+                        s = wxString::Format("s:%d", ++cur_sub_idx);
+                        subs_extra += wxString::Format("-c:%s %s ", s, p->subtitles.codec);
+                        metadata_extra += MakeMetaData(p->meta_data_s, s);
+                        disposition += MakeDisposition(p->disposition, 2, s);
+                    }
+                    //Else handle invalid preset error
+
+                }
+
 
                 //Prevent cuts if subtitles are mapped
                 mapped_subs = true;
 
             }
 
-            //Add stream to mapping
-            mapping += "-map " + smcur + " ";
+            //Add stream(s) to mapping
+            while (smcur.Len() > 0) mapping += "-map " + GetToken(smcur, ' ') + " ";
 
         }
 
@@ -718,10 +829,10 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
     }
 
     //Handy vars for detecting included content
-    bool has_video = (vid_idx >= 0),
+    bool has_video = (first_vid_idx >= 0),
 
          //Audio skipped in first pass
-         has_audio = (aud_idx >= 0) && (encoding_pass != 1),
+         has_audio = (first_aud_idx >= 0) && (encoding_pass != 1),
 
          //Subtitles skipped in first pass if not burned in
          has_subs = (sub_in.Len() > 0) && ( (encoding_pass != 1) || (sub_filter.Len() > 0) );
@@ -744,9 +855,9 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
 
         //Make filters for all streams
         wxString vf, af; //Video filters and audio filters
-        SBINFO dummy(0, "", FFQ_CUTS(),0); //Dummy used as empty pointer
-        LPSBINFO first_vid = (has_video ? (LPSBINFO)streams[vid_idx] : &dummy),
-                 first_aud = (has_audio ? (LPSBINFO)streams[aud_idx] : &dummy);
+        SBINFO dummy(0, 0, "", FFQ_CUTS(),0); //Dummy used as empty pointer
+        LPSBINFO first_vid = (has_video ? (LPSBINFO)streams[first_vid_idx] : &dummy),
+                 first_aud = (has_audio ? (LPSBINFO)streams[first_aud_idx] : &dummy);
 
         for (unsigned int sidx = 0; sidx < streams.GetCount(); sidx++)
         {
@@ -944,31 +1055,14 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
 
         }
 
-        //Audio codec
-        if (has_audio && (pst->audio_codec.Len() > 0)) preset += "-c:a " + pst->audio_codec + " ";
+        //Audio encoding
+        if (has_audio) preset += MakeAudioEncoding(pst, -1);
+        preset += aud_extra;
 
-        if ((!copy_aud) && has_audio)
-        {
-
-            //Audio rate
-            s = pst->audio_rate;
-            if (FormatStreamRate(s, false)) preset += s;//(pst->audioVBR ? "-qscale:a " : "-b:a ") + s + " ";
-
-            //Audio quality
-            s = pst->audio_quality;
-            if (FormatAudioQuality(s, pst->audio_codec)) preset += s;
-
-            //Audio channels
-            if (pst->audio_channels.Len() > 0) preset += "-ac " + pst->audio_channels + " ";
-
-            //Audio profile
-            if (pst->audio_profile.Len() > 0) preset += "-profile:a " + pst->audio_profile + " ";
-
-        }
-
-        //Subtitle codec
+        //Subtitle encoding
         if (has_subs && (pst->subtitles.codec.Len() > 0) && (pst->subtitles.codec != CODEC_SUBS_BURNIN))
             preset += "-c:s " + pst->subtitles.codec + " ";
+        preset += subs_extra;
 
         //Segmenting - note that "faststart" needs to be set different when segmenting
         if (segment)
@@ -994,11 +1088,24 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
             if (pst->fourcc.auds.Len() == 4) preset += "-atag " + pst->fourcc.auds + " ";
         }
 
-        if (pst->meta_data.Len() > 0)
+        //Disposition
+        preset += MakeDisposition(pst->disposition, 0, "v");
+        preset += MakeDisposition(pst->disposition, 1, "a");
+        preset += MakeDisposition(pst->disposition, 2, "s");
+        preset += disposition;
+
+        //Meta data
+        preset += MakeMetaData(pst->meta_data, "");
+        preset += MakeMetaData(pst->meta_data_v, "v");
+        preset += MakeMetaData(pst->meta_data_a, "a");
+        preset += MakeMetaData(pst->meta_data_s, "s");
+        preset += metadata_extra;
+
+        /*if (pst->meta_data.Len() > 0)
         {
             s = pst->meta_data;
             while (s.Len() > 0) preset += "-metadata " + GetToken(s, FILTER_SEPARATOR) + " ";
-        }
+        }*/
 
         //Aspect ratio - does not need encoding - just video
         if (has_video && (pst->aspect_ratio.Len() > 0)) preset += "-aspect " + pst->aspect_ratio + " ";
@@ -1490,7 +1597,7 @@ bool FormatFilter(wxString &filter, wxString &vid_in, wxString &aud_in, wxString
 
 //---------------------------------------------------------------------------------------
 
-bool FormatStreamRate(wxString &rate, bool video)
+bool FormatStreamRate(wxString &rate, bool video, wxString stream_tag)
 {
 
     //Converts the settings from the FFQBitRatePanel into command line arguments
@@ -1503,10 +1610,10 @@ bool FormatStreamRate(wxString &rate, bool video)
          buf = Str2Long(GetToken(rate, ','), 0);
 
     //Convert values to command line arguments
-    rate = BitRateToArg(abr, brt, "b", video) +
-           BitRateToArg(min, brt, "minrate", video) +
-           BitRateToArg(max, brt, "maxrate", video) +
-           BitRateToArg(buf, brt, "bufsize", video);
+    rate = BitRateToArg(abr, brt, "b", video, stream_tag) +
+           BitRateToArg(min, brt, "minrate", video, stream_tag) +
+           BitRateToArg(max, brt, "maxrate", video, stream_tag) +
+           BitRateToArg(buf, brt, "bufsize", video, stream_tag);
 
     //Return if any values are available
     return rate.Len() > 0;

@@ -147,6 +147,8 @@ const long FFQPresetEdit::ID_AUDIOFILTERSCOMPLEX = wxNewId();
 const long FFQPresetEdit::ID_FILTERTIP = wxNewId();
 const long FFQPresetEdit::ID_FILTERPAGE = wxNewId();
 const long FFQPresetEdit::ID_METADATA = wxNewId();
+const long FFQPresetEdit::ID_STMD1 = wxNewId();
+const long FFQPresetEdit::ID_METADATAFOR = wxNewId();
 const long FFQPresetEdit::ID_METADATAPAGE = wxNewId();
 const long FFQPresetEdit::ID_THUMBSPANEL = wxNewId();
 const long FFQPresetEdit::ID_THUMBSPAGE = wxNewId();
@@ -167,6 +169,7 @@ const long FFQPresetEdit::ID_SEGMENTSTREAMING = wxNewId();
 const long FFQPresetEdit::ID_SEGMENTBREAKB = wxNewId();
 const long FFQPresetEdit::ID_STATICTEXT13 = wxNewId();
 const long FFQPresetEdit::ID_ASPECT = wxNewId();
+const long FFQPresetEdit::ID_DISPOSITIONSBTN = wxNewId();
 const long FFQPresetEdit::ID_OUTPUTFORMAT = wxNewId();
 const long FFQPresetEdit::ID_MF_FASTSTART = wxNewId();
 const long FFQPresetEdit::ID_KEEPFILETIME = wxNewId();
@@ -196,6 +199,10 @@ const long FFQPresetEdit::ID_ADD_FILTER_MENU_BASE = wxNewId();
 
 //---------------------------------------------------------------------------------------
 
+const int DISPOSITION_MENU_ID_COUNT = 30;
+
+//---------------------------------------------------------------------------------------
+
 FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 {
 	//(*Initialize(FFQPresetEdit)
@@ -222,7 +229,9 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 	wxFlexGridSizer* FlexGridSizer26;
 	wxFlexGridSizer* FlexGridSizer27;
 	wxFlexGridSizer* FlexGridSizer28;
+	wxFlexGridSizer* FlexGridSizer29;
 	wxFlexGridSizer* FlexGridSizer2;
+	wxFlexGridSizer* FlexGridSizer33;
 	wxFlexGridSizer* FlexGridSizer3;
 	wxFlexGridSizer* FlexGridSizer4;
 	wxFlexGridSizer* FlexGridSizer5;
@@ -733,7 +742,7 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 	FlexGridSizer9->AddGrowableCol(0);
 	FlexGridSizer9->AddGrowableRow(0);
 	SBS31 = new wxStaticBoxSizer(wxVERTICAL, MetaDataPage, _T("Md"));
-	FlexGridSizer10 = new wxFlexGridSizer(1, 1, 0, 0);
+	FlexGridSizer10 = new wxFlexGridSizer(2, 1, 0, 0);
 	FlexGridSizer10->AddGrowableCol(0);
 	FlexGridSizer10->AddGrowableRow(0);
 	MetaData = new wxGrid(MetaDataPage, ID_METADATA, wxDefaultPosition, wxDefaultSize, 0, _T("ID_METADATA"));
@@ -747,6 +756,14 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 	MetaData->SetDefaultCellFont( MetaData->GetFont() );
 	MetaData->SetDefaultCellTextColour( MetaData->GetForegroundColour() );
 	FlexGridSizer10->Add(MetaData, 1, wxALL|wxEXPAND, 3);
+	FlexGridSizer29 = new wxFlexGridSizer(1, 2, 0, 0);
+	FlexGridSizer29->AddGrowableCol(0);
+	STMD1 = new wxStaticText(MetaDataPage, ID_STMD1, _T("Label"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STMD1"));
+	STMD1->SetLabel(FFQS(SID_PRESET_METADATA_FOR));
+	FlexGridSizer29->Add(STMD1, 1, wxRIGHT|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 5);
+	MetaDataFor = new wxChoice(MetaDataPage, ID_METADATAFOR, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator, _T("ID_METADATAFOR"));
+	FlexGridSizer29->Add(MetaDataFor, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
+	FlexGridSizer10->Add(FlexGridSizer29, 1, wxALL|wxEXPAND, 3);
 	SBS31->Add(FlexGridSizer10, 1, wxALL|wxEXPAND, 3);
 	FlexGridSizer9->Add(SBS31, 1, wxALL|wxEXPAND, 5);
 	MetaDataPage->SetSizer(FlexGridSizer9);
@@ -847,6 +864,8 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 	SBS51->GetStaticBox()->SetLabel(FFQS(SID_PRESET_OTHER));
 	ST55->SetLabel(FFQS(SID_PRESET_ASPECT_RATIO));
 	FlexGridSizer26->Add(ST55, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
+	FlexGridSizer33 = new wxFlexGridSizer(1, 2, 0, 0);
+	FlexGridSizer33->AddGrowableCol(1);
 	Aspect = new wxComboBox(MiscPage, ID_ASPECT, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator, _T("ID_ASPECT"));
 	Aspect->Append(_T("3:2"));
 	Aspect->Append(_T("4:3"));
@@ -855,7 +874,11 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 	Aspect->Append(_T("16:9"));
 	Aspect->Append(_T("16:10"));
 	Aspect->SetMinSize(wxSize(100,-1));
-	FlexGridSizer26->Add(Aspect, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
+	FlexGridSizer33->Add(Aspect, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 0);
+	DispositionsBtn = new wxButton(MiscPage, ID_DISPOSITIONSBTN, _T("Dsp"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_DISPOSITIONSBTN"));
+	DispositionsBtn->SetLabel(FFQS(SID_PRESET_DISPOSITION));
+	FlexGridSizer33->Add(DispositionsBtn, 1, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 0);
+	FlexGridSizer26->Add(FlexGridSizer33, 1, wxALL|wxEXPAND, 3);
 	ST56 = new wxStaticText(MiscPage, wxID_ANY, _T("Of"), wxDefaultPosition, wxDefaultSize, 0, _T("wxID_ANY"));
 	ST56->SetLabel(FFQS(SID_PRESET_OUTPUT_FORMAT));
 	FlexGridSizer26->Add(ST56, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
@@ -938,6 +961,8 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 	Connect(ID_FILTERUPBUTTON,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&FFQPresetEdit::OnButtonClick);
 	Connect(ID_FILTERDOWNBUTTON,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&FFQPresetEdit::OnButtonClick);
 	Connect(ID_FILTERPREVIEWBUTTON,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&FFQPresetEdit::OnButtonClick);
+	Connect(ID_METADATAFOR,wxEVT_COMMAND_CHOICE_SELECTED,(wxObjectEventFunction)&FFQPresetEdit::OnChoiceChange);
+	Connect(ID_DISPOSITIONSBTN,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&FFQPresetEdit::OnButtonClick);
 	Connect(ID_PAGES,wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGED,(wxObjectEventFunction)&FFQPresetEdit::OnNotebookPageChanged);
 	Connect(ID_OKBUTTON,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&FFQPresetEdit::OnButtonClick);
 	Connect(ID_CANCELBUTTON,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&FFQPresetEdit::OnButtonClick);
@@ -1009,6 +1034,27 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
     for (unsigned int i = 1; i < 17; i++) KeyFrameMaxP->Append(wxString::Format(as[3], i));
 
     //Release string array
+    delete[] as;
+
+    //Set items for meta data selection
+    as = FFQL()->GetStringArray(SID_PRESET_METADATA_FOR_ITEMS, 4);
+    for (unsigned int i = 0; i < 4; i++) MetaDataFor->Append(as[i]);
+    delete[] as;
+    m_MetaData.SetCount(4); //Global, Video, Audio, Subtitles
+
+    //Items for dispositions
+    Bind(wxEVT_COMMAND_MENU_SELECTED, &FFQPresetEdit::OnMenuSelected, this);
+    as = FFQL()->GetStringArray(SID_PRESET_METADATA_FOR_ITEMS, 4);
+    for (unsigned int i = 0; i < 3; i++)
+    {
+        m_DispositionMenus[i] = new wxMenu();
+        m_DispositionMenus[i]->AppendRadioItem(i * DISPOSITION_MENU_ID_COUNT, FFQS(SID_COMMON_UNDEFINED));
+        for (unsigned int ii = 0; ii <= DISPOSITION_COUNT; ii++)
+        {
+            m_DispositionMenus[i]->AppendRadioItem((i * DISPOSITION_MENU_ID_COUNT) + (ii + 1), ii == 0 ? FFQS(SID_PRESET_DISPOSITION_UNSET) : DISPOSITIONS[ii-1]);
+        }
+        DispositionsMenu.AppendSubMenu(m_DispositionMenus[i], as[i+1]);
+    }
     delete[] as;
 
     FilterEditor = NULL;
@@ -1182,6 +1228,18 @@ bool FFQPresetEdit::Execute(LPFFQ_PRESET preset)
     SubsCharEnc->SetValue(preset->subtitles.charenc);
 
 
+    //Dispositions
+    s = preset->disposition;
+    for (int i = 0; i < 3; i++)
+    {
+        m_DispositionSelection[i] = Str2Long(GetToken(s, ','), -1) + 1;
+        //if (m_DispositionSelection[i] < 0) m_DispositionSelection[i] = 0;
+        wxMenuItem *mi = m_DispositionMenus[i]->FindChildItem((i * DISPOSITION_MENU_ID_COUNT) + m_DispositionSelection[i]);
+        if (mi) mi->Check();
+        else m_DispositionMenus[i]->FindItemByPosition(0)->Check();
+    }
+
+
     //Filter settings
     FFMPEG_FILTER fltr;
     FilterList->Freeze();
@@ -1197,7 +1255,13 @@ bool FFQPresetEdit::Execute(LPFFQ_PRESET preset)
 
 
     //Metadata settings
-    SetMetaData(preset->meta_data);
+    m_MetaData[0] = preset->meta_data;
+    m_MetaData[1] = preset->meta_data_v;
+    m_MetaData[2] = preset->meta_data_a;
+    m_MetaData[3] = preset->meta_data_s;
+    m_SelMetaData = 0;
+    MetaDataFor->SetSelection(m_SelMetaData);
+    SetMetaData(m_MetaData[m_SelMetaData]);
     MetaData->SetColSize(0, 150);
     MetaData->SetColSize(1, MetaData->GetGrandParent()->GetSize().GetWidth() - MetaData->GetColLabelSize() - 170);
     //MetaData->SetColSize(1, MetaData->GetClientRect().GetWidth() - MetaData->GetColLabelSize() - 130);
@@ -1344,6 +1408,11 @@ bool FFQPresetEdit::Execute(LPFFQ_PRESET preset)
             FFQConfig::GetInstance()->SaveConfig();
         }
 
+        //Dispositions
+        preset->disposition  = (m_DispositionSelection[0] > 0 ? ToStr(m_DispositionSelection[0] - 1) : "") + ",";
+        preset->disposition += (m_DispositionSelection[1] > 0 ? ToStr(m_DispositionSelection[1] - 1) : "") + ",";
+        preset->disposition += (m_DispositionSelection[2] > 0 ? ToStr(m_DispositionSelection[2] - 1) : "");
+
         //Filters
         preset->filters.Clear();
         for (unsigned int i = 0; i < FilterList->GetCount(); i++)
@@ -1351,7 +1420,10 @@ bool FFQPresetEdit::Execute(LPFFQ_PRESET preset)
         preset->af_complex = AudioFiltersComplex->GetValue();
 
         //Metadata settings
-        preset->meta_data = m_MetaData;
+        preset->meta_data = m_MetaData[0];
+        preset->meta_data_v = m_MetaData[1];
+        preset->meta_data_a = m_MetaData[2];
+        preset->meta_data_s = m_MetaData[3];
 
         //Thumbs settings
         ThumbsPanel->GetValues(preset->thumbs, false);
@@ -1974,6 +2046,19 @@ void FFQPresetEdit::UpdateVideoPages(bool sizers)
 
 //---------------------------------------------------------------------------------------
 
+void FFQPresetEdit::OnMenuSelected(wxCommandEvent &event)
+{
+    int mid = event.GetId(), sid = 0;
+    while (mid >= DISPOSITION_MENU_ID_COUNT)
+    {
+        mid -= DISPOSITION_MENU_ID_COUNT;
+        sid++;
+    }
+    m_DispositionSelection[sid] = mid;
+}
+
+//---------------------------------------------------------------------------------------
+
 void FFQPresetEdit::OnClose(wxCloseEvent& event)
 {
 
@@ -2125,6 +2210,14 @@ void FFQPresetEdit::OnButtonClick(wxCommandEvent& event)
 
     }
 
+    else if (evtId == ID_DISPOSITIONSBTN)
+    {
+
+        DispositionsBtn->PopupMenu(&DispositionsMenu);
+        //ShowInfo("Dunno!");
+
+    }
+
     else if (evtId == ID_OKBUTTON)
     {
 
@@ -2219,7 +2312,7 @@ void FFQPresetEdit::OnButtonClick(wxCommandEvent& event)
 
         }
 
-        if (!GetMetaData(m_MetaData))
+        if (!GetMetaData(m_MetaData[MetaDataFor->GetSelection()]))
         {
             Pages->SetSelection(Pages->FindPage(MetaDataPage));
             ShowError(MetaData, FFQS(SID_PRESET_INVALID_METADATA));
@@ -2280,6 +2373,18 @@ void FFQPresetEdit::OnChoiceChange(wxCommandEvent& event)
 
     //Update codec info if required
     if ((id == ID_VIDEOCODEC) || (id == ID_AUDIOCODEC)) UpdateCodecInfo();
+
+    else if (id == ID_METADATAFOR)
+    {
+        if (!GetMetaData(m_MetaData[m_SelMetaData]))
+        {
+            ShowError(MetaData, FFQS(SID_PRESET_INVALID_METADATA));
+            MetaDataFor->SetSelection(m_SelMetaData);
+            return;
+        }
+        m_SelMetaData = MetaDataFor->GetSelection();
+        SetMetaData(m_MetaData[m_SelMetaData]);
+    }
 
     //Update controls and sizers
     UpdateControls(true);

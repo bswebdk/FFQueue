@@ -1389,7 +1389,7 @@
 										<object class="sizeritem">
 											<object class="wxFlexGridSizer" variable="FlexGridSizer10" member="no">
 												<cols>1</cols>
-												<rows>1</rows>
+												<rows>2</rows>
 												<growablecols>0</growablecols>
 												<growablerows>0</growablerows>
 												<object class="sizeritem">
@@ -1398,6 +1398,32 @@
 														<rows>5</rows>
 														<labelcolwidth>1</labelcolwidth>
 														<extra_code>MetaData-&gt;SetColLabelValue(0, FFQS(SID__PRESET__METADATA__KEY));&#x0A;MetaData-&gt;SetColLabelValue(1, FFQS(SID__PRESET__METADATA__VALUE));&#x0A;SBS31-&gt;GetStaticBox()-&gt;SetLabel(FFQS(SID__PRESET__METADATA__DEFINE));</extra_code>
+													</object>
+													<flag>wxALL|wxEXPAND</flag>
+													<border>3</border>
+													<option>1</option>
+												</object>
+												<object class="sizeritem">
+													<object class="wxFlexGridSizer" variable="FlexGridSizer29" member="no">
+														<cols>2</cols>
+														<rows>1</rows>
+														<growablecols>0</growablecols>
+														<object class="sizeritem">
+															<object class="wxStaticText" name="ID_STMD1" variable="STMD1" member="yes">
+																<label>Label</label>
+																<extra_code>STMD1-&gt;SetLabel(FFQS(SID__PRESET__METADATA__FOR));</extra_code>
+															</object>
+															<flag>wxRIGHT|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL</flag>
+															<border>5</border>
+															<option>1</option>
+														</object>
+														<object class="sizeritem">
+															<object class="wxChoice" name="ID_METADATAFOR" variable="MetaDataFor" member="yes">
+																<handler function="OnChoiceChange" entry="EVT_CHOICE" />
+															</object>
+															<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+															<option>1</option>
+														</object>
 													</object>
 													<flag>wxALL|wxEXPAND</flag>
 													<border>3</border>
@@ -1677,18 +1703,36 @@
 															<option>1</option>
 														</object>
 														<object class="sizeritem">
-															<object class="wxComboBox" name="ID_ASPECT" variable="Aspect" member="yes">
-																<content>
-																	<item>3:2</item>
-																	<item>4:3</item>
-																	<item>5:3</item>
-																	<item>5:4</item>
-																	<item>16:9</item>
-																	<item>16:10</item>
-																</content>
-																<minsize>100,-1</minsize>
+															<object class="wxFlexGridSizer" variable="FlexGridSizer33" member="no">
+																<cols>2</cols>
+																<rows>1</rows>
+																<growablecols>1</growablecols>
+																<object class="sizeritem">
+																	<object class="wxComboBox" name="ID_ASPECT" variable="Aspect" member="yes">
+																		<content>
+																			<item>3:2</item>
+																			<item>4:3</item>
+																			<item>5:3</item>
+																			<item>5:4</item>
+																			<item>16:9</item>
+																			<item>16:10</item>
+																		</content>
+																		<minsize>100,-1</minsize>
+																	</object>
+																	<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+																	<option>1</option>
+																</object>
+																<object class="sizeritem">
+																	<object class="wxButton" name="ID_DISPOSITIONSBTN" variable="DispositionsBtn" member="yes">
+																		<label>Dsp</label>
+																		<extra_code>DispositionsBtn-&gt;SetLabel(FFQS(SID__PRESET__DISPOSITION));</extra_code>
+																		<handler function="OnButtonClick" entry="EVT_BUTTON" />
+																	</object>
+																	<flag>wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL</flag>
+																	<option>1</option>
+																</object>
 															</object>
-															<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+															<flag>wxALL|wxEXPAND</flag>
 															<border>3</border>
 															<option>1</option>
 														</object>
@@ -1800,5 +1844,6 @@
 			<extra_code>OpenFileDlg-&gt;SetMessage(FFQS(SID__PRESET__SELECT__PREVIEW__FILE));</extra_code>
 			<style>wxFD_DEFAULT_STYLE|wxFD_OPEN|wxFD_FILE_MUST_EXIST</style>
 		</object>
+		<object class="wxMenu" variable="DispositionsMenu" member="yes" />
 	</object>
 </wxsmith>

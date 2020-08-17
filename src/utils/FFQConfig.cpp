@@ -85,6 +85,7 @@ const wxString CFG_SAVED_COMMANDS = "saved_commands";
 const wxString CFG_SAVE_ON_MODIFY = "save_on_modify";
 const wxString CFG_VALIDATE_ON_LOAD = "validate_on_load";
 const wxString CFG_CONFIRM_DELETE_JOBS = "confirm_delete_jobs";
+const wxString CFG_PREVIEW_MAP_SUBS = "preview_map_subs";
 const wxString CFG_SUBS_CHARENC = "subs_charenc";
 const wxString CFG_LOCALE = "locale";
 
@@ -457,6 +458,7 @@ void FFQConfig::DefaultOptions()
     save_on_modify = false;
     validate_on_load = true;
     confirm_delete_jobs = true;
+    preview_map_subs = false;
     saved_commands = "";
     subs_charenc = "";
     user_locale = "";
@@ -1083,6 +1085,7 @@ void FFQConfig::LoadConfig()
                     else if (name == CFG_SAVE_ON_MODIFY) save_on_modify = STRBOOL(line);
                     else if (name == CFG_VALIDATE_ON_LOAD) validate_on_load = STRBOOL(line);
                     else if (name == CFG_CONFIRM_DELETE_JOBS) confirm_delete_jobs = STRBOOL(line);
+                    else if (name == CFG_PREVIEW_MAP_SUBS) preview_map_subs = STRBOOL(line);
                     else if (name == CFG_SUBS_CHARENC) subs_charenc = line;
                     else if (name == CFG_LOCALE) user_locale = line;
 
@@ -1234,6 +1237,7 @@ void FFQConfig::SaveConfig()
         cfg.AddLine(CFG_SAVE_ON_MODIFY + "=" + BOOLSTR(save_on_modify));
         cfg.AddLine(CFG_VALIDATE_ON_LOAD + "=" + BOOLSTR(validate_on_load));
         cfg.AddLine(CFG_CONFIRM_DELETE_JOBS + "=" + BOOLSTR(confirm_delete_jobs));
+        cfg.AddLine(CFG_PREVIEW_MAP_SUBS + "=" + BOOLSTR(preview_map_subs));
         cfg.AddLine(CFG_SUBS_CHARENC + "=" + subs_charenc);
         cfg.AddLine(CFG_LOCALE + "=" + user_locale);
 

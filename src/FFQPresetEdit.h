@@ -71,6 +71,7 @@ class FFQPresetEdit: public wxDialog
 		FFQThumbPanel* ThumbsPanel;
 		wxButton* AddFilterButton;
 		wxButton* CancelButton;
+		wxButton* DispositionsBtn;
 		wxButton* EditFilterButton;
 		wxButton* FilterDownButton;
 		wxButton* FilterPreviewButton;
@@ -100,6 +101,7 @@ class FFQPresetEdit: public wxDialog
 		wxChoice* HWD_Accel;
 		wxChoice* KeyFrameMaxB;
 		wxChoice* KeyFrameMaxP;
+		wxChoice* MetaDataFor;
 		wxChoice* SegmentLenType;
 		wxChoice* SegmentListType;
 		wxChoice* SubsCodec;
@@ -132,6 +134,7 @@ class FFQPresetEdit: public wxDialog
 		wxGrid* MetaData;
 		wxListBox* FilterList;
 		wxMenu AddFilterMenu;
+		wxMenu DispositionsMenu;
 		wxNotebook* Pages;
 		wxNotebook* VideoPages;
 		wxPanel* AudioPage;
@@ -207,6 +210,7 @@ class FFQPresetEdit: public wxDialog
 		wxStaticText* ST53;
 		wxStaticText* ST55;
 		wxStaticText* ST56;
+		wxStaticText* STMD1;
 		wxStaticText* ScSensInfo;
 		wxStaticText* SegST1;
 		wxStaticText* SegST2;
@@ -336,6 +340,8 @@ class FFQPresetEdit: public wxDialog
 		static const long ID_FILTERTIP;
 		static const long ID_FILTERPAGE;
 		static const long ID_METADATA;
+		static const long ID_STMD1;
+		static const long ID_METADATAFOR;
 		static const long ID_METADATAPAGE;
 		static const long ID_THUMBSPANEL;
 		static const long ID_THUMBSPAGE;
@@ -356,6 +362,7 @@ class FFQPresetEdit: public wxDialog
 		static const long ID_SEGMENTBREAKB;
 		static const long ID_STATICTEXT13;
 		static const long ID_ASPECT;
+		static const long ID_DISPOSITIONSBTN;
 		static const long ID_OUTPUTFORMAT;
 		static const long ID_MF_FASTSTART;
 		static const long ID_KEEPFILETIME;
@@ -379,11 +386,15 @@ class FFQPresetEdit: public wxDialog
 		//*)
 
 		FFQFilterEdit *FilterEditor;
-		wxString m_MetaData, m_PreviewFile;
+		wxString m_PreviewFile;
+		wxArrayString m_MetaData;
+		int m_SelMetaData;
 		CODEC_INFO m_VidCodecInfo, m_AudCodecInfo;
 		bool m_ShowPreviewDlg, m_CanSegment, m_CanSSegment;
 		LPFFQ_PRESET m_Preset;
 	    wxIntegerValidator<unsigned int> m_UIntVal;
+	    wxMenu *m_DispositionMenus[3];
+	    int m_DispositionSelection[3];
 
 
 
@@ -405,6 +416,8 @@ class FFQPresetEdit: public wxDialog
 		void UpdateSliderLabels(int SliderId);
 		void UpdateSubtitleFilter();
 		void UpdateVideoPages(bool sizers = false);
+
+		void OnMenuSelected(wxCommandEvent &event);
 
 		DECLARE_EVENT_TABLE()
 };

@@ -507,7 +507,7 @@ void FFQBatchMake::GetStreamsFromParser(FFProbeInfoParser *pip, unsigned int fil
 
         }
 
-        else if (IncludeAudio->GetValue() && (si->codec_type == CODEC_TYPE_AUDIO) && IncludeAudioStream(si))
+        else if (IncludeAudio->GetValue() && (si->codec_type == CODEC_TYPE_AUDIO) && IncludeStream(si, m_FindAud, true, AudInverse->GetValue())) //IncludeAudioStream(si))
         {
 
             if (m_AudIdx < 0) m_AudIdx = m_StreamInf.size();
@@ -517,7 +517,7 @@ void FFQBatchMake::GetStreamsFromParser(FFProbeInfoParser *pip, unsigned int fil
 
         }
 
-        else if (IncludeSubs->GetValue() && (si->codec_type == CODEC_TYPE_SUBTITLE) && (!si->IsTeleText()) && IncludeSubtitleStream(si))
+        else if (IncludeSubs->GetValue() && (si->codec_type == CODEC_TYPE_SUBTITLE) && (!si->IsTeleText()) && IncludeStream(si, m_FindSubs, true, SubsInverse->GetValue())) //IncludeSubtitleStream(si))
         {
 
             if (m_SubsIdx < 0) m_SubsIdx = m_StreamInf.size();
@@ -550,9 +550,8 @@ void FFQBatchMake::GetStreamsFromParser(FFProbeInfoParser *pip, unsigned int fil
 
 //---------------------------------------------------------------------------------------
 
-bool FFQBatchMake::IncludeAudioStream(LPFFPROBE_STREAM_INFO si)
+/*bool FFQBatchMake::IncludeAudioStream(LPFFPROBE_STREAM_INFO si)
 {
-
     //Test is an audio stream can be included
     if (m_FindAud.Len() == 0) return true; //!AudInverse->GetValue();
     bool match = false;
@@ -564,12 +563,11 @@ bool FFQBatchMake::IncludeAudioStream(LPFFPROBE_STREAM_INFO si)
     }
     if (AudInverse->GetValue()) return !match;
     return match;
-
-}
+}*/
 
 //---------------------------------------------------------------------------------------
 
-bool FFQBatchMake::IncludeSubtitleStream(LPFFPROBE_STREAM_INFO si)
+/*bool FFQBatchMake::IncludeSubtitleStream(LPFFPROBE_STREAM_INFO si)
 {
     //Test if a subtitle stream can be included
     if (m_FindSubs.Len() == 0) return true;
@@ -583,6 +581,27 @@ bool FFQBatchMake::IncludeSubtitleStream(LPFFPROBE_STREAM_INFO si)
     }
     if (SubsInverse->GetValue()) return !match;
     return match;
+}*/
+
+//---------------------------------------------------------------------------------------
+
+bool FFQBatchMake::IncludeStream(LPFFPROBE_STREAM_INFO si, wxString search_for, bool find_language, bool invert_result)
+{
+    //Test if the applied stream matches the criteria for inclusion
+    if (search_for.Len() == 0) return true;
+    bool match = false;
+    wxString lng, s = m_FindSubs, t;
+    if (find_language)
+    {
+        FFQ_NVP_LIST *nvp = si->items->Find("tag:language", false);
+        if (nvp) lng = nvp->value.Lower();
+    }
+    while ((!match) && (s.Len() > 0))
+    {
+        t = GetToken(s, " ");
+        match = ((lng.Find(t) >= 0) || (si->codec_name.Lower().Find(t) >= 0) || (si->codec_long_name.Lower().Find(t) >= 0));
+    }
+    return invert_result ? !match : match;
 }
 
 //---------------------------------------------------------------------------------------

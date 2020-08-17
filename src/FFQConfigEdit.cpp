@@ -168,6 +168,7 @@ FFQConfigEdit::FFQConfigEdit(wxWindow* parent,wxWindowID id)
 	CheckList->Append(FFQS(SID_OPTIONS_KEEP_CONSOLE_OPEN));
 	CheckList->Append(FFQS(SID_OPTIONS_SILENT_QUEUE_FINISH));
 	CheckList->Append(FFQS(SID_OPTIONS_CONFIRM_DELETE_JOBS));
+	CheckList->Append(FFQS(SID_OPTIONS_PREVIEW_MAP_SUBS));
 	FlexGridSizer1->Add(CheckList, 1, wxALL|wxEXPAND, 3);
 	BoxSizer2 = new wxBoxSizer(wxHORIZONTAL);
 	LangButton = new wxButton(this, ID_LANGBUTTON, _("Lng"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_LANGBUTTON"));
@@ -243,6 +244,7 @@ bool FFQConfigEdit::Execute()
     CheckList->Check(9, FFQCFG()->keep_console);
     CheckList->Check(10, FFQCFG()->silent_qfinish);
     CheckList->Check(11, FFQCFG()->confirm_delete_jobs);
+    CheckList->Check(12, FFQCFG()->preview_map_subs);
 
     //Center and update
     CenterOnParent();
@@ -276,6 +278,7 @@ bool FFQConfigEdit::Execute()
         FFQCFG()->keep_console = CheckList->IsChecked(9);
         FFQCFG()->silent_qfinish = CheckList->IsChecked(10);
         FFQCFG()->confirm_delete_jobs = CheckList->IsChecked(11);
+        FFQCFG()->preview_map_subs = CheckList->IsChecked(12);
 
         FFQCFG()->SaveConfig();
 

@@ -235,7 +235,8 @@ FFQJobEditAdv::FFQJobEditAdv(wxWindow* parent)
 
 	//Connect(wxID_ANY, wxEVT_IDLE, (wxObjectEventFunction)&FFQJobEditAdv::OnIdle);
 	Bind(wxEVT_IDLE, &FFQJobEditAdv::OnIdle, this);
-
+    Bind(wxEVT_COMMAND_MENU_SELECTED, &FFQJobEditAdv::OnMenuSelected, this);
+	StreamList->Bind(wxEVT_RIGHT_DOWN, &FFQJobEditAdv::OnStreamListRightClick, this);
 }
 
 //---------------------------------------------------------------------------------------
@@ -262,6 +263,7 @@ bool FFQJobEditAdv::Execute(LPFFQ_JOB job)
     m_FindSecondary = (job->inputs.Count() == 0);
     m_AutoPreset = m_FindSecondary;
     m_CanCut = FFQCFG()->AreFiltersAvailable(ADV_CUTS_REQUIRED_FILTERS);
+
 
     //Freeze during updates
     Inputs->Freeze();
@@ -382,9 +384,7 @@ bool FFQJobEditAdv::Execute(LPFFQ_JOB job)
     }
 
 	//Clear the stream list and the inputs
-	StreamList->Freeze();
-    StreamList->Clear();
-	StreamList->Thaw();
+	ClearStreamList();
     RemoveInputFile(-1);
 
     //Return result
@@ -543,6 +543,19 @@ int FFQJobEditAdv::AddSecondaryFiles(wxString &for_file)
     //Return how many files where added
     return res;
 
+}
+
+//---------------------------------------------------------------------------------------
+
+void FFQJobEditAdv::ClearStreamList()
+{
+	StreamList->Freeze();
+	for (unsigned int i = 0; i < StreamList->GetCount(); i++)
+    {
+        delete (LPSTREAM_DATA)StreamList->GetClientData(i);
+    }
+    StreamList->Clear();
+	StreamList->Thaw();
 }
 
 //---------------------------------------------------------------------------------------
@@ -707,15 +720,19 @@ wxString FFQJobEditAdv::GetStreamMapping()
 {
 
     //Return the stream mapping from the StreamList
-    wxString res = "", cur;
+    wxString res = "", s;
     STREAM_MAPPING smap;
 
     for (unsigned int i = 0; i < StreamList->GetCount(); i++)
     {
 
-        cur = StreamList->GetString(i);
-        smap.Parse(cur);
+        LPSTREAM_DATA sd = (LPSTREAM_DATA)StreamList->GetClientData(i);
+        s = StreamList->GetString(i);
+        smap.Parse(s);
         smap.checked = StreamList->IsChecked(i);
+        s = "";
+        for (unsigned int pi = 0; pi < sd->presets.Count(); pi++) s += sd->presets[pi] + " ";
+        smap.preset_list = s.BeforeLast(' ');
         if (res.Len() > 0) res += STREAM_MAPPING_SEPERATOR;
         res += smap.ToString();
 
@@ -793,8 +810,9 @@ int FFQJobEditAdv::RefreshStreamList(bool force_all)
     {
 
         STREAM_MAPPING smap;
+        ClearStreamList();
         StreamList->Freeze();
-        StreamList->Clear();
+        //StreamList->Clear();
 
         for (unsigned int i = 0; i < m_CtrlData.Count(); i++)
         {
@@ -804,17 +822,20 @@ int FFQJobEditAdv::RefreshStreamList(bool force_all)
             //Set id of current file (starting from 1)
             smap.file_id = (i + 1);
 
-            for (unsigned int i = 0; i < ctrls->probe.GetStreamCount(); i++)
+            for (unsigned int ii = 0; ii < ctrls->probe.GetStreamCount(); ii++)
             {
 
                 //Construct the stream mapping based on the stream info
-                LPFFPROBE_STREAM_INFO si = ctrls->probe.GetStreamInfo(i);
-                smap.stream_id = si->index;
-                smap.codec_type = si->codec_type;
+                LPSTREAM_DATA sd = new STREAM_DATA();
+                sd->si = ctrls->probe.GetStreamInfo(ii);
+                //wxString s = smap.preset_id;
+                //while (s.Len() > 0) sd->presets.Add(GetToken(s, '*'));
+                smap.stream_id = sd->si->index;
+                smap.codec_type = sd->si->codec_type;
 
                 //Add and check the mapping
-                int ii = StreamList->Append(smap.ToString(si->codec_long_name), si);
-                StreamList->Check(ii, true);
+                int idx = StreamList->Append(smap.ToString(sd->si->codec_long_name), sd);
+                StreamList->Check(idx, true);
 
             }
 
@@ -836,7 +857,6 @@ void FFQJobEditAdv::RemoveInputFile(int index)
 
     //Remove the input file(s) including data and streams
     Inputs->Freeze();
-    StreamList->Freeze();
 
     if (index < 0)
     {
@@ -845,7 +865,7 @@ void FFQJobEditAdv::RemoveInputFile(int index)
         Inputs->DeleteAllPages();
         for (unsigned int i = 0; i < m_CtrlData.Count(); i++) delete (LPINPUT_CTRLS)m_CtrlData[i];
         m_CtrlData.Clear();
-        StreamList->Clear();
+        ClearStreamList();
 
     }
 
@@ -865,6 +885,7 @@ void FFQJobEditAdv::RemoveInputFile(int index)
         }
 
         //Update stream list
+        StreamList->Freeze();
         index++; //File index in stream mapping starts from 1, not 0
         unsigned int i = 0;
         while (i < StreamList->GetCount())
@@ -873,8 +894,13 @@ void FFQJobEditAdv::RemoveInputFile(int index)
             //Get stream mapping
             wxString s = StreamList->GetString(i);
             STREAM_MAPPING smap(s);
+            LPSTREAM_DATA sd = (LPSTREAM_DATA)StreamList->GetClientData(i);
 
-            if (smap.file_id == index) StreamList->Delete(i); //Delete
+            if (smap.file_id == index)
+            {
+                delete sd;
+                StreamList->Delete(i); //Delete
+            }
 
             else
             {
@@ -884,8 +910,7 @@ void FFQJobEditAdv::RemoveInputFile(int index)
 
                     //Decrement file index for the stream mapping
                     smap.file_id--;
-                    LPFFPROBE_STREAM_INFO si = (LPFFPROBE_STREAM_INFO)StreamList->GetClientData(i);
-                    StreamList->SetString(i, smap.ToString(si->codec_long_name));
+                    StreamList->SetString(i, smap.ToString(sd->si->codec_long_name));
 
                 }
 
@@ -894,11 +919,11 @@ void FFQJobEditAdv::RemoveInputFile(int index)
             }
 
         }
+        StreamList->Thaw();
 
     }
 
     Inputs->Thaw();
-    StreamList->Thaw();
 
 }
 
@@ -937,6 +962,10 @@ void FFQJobEditAdv::SetStreamMapping(wxString mapping)
                 {
 
                     //Check the stream according to the mapping, sort it and we are done
+                    LPSTREAM_DATA sd = (LPSTREAM_DATA)StreamList->GetClientData(i);
+                    sd->presets.Clear();
+                    wxString s = smap.preset_list;
+                    while (s.Len() > 0) sd->presets.Add(GetToken(s, ' '));
                     StreamList->Check(i, smap.checked);
                     ListBoxSwapItems(StreamList, i, midx, true);
                     break;
@@ -1252,6 +1281,51 @@ void FFQJobEditAdv::OnIdle(wxIdleEvent &event)
 
 //---------------------------------------------------------------------------------------
 
+void FFQJobEditAdv::OnMenuSelected(wxCommandEvent &event)
+{
+    LPFFQ_PRESET pst = (LPFFQ_PRESET)Preset->Presets->GetClientData(event.GetId());
+    wxString pid = pst->preset_id.ToString();
+    LPSTREAM_DATA sd = (LPSTREAM_DATA)StreamList->GetClientData(StreamList->GetSelection());
+    for (unsigned int i = 0; i < sd->presets.Count(); i++)
+    {
+        if (sd->presets[i] == pid)
+        {
+            sd->presets.RemoveAt(i);
+            return;
+        }
+    }
+    sd->presets.Add(pid);
+}
+
+//---------------------------------------------------------------------------------------
+
+void FFQJobEditAdv::OnStreamListRightClick(wxMouseEvent &event)
+{
+    int sel = StreamList->GetSelection();
+    if ((sel < 0) || (!StreamList->IsChecked(sel))) return;
+
+    LPSTREAM_DATA sd = (LPSTREAM_DATA)StreamList->GetClientData(sel);
+    bool aud = sd->si->codec_type == CODEC_TYPE_AUDIO,
+         sub = sd->si->codec_type == CODEC_TYPE_SUBTITLE;
+
+    if (aud || sub)
+    {
+        wxMenu popup;
+        for (unsigned int i = 1; i < Preset->Presets->GetCount(); i++)
+        {
+            LPFFQ_PRESET pst = (LPFFQ_PRESET)Preset->Presets->GetClientData(i);
+            if (aud || (pst->subtitles.codec != CODEC_SUBS_BURNIN))
+            {
+                wxMenuItem *mi = popup.AppendCheckItem((int)i, Preset->Presets->GetString(i));
+                mi->Check(sd->presets.Index(pst->preset_id.ToString()) >= 0);
+            }
+        }
+        StreamList->PopupMenu(&popup);
+    }
+}
+
+//---------------------------------------------------------------------------------------
+
 void FFQJobEditAdv::OnAction(wxCommandEvent& event)
 {
 
@@ -1330,8 +1404,8 @@ void FFQJobEditAdv::OnAction(wxCommandEvent& event)
 
         //Show details for a stream
         if (m_ViewText == NULL) m_ViewText = new FFQShowText(this);
-        LPFFPROBE_STREAM_INFO si = (LPFFPROBE_STREAM_INFO)StreamList->GetClientData(StreamList->GetSelection());
-        m_ViewText->Execute(FFQS(SID_STREAM_INFORMATION), si->items);
+        LPSTREAM_DATA sd = (LPSTREAM_DATA)StreamList->GetClientData(StreamList->GetSelection());
+        m_ViewText->Execute(FFQS(SID_STREAM_INFORMATION), sd->si->items);
 
     }
 

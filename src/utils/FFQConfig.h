@@ -86,6 +86,7 @@ class FFQConfig
 	    bool save_on_modify;
 	    bool validate_on_load;
 	    bool confirm_delete_jobs;
+	    bool preview_map_subs;
 
 	    wxString app_name;
 	    wxString batch_config;

@@ -146,10 +146,12 @@ class FFQBatchMake: public wxDialog
 
 		bool FindJobForDest(wxString dest);
 		//wxString GetStreamMapping(FFProbeInfoParser *pip, unsigned int file_id);
+
 		void GetStreamsFromParser(FFProbeInfoParser *pip, unsigned int file_id, wxString &stream_map);
 		//bool HasStreamFromParser(LPFFPROBE_STREAM_INFO si);
-        bool IncludeAudioStream(LPFFPROBE_STREAM_INFO si);
-        bool IncludeSubtitleStream(LPFFPROBE_STREAM_INFO si);
+        //bool IncludeAudioStream(LPFFPROBE_STREAM_INFO si);
+        //bool IncludeSubtitleStream(LPFFPROBE_STREAM_INFO si);
+        bool IncludeStream(LPFFPROBE_STREAM_INFO si, wxString search_for, bool find_language, bool invert_result);
 		void LogLine(wxString line, unsigned int color);
 		void MakeJobs(bool dry_run);
 		void SaveConfig();

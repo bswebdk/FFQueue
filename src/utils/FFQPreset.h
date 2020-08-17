@@ -55,7 +55,10 @@ typedef struct FFQ_PRESET
              audio_quality, //Audio quality settings
              audio_channels, //Number of audio channels
              audio_profile, //Audio profile
-             meta_data, //Meta data to embed in target file
+             meta_data, //Global meta data to embed in target file
+             meta_data_v, //Video specific meta data
+             meta_data_a, //Audio specific meta data
+             meta_data_s, //Subtitle specific meta data
              pixel_format, //The pixel format to use
              trellis, //Trellis settings
              threads, //Number of threads to use
@@ -65,6 +68,7 @@ typedef struct FFQ_PRESET
              output_format, //Output format
              custom_args_1, //Custom command line arguments for 1st pass
              custom_args_2, //As "custom_args_1" but for second pass
+             disposition, //Video,Audio,Subtitle disposition
              finger_print; //Used to auto detect preset (see FFQJobEditAdv::GetPresetFingerPrint)
 
     wxArrayString filters; //The video and audio filters

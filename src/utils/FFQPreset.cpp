@@ -54,11 +54,15 @@ const wxString PRESET_AUDIO_FILTERS_COMPLEX = "af_complex";
 const wxString PRESET_FASTSTART = "faststart";
 const wxString PRESET_KEEP_FILETIME = "keep_filetime";
 const wxString PRESET_METADATA = "metadata";
+const wxString PRESET_METADATA_V = "metadata_v";
+const wxString PRESET_METADATA_A = "metadata_a";
+const wxString PRESET_METADATA_S = "metadata_s";
 const wxString PRESET_PIXEL_FMT = "pixel_fmt";
 const wxString PRESET_ASPECT = "aspect_ratio";
 const wxString PRESET_OUTPUT_FORMAT = "output_format";
 const wxString PRESET_CUSTOM_ARGS = "custom_args";
 const wxString PRESET_CUSTOM_ARGS_2 = "custom_args_2";
+const wxString PRESET_DISPOSITION = "disposition";
 const wxString PRESET_SUBTITLE = "subtitle";
 const wxString PRESET_FOURCC = "fourcc";
 const wxString PRESET_THUMBS = "thumbs";
@@ -125,6 +129,9 @@ FFQ_PRESET::FFQ_PRESET(wxString &preset)
         else if (n == PRESET_FASTSTART) mf_faststart = (v == STR_YES);
         else if (n == PRESET_KEEP_FILETIME) keep_filetime = (v == STR_YES);
         else if (n == PRESET_METADATA) meta_data = v;
+        else if (n == PRESET_METADATA_V) meta_data_v = v;
+        else if (n == PRESET_METADATA_A) meta_data_a = v;
+        else if (n == PRESET_METADATA_S) meta_data_s = v;
         else if (n == PRESET_PIXEL_FMT) pixel_format = v;
         else if (n == PRESET_TRELLIS) trellis = v;
         else if (n == PRESET_THREADS) threads = v;
@@ -134,6 +141,7 @@ FFQ_PRESET::FFQ_PRESET(wxString &preset)
         else if (n == PRESET_OUTPUT_FORMAT) output_format = v;
         else if (n == PRESET_CUSTOM_ARGS) custom_args_1 = v;
         else if (n == PRESET_CUSTOM_ARGS_2) custom_args_2 = v;
+        else if (n == PRESET_DISPOSITION) disposition = v;
         else if (n == PRESET_FINGER_PRINT) finger_print = v;
         else if (n == PRESET_SUBTITLE)
         {
@@ -233,6 +241,9 @@ void FFQ_PRESET::Reset(bool new_preset)
     audio_profile = "";
     frame_rate = "";
     meta_data = "";
+    meta_data_v = "";
+    meta_data_a = "";
+    meta_data_s = "";
     pixel_format = "";
     trellis = "";
     threads = "";
@@ -242,6 +253,7 @@ void FFQ_PRESET::Reset(bool new_preset)
     output_format = "";
     custom_args_1 = "";
     custom_args_2 = "";
+    disposition = "";
     finger_print = "";
 
     fourcc.vids = "";
@@ -337,6 +349,9 @@ wxString FFQ_PRESET::ToString()
     if (mf_faststart) res += PRESET_FASTSTART + "=" + STR_YES + CRLF;
     if (keep_filetime) res += PRESET_KEEP_FILETIME + "=" + STR_YES + CRLF;
     if (meta_data.Len() > 0) res += PRESET_METADATA + "=" + meta_data + CRLF;
+    if (meta_data_v.Len() > 0) res += PRESET_METADATA_V + "=" + meta_data_v + CRLF;
+    if (meta_data_a.Len() > 0) res += PRESET_METADATA_A + "=" + meta_data_a + CRLF;
+    if (meta_data_s.Len() > 0) res += PRESET_METADATA_S + "=" + meta_data_s + CRLF;
     if (pixel_format.Len() > 0) res += PRESET_PIXEL_FMT + "=" + pixel_format + CRLF;
     if (trellis.Len() > 0) res += PRESET_TRELLIS + "=" + trellis + CRLF;
     if (threads.Len() > 0) res += PRESET_THREADS + "=" + threads + CRLF;
@@ -346,6 +361,7 @@ wxString FFQ_PRESET::ToString()
     if (output_format.Len() > 0) res += PRESET_OUTPUT_FORMAT + "=" + output_format + CRLF;
     if (custom_args_1.Len() > 0) res += PRESET_CUSTOM_ARGS + "=" + custom_args_1 + CRLF;
     if (custom_args_2.Len() > 0) res += PRESET_CUSTOM_ARGS_2 + "=" + custom_args_2 + CRLF;
+    if (disposition.Len() > 0) res += PRESET_DISPOSITION + "=" + disposition + CRLF;
     if (finger_print.Len() > 0) res += PRESET_FINGER_PRINT + "=" + finger_print + CRLF;
     if (subs.Len() > 0) res += PRESET_SUBTITLE + "=" + subs + CRLF;
     if (segm.Len() > 0) res += PRESET_SEGMENTING + "=" + segm + CRLF;
