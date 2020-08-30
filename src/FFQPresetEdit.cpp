@@ -542,7 +542,7 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 	VideoPage->SetSizer(FlexGridSizer13);
 	FlexGridSizer13->Fit(VideoPage);
 	FlexGridSizer13->SetSizeHints(VideoPage);
-	AudioPage = new wxPanel(Pages, ID_AUDIOPAGE, wxDefaultPosition, wxDefaultSize, wxNO_BORDER|wxTAB_TRAVERSAL, _T("ID_AUDIOPAGE"));
+	AudioPage = new wxPanel(Pages, ID_AUDIOPAGE, wxDefaultPosition, wxDefaultSize, wxBORDER_NONE|wxTAB_TRAVERSAL, _T("ID_AUDIOPAGE"));
 	FlexGridSizer3 = new wxFlexGridSizer(4, 1, 0, 0);
 	FlexGridSizer3->AddGrowableCol(0);
 	ASBS1 = new wxStaticBoxSizer(wxVERTICAL, AudioPage, _T("Cd"));

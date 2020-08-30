@@ -563,7 +563,7 @@ wxString MakeLogFileName(wxString &forFile)
 //---------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------------
 
-void EnableSizer(wxSizer *sizer, bool enable, const long *skip)
+void EnableSizer(wxSizer *sizer, bool enable, const long *skip, const unsigned int skip_count)
 {
 
     //Enables or disables all controls or sub-sizers in a sizer
@@ -583,7 +583,7 @@ void EnableSizer(wxSizer *sizer, bool enable, const long *skip)
         else
         {
             bool ok = true;
-            for (unsigned int ii = 0; (ii < sizeof(skip) / sizeof(*skip)) && ok; ii++) ok = (ctrl->GetId() != skip[ii]);
+            for (unsigned int ii = 0; (ii < skip_count) && ok; ii++) ok = (ctrl->GetId() != skip[ii]);
             if (ok) ctrl->Enable(enable);
         }
     }

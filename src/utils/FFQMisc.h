@@ -101,7 +101,7 @@ bool IsValidFrameRate(wxString frame_rate);
 wxString MakeLogFileName(wxString &for_file);
 
 //UI related function
-void EnableSizer(wxSizer *sizer, bool enable, const long *skip = NULL);
+void EnableSizer(wxSizer *sizer, bool enable, const long *skip = NULL, const unsigned int skip_count = 0);
 void ListBoxMoveSelectedItems(wxListBox *lb, bool up, bool is_check_list_box);
 void ListBoxSwapItems(wxListBox *lb, unsigned int a, unsigned int b, bool is_check_list_box);
 

@@ -361,7 +361,7 @@ bool FFQJobEditAdv::Execute(LPFFQ_JOB job)
         bool force_save_cfg = StoreCommand(&job->cmd_line);
 
         LPFFQ_PRESET pst = Preset->GetSelectedPreset();
-        if (pst == NULL) memset(&job->preset_id, 0, sizeof(job->preset_id));
+        if (pst == NULL) job->preset_id.Reset();// memset(&job->preset_id, 0, sizeof(job->preset_id));
         else
         {
             job->preset_id = pst->preset_id;

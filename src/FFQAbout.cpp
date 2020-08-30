@@ -107,7 +107,7 @@ FFQAbout::FFQAbout(wxWindow* parent,wxWindowID id)
 	FlexGridSizer1->AddGrowableCol(0);
 	FlexGridSizer2 = new wxFlexGridSizer(1, 2, 0, 0);
 	FlexGridSizer2->AddGrowableCol(1);
-	StaticBitmap = new wxStaticBitmap(this, ID_STATICBITMAP, wxNullBitmap, wxDefaultPosition, wxSize(100,100), wxNO_BORDER, _T("ID_STATICBITMAP"));
+	StaticBitmap = new wxStaticBitmap(this, ID_STATICBITMAP, wxNullBitmap, wxDefaultPosition, wxSize(100,100), wxBORDER_NONE, _T("ID_STATICBITMAP"));
 	FlexGridSizer2->Add(StaticBitmap, 0, wxALL|wxALIGN_LEFT|wxALIGN_TOP, 5);
 	FlexGridSizer3 = new wxFlexGridSizer(3, 1, 0, 0);
 	FlexGridSizer3->AddGrowableCol(0);
@@ -122,7 +122,7 @@ FFQAbout::FFQAbout(wxWindow* parent,wxWindowID id)
 	Info = new wxStaticText(this, wxID_ANY, _("gui"), wxDefaultPosition, wxDefaultSize, 0, _T("wxID_ANY"));
 	Info->SetLabel(GUI_2);
 	FlexGridSizer5->Add(Info, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
-	Link = new wxHyperlinkCtrl(this, wxID_ANY, _("www"), wxEmptyString, wxDefaultPosition, wxDefaultSize, wxHL_CONTEXTMENU|wxHL_ALIGN_CENTRE|wxNO_BORDER, _T("wxID_ANY"));
+	Link = new wxHyperlinkCtrl(this, wxID_ANY, _("www"), wxEmptyString, wxDefaultPosition, wxDefaultSize, wxHL_CONTEXTMENU|wxHL_ALIGN_CENTRE, _T("wxID_ANY"));
 	Link->SetLabel(GUI_3);
 	Link->SetURL(GUI_4);
 	FlexGridSizer5->Add(Link, 1, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 5);
@@ -132,12 +132,12 @@ FFQAbout::FFQAbout(wxWindow* parent,wxWindowID id)
 	Bacon = new wxStaticText(this, wxID_ANY, _("100%"), wxDefaultPosition, wxDefaultSize, 0, _T("wxID_ANY"));
 	Bacon->SetLabel(GUI_5);
 	FlexGridSizer4->Add(Bacon, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
-	AnimPanel = new wxPanel(this, ID_ANIMPANEL, wxDefaultPosition, wxDefaultSize, wxNO_BORDER|wxTAB_TRAVERSAL, _T("ID_ANIMPANEL"));
+	AnimPanel = new wxPanel(this, ID_ANIMPANEL, wxDefaultPosition, wxDefaultSize, wxBORDER_NONE|wxTAB_TRAVERSAL, _T("ID_ANIMPANEL"));
 	FlexGridSizer4->Add(AnimPanel, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	FlexGridSizer3->Add(FlexGridSizer4, 1, wxALL|wxEXPAND, 0);
 	FlexGridSizer2->Add(FlexGridSizer3, 1, wxALL|wxEXPAND, 5);
 	FlexGridSizer1->Add(FlexGridSizer2, 1, wxALL|wxEXPAND, 5);
-	TextCtrl = new wxTextCtrl(this, ID_TEXTCTRL, wxEmptyString, wxDefaultPosition, wxSize(500,300), wxTE_MULTILINE|wxTE_READONLY|wxTE_RICH|wxSTATIC_BORDER, wxDefaultValidator, _T("ID_TEXTCTRL"));
+	TextCtrl = new wxTextCtrl(this, ID_TEXTCTRL, wxEmptyString, wxDefaultPosition, wxSize(500,300), wxTE_MULTILINE|wxTE_READONLY|wxTE_RICH|wxBORDER_STATIC, wxDefaultValidator, _T("ID_TEXTCTRL"));
 	FlexGridSizer1->Add(TextCtrl, 0, wxALL|wxEXPAND, 5);
 	BoxSizer1 = new wxBoxSizer(wxHORIZONTAL);
 	BoxSizer1->Add(-1,-1,1, wxALL|wxEXPAND, 5);

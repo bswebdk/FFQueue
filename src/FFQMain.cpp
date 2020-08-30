@@ -2265,6 +2265,7 @@ void FFQMain::OnToolBarButtonClick(wxCommandEvent& event)
     {
 
         //Handler used to test all sorts of madness
+
         wxArrayString as;
         as.Add("kjh");
         as.Add("kjh");

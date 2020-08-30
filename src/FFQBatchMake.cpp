@@ -590,16 +590,16 @@ bool FFQBatchMake::IncludeStream(LPFFPROBE_STREAM_INFO si, wxString search_for, 
     //Test if the applied stream matches the criteria for inclusion
     if (search_for.Len() == 0) return true;
     bool match = false;
-    wxString lng, s = m_FindSubs, t;
+    wxString lng, s;
     if (find_language)
     {
         FFQ_NVP_LIST *nvp = si->items->Find("tag:language", false);
         if (nvp) lng = nvp->value.Lower();
     }
-    while ((!match) && (s.Len() > 0))
+    while ((!match) && (search_for.Len() > 0))
     {
-        t = GetToken(s, " ");
-        match = ((lng.Find(t) >= 0) || (si->codec_name.Lower().Find(t) >= 0) || (si->codec_long_name.Lower().Find(t) >= 0));
+        s = GetToken(search_for, " ");
+        match = ((lng.Find(s) >= 0) || (si->codec_name.Lower().Find(s) >= 0) || (si->codec_long_name.Lower().Find(s) >= 0));
     }
     return invert_result ? !match : match;
 }
