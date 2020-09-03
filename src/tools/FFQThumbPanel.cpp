@@ -79,8 +79,8 @@ FFQThumbPanel::FFQThumbPanel(wxWindow* parent,wxWindowID id)
 
 
 	//(*Initialize(FFQThumbPanel)
-	wxFlexGridSizer* FlexGridSizer8;
 	wxFlexGridSizer* FlexGridSizer7;
+	wxFlexGridSizer* FlexGridSizer8;
 	wxFlexGridSizer* MakeSizer;
 
 	Create(parent, id, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, _T("id"));
@@ -137,7 +137,7 @@ FFQThumbPanel::FFQThumbPanel(wxWindow* parent,wxWindowID id)
 	TimeSizer = new wxFlexGridSizer(1, 1, 0, 0);
 	TimeSizer->AddGrowableCol(0);
 	TimeSizer->AddGrowableRow(0);
-	StartTime = new wxHyperlinkCtrl(this, ID_STARTTIME, _T("Start Time"), wxEmptyString, wxDefaultPosition, wxDefaultSize, wxHL_CONTEXTMENU|wxHL_ALIGN_CENTRE|wxNO_BORDER, _T("ID_STARTTIME"));
+	StartTime = new wxHyperlinkCtrl(this, ID_STARTTIME, _T("Start Time"), wxEmptyString, wxDefaultPosition, wxDefaultSize, wxHL_CONTEXTMENU|wxHL_ALIGN_CENTRE, _T("ID_STARTTIME"));
 	TimeSizer->Add(StartTime, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
 	FGS_Main->Add(TimeSizer, 1, wxALL|wxEXPAND, 2);
 	FreqSizer = new wxFlexGridSizer(2, 1, 0, 0);
@@ -321,7 +321,7 @@ void FFQThumbPanel::UpdateControls()
 {
 
     StartTime->SetLabelText(FFQSF(SID_CREATE_FIRST_THUMB_FROM,  (m_StartTime.IsUndefined() ? FFQS(SID_THE_BEGINNING) : m_StartTime.ToString())));
-    TimeSizer->RecalcSizes();
+    //TimeSizer->RecalcSizes();
     TimeSizer->Layout();
 
     bool makeAny = MakeThumbs->GetValue() || MakeTiles->GetValue();

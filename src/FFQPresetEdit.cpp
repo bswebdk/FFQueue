@@ -195,11 +195,11 @@ const wxString METADATA_FIELDS = "title,author,album_artist,album,grouping,compo
 //---------------------------------------------------------------------------------------
 
 const wxString VSYNC_FORMAT = "%s (%s)";
-const long FFQPresetEdit::ID_ADD_FILTER_MENU_BASE = wxNewId();
 
 //---------------------------------------------------------------------------------------
 
 const int DISPOSITION_MENU_ID_COUNT = 30;
+const int FILTER_MENU_BASE_ID = 1000;
 
 //---------------------------------------------------------------------------------------
 
@@ -997,7 +997,6 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 
         int f = FILTER_ORDER[i];
 
-        //if (f == -1) AddFilterMenu.Append(new wxMenuItem(&AddFilterMenu)); //Separator
         if (f == -1)
         {
 
@@ -1009,11 +1008,8 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
         else
         {
 
-            wxMenuItem *mi = new wxMenuItem(cur, ID_ADD_FILTER_MENU_BASE + f, FFQL()->FILTER_NAMES[f], wxEmptyString, wxITEM_NORMAL);
+            wxMenuItem *mi = new wxMenuItem(cur, FILTER_MENU_BASE_ID + f, FFQL()->FILTER_NAMES[f], wxEmptyString, wxITEM_NORMAL);
             cur->Append(mi);
-            //wxMenuItem *mi = new wxMenuItem((&AddFilterMenu), ID_ADD_FILTER_MENU_BASE + f, FFQL()->FILTER_NAMES[f], wxEmptyString, wxITEM_NORMAL);
-            //AddFilterMenu.Append(mi);
-            Connect(ID_ADD_FILTER_MENU_BASE + f, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&FFQPresetEdit::OnButtonClick);
 
         }
 
@@ -1043,7 +1039,6 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
     m_MetaData.SetCount(4); //Global, Video, Audio, Subtitles
 
     //Items for dispositions
-    Bind(wxEVT_COMMAND_MENU_SELECTED, &FFQPresetEdit::OnMenuSelected, this);
     as = FFQL()->GetStringArray(SID_PRESET_METADATA_FOR_ITEMS, 4);
     for (unsigned int i = 0; i < 3; i++)
     {
@@ -1056,6 +1051,9 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
         DispositionsMenu.AppendSubMenu(m_DispositionMenus[i], as[i+1]);
     }
     delete[] as;
+
+    //Bind menu handler for both filters and dispositions
+    Bind(wxEVT_COMMAND_MENU_SELECTED, &FFQPresetEdit::OnMenuSelected, this);
 
     FilterEditor = NULL;
 
@@ -1893,7 +1891,7 @@ void FFQPresetEdit::UpdateFilterMenu()
         int f = FILTER_ORDER[i];
         if (f != -1)
         {
-            wxMenuItem *mi = AddFilterMenu.FindItem(ID_ADD_FILTER_MENU_BASE + f);
+            wxMenuItem *mi = AddFilterMenu.FindItem(FILTER_MENU_BASE_ID + f);
             if (mi) mi->Enable(FFQCFG()->AreFiltersAvailable(FILTER_NAMES[f]));
         }
     }
@@ -2048,13 +2046,67 @@ void FFQPresetEdit::UpdateVideoPages(bool sizers)
 
 void FFQPresetEdit::OnMenuSelected(wxCommandEvent &event)
 {
-    int mid = event.GetId(), sid = 0;
-    while (mid >= DISPOSITION_MENU_ID_COUNT)
+    int mid = event.GetId(), idx = 0;
+
+    if (mid >= FILTER_MENU_BASE_ID)
     {
-        mid -= DISPOSITION_MENU_ID_COUNT;
-        sid++;
+
+        //Filter menu selected
+        FFMPEG_FILTER fltr;
+        fltr.type = (FILTER_TYPE)(mid - FILTER_MENU_BASE_ID);
+        idx = FindFilter(fltr.type);
+        wxString *fs;
+
+        if ((fltr.type == ftDEINTERLACE) && (idx != -1)) ShowInfo(FFQS(SID_PRESET_ONLY_ONE_DEINTERLACE));
+
+        else if (!fltr.IsEditable())
+        {
+
+            wxString a, b;
+
+            if (fltr.type == ftEARWAX)
+            {
+                a = FILTER_AUDIO_IN;
+                b = FILTER_AUDIO_OUT;
+            }
+            else
+            {
+                a = FILTER_VIDEO_IN;
+                b = FILTER_VIDEO_OUT;
+            }
+
+            fltr.ff_filter = a + FILTER_NAMES[fltr.type] + b;
+            fltr.friendly = FFQS(SID_FILTER_NAME_BASE + fltr.type);
+
+            fs = new wxString(fltr.ToString());
+            idx = FilterList->Append(fltr.friendly, (void*)fs);
+
+        }
+
+        else if (EditFilter(&fltr))
+        {
+
+            fs = new wxString(fltr.ToString());
+            if (fltr.type == ftDEINTERLACE) idx = FilterList->Insert(fltr.friendly, 0, (void*)fs);
+            else idx = FilterList->Append(fltr.friendly, (void*)fs);
+
+        }
+
+        FilterList->Deselect(-1);
+        FilterList->SetSelection(idx);
+        FilterList->SetFocus();
+
     }
-    m_DispositionSelection[sid] = mid;
+    else
+    {
+        //Dispositions menu selected
+        while (mid >= DISPOSITION_MENU_ID_COUNT)
+        {
+            mid -= DISPOSITION_MENU_ID_COUNT;
+            idx++;
+        }
+        m_DispositionSelection[idx] = mid;
+    }
 }
 
 //---------------------------------------------------------------------------------------
@@ -2159,54 +2211,6 @@ void FFQPresetEdit::OnButtonClick(wxCommandEvent& event)
     {
 
         PreviewFilters();
-
-    }
-
-    else if (evtId >= ID_ADD_FILTER_MENU_BASE)
-    {
-
-        fltr.type = (FILTER_TYPE)(evtId - ID_ADD_FILTER_MENU_BASE);
-        idx = FindFilter(fltr.type);
-        wxString *fs;
-
-        if ((fltr.type == ftDEINTERLACE) && (idx != -1)) ShowInfo(FFQS(SID_PRESET_ONLY_ONE_DEINTERLACE));
-
-        else if (!fltr.IsEditable())
-        {
-
-            wxString a, b;
-
-            if (fltr.type == ftEARWAX)
-            {
-                a = FILTER_AUDIO_IN;
-                b = FILTER_AUDIO_OUT;
-            }
-            else
-            {
-                a = FILTER_VIDEO_IN;
-                b = FILTER_VIDEO_OUT;
-            }
-
-            fltr.ff_filter = a + FILTER_NAMES[fltr.type] + b;
-            fltr.friendly = FFQS(SID_FILTER_NAME_BASE + fltr.type);
-
-            fs = new wxString(fltr.ToString());
-            idx = FilterList->Append(fltr.friendly, (void*)fs);
-
-        }
-
-        else if (EditFilter(&fltr))
-        {
-
-            fs = new wxString(fltr.ToString());
-            if (fltr.type == ftDEINTERLACE) idx = FilterList->Insert(fltr.friendly, 0, (void*)fs);
-            else idx = FilterList->Append(fltr.friendly, (void*)fs);
-
-        }
-
-        FilterList->Deselect(-1);
-        FilterList->SetSelection(idx);
-        FilterList->SetFocus();
 
     }
 

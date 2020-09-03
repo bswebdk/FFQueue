@@ -31,9 +31,9 @@ Negate::Negate(wxWindow* parent) : FilterBasePanel(parent)
     bs = new wxBoxSizer(wxVERTICAL);
 
     m_Alpha = new wxCheckBox(this, wxID_ANY, FFQS(SID_NEGATE_ALPHA_CHANNEL), wxDefaultPosition, wxDefaultSize, 0);
-    bs->Add(m_Alpha, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 10);
+    bs->Add(m_Alpha, 1, wxALL|wxALIGN_LEFT/*|wxALIGN_CENTER_VERTICAL*/, 10);
 
-    bs->Add(GetTimeLimitControls(true), 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 0);
+    bs->Add(GetTimeLimitControls(true), 1, wxALL|wxALIGN_LEFT/*|wxALIGN_CENTER_VERTICAL*/, 0);
 
     SetSizer(bs);
     bs->Fit(this);

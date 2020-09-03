@@ -45,24 +45,24 @@ Vignette::Vignette(wxWindow* parent) : FilterBasePanel(parent)
 
         bs = new wxBoxSizer(wxVERTICAL);
         m_Centered = new wxCheckBox(this, wxID_ANY, FFQS(SID_VIGNETTE_CALC_CENTER_COORDS));
-        bs->Add(m_Centered, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
-        bs->Add(GetLeftAndTopControls(iVal), 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
+        bs->Add(m_Centered, 1, wxALL|wxALIGN_LEFT, 3);
+        bs->Add(GetLeftAndTopControls(iVal), 1, wxALL|wxALIGN_LEFT, 3);
 
-    fgs->Add(bs, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 3);
+    fgs->Add(bs, 1, wxALL|wxEXPAND/*|wxALIGN_CENTER_VERTICAL*/, 3);
 
-    fgs->Add(-1, -1, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 3);
+    fgs->Add(-1, -1, 1, wxALL|wxEXPAND/*|wxALIGN_CENTER_VERTICAL*/, 3);
     m_Forward = new wxCheckBox(this, wxID_ANY, FFQS(SID_VIGNETTE_FORWARD));
     fgs->Add(m_Forward, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
 
-    fgs->Add(-1, -1, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 3);
+    fgs->Add(-1, -1, 1, wxALL|wxEXPAND/*|wxALIGN_CENTER_VERTICAL*/, 3);
     m_PerFrame = new wxCheckBox(this, wxID_ANY, FFQS(SID_VIGNETTE_CALC_EACH_FRAME));
     fgs->Add(m_PerFrame, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
 
-    fgs->Add(-1, -1, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 3);
+    fgs->Add(-1, -1, 1, wxALL|wxEXPAND/*|wxALIGN_CENTER_VERTICAL*/, 3);
     m_Flicker = new wxCheckBox(this, wxID_ANY, FFQS(SID_VIGNETTE_APPLY_FLICKER));
     fgs->Add(m_Flicker, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
 
-    fgs->Add(-1, -1, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 3);
+    fgs->Add(-1, -1, 1, wxALL|wxEXPAND/*|wxALIGN_CENTER_VERTICAL*/, 3);
     m_Dither = new wxCheckBox(this, wxID_ANY, FFQS(SID_VIGNETTE_REDUCE_BANDING));
     fgs->Add(m_Dither, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
 

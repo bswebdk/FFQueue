@@ -188,29 +188,29 @@ void Unsharp::MakeSizeGroup(wxSizer *sizer, wxString caption, wxSlider **sX, wxS
     //Softer|Sharper|Smaller|Larger|None|Luma|Chroma|X|Y|Lock values
 
     MakeLabel(power ? m_Labels[0] : m_Labels[2], fgsx, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL);
-    MakeLabel(power ? m_Labels[4] : _T(""), fgsx, wxALL|wxALIGN_CENTER|wxALIGN_CENTER_VERTICAL);
+    MakeLabel(power ? m_Labels[4] : _T(""), fgsx, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL);
     MakeLabel(power ? m_Labels[1] : m_Labels[3], fgsx, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL);
 
-    fgs->Add(50, -1, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 0);
-    fgs->Add(fgsx, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 0);
+    fgs->Add(50, -1, 1, wxALL|wxEXPAND/*|wxALIGN_CENTER_VERTICAL*/, 0);
+    fgs->Add(fgsx, 1, wxALL|wxEXPAND/*|wxALIGN_CENTER_VERTICAL*/, 0);
 
     MakeLabel(power ? m_Labels[5] : m_Labels[7], fgs);
     *sX = new wxSlider(this, wxID_ANY, 0, 0, power ? 200 : 30, wxDefaultPosition, wxSize(400, -1));
-    fgs->Add(*sX, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 0);
+    fgs->Add(*sX, 1, wxALL|wxEXPAND/*|wxALIGN_CENTER_VERTICAL*/, 0);
 
     MakeLabel(power ? m_Labels[6] : m_Labels[8], fgs);
     *sY = new wxSlider(this, wxID_ANY, 0, 0, power ? 200 : 30, wxDefaultPosition, wxSize(400, -1));
-    fgs->Add(*sY, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 0);
+    fgs->Add(*sY, 1, wxALL|wxEXPAND/*|wxALIGN_CENTER_VERTICAL*/, 0);
 
-    fgs->Add(-1, -1, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 0);
+    fgs->Add(-1, -1, 1, wxALL|wxEXPAND/*|wxALIGN_CENTER_VERTICAL*/, 0);
     fgsx = new wxFlexGridSizer(1, 2, 0, 0);
-    fgsx->Add(10, -1, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 0);
+    fgsx->Add(10, -1, 1, wxALL|wxEXPAND/*|wxALIGN_CENTER_VERTICAL*/, 0);
     *cL = new wxCheckBox(this, wxID_ANY, m_Labels[9]);
     fgsx->Add(*cL, 1, wxBOTTOM|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
     fgs->Add(fgsx, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 0);
 
-    sbs->Add(fgs, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 0);
+    sbs->Add(fgs, 1, wxALL|wxEXPAND/*|wxALIGN_CENTER_VERTICAL*/, 0);
 
-    sizer->Add(sbs, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 0);
+    sizer->Add(sbs, 1, wxALL|wxEXPAND/*|wxALIGN_CENTER_VERTICAL*/, 0);
 
 }

@@ -555,8 +555,8 @@ wxString MakeMetaData(wxString meta_data, wxString stream_tag)
 
 wxString MakeDisposition(wxString from, int index, wxString stream_tag)
 {
-    int disp = -1;
-    while ((from.Len() > 0) && (index-- >= 0)) disp = Str2Long(GetToken(from, ','), disp);
+    while ((from.Len() > 0) && (index-- > 0)) from = from.AfterFirst(',');
+    int disp = Str2Long(from.BeforeFirst(','), -1);
     if (disp >= 0)
     {
         if (stream_tag.Len() > 0) stream_tag = ":" + stream_tag;

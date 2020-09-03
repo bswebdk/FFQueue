@@ -95,6 +95,7 @@ bool FFQFilterEdit::Execute(LPFFMPEG_FILTER filter)
 
     //Add to container and fit window
     FilterContainer->Add(m_FilterPanel, 1, wxALL|wxEXPAND, 3);
+    FilterContainer->Layout();
 	GridSizer->Fit(this);
 	//GridSizer->SetSizeHints(this);
 

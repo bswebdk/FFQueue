@@ -28,8 +28,8 @@ VolumeAndTone::VolumeAndTone(wxWindow* parent) : FilterBasePanel(parent)
 
     SetControlPadding(5); //Label padding
 
-    wxFlexGridSizer *fgs1 = new wxFlexGridSizer(2, 5, 0, 0), //
-                    *fgs2 = new wxFlexGridSizer(3, 1, 0, 0);
+    wxFlexGridSizer *fgs1 = new wxFlexGridSizer(2, 5, 0, 0)/*, //
+                    *fgs2 = new wxFlexGridSizer(3, 1, 0, 0)*/;
 
     fgs1->AddGrowableCol(4);
 
@@ -40,12 +40,7 @@ VolumeAndTone::VolumeAndTone(wxWindow* parent) : FilterBasePanel(parent)
     MakeLabel(FFQS(SID_VOLTONE_TREBLE), fgs1, wxLEFT|wxRIGHT|wxALIGN_CENTER|wxALIGN_CENTER_VERTICAL);
     fgs1->Add(-1, -1, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 0);
 
-    //Bottom row: labels
-    fgs2->AddGrowableRow(1);
-    MakeLabel(_T("+20"), fgs2, wxLEFT|wxRIGHT|wxALIGN_RIGHT|wxALIGN_TOP);
-    MakeLabel(_T("0"), fgs2, wxLEFT|wxRIGHT|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL);
-    MakeLabel(_T("-20"), fgs2, wxLEFT|wxRIGHT|wxALIGN_RIGHT|wxALIGN_BOTTOM);
-    fgs1->Add(fgs2, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 0);
+    MakeSliderLabels(fgs1, _T("+20"), _T("0"), _T("-20"), true);
 
     //Bottom row - sliders
     m_Volume = new wxSlider(this, wxID_ANY, 20, 0, 40, wxDefaultPosition, wxSize(-1, 300), wxSL_VERTICAL|wxSL_INVERSE);

@@ -55,8 +55,8 @@ Noise::Noise(wxWindow* parent) : FilterBasePanel(parent)
         }
     }
     wxStaticBoxSizer *sbs = new wxStaticBoxSizer(wxVERTICAL, this, FFQS(SID_NOISE_SEED));
-    sbs->Add(fgsx, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 0);
-    fgs->Add(sbs, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 0);
+    sbs->Add(fgsx, 1, wxALL|wxALIGN_LEFT/*|wxALIGN_CENTER_VERTICAL*/, 0);
+    fgs->Add(sbs, 1, wxALL|wxEXPAND/*|wxALIGN_CENTER_VERTICAL*/, 0);
 
     //Strengths
     fgsx = new wxFlexGridSizer(3, 6, 1, 10);
@@ -76,8 +76,8 @@ Noise::Noise(wxWindow* parent) : FilterBasePanel(parent)
         }
     }
     sbs = new wxStaticBoxSizer(wxVERTICAL, this, FFQS(SID_NOISE_STRENGTH));
-    sbs->Add(fgsx, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 0);
-    fgs->Add(sbs, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 0);
+    sbs->Add(fgsx, 1, wxALL|wxALIGN_LEFT/*|wxALIGN_CENTER_VERTICAL*/, 0);
+    fgs->Add(sbs, 1, wxALL|wxEXPAND/*|wxALIGN_CENTER_VERTICAL*/, 0);
 
     //Flags
     fgsx = new wxFlexGridSizer(COMPONENT_COUNT, 6, 0, 0);
@@ -100,8 +100,8 @@ Noise::Noise(wxWindow* parent) : FilterBasePanel(parent)
     }
     delete[] fn;
     sbs = new wxStaticBoxSizer(wxVERTICAL, this, FFQS(SID_NOISE_FLAGS));
-    sbs->Add(fgsx, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 0);
-    fgs->Add(sbs, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 0);
+    sbs->Add(fgsx, 1, wxALL|wxALIGN_LEFT/*|wxALIGN_CENTER_VERTICAL*/, 0);
+    fgs->Add(sbs, 1, wxALL|wxEXPAND/*|wxALIGN_CENTER_VERTICAL*/, 0);
 
     delete[] cn;
 

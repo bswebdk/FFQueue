@@ -28,15 +28,15 @@
 
 #ifndef WX_PRECOMP
 	//(*HeadersPCH(FFQThumbPanel)
-	#include <wx/combobox.h>
 	#include <wx/checkbox.h>
-	#include <wx/sizer.h>
+	#include <wx/choice.h>
+	#include <wx/combobox.h>
 	#include <wx/hyperlink.h>
-	#include <wx/radiobut.h>
 	#include <wx/panel.h>
+	#include <wx/radiobut.h>
+	#include <wx/sizer.h>
 	#include <wx/stattext.h>
 	#include <wx/textctrl.h>
-	#include <wx/choice.h>
 	//*)
 #endif
 //(*Headers(FFQThumbPanel)
@@ -59,35 +59,35 @@ class FFQThumbPanel: public wxPanel
 		void UpdateControls();
 
 		//(*Declarations(FFQThumbPanel)
-		wxComboBox* ImgFormat;
-		wxTextCtrl* Columns;
-		wxChoice* ImgDest;
-		wxFlexGridSizer* WidthSizer;
-		wxRadioButton* EveryCustom;
-		wxStaticText* ST2;
-		wxStaticText* ST1;
-		wxStaticText* ST7;
-		wxTextCtrl* Width;
-		wxStaticText* ST8;
-		wxStaticText* ST5;
-		wxTextCtrl* Rows;
-		wxFlexGridSizer* FreqSizer;
-		wxFlexGridSizer* TimeSizer;
-		wxFlexGridSizer* FGS_Main;
-		wxStaticText* ST4;
-		wxTextCtrl* MaxTiles;
-		wxTextCtrl* CustFreq;
-		wxFlexGridSizer* AmountSizer;
-		wxFlexGridSizer* MosaicSizer;
-		wxCheckBox* MakeTiles;
 		wxCheckBox* MakeThumbs;
-		wxStaticText* ST3;
+		wxCheckBox* MakeTiles;
 		wxChoice* CustFreqType;
-		wxHyperlinkCtrl* StartTime;
-		wxTextCtrl* MaxThumbs;
-		wxRadioButton* EveryScene;
+		wxChoice* ImgDest;
+		wxComboBox* ImgFormat;
+		wxFlexGridSizer* AmountSizer;
 		wxFlexGridSizer* DestSizer;
+		wxFlexGridSizer* FGS_Main;
+		wxFlexGridSizer* FreqSizer;
+		wxFlexGridSizer* MosaicSizer;
+		wxFlexGridSizer* TimeSizer;
+		wxFlexGridSizer* WidthSizer;
+		wxHyperlinkCtrl* StartTime;
+		wxRadioButton* EveryCustom;
+		wxRadioButton* EveryScene;
+		wxStaticText* ST1;
+		wxStaticText* ST2;
+		wxStaticText* ST3;
+		wxStaticText* ST4;
+		wxStaticText* ST5;
 		wxStaticText* ST6;
+		wxStaticText* ST7;
+		wxStaticText* ST8;
+		wxTextCtrl* Columns;
+		wxTextCtrl* CustFreq;
+		wxTextCtrl* MaxThumbs;
+		wxTextCtrl* MaxTiles;
+		wxTextCtrl* Rows;
+		wxTextCtrl* Width;
 		//*)
 
 	protected:

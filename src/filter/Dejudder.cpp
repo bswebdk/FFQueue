@@ -35,23 +35,23 @@ Dejudder::Dejudder(wxWindow* parent) : FilterBasePanel(parent)
     bs = new wxBoxSizer(wxVERTICAL);
 
     m_Film2NTSC = new wxRadioButton(this, wxID_ANY, FFQS(SID_DEJUDDER_FILM_2_NTSC), wxDefaultPosition, wxDefaultSize, 0);
-    bs->Add(m_Film2NTSC, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
+    bs->Add(m_Film2NTSC, 1, wxALL|wxALIGN_LEFT/*|wxALIGN_CENTER_VERTICAL*/, 5);
 
     m_PAL2NTSC = new wxRadioButton(this, wxID_ANY, FFQS(SID_DEJUDDER_PAL_2_NTSC), wxDefaultPosition, wxDefaultSize, 0);
-    bs->Add(m_PAL2NTSC, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
+    bs->Add(m_PAL2NTSC, 1, wxALL|wxALIGN_LEFT/*|wxALIGN_CENTER_VERTICAL*/, 5);
 
     m_MixBoth = new wxRadioButton(this, wxID_ANY, FFQS(SID_DEJUDDER_MIX_OF_BOTH), wxDefaultPosition, wxDefaultSize, 0);
-    bs->Add(m_MixBoth, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
+    bs->Add(m_MixBoth, 1, wxALL|wxALIGN_LEFT/*|wxALIGN_CENTER_VERTICAL*/, 5);
 
         fgs = new wxFlexGridSizer(1, 2, 0, 0);
         fgs->AddGrowableCol(1);
         m_Custom = new wxRadioButton(this, wxID_ANY, FFQS(SID_DEJUDDER_CUSTOM), wxDefaultPosition, wxDefaultSize, 0);
-        fgs->Add(m_Custom, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
+        fgs->Add(m_Custom, 1, wxALL|wxALIGN_LEFT/*|wxALIGN_CENTER_VERTICAL*/, 3);
         m_Cycle = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(80, -1), 0);
         m_Cycle->SetValidator(iVal);
-        fgs->Add(m_Cycle, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
+        fgs->Add(m_Cycle, 1, wxALL|wxALIGN_LEFT/*|wxALIGN_CENTER_VERTICAL*/, 3);
 
-    bs->Add(fgs, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 2);
+    bs->Add(fgs, 1, wxALL|wxALIGN_LEFT/*|wxALIGN_CENTER_VERTICAL*/, 2);
 
     SetSizer(bs);
     bs->Fit(this);

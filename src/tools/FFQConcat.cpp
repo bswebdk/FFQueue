@@ -1063,11 +1063,11 @@ void FFQConcat::UpdateControls()
 
     wxString s = (m_ImgCount == 0) ? "No" : ToStr(m_ImgCount);
     SSFrameStatus->SetLabelText(FFQSF(SID_CONCAT_IMAGES_FOUND, s));
-    Sizer1->RecalcSizes();
+    //Sizer1->RecalcSizes();
     Sizer1->Layout();
 
     LimitDest->SetLabelText(FFQSF(SID_LIMIT_LENGTH, (m_LimitLen.IsUndefined() ? FFQS(SID_NO_LIMIT) : m_LimitLen.ToString())));
-    Sizer2->RecalcSizes();
+    //Sizer2->RecalcSizes();
     Sizer2->Layout();
 
     long s_first = -1, s_last = -1, s_count = 0, vids = 0, auds = 0;

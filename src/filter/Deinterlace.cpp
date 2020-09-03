@@ -56,11 +56,11 @@ Deinterlace::Deinterlace(wxWindow* parent) : FilterBasePanel(parent)
 	m_KernDeint = new wxRadioButton(this, wxID_ANY, as[1]);
     m_KernDeint->Bind(wxEVT_RADIOBUTTON, &Deinterlace::OnAction, this);
 	fgs->Add(m_KernDeint, 1, wxALL|wxALIGN_CENTER|wxALIGN_CENTER_VERTICAL, 3);
-	outer->Add(fgs, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 0);
+	outer->Add(fgs, 1, wxALL|wxEXPAND/*|wxALIGN_CENTER_VERTICAL*/, 0);
 	delete[] as;
 
 	//Add separator line
-	outer->Add(new wxStaticLine(this), 1, wxTOP|wxBOTTOM|wxEXPAND|wxALIGN_CENTER_VERTICAL, 10);
+	outer->Add(new wxStaticLine(this), 1, wxTOP|wxEXPAND/*|wxALIGN_CENTER_VERTICAL*/, 10);
 
     //Create yadif page and set as control parent (in MakeLabel etc.)
     m_YadifPan = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
@@ -76,7 +76,7 @@ Deinterlace::Deinterlace(wxWindow* parent) : FilterBasePanel(parent)
 	m_DeintMode = new wxChoice(m_YadifPan, wxID_ANY, wxDefaultPosition, wxDefaultSize, DEINTER_MODE_COUNT, as);
     m_DeintMode->SetSelection(0);
 	delete[] as;
-	fgs->Add(m_DeintMode, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 3);
+	fgs->Add(m_DeintMode, 1, wxALL|wxEXPAND/*|wxALIGN_CENTER_VERTICAL*/, 3);
 
 	//Parity
 	MakeLabel(FFQS(SID_DEINTER_PARITY_NAME), fgs);
@@ -92,7 +92,7 @@ Deinterlace::Deinterlace(wxWindow* parent) : FilterBasePanel(parent)
 	grp->SetSizer(bs);
 	bs->Fit(grp);
 	bs->SetSizeHints(grp);
-	fgs->Add(grp, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 3);
+	fgs->Add(grp, 1, wxALL|wxEXPAND/*|wxALIGN_CENTER_VERTICAL*/, 3);
 	delete[] as;
 
 	//Limit frames
@@ -108,7 +108,7 @@ Deinterlace::Deinterlace(wxWindow* parent) : FilterBasePanel(parent)
 	grp->SetSizer(bs);
 	bs->Fit(grp);
 	bs->SetSizeHints(grp);
-	fgs->Add(grp, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 3);
+	fgs->Add(grp, 1, wxALL|wxEXPAND/*|wxALIGN_CENTER_VERTICAL*/, 3);
 	delete[] as;
 
 	//Set panel sizer and add to outer
@@ -116,7 +116,7 @@ Deinterlace::Deinterlace(wxWindow* parent) : FilterBasePanel(parent)
     m_YadifPan->SetSizer(fgs);
     fgs->Fit(m_YadifPan);
     fgs->SetSizeHints(m_YadifPan);
-	outer->Add(m_YadifPan, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 0);
+	outer->Add(m_YadifPan, 1, wxALL|wxEXPAND/*|wxALIGN_CENTER_VERTICAL*/, 0);
 
 
     //Create kerndeint page
@@ -137,7 +137,7 @@ Deinterlace::Deinterlace(wxWindow* parent) : FilterBasePanel(parent)
     m_Threshold = new wxSlider(m_KernDeintPan, wxID_ANY, 10, 0, 255, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL|wxSL_TOP|wxSL_INVERSE);
     m_Threshold->SetMinSize(wxSize(300, -1));
     m_Threshold->Bind(wxEVT_SLIDER, &Deinterlace::OnAction, this);
-    fgsx->Add(m_Threshold, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 3);
+    fgsx->Add(m_Threshold, 1, wxALL|wxEXPAND/*|wxALIGN_CENTER_VERTICAL*/, 3);
     m_ThreshLab = MakeLabel("XXXX", fgsx, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL);
     int w, h;
     m_ThreshLab->GetTextExtent(m_ThreshLab->GetLabel(), &w, &h);
@@ -165,7 +165,7 @@ Deinterlace::Deinterlace(wxWindow* parent) : FilterBasePanel(parent)
     m_KernDeintPan->SetSizer(fgs);
     fgs->Fit(m_KernDeintPan);
     fgs->SetSizeHints(m_KernDeintPan);
-	outer->Add(m_KernDeintPan, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 0);
+	outer->Add(m_KernDeintPan, 1, wxALL|wxEXPAND/*|wxALIGN_CENTER_VERTICAL*/, 0);
 
     //Set outer sizer
     SetSizer(outer);

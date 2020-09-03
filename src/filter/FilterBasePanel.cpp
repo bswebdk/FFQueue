@@ -213,10 +213,10 @@ wxFlexGridSizer* FilterBasePanel::MakeSliderLabels(wxSizer *addToSizer, wxString
     else res->AddGrowableCol(1);
 
     MakeLabel(l1, res, vert ? wxALL|wxALIGN_TOP|wxALIGN_RIGHT : wxALL|wxALIGN_BOTTOM|wxALIGN_LEFT);
-    MakeLabel(l2, res, vert ? wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT : wxALL|wxALIGN_BOTTOM|wxALIGN_CENTER);
+    MakeLabel(l2, res, vert ? wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT : wxALL|wxALIGN_BOTTOM|wxALIGN_CENTER_HORIZONTAL);
     MakeLabel(l3, res, vert ? wxALL|wxALIGN_BOTTOM|wxALIGN_RIGHT : wxALL|wxALIGN_BOTTOM|wxALIGN_RIGHT);
 
-    if (addToSizer != NULL) addToSizer->Add(res, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, m_Padding);
+    if (addToSizer != NULL) addToSizer->Add(res, 1, wxALL|wxEXPAND/*|wxALIGN_CENTER_VERTICAL*/, m_Padding);
 
     return res;
 
@@ -261,19 +261,19 @@ wxSizer* FilterBasePanel::GetTimeLimitControls(bool AddLabelThis)
      {
 
         st = new wxStaticText(m_CtrlParent, wxID_ANY, FFQS(SID_FILTER_THIS) + " ", wxDefaultPosition, wxDefaultSize, 0);
-        m_TimeSizer->Add(st, 1, wxTOP|wxBOTTOM|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, m_Padding);
+        m_TimeSizer->Add(st, 1, wxTOP|/*wxBOTTOM|*/wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, m_Padding);
 
      }
 
      st = new wxStaticText(m_CtrlParent, wxID_ANY, FFQS(SID_FILTER_TIME_LIMIT_FROM) + " ", wxDefaultPosition, wxDefaultSize, 0);
-     m_TimeSizer->Add(st, 1, wxTOP|wxBOTTOM|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, m_Padding);
+     m_TimeSizer->Add(st, 1, wxTOP|/*wxBOTTOM|*/wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, m_Padding);
      m_ShowTime1 = new wxHyperlinkCtrl(m_CtrlParent, 1000, _(" "), wxEmptyString, wxDefaultPosition, wxDefaultSize, wxHL_DEFAULT_STYLE);
-     m_TimeSizer->Add(m_ShowTime1, 1, wxTOP|wxBOTTOM|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, m_Padding);
+     m_TimeSizer->Add(m_ShowTime1, 1, wxTOP|/*wxBOTTOM|*/wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, m_Padding);
 
      st = new wxStaticText(m_CtrlParent, wxID_ANY, " " + FFQS(SID_FILTER_TIME_LIMIT_TO) + " ", wxDefaultPosition, wxDefaultSize, 0);
-     m_TimeSizer->Add(st, 1, wxTOP|wxBOTTOM|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, m_Padding);
+     m_TimeSizer->Add(st, 1, wxTOP|/*wxBOTTOM|*/wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, m_Padding);
      m_ShowTime2 = new wxHyperlinkCtrl(m_CtrlParent, 1001, _(" "), wxEmptyString, wxDefaultPosition, wxDefaultSize, wxHL_DEFAULT_STYLE);
-     m_TimeSizer->Add(m_ShowTime2, 1, wxTOP|wxBOTTOM|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, m_Padding);
+     m_TimeSizer->Add(m_ShowTime2, 1, wxTOP|/*wxBOTTOM|*/wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, m_Padding);
 
      Connect(1000, wxEVT_HYPERLINK, (wxObjectEventFunction)&FilterBasePanel::OnTimeLinkClick);
      Connect(1001, wxEVT_HYPERLINK, (wxObjectEventFunction)&FilterBasePanel::OnTimeLinkClick);
@@ -426,7 +426,7 @@ void FilterBasePanel::UpdateTimeLimitLinks()
     GetTimeLimitFriendly(t1, t2);
     m_ShowTime1->SetLabelText(t1);
     m_ShowTime2->SetLabelText(t2);
-    m_TimeSizer->RecalcSizes();
+    //m_TimeSizer->RecalcSizes();
     m_TimeSizer->Layout();
     //Layout();
 

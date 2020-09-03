@@ -372,8 +372,6 @@ class FFQPresetEdit: public wxDialog
 		static const long ID_CANCELBUTTON;
 		//*)
 
-		static const long ID_ADD_FILTER_MENU_BASE;
-
 	private:
 
 		//(*Handlers(FFQPresetEdit)

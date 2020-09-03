@@ -222,6 +222,9 @@ bool FFQTimeEdit::DoExecute(TIME_VALUE &time, SUBTRACT_TIME subtract[], int coun
 
     }
 
+    //Fit buttons in sizer
+    SubtractSizer->Layout();
+
     //Adjust tab order
     OKButton->MoveAfterInTabOrder((b == NULL) ? (wxWindow*)Millis : (wxWindow*)b);
     CancelButton->MoveAfterInTabOrder(OKButton);

@@ -39,10 +39,10 @@ Transpose::Transpose(wxWindow* parent) : FilterBasePanel(parent)
     fgs->Add(m_CClockwise, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
 
     wxBoxSizer *bs = new wxBoxSizer(wxVERTICAL);
-    bs->Add(fgs, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 0);
+    bs->Add(fgs, 1, wxALL|wxALIGN_LEFT, 0);
 
     m_Flip = new wxCheckBox(this, wxID_ANY, FFQS(SID_TRANSPOSE_FLIP));
-    bs->Add(m_Flip, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
+    bs->Add(m_Flip, 1, wxALL|wxALIGN_LEFT, 5);
 
     SetSizer(bs);
     bs->Fit(this);
