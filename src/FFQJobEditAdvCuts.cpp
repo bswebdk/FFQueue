@@ -42,6 +42,7 @@
 
 //(*IdInit(FFQJobEditAdvCuts)
 const long FFQJobEditAdvCuts::ID_CUTLIST = wxNewId();
+const long FFQJobEditAdvCuts::ID_QUICKCUT = wxNewId();
 const long FFQJobEditAdvCuts::ID_FILTERFIRST = wxNewId();
 const long FFQJobEditAdvCuts::ID_FILTERLAST = wxNewId();
 const long FFQJobEditAdvCuts::ID_FROMTIME = wxNewId();
@@ -129,6 +130,10 @@ FFQJobEditAdvCuts::FFQJobEditAdvCuts(wxWindow* parent)
 	FlexGridSizer4->AddGrowableRow(0);
 	CutList = new wxListBox(this, ID_CUTLIST, wxDefaultPosition, wxSize(-1,150), 0, 0, wxLB_EXTENDED, wxDefaultValidator, _T("ID_CUTLIST"));
 	FlexGridSizer4->Add(CutList, 1, wxALL|wxEXPAND, 0);
+	QuickCut = new wxCheckBox(this, ID_QUICKCUT, _T("Qc"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_QUICKCUT"));
+	QuickCut->SetValue(false);
+	QuickCut->SetLabel(FFQS(SID_JOBEDIT_ADV_CUTS_QUICK_CUT));
+	FlexGridSizer4->Add(QuickCut, 1, wxTOP|wxBOTTOM|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
 	FlexGridSizer15 = new wxFlexGridSizer(2, 2, 0, 0);
 	ST4 = new wxStaticText(this, wxID_ANY, _T("Cm"), wxDefaultPosition, wxDefaultSize, 0, _T("wxID_ANY"));
 	SBS1->GetStaticBox()->SetLabel(FFQS(SID_JOBEDIT_ADV_CUTS_LIST_TITLE));
@@ -220,7 +225,7 @@ FFQJobEditAdvCuts::FFQJobEditAdvCuts(wxWindow* parent)
 	PreviewSizer1 = new wxFlexGridSizer(3, 1, 0, 0);
 	PreviewSizer1->AddGrowableCol(0);
 	PreviewSizer1->AddGrowableRow(0);
-	FrameView = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxNO_BORDER, _T("wxID_ANY"));
+	FrameView = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxBORDER_NONE, _T("wxID_ANY"));
 	SBS4->GetStaticBox()->SetLabel(FFQS(SID_JOBEDIT_ADV_CUTS_PREVIEW));
 	FrameView->SetMinSize(fv_size);
 	PreviewSizer1->Add(FrameView, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
@@ -294,6 +299,7 @@ FFQJobEditAdvCuts::FFQJobEditAdvCuts(wxWindow* parent)
 
 	Connect(ID_CUTLIST,wxEVT_COMMAND_LISTBOX_SELECTED,(wxObjectEventFunction)&FFQJobEditAdvCuts::ActionClick);
 	Connect(ID_CUTLIST,wxEVT_COMMAND_LISTBOX_DOUBLECLICKED,(wxObjectEventFunction)&FFQJobEditAdvCuts::OnCutListDClick);
+	Connect(ID_QUICKCUT,wxEVT_COMMAND_CHECKBOX_CLICKED,(wxObjectEventFunction)&FFQJobEditAdvCuts::ActionClick);
 	Connect(ID_FROMTIME,wxEVT_COMMAND_TEXT_ENTER,(wxObjectEventFunction)&FFQJobEditAdvCuts::ActionClick);
 	Connect(ID_TOTIME,wxEVT_COMMAND_TEXT_ENTER,(wxObjectEventFunction)&FFQJobEditAdvCuts::ActionClick);
 	Connect(ID_ADDCUT,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&FFQJobEditAdvCuts::ActionClick);
@@ -367,6 +373,7 @@ bool FFQJobEditAdvCuts::Execute(FFQ_CUTS &cuts, wxString file_path, FFProbeInfoP
     }
 
     //Cut settings
+    QuickCut->SetValue(cuts.quick);
     KeepCuts->SetValue(cuts.keep);
     RemoveCuts->SetValue(!cuts.keep);
     FilterFirst->SetValue(cuts.filter_first);
@@ -448,6 +455,7 @@ bool FFQJobEditAdvCuts::Execute(FFQ_CUTS &cuts, wxString file_path, FFProbeInfoP
     {
 
         //Store cut settings (we cannot use "," as separator since it is used in FFQ_INPUT_FILE where cuts are stored)
+        cuts.quick = QuickCut->GetValue();
         cuts.keep = KeepCuts->GetValue();
         cuts.filter_first = FilterFirst->GetValue();
         cuts.frame_time = m_FrameTime;
@@ -645,7 +653,7 @@ void* FFQJobEditAdvCuts::MakePreviewJob(TIME_VALUE start_time, FFQ_CUTS cuts, bo
     LPFFQ_PRESET pst = new FFQ_PRESET();
     pst->video_codec = encode ? "libx264" : "copy";
     pst->video_rate = encode ? "2024,1" : "";
-    pst->audio_codec = encode ? "libvo_aacenc" : "copy";
+    pst->audio_codec = encode ? "aac" : "copy"; //Used to be aac
     pst->audio_rate = encode ? "128,1" : "";
 
     //Apply scaling for videos not fitting in 640x480
@@ -808,6 +816,12 @@ void FFQJobEditAdvCuts::UpdateControls()
 
     //AddCut->Enable(true);
     RemoveCut->Enable(sel);
+
+    //Disable filer position controls if quick cuts are enabled
+    ST11->Enable(!QuickCut->GetValue());
+    FilterFirst->Enable(ST11->IsEnabled());
+    FilterLast->Enable(ST11->IsEnabled());
+
 
     //Preview controls
     if ( FrameView->IsEnabled() )

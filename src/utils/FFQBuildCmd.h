@@ -32,6 +32,8 @@
 extern const wxString CODEC_TYPE_VIDEO;
 extern const wxString CODEC_TYPE_AUDIO;
 extern const wxString CODEC_TYPE_SUBTITLE;
+extern const wxString CODEC_TYPE_DATA;
+extern const wxString CODEC_TYPE_ATTACHMENT;
 extern const wxString CODEC_COPY;
 extern const wxString CODEC_SUBS_BURNIN;
 
@@ -56,7 +58,8 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview =
 void CleanupFinishedJob(LPFFQ_JOB job);
 wxString EscapeFilterString(wxString s, bool un_escape = false);
 wxString FormatFileName(wxString fn);
-bool FormatCuts(FFQ_CUTS &cuts, wxString &stream_tag, bool video, TIME_VALUE duration, int &filter_id);
+//bool FormatCuts(FFQ_CUTS &cuts, wxString &stream_tag, bool video, TIME_VALUE duration, int &filter_id);
+wxString FormatCuts(wxArrayPtrVoid &streams, int &filter_id);
 bool FormatFilter(wxString &filter, wxString &vid_in, wxString &aud_in, wxString &sub_in, wxString &req_in, int &filter_id);
 bool FormatStreamRate(wxString &rate, bool video, wxString stream_tag = wxEmptyString);
 

@@ -211,6 +211,15 @@ FFQ_PRESET::FFQ_PRESET(wxString &preset)
 
 //---------------------------------------------------------------------------------------
 
+wxString FFQ_PRESET::GetFilters(wxUniChar separator)
+{
+    wxString res;
+    for (wxString cur : filters) res += cur + separator;
+    return res;
+}
+
+//---------------------------------------------------------------------------------------
+
 void FFQ_PRESET::Reset(bool new_preset)
 {
 

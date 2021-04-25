@@ -65,7 +65,7 @@ class FFQMain: public wxFrame
 {
     public:
 
-        static FFQMain* getInstance() { return m_Instance; }
+        static FFQMain* GetInstance() { return m_Instance; }
 
         FFQMain(wxWindow* parent, wxWindowID id = -1);
         virtual ~FFQMain();

@@ -29,7 +29,7 @@ Custom::Custom(wxWindow* parent) : FilterBasePanel(parent)
     wxFlexGridSizer *fgs = new wxFlexGridSizer(2, 2, 0, 0), *fgsx;
     fgs->AddGrowableCol(1);
 
-    MakeLabel(FFQS(SID_CUSTFLTR_TYPE) + " ", fgs);
+    MakeLabel(FFQS(SID_CUSTFLTR_TYPE) + SPACE, fgs);
 
         fgsx = new wxFlexGridSizer(1, 2, 0, 0);
         m_Video = new wxRadioButton(this, wxID_ANY, FFQS(SID_COMMON_VIDEO));
@@ -38,7 +38,7 @@ Custom::Custom(wxWindow* parent) : FilterBasePanel(parent)
         fgsx->Add(m_Audio, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
         fgs->Add(fgsx, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
 
-    MakeLabel(FFQS(SID_CUSTFLTR_VALUE) + " ", fgs);
+    MakeLabel(FFQS(SID_CUSTFLTR_VALUE) + SPACE, fgs);
 
         fgsx = new wxFlexGridSizer(1, 3, 0, 0);
         fgsx->AddGrowableCol(1);

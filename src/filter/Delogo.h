@@ -26,6 +26,8 @@
 
 #include "FilterBasePanel.h"
 
+//#define MAKE_BAND_CTRLS
+
 class Delogo : public FilterBasePanel
 {
 
@@ -43,7 +45,10 @@ class Delogo : public FilterBasePanel
 
         wxFlexGridSizer *m_DelogoCtrls;
         wxCheckBox *m_UseImgMask;
-        wxTextCtrl *m_Blur, *m_ImgMask;
+        wxTextCtrl *m_ImgMask;
+        #ifdef MAKE_BAND_CTRLS
+        wxTextCtrl *m_Band;
+        #endif
         wxButton *m_BrowseImg;
 
         void OnAction(wxCommandEvent &event);

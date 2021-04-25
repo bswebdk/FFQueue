@@ -60,9 +60,33 @@ FFQ_CUTS::FFQ_CUTS(wxString from)
     filter_first = STRBOOLDEF(GetToken(cfg, "|", true), filter_first);
     keep = STRBOOLDEF(GetToken(cfg, "|", true), keep);
     frame_time = Str2Long(GetToken(cfg, "|", true), frame_time);
+    quick = STRBOOLDEF(GetToken(cfg, "|", true), quick);
     cuts = from;
 
 
+}
+
+//---------------------------------------------------------------------------------------
+
+wxString FFQ_CUTS::KeepParts(TIME_VALUE file_duration)
+{
+    //Return a string with parts to keep
+    if (keep || (cuts.Len() == 0)) return cuts;
+    bool odd = true;
+    wxString res = "", c = cuts;
+    TIME_VALUE tv(GetToken(c, ";", true));
+    if (tv.ToMilliseconds() > 0) res = "0;" + TIME_VALUE(tv.ToMilliseconds() - frame_time).ToString() + ";";
+    while (c.Len() > 0)
+    {
+        tv = TIME_VALUE(GetToken(c, ";", true));
+        if (tv.ToMilliseconds() < file_duration.ToMilliseconds())
+        {
+            tv = odd ? TIME_VALUE(tv.ToMilliseconds() + frame_time) : TIME_VALUE(tv.ToMilliseconds() - frame_time);
+            res += tv.ToString() + ";";
+        }
+        odd = !odd;
+    }
+    return res + (odd ? file_duration.ToString() : "");
 }
 
 //---------------------------------------------------------------------------------------
@@ -73,6 +97,7 @@ void FFQ_CUTS::Reset()
     //Reset cuts to default
     filter_first = false;
     keep = false;
+    quick = false;
     frame_time = 0;
     cuts.Clear();
 
@@ -85,7 +110,7 @@ wxString FFQ_CUTS::ToString()
 
     //Pack cuts - since this is a value stored in
     //FFQ_INPUT_FILE we cannot use "," as separator
-    return wxString::Format("%s|%s|%u:%s", BOOLSTR(filter_first), BOOLSTR(keep), frame_time, cuts);
+    return wxString::Format("%s|%s|%u|%s:%s", BOOLSTR(filter_first), BOOLSTR(keep), frame_time, BOOLSTR(quick), cuts);
 
 }
 

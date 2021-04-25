@@ -41,7 +41,7 @@ HighLowBandPass::HighLowBandPass(wxWindow* parent) : FilterBasePanel(parent)
     fVal.SetRange(0, 99999);
 
     m_Sizer = new wxFlexGridSizer(1, 10, 0, 0);
-    m_MainLab = MakeLabel(_T(" "), m_Sizer);
+    m_MainLab = MakeLabel(SPACE, m_Sizer);
 
     MakeLabel(" " + FFQS(SID_BANDPASS_FREQUENCY), m_Sizer, wxRIGHT|wxALIGN_CENTER_VERTICAL);
     m_Frequency = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(60, -1), 0);
@@ -109,11 +109,11 @@ void HighLowBandPass::SetFilter(LPFFMPEG_FILTER fltr)
 
     if (fs.Len() == 0) fs = t + ",0,2,0.707,1"; //Set default values
 
-    m_Frequency->SetValue(GetToken(fs, ','));
-    m_CSG->SetValue(GetToken(fs, ',') == "1");
-    m_Poles->SetSelection(Str2Long(GetToken(fs, ',')) - 1);
-    m_Width->SetValue(GetToken(fs, ','));
-    m_WidthType->SetSelection(Str2Long(GetToken(fs, ',')));
+    m_Frequency->SetValue(GetToken(fs, COMMA));
+    m_CSG->SetValue(GetToken(fs, COMMA) == "1");
+    m_Poles->SetSelection(Str2Long(GetToken(fs, COMMA)) - 1);
+    m_Width->SetValue(GetToken(fs, COMMA));
+    m_WidthType->SetSelection(Str2Long(GetToken(fs, COMMA)));
 
     UpdateControls();
 
@@ -134,8 +134,8 @@ bool HighLowBandPass::GetFilter(LPFFMPEG_FILTER fltr)
     double width = 0;
     m_Width->GetValue().ToDouble(&width);
 
-    if (m_FilterType == ftBANDPASS) s = " " + FFQS(SID_BANDPASS_SKIRT_GAIN_FRIENDLY) + csg;
-    else if (m_FilterType != ftBANDREJECT) s = " " + FFQS(SID_BANDPASS_POLES) + poles;
+    if (m_FilterType == ftBANDPASS) s = SPACE + FFQS(SID_BANDPASS_SKIRT_GAIN_FRIENDLY) + csg;
+    else if (m_FilterType != ftBANDREJECT) s = SPACE + FFQS(SID_BANDPASS_POLES) + poles;
 
     fltr->friendly = FFQSF(SID_BANDPASS_USERFRIENDLY, m_MainLab->GetLabel(), freq, s, width, wt == "h" ? "Hz" : wt.Upper());
 

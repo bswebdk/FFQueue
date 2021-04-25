@@ -70,6 +70,7 @@ class FFQJobEditAdvCuts: public wxDialog
 		wxButton* SetTo;
 		wxButton* TimePreview;
 		wxCheckBox* FrameConv;
+		wxCheckBox* QuickCut;
 		wxFlexGridSizer* PreviewSizer1;
 		wxFlexGridSizer* PreviewSizer2;
 		wxListBox* CutList;
@@ -103,6 +104,7 @@ class FFQJobEditAdvCuts: public wxDialog
 
 		//(*Identifiers(FFQJobEditAdvCuts)
 		static const long ID_CUTLIST;
+		static const long ID_QUICKCUT;
 		static const long ID_FILTERFIRST;
 		static const long ID_FILTERLAST;
 		static const long ID_FROMTIME;

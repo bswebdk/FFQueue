@@ -162,7 +162,7 @@ FFQAbout::FFQAbout(wxWindow* parent,wxWindowID id)
 	if (Timer.IsRunning()) Timer.Stop();
 	#endif // DEBUG
 
-	SetTitle(FFQS(SID_ABOUT_TITLE) + " " + GUI_1);
+	SetTitle(FFQS(SID_ABOUT_TITLE) + SPACE + GUI_1);
 	wxMemoryInputStream *ms = new wxMemoryInputStream(&FLAG_ANIM, FLAG_ANIM_SIZE);//sizeof(FLAG_ANIM));
 	wxAnimation anm;
 	anm.Load(*ms, wxANIMATION_TYPE_GIF);

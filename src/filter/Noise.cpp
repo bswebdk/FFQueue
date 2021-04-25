@@ -201,16 +201,16 @@ bool Noise::GetFilter(LPFFMPEG_FILTER fltr)
             n = (i == 0) ? "all_seed=" : wxString::Format("c%i_seed=", i - 1);
             int64_t v = Str2Long(m_Seed[i].val->GetValue(), -1);
             if (v < 0) return ShowError(m_Seed[i].val, FFQS(SID_NOISE_SEED_ERROR));
-            seed += n + ToStr(v) + ":";
+            seed += n + ToStr(v) + COLON;
 
             //For user
             n = (i == 0) ? "all" : wxString(RGBA.at(i-1));
-            useed += n + "=" + m_Seed[i].val->GetValue() + " ";
+            useed += n + "=" + m_Seed[i].val->GetValue() + SPACE;
 
         }
 
         //For edit
-        edit += BOOLSTR(m_Seed[i].use->GetValue()) + "," + m_Seed[i].val->GetValue() + ",";
+        edit += BOOLSTR(m_Seed[i].use->GetValue()) + COMMA + m_Seed[i].val->GetValue() + COMMA;
 
     }
 
@@ -225,16 +225,16 @@ bool Noise::GetFilter(LPFFMPEG_FILTER fltr)
 
             //For ffmpeg
             n = (i == 0) ? "alls=" : wxString::Format("c%is=", i - 1);
-            stren += n + s + ":";
+            stren += n + s + COLON;
 
             //For user
             n = (i == 0) ? "all" : wxString(RGBA.at(i-1));
-            ustren += n + "=" + s + " ";
+            ustren += n + "=" + s + SPACE;
 
         }
 
         //For edit
-        edit += BOOLSTR(m_Strength[i].use->GetValue()) + "," + s + ",";
+        edit += BOOLSTR(m_Strength[i].use->GetValue()) + COMMA + s + COMMA;
 
     }
 
@@ -268,7 +268,7 @@ bool Noise::GetFilter(LPFFMPEG_FILTER fltr)
 
         //For edit
         s.Replace("+", "");
-        edit += BOOLSTR(m_Flags[i].use->GetValue()) + "," + s + ",";
+        edit += BOOLSTR(m_Flags[i].use->GetValue()) + COMMA + s + COMMA;
 
     }
 
@@ -291,19 +291,19 @@ bool Noise::GetFilter(LPFFMPEG_FILTER fltr)
     s = seed;
     if (stren.Len() > 0)
     {
-        if (s.Len() > 0) s += ":";
+        if (s.Len() > 0) s += COLON;
         s += stren;
     }
     if (flag.Len() > 0)
     {
-        if (s.Len() > 0) s += ":";
+        if (s.Len() > 0) s += COLON;
         s += flag;
     }
     s = "noise=" + s;
 
     fltr->friendly = FFQSF(SID_NOISE_USERFRIENDLY, FFQL()->FILTER_NAMES[fltr->type], useed, ustren, uflag, ft);
     fltr->ff_filter.Printf("%s%s%s%s", FILTER_VIDEO_IN, s, tf, FILTER_VIDEO_OUT);
-    fltr->editable = edit + wxString::Format(UINT64FMT + "," + UINT64FMT, t1, t2);
+    fltr->editable = edit + wxString::Format(UINT64FMT + COMMA + UINT64FMT, t1, t2);
 
     return true;
 

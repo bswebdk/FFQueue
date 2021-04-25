@@ -847,13 +847,13 @@ void FFQMain::LogCurrentItemStatus(bool first_command)
 
         case qsPASS1:
             //First pass
-            Console->AppendLine(FFQSF(SID_LOG_STARTING_FFMPEG, " " + FFQS(SID_LOG_FOR_FIRST_PASS), FFQDT(), m_CurrentCommand), COLOR_GRAY);
+            Console->AppendLine(FFQSF(SID_LOG_STARTING_FFMPEG, SPACE + FFQS(SID_LOG_FOR_FIRST_PASS), FFQDT(), m_CurrentCommand), COLOR_GRAY);
             break;
 
         case qsPASS2:
             //Second pass
             Console->AppendBlankLine(2);
-            Console->AppendLine(FFQSF(SID_LOG_STARTING_FFMPEG, " " + FFQS(SID_LOG_FOR_SECOND_PASS), FFQDT(), m_CurrentCommand), COLOR_GRAY);
+            Console->AppendLine(FFQSF(SID_LOG_STARTING_FFMPEG, SPACE + FFQS(SID_LOG_FOR_SECOND_PASS), FFQDT(), m_CurrentCommand), COLOR_GRAY);
             break;
 
         case qsDONE:
@@ -1642,6 +1642,7 @@ void FFQMain::ShowFFMpegVersion(bool langInfo)
     }
 
     #ifdef DEBUG
+
 
         //Show a list of unsupported filters
         wxString sl = ",", fl = FFQCFG()->GetFFMpegFilters(), cur, res = "";

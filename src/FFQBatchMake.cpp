@@ -98,6 +98,7 @@ FFQBatchMake::FFQBatchMake(wxWindow* parent,wxWindowID id)
 	wxFlexGridSizer* FlexGridSizer6;
 	wxFlexGridSizer* FlexGridSizer7;
 	wxFlexGridSizer* FlexGridSizer8;
+	wxFlexGridSizer* FlexGridSizer9;
 	wxStaticBoxSizer* SBS1;
 
 	Create(parent, id, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE, _T("id"));
@@ -111,7 +112,7 @@ FFQBatchMake::FFQBatchMake(wxWindow* parent,wxWindowID id)
 	FlexGridSizer2->Add(JobInfo, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	MainSizer->Add(FlexGridSizer2, 1, wxALL|wxEXPAND, 5);
 	SBS1 = new wxStaticBoxSizer(wxHORIZONTAL, this, _T("Props"));
-	FlexGridSizer3 = new wxFlexGridSizer(11, 1, 0, 0);
+	FlexGridSizer3 = new wxFlexGridSizer(13, 1, 0, 0);
 	FlexGridSizer3->AddGrowableCol(0);
 	FlexGridSizer4 = new wxFlexGridSizer(2, 4, 0, 0);
 	FlexGridSizer4->AddGrowableCol(1);
@@ -149,6 +150,23 @@ FFQBatchMake::FFQBatchMake(wxWindow* parent,wxWindowID id)
 	NoFailSubs->SetLabel(FFQS(SID_COMMON_SUBTITLES));
 	FlexGridSizer4->Add(NoFailSubs, 1, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 0);
 	FlexGridSizer3->Add(FlexGridSizer4, 1, wxALL|wxEXPAND, 3);
+	SL1 = new wxStaticLine(this, wxID_ANY, wxDefaultPosition, wxSize(10,-1), wxLI_HORIZONTAL, _T("wxID_ANY"));
+	FlexGridSizer3->Add(SL1, 1, wxTOP|wxBOTTOM|wxEXPAND, 3);
+	FlexGridSizer9 = new wxFlexGridSizer(1, 3, 0, 10);
+	FlexGridSizer9->AddGrowableCol(0);
+	FlexGridSizer9->AddGrowableRow(0);
+	ST8 = new wxStaticText(this, wxID_ANY, _T("IncX"), wxDefaultPosition, wxDefaultSize, 0, _T("wxID_ANY"));
+	ST8->SetLabel(FFQS(SID_BATCHMAKE_ALSO_INCLUDE));
+	FlexGridSizer9->Add(ST8, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
+	IncludeAttachment = new wxCheckBox(this, wxID_ANY, _T("T"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("wxID_ANY"));
+	IncludeAttachment->SetValue(false);
+	IncludeAttachment->SetLabel(FFQS(SID_COMMON_ATTACHMENT));
+	FlexGridSizer9->Add(IncludeAttachment, 1, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 0);
+	IncludeData = new wxCheckBox(this, wxID_ANY, _T("D"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("wxID_ANY"));
+	IncludeData->SetValue(false);
+	IncludeData->SetLabel(FFQS(SID_COMMON_DATA));
+	FlexGridSizer9->Add(IncludeData, 1, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 0);
+	FlexGridSizer3->Add(FlexGridSizer9, 1, wxALL|wxEXPAND, 3);
 	StaticLine1 = new wxStaticLine(this, ID_STATICLINE1, wxDefaultPosition, wxSize(10,-1), wxLI_HORIZONTAL, _T("ID_STATICLINE1"));
 	FlexGridSizer3->Add(StaticLine1, 1, wxTOP|wxBOTTOM|wxEXPAND, 3);
 	FlexGridSizer1 = new wxFlexGridSizer(1, 2, 0, 0);
@@ -527,6 +545,15 @@ void FFQBatchMake::GetStreamsFromParser(FFProbeInfoParser *pip, unsigned int fil
 
         }
 
+        else if ((IncludeData->GetValue() && (si->codec_type == CODEC_TYPE_DATA)) || (IncludeAttachment->GetValue() && (si->codec_type == CODEC_TYPE_ATTACHMENT)))
+        {
+
+            m_StreamInf.push_back(si);
+            smap.checked = true;
+            used++;
+
+        }
+
         stream_map += smap.ToString() + STREAM_MAPPING_SEPERATOR;
 
     }
@@ -598,7 +625,7 @@ bool FFQBatchMake::IncludeStream(LPFFPROBE_STREAM_INFO si, wxString search_for, 
     }
     while ((!match) && (search_for.Len() > 0))
     {
-        s = GetToken(search_for, " ");
+        s = GetToken(search_for, SPACE);
         match = ((lng.Find(s) >= 0) || (si->codec_name.Lower().Find(s) >= 0) || (si->codec_long_name.Lower().Find(s) >= 0));
     }
     return invert_result ? !match : match;
@@ -685,18 +712,15 @@ void FFQBatchMake::MakeJobs(bool dry_run)
 
     LPFFQ_JOB job;
     FFQ_INPUT_FILE in1, in2;
-    //STREAM_MAPPING smap;
-    //LPFFPROBE_STREAM_INFO v_inf, a_inf, s_inf, si;
 
     unsigned int fileCount = m_Files->Count();
     wxString cur, sub_path;
     long idx, pt_pos;
     LPFFQ_PRESET preset = Preset->GetSelectedPreset();
-    //bool vid = IncludeVideo->GetValue(), aud = IncludeAudio->GetValue(), sub = IncludeSubs->GetValue();
 
     FFQMain* main = (FFQMain*)GetParent();
     FFQProcess* proc = new FFQProcess();
-    //FFProbeInfoParser* pip = new FFProbeInfoParser();
+    FFQConfig *cfg = FFQConfig::GetInstance();
 
     for (unsigned int i = 0; i < fileCount; i++)
     {
@@ -780,21 +804,43 @@ void FFQBatchMake::MakeJobs(bool dry_run)
                 if (job->out.Len() == 0)
                 {
                     //No output path = use source path
-                    job->out = in1.path.BeforeLast('.') + "." + StrTrim(OutputFormat->GetValue());
+                    job->out = in1.path.BeforeLast(DOT) + DOT + StrTrim(OutputFormat->GetValue());
                 }
                 else
                 {
                     //Add sub_path to output path
                     if (job->out[job->out.Len() - 1] != wxFileName::GetPathSeparator()) job->out += wxFileName::GetPathSeparator();
-                    job->out += sub_path.BeforeLast('.') + "." + StrTrim(OutputFormat->GetValue());
+                    job->out += sub_path.BeforeLast(DOT) + DOT + StrTrim(OutputFormat->GetValue());
                 }
+
+                //Make sure that the name is coherent with the naming scheme - except preferred format
+                job->out = cfg->GetPreferredOutputName(job->out, preset, false, false);
 
                 //Make sure that source and destination are not equal
                 if (in1.path.Lower() == job->out.Lower()) LogLine("\t" + FFQSF(SID_SOURCE_EQUALS_OUTPUT, job->out), COLOR_RED);
 
                 //Make sure that no jobs has already been created with the destination
-                else if (FindJobForDest(job->out)) LogLine("\t" + FFQSF(SID_DUPLICATE_JOB_FOR_OUTPUT, job->out), COLOR_RED);
+                else if (FindJobForDest(job->out))
+                {
 
+                    //If suggest unique names is enabled, generate a unique name
+                    if (cfg->preferred_unique)
+                    {
+
+                        unsigned int cc = 0;
+                        wxString a = job->out.BeforeLast(DOT), b = job->out.AfterLast(DOT);
+                        do
+                        {
+                            job->out = a + wxString::Format("_%u", ++cc) + DOT + b;
+                        }
+                        while (FindJobForDest(job->out) || wxFileExists(job->out));
+
+                    }
+
+                    //Else bug out on this one
+                    else LogLine("\t" + FFQSF(SID_DUPLICATE_JOB_FOR_OUTPUT, job->out), COLOR_RED);
+
+                }
                 else
                 {
 
@@ -823,100 +869,6 @@ void FFQBatchMake::MakeJobs(bool dry_run)
                 }
 
             }
-
-            /*v_inf = vid ? FindStreamInfo(m_PIPS, ctVIDEO) : NULL;
-            a_inf = aud ? FindStreamInfo(m_PIPS, ctAUDIO, StrTrim(PrefAudio->GetValue())) : NULL;
-            bool pref_aud = (a_inf != NULL);
-            if ((!pref_aud) && aud) a_inf = FindStreamInfo(m_PIPS, ctAUDIO); //Take first stream
-            s_inf = sub ? FindStreamInfo(m_PIPS, ctSUBTITLE) : NULL;
-
-            //Translation hint: FFQS(SID_COMMON_[VIDEO|AUDIO|SUBTITLES]) can be used instead of CODEC_TYPE
-            if ((v_inf == NULL) && vid) LogLine("\t" + FFQSF(SID_LOG_CONTENT_NOT_FOUND, CODEC_TYPE_VIDEO), COLOR_RED);
-            else if ((a_inf == NULL) && aud) LogLine("\t" + FFQSF(SID_LOG_CONTENT_NOT_FOUND, CODEC_TYPE_AUDIO), COLOR_RED);
-            else if ((s_inf == NULL) && sub) LogLine("\t" + FFQSF(SID_LOG_CONTENT_NOT_FOUND, CODEC_TYPE_SUBTITLE), COLOR_RED);
-
-            else
-            {
-
-                //Check if in2 is used - if not remove it
-                if (in2.path.Len() > 0)
-                {
-                    if ( (m_PIPS[1].IndexOf(v_inf) < 0) && (m_PIPS[1].IndexOf(a_inf) < 0) && (m_PIPS[1].IndexOf(s_inf) < 0) )
-                    {
-                        in2.path = "";
-                        m_PIPS[1].SetProbeOutput("");
-                    }
-                }
-
-                job->cmd_line = CMD_DEFAULT;
-                m_PIPS[0].GetDuration(in1.duration);
-                m_PIPS[0].GetVideoDimension(in1.width, in1.height);
-
-                if (in2.path.Len() > 0)
-                {
-                    m_PIPS[1].GetDuration(in2.duration);
-                    m_PIPS[1].GetVideoDimension(in2.width, in2.height);
-                }
-
-                //Name of output file
-                //job->out = FFQCFG()->GetPreferredOutputName(in1.path); //Completely wrong!
-                job->out = StrTrim(OutputPath->GetValue());
-                if (job->out.Len() == 0)
-                {
-
-                    //No output path = use source path
-                    job->out = in1.path.BeforeLast('.') + "." + StrTrim(OutputFormat->GetValue());
-
-                }
-                else
-                {
-                    //Add sub_path to output path
-                    if (job->out[job->out.Len() - 1] != wxFileName::GetPathSeparator()) job->out += wxFileName::GetPathSeparator();
-                    job->out += sub_path.BeforeLast('.') + "." + StrTrim(OutputFormat->GetValue());
-                }
-
-                //Make sure that source and destination are not equal
-                if (in1.path.Lower() == job->out.Lower()) LogLine("\t" + FFQSF(SID_SOURCE_EQUALS_OUTPUT, job->out), COLOR_RED);
-
-                //Make sure that no jobs has already been created with the destination
-                else if (FindJobForDest(job->out)) LogLine("\t" + FFQSF(SID_DUPLICATE_JOB_FOR_OUTPUT, job->out), COLOR_RED);
-
-                else
-                {
-
-                    //Preset to use
-                    job->preset_id = preset->preset_id;
-
-                    if (v_inf != NULL) LogLine("\t" + v_inf->codec_type + " : " + v_inf->codec_long_name, COLOR_GREEN);
-                    if (a_inf != NULL) LogLine("\t" + a_inf->codec_type + " : " + a_inf->codec_long_name, pref_aud ? COLOR_GREEN : COLOR_BLUE);
-                    if (s_inf != NULL) LogLine("\t" + s_inf->codec_type + " : " + s_inf->codec_long_name, COLOR_GREEN);
-
-                    //All streams has to be implemented to prevent job-editor from sorting streams wrong
-                    for (unsigned int pidx = 0; pidx < PIP_COUNT; pidx++)
-                    {
-
-                        FFProbeInfoParser* pip = &m_PIPS[pidx];
-
-                        for (unsigned int sidx = 0; sidx < pip->GetStreamCount(); sidx++)
-                        {
-                            si = pip->GetStreamInfo(sidx);
-                            job->stream_map += MakeStreamMapping(si, pidx+1, (si == v_inf) || (si == a_inf) || (si == s_inf)) + STREAM_MAPPING_SEPERATOR;
-                        }
-
-                    }
-
-                    job->stream_map = job->stream_map.BeforeLast(STREAM_MAPPING_SEPERATOR);
-
-                    //Add input files
-                    job->inputs.Add(in1.ToString());
-                    if (in2.path.Len() > 0) job->inputs.Add(in2.ToString());
-
-                    m_Jobs.push_back(job);
-                    job = NULL;
-
-                }
-
-            }*/
 
             //Free unused pointer
             if (job != NULL) delete job;
@@ -961,8 +913,8 @@ void FFQBatchMake::SaveConfig()
     LPFFQ_PRESET pst = Preset->GetSelectedPreset();
 
     wxString s, pa = StrTrim(PrefAudio->GetValue()), ps = StrTrim(PrefSubs->GetValue());
-    pa.Replace(",", " ");
-    ps.Replace(",", " ");
+    pa.Replace(COMMA, SPACE);
+    ps.Replace(COMMA, SPACE);
     s.Printf(
         "%s,%s,%s,%s,%s,%s,%s,%s",
         BOOLSTR(IncludeVideo->GetValue()),

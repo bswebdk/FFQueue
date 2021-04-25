@@ -142,7 +142,7 @@ bool Curves::GetFilter(LPFFMPEG_FILTER fltr)
     if (!GetVal(m_All, av)) return false;
 
     pst = GetToken(pst, " (", false).Lower(); //Remove info: (..) and lowercase
-    pst.Replace(" ", "_"); //Replace space with underscore
+    pst.Replace(SPACE, "_"); //Replace space with underscore
 
     fltr->friendly = FFQSF(SID_CURVES_USERFRIENDLY, FFQL()->FILTER_NAMES[fltr->type], pst, mv, rv, gv, bv, av);
 

@@ -27,3 +27,18 @@
 {
     return sval.Len() == 0 ? def : STRBOOL(sval);
 }*/
+
+//---------------------------------------------------------------------------------------
+
+uint32_t COLOR_BLACK  = 0x01000000;
+uint32_t COLOR_BLUE   = 0x02000000;
+uint32_t COLOR_GRAY   = 0x03000000;
+uint32_t COLOR_GREEN  = 0x04000000;
+uint32_t COLOR_ORANGE = 0x05000000;
+uint32_t COLOR_RED    = 0x06000000;
+
+uint32_t DEFAULT_COLORS[COLOR_COUNT]      = { 0x000000, 0xff0000, 0x777777, 0x007700, 0x0066ff, 0x0000ff };
+uint32_t DEFAULT_COLORS_DARK[COLOR_COUNT] = { 0xffffff, 0xff5555, 0x888888, 0x337733, 0x0066ff, 0x3333ff };
+
+//---------------------------------------------------------------------------------------
+

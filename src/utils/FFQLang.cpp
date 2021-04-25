@@ -168,11 +168,14 @@ void LoadString(wxFile *file, wxString &str, uint8_t *buf, STR_HASH &key)
 //---------------------------------------------------------------------------------------
 
 bool DoConfirm(wxString msg) { return DoConfirm(NULL, msg); }
-bool DoConfirm(wxWindow *focus, wxString msg)
+bool DoConfirm(wxWindow *focus, wxString msg, unsigned int icon)
 {
 
+    //If icon is undefined, use a question mark
+    if (icon == 0) icon = wxICON_QUESTION;
+
     //Show an OK/Cancel dialog with question mark icon
-    bool res = (wxMessageBox(msg, FFQS(SID_CONFIRM), wxYES_NO | wxICON_QUESTION, focus) == wxYES);
+    bool res = (wxMessageBox(msg, FFQS(SID_CONFIRM), wxYES_NO | icon, focus) == wxYES);
 
     //Focus window as needed
     if (focus) focus->SetFocus();
@@ -355,6 +358,7 @@ FFQLang::FFQLang(bool loadFile)
     SetString(SID_INVALID_CONSOLE_COMMAND,      "The console command seems invalid, following would be valid: executable -arg1 '%s'||executable -arg1 -arg2 '%s'");
     SetString(SID_CANNOT_SAVE_ACTIVE_QUEUE_ITEM,"The item cannot be saved because it is active!");
     SetString(SID_INLINE_SHELL_CODE_WARNING,    "The command you are about to execute seems to contain inline shell code which may be harmful for your system. Are you sure that you want to take the risk?");
+    SetString(SID_ADVANCED_CUTS_WARNING,        "You have combined advanced cuts with remapping (copy codec) and this will cause the job to fail. Continue anyway?");
 
 
     //Log related messages
@@ -420,6 +424,8 @@ FFQLang::FFQLang(bool loadFile)
     SetString(SID_COMMON_DEFAULTS,              "Defaults");
     SetString(SID_COMMON_UPDATE,                "Update");
     SetString(SID_COMMON_DRY_RUN,               "Dry run...");
+    SetString(SID_COMMON_ATTACHMENT,            "Attachment");
+    SetString(SID_COMMON_DATA,                  "Data");
 
 
     //Main frame UI strings
@@ -466,6 +472,7 @@ FFQLang::FFQLang(bool loadFile)
     SetString(SID_BATCHMAKE_MATCH_INVERSE,     "Inverse matching: Exclude matching streams");
     SetString(SID_BATCHMAKE_PREF_SUBS_CODEC,   "Preferred subtitle codec(s) / language(s):");
     SetString(SID_BATCHMAKE_NOFAIL_CONTENT,    "Do not fail on missing:");
+    SetString(SID_BATCHMAKE_ALSO_INCLUDE,      "If available, also include:");
 
     //Job editor UI strings
     SetString(SID_JOBEDIT_TITLE,                "Edit job");
@@ -519,6 +526,7 @@ FFQLang::FFQLang(bool loadFile)
     SetString(SID_JOBEDIT_ADV_CUTS_CFG_ACCURACY,"Frame accuracy:|Low (fast)|High (slow)");
     SetString(SID_JOBEDIT_ADV_CUTS_CFG_DELAY,   "Load delay:|Fast|Slow");
     SetString(SID_JOBEDIT_ADV_CUTS_CFG_PLACEMENT,"Trim filter placement:|First|Last");
+    SetString(SID_JOBEDIT_ADV_CUTS_QUICK_CUT,   "Perform quick cuts (may be less accurate)");
 
     //Concat tool UI strings
     SetString(SID_CONCAT_TITLE,                 "Make slideshow / concat");

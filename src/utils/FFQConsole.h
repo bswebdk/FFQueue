@@ -31,33 +31,17 @@
 //Maximum lines of consecutive statistics
 #define MAX_STATISTIC_LINES 5
 
-//Colors used in the console
-#define COLOR_GRAY 0x777777
-#define COLOR_BLUE 0xFF0000
-#define COLOR_RED 0x0000FF
-#define COLOR_BLACK 0x000000
-#define COLOR_GREEN 0x007700
-#define COLOR_ORANGE 0x0066FF
+//---------------------------------------------------------------------------------------
 
-//Used for easier export to HTML
-#define CONSOLE_COLOR_COUNT 6
+//The message types that are recognized by the console handler
+enum FF_MSG_TYPE { mtUNDEF, mtSTATS, mtCLIPPING, mtMSG_REPEAT, mtLOW_CONTRAST };
 
 //---------------------------------------------------------------------------------------
 
 //Const array of the colors above for easier search
-const unsigned int CONSOLE_COLORS[ CONSOLE_COLOR_COUNT ] = {
+/*const uint32_t CONSOLE_COLORS[ CONSOLE_COLOR_COUNT ] = {
     COLOR_GRAY, COLOR_BLUE, COLOR_RED, COLOR_BLACK, COLOR_GREEN, COLOR_ORANGE
-};
-
-//---------------------------------------------------------------------------------------
-
-//The message types that are recognized by the console handler
-typedef enum FF_MSG_TYPE
-{
-
-    mtUNDEF, mtSTATS, mtCLIPPING, mtMSG_REPEAT, mtLOW_CONTRAST
-
-} FF_MSG_TYPE;
+};*/
 
 //---------------------------------------------------------------------------------------
 
@@ -79,7 +63,7 @@ class FFQConsole
 
         void AppendBlankLine(int count = 1);
         FF_MSG_TYPE AppendFFOutput(wxString &Output, bool IsStdOut, bool ClearCtrl = false);
-        void AppendLine(const wxString &Line, unsigned int Color, bool ClearCtrl = false);
+        void AppendLine(const wxString &Line, uint32_t Color, bool ClearCtrl = false);
         void AppendStatistics(const wxString &Prog);
         void Clear(bool Ctrl = true);
         void FlushMessages(bool Finalize = true);

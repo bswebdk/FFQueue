@@ -164,7 +164,7 @@ FF_MSG_TYPE FFQConsole::AppendFFOutput(wxString &Output, bool IsStdOut, bool Cle
 
 //---------------------------------------------------------------------------------------
 
-void FFQConsole::AppendLine(const wxString &Line, unsigned int Color, bool ClearCtrl)
+void FFQConsole::AppendLine(const wxString &Line, uint32_t Color, bool ClearCtrl)
 {
 
     //Reset whenever non-progress is added
@@ -185,7 +185,7 @@ void FFQConsole::AppendLine(const wxString &Line, unsigned int Color, bool Clear
     //Style
     wxTextPos p = m_Ctrl->GetLastPosition();
     m_Ctrl->SetSelection(p, p);
-    m_Ctrl->SetDefaultStyle(wxTextAttr(Color));
+    m_Ctrl->SetDefaultStyle(wxTextAttr(FFQCFG()->GetColor(Color)));
 
     //Append
     m_Ctrl->AppendText(Line + CRLF);
@@ -216,7 +216,7 @@ void FFQConsole::AppendStatistics(const wxString &Stats)
     FlushMessages(false);
 
     //Style
-    m_Ctrl->SetDefaultStyle(wxTextAttr(COLOR_GREEN));
+    m_Ctrl->SetDefaultStyle(wxTextAttr(FFQCFG()->GetColor(COLOR_GREEN)));
 
     //Index of last line, zero based + empty last line = -2
     int last = m_Ctrl->GetNumberOfLines() - 2;
@@ -436,11 +436,11 @@ bool FFQConsole::SaveAsHtml(const wxString &FileName)
                          "div{margin:0px;padding:0px;}" + CRLF, t;
 
             //Save styles for each of the colors used
-            for (unsigned int i = 0; i < CONSOLE_COLOR_COUNT; i++)
+            for (int i = 0; i < COLOR_COUNT; i++)
             {
 
                 //Color values are back-words; fix this or colors are wrong in HTML
-                unsigned int c = CONSOLE_COLORS[i];
+                uint32_t c = DEFAULT_COLORS[i];
                 c = ((c & 0xFF0000) >> 16) | ((c & 0x0000FF) << 16) | (c & 0x00FF00);
 
                 //Print the  corrected color value as 6-digit hex
@@ -459,7 +459,7 @@ bool FFQConsole::SaveAsHtml(const wxString &FileName)
             log->Write((void*)scb.data(), scb.length());
 
             //Impossible color value to force new <div in HTML
-            unsigned int last_col = 0xff000000;
+            uint32_t last_col = 0xff000000;
 
             //Freeze
             m_Ctrl->Freeze();
@@ -486,14 +486,15 @@ bool FFQConsole::SaveAsHtml(const wxString &FileName)
                     t += "<div class=\"c";
 
                     //Find correct color
-                    for (unsigned int i = 0; i < CONSOLE_COLOR_COUNT; i++)
+                    t << (FFQCFG()->GetColor(last_col, true) - 1);
+                    /*for (int i = 0; i < CONSOLE_COLOR_COUNT; i++)
                     {
                         if (last_col == CONSOLE_COLORS[i])
                         {
                             t << i;
                             break;
                         }
-                    }
+                    }*/
 
                     //Finish <div
                     t += "\">" + CRLF;

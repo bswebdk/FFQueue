@@ -72,15 +72,15 @@ bool STREAM_MAPPING::Parse(wxString &from)
 
     wxString chk;
 
-    if (from.StartsWith('#'))
+    if (from.StartsWith(HASH))
     {
 
         //The format used in the job editor: #file_id:stream_id codec_type { codec_long_name }
         chk = STR_YES; //Always checked by default
-        from = from.AfterFirst('#');
-        file_id = Str2Long(GetToken(from, ':'), -1);
-        stream_id = Str2Long(GetToken(from, ' '), -1);
-        codec_type = GetToken(from, ' ', false);
+        from = from.AfterFirst(HASH);
+        file_id = Str2Long(GetToken(from, COLON), -1);
+        stream_id = Str2Long(GetToken(from, SPACE), -1);
+        codec_type = GetToken(from, SPACE, false);
         preset_list = "";
 
     }
@@ -89,14 +89,14 @@ bool STREAM_MAPPING::Parse(wxString &from)
     {
 
         //The format used in FFQ_JOB::stream_map: checked,file_id,stream_id,codec_type[,preset][STREAM_MAPPING_SEPERATOR | end of string]
-        chk = GetToken(from, ',');
-        file_id = Str2Long(GetToken(from, ','), -1);
-        stream_id = Str2Long(GetToken(from, ','), -1);
+        chk = GetToken(from, COMMA);
+        file_id = Str2Long(GetToken(from, COMMA), -1);
+        stream_id = Str2Long(GetToken(from, COMMA), -1);
         codec_type = GetToken(from, STREAM_MAPPING_SEPERATOR);
-        if (codec_type.Find(',') > 0)
+        if (codec_type.Find(COMMA) > 0)
         {
-            preset_list = codec_type.After(',');
-            codec_type = codec_type.Before(',');
+            preset_list = codec_type.After(COMMA);
+            codec_type = codec_type.Before(COMMA);
         }
 
     }

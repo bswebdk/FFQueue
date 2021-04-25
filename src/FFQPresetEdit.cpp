@@ -1285,7 +1285,7 @@ bool FFQPresetEdit::Execute(LPFFQ_PRESET preset)
         else if (t == "stream_segment") m_CanSSegment = true;
         else
         {
-            if ( (preset->output_format.Len() > 0) && t.StartsWith(preset->output_format + " ")) sel = OutputFormat->GetCount();
+            if ( (preset->output_format.Len() > 0) && t.StartsWith(preset->output_format + SPACE)) sel = OutputFormat->GetCount();
             OutputFormat->Append(t);
         }
     }
@@ -1340,25 +1340,25 @@ bool FFQPresetEdit::Execute(LPFFQ_PRESET preset)
         VideoBitRate->GetValues(preset->video_rate, false);
 
         //Video quality settings
-        preset->video_quality  = BOOLSTR(UseVideoQScale->GetValue()) + "," + ToStr(VideoQScale->GetValue()) + ","; //qscale
-        preset->video_quality += BOOLSTR(UseConstRate->GetValue()) + "," + ToStr(ConstRate->GetValue()) + ","; //crf
-        preset->video_quality += BOOLSTR(UseMinConstRate->GetValue()) + "," + ToStr(MinConstRate->GetValue()) + ","; //crf_min
-        preset->video_quality += BOOLSTR(UseQMin->GetValue()) + "," + ToStr(QMin->GetValue()) + ","; //qmin
-        preset->video_quality += BOOLSTR(UseQMax->GetValue()) + "," + ToStr(QMax->GetValue()) + ","; //qmax
-        preset->video_quality += BOOLSTR(UseQDiff->GetValue()) + "," + ToStr(QDiff->GetValue()); //qdiff
+        preset->video_quality  = BOOLSTR(UseVideoQScale->GetValue()) + COMMA + ToStr(VideoQScale->GetValue()) + COMMA; //qscale
+        preset->video_quality += BOOLSTR(UseConstRate->GetValue()) + COMMA + ToStr(ConstRate->GetValue()) + COMMA; //crf
+        preset->video_quality += BOOLSTR(UseMinConstRate->GetValue()) + COMMA + ToStr(MinConstRate->GetValue()) + COMMA; //crf_min
+        preset->video_quality += BOOLSTR(UseQMin->GetValue()) + COMMA + ToStr(QMin->GetValue()) + COMMA; //qmin
+        preset->video_quality += BOOLSTR(UseQMax->GetValue()) + COMMA + ToStr(QMax->GetValue()) + COMMA; //qmax
+        preset->video_quality += BOOLSTR(UseQDiff->GetValue()) + COMMA + ToStr(QDiff->GetValue()); //qdiff
 
         //Key frames settings
-        preset->key_frames  = KeyFrameMin->GetValue() + "," + KeyFrameMax->GetValue() + ",";
-        preset->key_frames += StrTrim(MotionEstimation->GetValue()) + ",";
-        preset->key_frames += BOOLSTR(UseSceneChangeSens->GetValue()) + ",";
-        preset->key_frames += ToStr(SceneChangeSens->GetValue()) + ",";
-        preset->key_frames += ToStr(KeyFrameMaxB->GetSelection()) + ",";
-        preset->key_frames += ToStr(KeyFrameMaxP->GetSelection()) + ",";
+        preset->key_frames  = KeyFrameMin->GetValue() + COMMA + KeyFrameMax->GetValue() + COMMA;
+        preset->key_frames += StrTrim(MotionEstimation->GetValue()) + COMMA;
+        preset->key_frames += BOOLSTR(UseSceneChangeSens->GetValue()) + COMMA;
+        preset->key_frames += ToStr(SceneChangeSens->GetValue()) + COMMA;
+        preset->key_frames += ToStr(KeyFrameMaxB->GetSelection()) + COMMA;
+        preset->key_frames += ToStr(KeyFrameMaxP->GetSelection()) + COMMA;
         preset->key_frames += BOOLSTR(UseClosedGOP->GetValue());
 
         //Other video settings
         unsigned int sel = VideoSync->GetSelection();
-        preset->video_sync = (sel == 0) ? "" : VideoSync->GetString(sel).BeforeFirst(' ').Lower();
+        preset->video_sync = (sel == 0) ? "" : VideoSync->GetString(sel).BeforeFirst(SPACE).Lower();
         preset->frame_rate = StrTrim(FrameRate->GetValue());
         preset->pixel_format = StrTrim(PixFmt->GetValue());
         sel = Trellis->GetSelection();
@@ -1368,27 +1368,27 @@ bool FFQPresetEdit::Execute(LPFFQ_PRESET preset)
         preset->threads = StrTrim(VideoThreads->GetValue());
 
         //HW Decode settings
-        preset->hw_decode = HWD_Accel->GetString(HWD_Accel->GetSelection()) + ",";
+        preset->hw_decode = HWD_Accel->GetString(HWD_Accel->GetSelection()) + COMMA;
         s = HWD_Codec->GetValue();
-        preset->hw_decode += GetToken(s, " ", false) + ",";
-        preset->hw_decode += HWD_Device->GetValue() + "," + HWD_DeviceInit->GetValue();
+        preset->hw_decode += GetToken(s, SPACE, false) + COMMA;
+        preset->hw_decode += HWD_Device->GetValue() + COMMA + HWD_DeviceInit->GetValue();
 
 
         //Audio settings
-        preset->audio_codec = AudioCodec->GetStringSelection().BeforeFirst(' ');
+        preset->audio_codec = AudioCodec->GetStringSelection().BeforeFirst(SPACE);
 
         //Audio bit rate
         AudioBitRate->GetValues(preset->audio_rate, false);
 
         //Audio quality
-        preset->audio_quality = BOOLSTR(UseAudioQScale->GetValue()) + "," + ToStr(AudioQScale->GetValue()); //qscale
+        preset->audio_quality = BOOLSTR(UseAudioQScale->GetValue()) + COMMA + ToStr(AudioQScale->GetValue()); //qscale
 
         //Audio other
         preset->audio_channels = StrTrim(AudioChannels->GetValue());
         preset->audio_profile = StrTrim(AudioProfile->GetValue());
 
         //Subtitles settings
-        preset->subtitles.codec = SubsCodec->GetStringSelection().BeforeFirst(' ');
+        preset->subtitles.codec = SubsCodec->GetStringSelection().BeforeFirst(SPACE);
         preset->subtitles.bitmap = SubsBitmap->GetValue();
         preset->subtitles.scale = SubsScale->GetValue();
         if (SubsSizePAL->GetValue()) preset->subtitles.size_type = 1;
@@ -1407,8 +1407,8 @@ bool FFQPresetEdit::Execute(LPFFQ_PRESET preset)
         }
 
         //Dispositions
-        preset->disposition  = (m_DispositionSelection[0] > 0 ? ToStr(m_DispositionSelection[0] - 1) : "") + ",";
-        preset->disposition += (m_DispositionSelection[1] > 0 ? ToStr(m_DispositionSelection[1] - 1) : "") + ",";
+        preset->disposition  = (m_DispositionSelection[0] > 0 ? ToStr(m_DispositionSelection[0] - 1) : "") + COMMA;
+        preset->disposition += (m_DispositionSelection[1] > 0 ? ToStr(m_DispositionSelection[1] - 1) : "") + COMMA;
         preset->disposition += (m_DispositionSelection[2] > 0 ? ToStr(m_DispositionSelection[2] - 1) : "");
 
         //Filters
@@ -1435,7 +1435,7 @@ bool FFQPresetEdit::Execute(LPFFQ_PRESET preset)
         preset->mf_faststart = MF_FastStart->GetValue();
         preset->keep_filetime = KeepFileTime->GetValue();
         s = OutputFormat->GetValue();
-        preset->output_format = GetToken(s, " ");
+        preset->output_format = GetToken(s, SPACE);
         preset->segmenting.length = Str2Long(SegmentLen->GetValue(), 0);
         preset->segmenting.length_type = SegmentLenType->GetSelection();
         preset->segmenting.list_file = SegmentListType->GetSelection();
@@ -1494,7 +1494,7 @@ void FFQPresetEdit::PreviewFilters()
             LPFFQ_QUEUE_ITEM item = ((FFQMain*)p)->GetSelectedItem();
             if (item) m_PreviewFile = item->GetInput(0).path;
         }*/
-        LPFFQ_QUEUE_ITEM item = FFQMain::getInstance()->GetSelectedItem();
+        LPFFQ_QUEUE_ITEM item = FFQMain::GetInstance()->GetSelectedItem();
         if (item) m_PreviewFile = item->GetInput(0).path;
     }
 
@@ -2228,7 +2228,7 @@ void FFQPresetEdit::OnButtonClick(wxCommandEvent& event)
         //Confirm that the preset can be saved
         bool can_modify = true;
 
-        if (FFQMain::getInstance()->IsPresetActive(m_Preset, &can_modify) && (!can_modify))
+        if (FFQMain::GetInstance()->IsPresetActive(m_Preset, &can_modify) && (!can_modify))
         {
             ShowError(this, FFQS(SID_PRESET_MODIFY_ACTIVE_ERROR));
             return;
@@ -2304,7 +2304,7 @@ void FFQPresetEdit::OnButtonClick(wxCommandEvent& event)
             if (vErr || aErr)
             {
 
-                if (!DoConfirm(FFQS(SID_PRESET_INVALID_FILTERS_ADDED)))
+                if (!DoConfirm(NULL, FFQS(SID_PRESET_INVALID_FILTERS_ADDED), wxICON_WARNING))
                 {
 
                     Pages->SetSelection(Pages->FindPage(FilterPage));

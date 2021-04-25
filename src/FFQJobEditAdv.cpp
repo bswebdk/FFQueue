@@ -731,8 +731,8 @@ wxString FFQJobEditAdv::GetStreamMapping()
         smap.Parse(s);
         smap.checked = StreamList->IsChecked(i);
         s = "";
-        for (unsigned int pi = 0; pi < sd->presets.Count(); pi++) s += sd->presets[pi] + " ";
-        smap.preset_list = s.BeforeLast(' ');
+        for (unsigned int pi = 0; pi < sd->presets.Count(); pi++) s += sd->presets[pi] + SPACE;
+        smap.preset_list = s.BeforeLast(SPACE);
         if (res.Len() > 0) res += STREAM_MAPPING_SEPERATOR;
         res += smap.ToString();
 
@@ -938,6 +938,7 @@ void FFQJobEditAdv::SetStreamMapping(wxString mapping)
     //If the stream mapping is empty all streams must be selected
     if (mapping.Len() == 0) for (unsigned int i = 0; i < StreamList->GetCount(); i++) StreamList->Check(i, true);
 
+
     //Else the mapping must examined and applied per stream
     else
     {
@@ -951,8 +952,8 @@ void FFQJobEditAdv::SetStreamMapping(wxString mapping)
 
             //Parse one mapping and create the search string
             smap.Parse(mapping);
-            sw = "#";
-            sw << smap.file_id << ":" << smap.stream_id << " " << smap.codec_type;
+            sw = HASH;
+            sw << smap.file_id << COLON << smap.stream_id << SPACE << smap.codec_type;
 
             //Locate the current mapping in the stream list
             for (unsigned int i = midx; i < StreamList->GetCount(); i++)
@@ -965,7 +966,7 @@ void FFQJobEditAdv::SetStreamMapping(wxString mapping)
                     LPSTREAM_DATA sd = (LPSTREAM_DATA)StreamList->GetClientData(i);
                     sd->presets.Clear();
                     wxString s = smap.preset_list;
-                    while (s.Len() > 0) sd->presets.Add(GetToken(s, ' '));
+                    while (s.Len() > 0) sd->presets.Add(GetToken(s, SPACE));
                     StreamList->Check(i, smap.checked);
                     ListBoxSwapItems(StreamList, i, midx, true);
                     break;
@@ -1023,7 +1024,7 @@ bool FFQJobEditAdv::StoreCommand(wxString *cmd_line)
 
     //Pack and base64 all custom items
     cmd = "1\n"; //Stored commands version
-    for (unsigned int i = 1; i < CmdLine->GetCount(); i++) cmd += CmdLine->GetString(i) + "\n";
+    for (unsigned int i = 1; i < CmdLine->GetCount(); i++) cmd += CmdLine->GetString(i) + LF;
     CompressAndBase64(cmd, 0);
 
     //Check for no modifications
@@ -1048,6 +1049,7 @@ void FFQJobEditAdv::UpdateControls()
         TIME_VALUE dur;
         if ((!ctrls->valid) || (!ctrls->probe.GetDuration(dur))) dur = 0;
         ctrls->cuts->Enable(m_CanCut && ctrls->can_cut && (dur.ToMilliseconds() > 0));
+        ctrls->start->Enable((ctrls->cut_cfg.cuts.Len() == 0) || (!ctrls->cut_cfg.quick));
 
     }
 
@@ -1132,6 +1134,61 @@ void FFQJobEditAdv::UpdateToolTip(LPINPUT_CTRLS ctrls)
 
 //---------------------------------------------------------------------------------------
 
+bool FFQJobEditAdv::ValidateCuts()
+{
+
+    //This will try to detect if advances cuts is combined with copy codecs
+    //or mapping of subtitles which is known to fail.
+
+    bool ok = true;
+    for (size_t i = 0; ok && (i < m_CtrlData.Count()); i++)
+    {
+        LPINPUT_CTRLS ctrls = GetCtrlData(i);
+        ok = ctrls->cut_cfg.cuts.Len() == 0;
+    }
+    if (ok) return true; //No cuts present
+
+    ok = true;
+    LPFFQ_PRESET pst = Preset->GetSelectedPreset();
+    wxString smap = GetStreamMapping();
+    STREAM_MAPPING sm;
+
+    while (ok && (smap.Len() > 0))
+    {
+
+        sm.Parse(smap);
+        if (!sm.checked) continue; //Unused stream, go to next
+
+        if (pst)
+        {
+            //Add the default preset to the list of presets for the stream
+            if (sm.preset_list.Len() > 0) sm.preset_list += SPACE;
+            sm.preset_list += pst->preset_id.ToString();
+        }
+
+        //Check if any of the used presets have "copy" as codec for the stream
+        while (ok && (sm.preset_list.Len() > 0))
+        {
+            pst = FFQPresetMgr::Get()->GetPreset(GetToken(sm.preset_list, SPACE));
+            if (pst)
+            {
+                ok = ((sm.codec_type == CODEC_TYPE_VIDEO) && (pst->video_codec != CODEC_COPY))
+                      ||
+                     ((sm.codec_type == CODEC_TYPE_AUDIO) && (pst->audio_codec != CODEC_COPY))
+                      ||
+                     ((sm.codec_type == CODEC_TYPE_SUBTITLE) && (pst->subtitles.codec != CODEC_COPY));
+            }
+
+        }
+
+    }
+
+    return ok;
+
+}
+
+//---------------------------------------------------------------------------------------
+
 bool FFQJobEditAdv::ValidateJob()
 {
 
@@ -1162,9 +1219,9 @@ bool FFQJobEditAdv::ValidateJob()
 
         //Nope, prompt the wronginess
         cmd = "";
-        if (!inp_ok) cmd += CMD_INPUTS + " ";
-        if (!pst_ok) cmd += CMD_PRESET + " ";
-        if (!out_ok) cmd += CMD_OUTPUT + " ";
+        if (!inp_ok) cmd += CMD_INPUTS + SPACE;
+        if (!pst_ok) cmd += CMD_PRESET + SPACE;
+        if (!out_ok) cmd += CMD_OUTPUT + SPACE;
         cmd.Trim();
         return ShowError(CmdLine, FFQSF(SID_COMMAND_LINE_INVALID, cmd));
 
@@ -1187,6 +1244,9 @@ bool FFQJobEditAdv::ValidateJob()
 
     }
 
+    //Check if cuts are valid and warn about it
+    if (!ValidateCuts() && ( !DoConfirm(NULL, FFQS(SID_ADVANCED_CUTS_WARNING), wxICON_WARNING) )) return false;
+
     //Job is valid
     return true;
 
@@ -1200,6 +1260,10 @@ void FFQJobEditAdv::OnIdle(wxIdleEvent &event)
     //For some reason the focus of the wxTextCtrl for input files looses
     //focus sometimes during idle work. Therefore we store the current focus
     //in order to be able to restore it later
+    static bool idling = false;
+    if (idling) return;
+    idling = true;
+
     wxWindow *focus = wxWindow::FindFocus();
 
     //Refresh streams
@@ -1276,6 +1340,8 @@ void FFQJobEditAdv::OnIdle(wxIdleEvent &event)
         //m_PopupCtrls->CheckFocus(focus);
 
     }
+
+    idling = false;
 
 }
 

@@ -134,6 +134,7 @@ const FFQ_SID SID_NOTHING_QUEUED                    = SID_BASIC_BASE + 91;
 const FFQ_SID SID_INVALID_CONSOLE_COMMAND           = SID_BASIC_BASE + 92;
 const FFQ_SID SID_CANNOT_SAVE_ACTIVE_QUEUE_ITEM     = SID_BASIC_BASE + 93;
 const FFQ_SID SID_INLINE_SHELL_CODE_WARNING         = SID_BASIC_BASE + 94;
+const FFQ_SID SID_ADVANCED_CUTS_WARNING             = SID_BASIC_BASE + 95;
 
 
 
@@ -202,6 +203,8 @@ const FFQ_SID SID_COMMON_OUTPUT                     = SID_COMMON_BASE + 28;
 const FFQ_SID SID_COMMON_DEFAULTS                   = SID_COMMON_BASE + 29;
 const FFQ_SID SID_COMMON_UPDATE                     = SID_COMMON_BASE + 30;
 const FFQ_SID SID_COMMON_DRY_RUN                    = SID_COMMON_BASE + 31;
+const FFQ_SID SID_COMMON_ATTACHMENT                 = SID_COMMON_BASE + 32;
+const FFQ_SID SID_COMMON_DATA                       = SID_COMMON_BASE + 33;
 
 
 //Main frame UI
@@ -255,6 +258,7 @@ const FFQ_SID SID_BATCHMAKE_MAKE_JOBS_FOR           = SID_BATCHMAKE_BASE + 7;
 const FFQ_SID SID_BATCHMAKE_MATCH_INVERSE           = SID_BATCHMAKE_BASE + 8;
 const FFQ_SID SID_BATCHMAKE_PREF_SUBS_CODEC         = SID_BATCHMAKE_BASE + 9;
 const FFQ_SID SID_BATCHMAKE_NOFAIL_CONTENT          = SID_BATCHMAKE_BASE + 10;
+const FFQ_SID SID_BATCHMAKE_ALSO_INCLUDE            = SID_BATCHMAKE_BASE + 11;
 
 
 
@@ -313,6 +317,7 @@ const FFQ_SID SID_JOBEDIT_ADV_CUTS_PREVIEW_CFG      = SID_JOBEDIT_ADV_BASE + 33;
 const FFQ_SID SID_JOBEDIT_ADV_CUTS_CFG_ACCURACY     = SID_JOBEDIT_ADV_BASE + 34;
 const FFQ_SID SID_JOBEDIT_ADV_CUTS_CFG_DELAY        = SID_JOBEDIT_ADV_BASE + 35;
 const FFQ_SID SID_JOBEDIT_ADV_CUTS_CFG_PLACEMENT    = SID_JOBEDIT_ADV_BASE + 36;
+const FFQ_SID SID_JOBEDIT_ADV_CUTS_QUICK_CUT        = SID_JOBEDIT_ADV_BASE + 37;
 
 //Concat tool UI
 const FFQ_SID SID_CONCAT_BASE                       = 4500;
@@ -1072,7 +1077,7 @@ void EncBuf(uint8_t *buf, uint32_t len, STR_HASH &key);
 
 //Message functions
 bool DoConfirm(wxString msg);
-bool DoConfirm(wxWindow *focus, wxString msg);
+bool DoConfirm(wxWindow *focus, wxString msg, unsigned int icon = 0);
 bool ShowError(wxString msg);
 bool ShowError(wxWindow *focus, wxString msg);
 bool ShowInfo(wxString msg);

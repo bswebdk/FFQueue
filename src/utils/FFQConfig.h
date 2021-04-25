@@ -29,6 +29,7 @@
 #include "FFQPixFmt.h"
 #include "FFQPreset.h"
 #include "FFQCodecInfo.h"
+#include "FFQConst.h"
 #include "../utils/FFQTaskBar.h"
 
 //File name for configurations
@@ -43,8 +44,8 @@ extern const wxString TEMP_PATH_SYST;
 extern const wxString TEMP_PATH_DEST;
 
 //Used to define the variables used in output name pattern
-extern const wxString PATTERN_VAR_ORGNAME;
-extern const wxString PATTERN_VAR_ORGFMT;
+extern const wxString PATTERN_VAR_FILENAME;
+extern const wxString PATTERN_VAR_FILEFMT;
 extern const wxString PATTERN_VAR_PREFFMT;
 extern const wxString PATTERN_VAR_PRESET;
 
@@ -106,6 +107,8 @@ class FFQConfig
 	    wxString user_locale;
 	    wxString share_data_dir;
 
+	    uint32_t colors[COLOR_COUNT];
+
 		//Methods to access options not stored in public vars
 		bool            AreFiltersAvailable(wxString filter_list);
 		void            CheckFontsConf();
@@ -113,6 +116,7 @@ class FFQConfig
         wxString        FindSecondaryInputFile(wxString &for_filename);
         unsigned int    FindSecondaryInputFiles(wxString &for_filename, wxArrayString &dest, unsigned int limit = 0);
         LPCODEC_INFO    GetCodecInfo();
+        uint32_t        GetColor(uint32_t color, bool find_index = false);
 		wxString        GetConfigPath(wxString append_filename = "");
 		wxString        GetConsoleCommand(wxString prog, wxString args);
         wxString        GetExecutableName(EXECUTABLE_TYPE exe_type, bool add_ext = true);
@@ -125,7 +129,7 @@ class FFQConfig
 		wxString        GetHWAccelerators();
 		wxString        GetHWDecoders();
 		LPPIXEL_FORMAT  GetPixelFormats();
-		wxString        GetPreferredOutputName(wxString for_input_file, LPFFQ_PRESET pst = NULL);
+		wxString        GetPreferredOutputName(wxString for_input_file, LPFFQ_PRESET pst = NULL, bool use_preferred_path = true, bool use_preferred_format = true);
 		wxWindow*       GetPresetManager();
 		FFQTaskBar*     GetTaskBar();
 		wxString        GetTmpPath(wxString dest_path, bool make_sub_folder = false, wxString temp_file_extension = "");

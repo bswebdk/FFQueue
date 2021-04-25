@@ -260,19 +260,19 @@ wxSizer* FilterBasePanel::GetTimeLimitControls(bool AddLabelThis)
      if (AddLabelThis)
      {
 
-        st = new wxStaticText(m_CtrlParent, wxID_ANY, FFQS(SID_FILTER_THIS) + " ", wxDefaultPosition, wxDefaultSize, 0);
+        st = new wxStaticText(m_CtrlParent, wxID_ANY, FFQS(SID_FILTER_THIS) + SPACE, wxDefaultPosition, wxDefaultSize, 0);
         m_TimeSizer->Add(st, 1, wxTOP|/*wxBOTTOM|*/wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, m_Padding);
 
      }
 
-     st = new wxStaticText(m_CtrlParent, wxID_ANY, FFQS(SID_FILTER_TIME_LIMIT_FROM) + " ", wxDefaultPosition, wxDefaultSize, 0);
+     st = new wxStaticText(m_CtrlParent, wxID_ANY, FFQS(SID_FILTER_TIME_LIMIT_FROM) + SPACE, wxDefaultPosition, wxDefaultSize, 0);
      m_TimeSizer->Add(st, 1, wxTOP|/*wxBOTTOM|*/wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, m_Padding);
-     m_ShowTime1 = new wxHyperlinkCtrl(m_CtrlParent, 1000, _(" "), wxEmptyString, wxDefaultPosition, wxDefaultSize, wxHL_DEFAULT_STYLE);
+     m_ShowTime1 = new wxHyperlinkCtrl(m_CtrlParent, 1000, _(SPACE), wxEmptyString, wxDefaultPosition, wxDefaultSize, wxHL_DEFAULT_STYLE);
      m_TimeSizer->Add(m_ShowTime1, 1, wxTOP|/*wxBOTTOM|*/wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, m_Padding);
 
-     st = new wxStaticText(m_CtrlParent, wxID_ANY, " " + FFQS(SID_FILTER_TIME_LIMIT_TO) + " ", wxDefaultPosition, wxDefaultSize, 0);
+     st = new wxStaticText(m_CtrlParent, wxID_ANY, " " + FFQS(SID_FILTER_TIME_LIMIT_TO) + SPACE, wxDefaultPosition, wxDefaultSize, 0);
      m_TimeSizer->Add(st, 1, wxTOP|/*wxBOTTOM|*/wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, m_Padding);
-     m_ShowTime2 = new wxHyperlinkCtrl(m_CtrlParent, 1001, _(" "), wxEmptyString, wxDefaultPosition, wxDefaultSize, wxHL_DEFAULT_STYLE);
+     m_ShowTime2 = new wxHyperlinkCtrl(m_CtrlParent, 1001, _(SPACE), wxEmptyString, wxDefaultPosition, wxDefaultSize, wxHL_DEFAULT_STYLE);
      m_TimeSizer->Add(m_ShowTime2, 1, wxTOP|/*wxBOTTOM|*/wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, m_Padding);
 
      Connect(1000, wxEVT_HYPERLINK, (wxObjectEventFunction)&FilterBasePanel::OnTimeLinkClick);
@@ -320,9 +320,9 @@ bool FilterBasePanel::GetTimeLimitFilter(wxString &str, bool colonFirst)
     if (!GetTimeLimitValues(s, e, true)) return false;
     if (s + e == 0) return true;
     if (e == 0) e = 0xffffffff;
-    str.Printf("enable='between(t," + UINT64FMT + "," + UINT64FMT + ")'", s, e);
-    if (colonFirst) str = ":" + str;
-    else str += ":";
+    str.Printf("enable='between(t," + UINT64FMT + COMMA + UINT64FMT + ")'", s, e);
+    if (colonFirst) str = COLON + str;
+    else str += COLON;
     return true;
 
 }
@@ -466,6 +466,9 @@ wxSizer* FilterBasePanel::GetLeftAndTopControls(wxValidator &val)
 
 void FilterBasePanel::GetLeftAndTopValues(int &left, int &top)
 {
+    //wxIntegerValidator<unsigned int> *val = dynamic_cast<wxIntegerValidator<unsigned int>*>(m_Left->GetValidator());
+    //left = Str2Long(m_Left->GetValue(), val ? val->GetMin() : 0);
+    //top = Str2Long(m_Top->GetValue(), val ? val->GetMin() : 0);
     left = Str2Long(m_Left->GetValue(), 0);
     top = Str2Long(m_Top->GetValue(), 0);
 }
@@ -482,8 +485,8 @@ void FilterBasePanel::SetLeftAndTopValues(int left, int top)
 
 void FilterBasePanel::SetLeftAndTopValues(wxString &from)
 {
-    m_Left->SetValue(GetToken(from, ','));
-    m_Top->SetValue(GetToken(from, ','));
+    m_Left->SetValue(GetToken(from, COMMA));
+    m_Top->SetValue(GetToken(from, COMMA));
 }
 
 //---------------------------------------------------------------------------------------
@@ -550,8 +553,8 @@ void FilterBasePanel::SetWidthAndHeightValues(int width, int height)
 
 void FilterBasePanel::SetWidthAndHeightValues(wxString &from)
 {
-    m_Width->SetValue(GetToken(from, ','));
-    m_Height->SetValue(GetToken(from, ','));
+    m_Width->SetValue(GetToken(from, COMMA));
+    m_Height->SetValue(GetToken(from, COMMA));
 }
 
 //---------------------------------------------------------------------------------------

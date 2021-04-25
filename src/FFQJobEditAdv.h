@@ -173,6 +173,7 @@ class FFQJobEditAdv: public wxDialog
 		void UpdateControls();
 		void UpdateLink(int index);
 		void UpdateToolTip(LPINPUT_CTRLS ctrls = NULL);
+		bool ValidateCuts();
 		bool ValidateJob();
 
 		void OnIdle(wxIdleEvent &event);

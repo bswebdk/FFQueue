@@ -69,7 +69,9 @@ class FFQBatchMake: public wxDialog
 		wxButton* DryRunButton;
 		wxButton* MakeButton;
 		wxCheckBox* AudInverse;
+		wxCheckBox* IncludeAttachment;
 		wxCheckBox* IncludeAudio;
+		wxCheckBox* IncludeData;
 		wxCheckBox* IncludeSubs;
 		wxCheckBox* IncludeVideo;
 		wxCheckBox* NoFailAudio;
@@ -82,6 +84,7 @@ class FFQBatchMake: public wxDialog
 		wxDirDialog* DestPathDlg;
 		wxFlexGridSizer* MainSizer;
 		wxGauge* Gauge;
+		wxStaticLine* SL1;
 		wxStaticLine* StaticLine1;
 		wxStaticLine* StaticLine2;
 		wxStaticLine* StaticLine3;
@@ -93,6 +96,7 @@ class FFQBatchMake: public wxDialog
 		wxStaticText* ST5;
 		wxStaticText* ST6;
 		wxStaticText* ST7;
+		wxStaticText* ST8;
 		wxTextCtrl* OutputPath;
 		//*)
 

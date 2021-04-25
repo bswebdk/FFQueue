@@ -35,7 +35,17 @@
 													<handler function="ActionClick" entry="EVT_LISTBOX" />
 													<handler function="OnCutListDClick" entry="EVT_LISTBOX_DCLICK" />
 												</object>
-												<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+												<flag>wxALL|wxEXPAND</flag>
+												<option>1</option>
+											</object>
+											<object class="sizeritem">
+												<object class="wxCheckBox" name="ID_QUICKCUT" variable="QuickCut" member="yes">
+													<label>Qc</label>
+													<extra_code>QuickCut-&gt;SetLabel(FFQS(SID__JOBEDIT__ADV__CUTS__QUICK__CUT));</extra_code>
+													<handler function="ActionClick" entry="EVT_CHECKBOX" />
+												</object>
+												<flag>wxTOP|wxBOTTOM|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+												<border>3</border>
 												<option>1</option>
 											</object>
 											<object class="sizeritem">
@@ -73,7 +83,7 @@
 																</object>
 															</object>
 														</object>
-														<flag>wxLEFT|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+														<flag>wxLEFT|wxEXPAND</flag>
 														<border>5</border>
 														<option>1</option>
 													</object>
@@ -109,21 +119,21 @@
 																</object>
 															</object>
 														</object>
-														<flag>wxTOP|wxLEFT|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+														<flag>wxTOP|wxLEFT|wxEXPAND</flag>
 														<border>5</border>
 														<option>1</option>
 													</object>
 												</object>
-												<flag>wxTOP|wxBOTTOM|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+												<flag>wxTOP|wxBOTTOM|wxEXPAND</flag>
 												<border>5</border>
 												<option>1</option>
 											</object>
 										</object>
-										<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+										<flag>wxALL|wxEXPAND</flag>
 										<option>1</option>
 									</object>
 								</object>
-								<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<flag>wxALL|wxEXPAND</flag>
 								<border>3</border>
 								<option>1</option>
 							</object>
@@ -154,7 +164,7 @@
 															<style>wxTE_PROCESS_ENTER|wxTE_RIGHT</style>
 															<handler function="ActionClick" entry="EVT_TEXT_ENTER" />
 														</object>
-														<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+														<flag>wxALL|wxEXPAND</flag>
 														<border>3</border>
 														<option>1</option>
 													</object>
@@ -172,7 +182,7 @@
 															<style>wxTE_PROCESS_ENTER|wxTE_RIGHT</style>
 															<handler function="ActionClick" entry="EVT_TEXT_ENTER" />
 														</object>
-														<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+														<flag>wxALL|wxEXPAND</flag>
 														<border>3</border>
 														<option>1</option>
 													</object>
@@ -197,7 +207,7 @@
 														<option>1</option>
 													</object>
 												</object>
-												<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+												<flag>wxALL|wxEXPAND</flag>
 												<option>1</option>
 											</object>
 											<object class="sizeritem">
@@ -214,7 +224,7 @@
 										<option>1</option>
 									</object>
 								</object>
-								<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<flag>wxALL|wxEXPAND</flag>
 								<border>3</border>
 								<option>1</option>
 							</object>
@@ -260,7 +270,7 @@
 														<option>1</option>
 													</object>
 												</object>
-												<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+												<flag>wxALL|wxEXPAND</flag>
 												<option>1</option>
 											</object>
 											<object class="sizeritem">
@@ -268,21 +278,21 @@
 													<label>Dur</label>
 													<fg>wxSYS_COLOUR_GRAYTEXT</fg>
 												</object>
-												<flag>wxALL|wxEXPAND|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+												<flag>wxALL|wxEXPAND</flag>
 												<border>3</border>
 												<option>1</option>
 											</object>
 										</object>
-										<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+										<flag>wxALL|wxEXPAND</flag>
 										<option>1</option>
 									</object>
 								</object>
-								<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<flag>wxALL|wxEXPAND</flag>
 								<border>3</border>
 								<option>1</option>
 							</object>
 						</object>
-						<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<flag>wxALL|wxEXPAND</flag>
 						<border>2</border>
 						<option>1</option>
 					</object>
@@ -304,7 +314,7 @@
 											<object class="sizeritem">
 												<object class="wxPanel" name="wxID_ANY" variable="FrameView" member="yes">
 													<extra_code>SBS4-&gt;GetStaticBox()-&gt;SetLabel(FFQS(SID__JOBEDIT__ADV__CUTS__PREVIEW));&#x0A;FrameView-&gt;SetMinSize(fv__size);</extra_code>
-													<style>wxNO_BORDER</style>
+													<style>wxBORDER_NONE</style>
 													<handler function="OnFrameViewPaint" entry="EVT_PAINT" />
 												</object>
 												<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
@@ -316,7 +326,7 @@
 													<pagesize>25</pagesize>
 													<style>wxSL_TOP</style>
 												</object>
-												<flag>wxBOTTOM|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+												<flag>wxBOTTOM|wxEXPAND</flag>
 												<border>3</border>
 												<option>1</option>
 											</object>
@@ -367,12 +377,12 @@
 														<object class="wxStaticText" name="wxID_ANY" variable="FramePos" member="yes">
 															<label>Pos</label>
 														</object>
-														<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+														<flag>wxALL|wxEXPAND</flag>
 														<border>3</border>
 														<option>1</option>
 													</object>
 												</object>
-												<flag>wxTOP|wxLEFT|wxRIGHT|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+												<flag>wxTOP|wxLEFT|wxRIGHT|wxEXPAND</flag>
 												<border>3</border>
 												<option>1</option>
 											</object>
@@ -381,7 +391,7 @@
 										<option>1</option>
 									</object>
 								</object>
-								<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<flag>wxALL|wxEXPAND</flag>
 								<border>3</border>
 								<option>1</option>
 							</object>
@@ -416,7 +426,7 @@
 													<value>2</value>
 													<max>20</max>
 												</object>
-												<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+												<flag>wxALL|wxEXPAND</flag>
 												<option>1</option>
 											</object>
 											<object class="sizeritem">
@@ -451,7 +461,7 @@
 													<value>3</value>
 													<max>20</max>
 												</object>
-												<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+												<flag>wxALL|wxEXPAND</flag>
 												<option>1</option>
 											</object>
 											<object class="sizeritem">
@@ -468,7 +478,7 @@
 										<option>1</option>
 									</object>
 								</object>
-								<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<flag>wxALL|wxEXPAND</flag>
 								<border>3</border>
 								<option>1</option>
 							</object>
@@ -504,17 +514,17 @@
 										<option>1</option>
 									</object>
 								</object>
-								<flag>wxTOP|wxBOTTOM|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<flag>wxTOP|wxBOTTOM|wxEXPAND</flag>
 								<border>10</border>
 								<option>1</option>
 							</object>
 						</object>
-						<flag>wxTOP|wxBOTTOM|wxRIGHT|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<flag>wxTOP|wxBOTTOM|wxRIGHT|wxEXPAND</flag>
 						<border>2</border>
 						<option>1</option>
 					</object>
 				</object>
-				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<flag>wxALL|wxEXPAND</flag>
 				<option>1</option>
 			</object>
 		</object>

@@ -34,7 +34,7 @@
 					<object class="sizeritem">
 						<object class="wxFlexGridSizer" variable="FlexGridSizer3" member="no">
 							<cols>1</cols>
-							<rows>11</rows>
+							<rows>13</rows>
 							<growablecols>0</growablecols>
 							<object class="sizeritem">
 								<object class="wxFlexGridSizer" variable="FlexGridSizer4" member="no">
@@ -106,6 +106,51 @@
 										<object class="wxCheckBox" name="ID_NOFAILSUBS" variable="NoFailSubs" member="yes">
 											<label>S</label>
 											<extra_code>NoFailSubs-&gt;SetLabel(FFQS(SID__COMMON__SUBTITLES));</extra_code>
+										</object>
+										<flag>wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL</flag>
+										<option>1</option>
+									</object>
+								</object>
+								<flag>wxALL|wxEXPAND</flag>
+								<border>3</border>
+								<option>1</option>
+							</object>
+							<object class="sizeritem">
+								<object class="wxStaticLine" name="wxID_ANY" variable="SL1" member="yes">
+									<size>10,-1</size>
+								</object>
+								<flag>wxTOP|wxBOTTOM|wxEXPAND</flag>
+								<border>3</border>
+								<option>1</option>
+							</object>
+							<object class="sizeritem">
+								<object class="wxFlexGridSizer" variable="FlexGridSizer9" member="no">
+									<cols>3</cols>
+									<rows>1</rows>
+									<hgap>10</hgap>
+									<growablecols>0</growablecols>
+									<growablerows>0</growablerows>
+									<object class="sizeritem">
+										<object class="wxStaticText" name="wxID_ANY" variable="ST8" member="yes">
+											<label>IncX</label>
+											<extra_code>ST8-&gt;SetLabel(FFQS(SID__BATCHMAKE__ALSO__INCLUDE));</extra_code>
+										</object>
+										<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+										<border>3</border>
+										<option>1</option>
+									</object>
+									<object class="sizeritem">
+										<object class="wxCheckBox" name="wxID_ANY" variable="IncludeAttachment" member="yes">
+											<label>T</label>
+											<extra_code>IncludeAttachment-&gt;SetLabel(FFQS(SID__COMMON__ATTACHMENT));</extra_code>
+										</object>
+										<flag>wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL</flag>
+										<option>1</option>
+									</object>
+									<object class="sizeritem">
+										<object class="wxCheckBox" name="wxID_ANY" variable="IncludeData" member="yes">
+											<label>D</label>
+											<extra_code>IncludeData-&gt;SetLabel(FFQS(SID__COMMON__DATA));</extra_code>
 										</object>
 										<flag>wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL</flag>
 										<option>1</option>

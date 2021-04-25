@@ -23,7 +23,7 @@
 
 #include "FFQConfig.h"
 #include "FFQProcess.h"
-#include "FFQConst.h"
+#include "../FFQMain.h"
 #include "../FFQPresetMgr.h"
 #include "../bin_res.h"
 #include <wx/filename.h>
@@ -88,6 +88,7 @@ const wxString CFG_CONFIRM_DELETE_JOBS = "confirm_delete_jobs";
 const wxString CFG_PREVIEW_MAP_SUBS = "preview_map_subs";
 const wxString CFG_SUBS_CHARENC = "subs_charenc";
 const wxString CFG_LOCALE = "locale";
+const wxString CFG_COLORS = "colors";
 
 //---------------------------------------------------------------------------------------
 
@@ -425,6 +426,8 @@ void FFQConfig::CheckFontsConf()
 
 //---------------------------------------------------------------------------------------
 
+#define LUMINANCE(cl) (0.299*cl.Red() + 0.587*cl.Green() + 0.114*cl.Blue()) / 255.0
+
 void FFQConfig::DefaultOptions()
 {
 
@@ -462,6 +465,9 @@ void FFQConfig::DefaultOptions()
     saved_commands = "";
     subs_charenc = "";
     user_locale = "";
+
+    bool dark = LUMINANCE(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOWTEXT)) - LUMINANCE(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW)) > 0.2;
+    memcpy(colors, dark ? DEFAULT_COLORS_DARK : DEFAULT_COLORS, sizeof(uint32_t) * COLOR_COUNT);
 
 	//Private config
     if (m_CodecInfo) delete m_CodecInfo;
@@ -539,6 +545,22 @@ LPCODEC_INFO FFQConfig::GetCodecInfo()
 
     //Return the list of codec info's
     return m_CodecInfo;
+
+}
+
+//---------------------------------------------------------------------------------------
+
+uint32_t FFQConfig::GetColor(uint32_t color, bool find_index)
+{
+
+    if (find_index)
+    {
+        for (int i = 0; i < COLOR_COUNT; i++) if (colors[i] == color) return i + 1;
+        return 0;
+    }
+
+    uint8_t ci = COLOR_INDEX(color);
+    return (ci > 0) && (ci <= COLOR_COUNT) ? colors[ci - 1] : color;
 
 }
 
@@ -783,44 +805,31 @@ LPPIXEL_FORMAT FFQConfig::GetPixelFormats()
 
 //---------------------------------------------------------------------------------------
 
-wxString FFQConfig::GetPreferredOutputName(wxString for_input_file, LPFFQ_PRESET pst)
+wxString FFQConfig::GetPreferredOutputName(wxString for_input_file, LPFFQ_PRESET pst, bool use_preferred_path, bool use_preferred_format)
 {
 
     //Returns the preferred (estimated) file name for output files
     //based on the name of the input file and the specified pattern
 
     wxUniChar psep = wxFileName::GetPathSeparator();
-    wxString p = preferred_path, n = for_input_file.AfterLast(psep), e = n.AfterLast('.');
+    wxString p = use_preferred_path ? preferred_path : for_input_file.BeforeLast(psep), //Path
+             n = for_input_file.AfterLast(psep), //File name
+             e = n.AfterLast('.'); //File format
+
+    //Remove format from name
     n = n.BeforeLast('.');
 
+    //Generate the output name
     wxString ptn = output_name_pattern;
     ptn.Replace(PATTERN_VAR_FILEFMT, e);
     ptn.Replace(PATTERN_VAR_FILENAME, n);
-    ptn.Replace(PATTERN_VAR_PREFFMT, preferred_format);
+    ptn.Replace(PATTERN_VAR_PREFFMT, use_preferred_format ? preferred_format : e);
     ptn.Replace(PATTERN_VAR_PRESET, pst == NULL ? "" : pst->preset_name);
 
+    //Add the name to the path
     if ((p.Len() == 0) || (!wxDirExists(p))) p = for_input_file.BeforeLast(psep);
     if (p.Right(1) != psep) p += psep;
     p += ptn;
-
-    /*if ((p.Len() > 0) && wxDirExists(p))
-    {
-
-        //If the last used output path exists, use it again
-        wxUniChar psep = wxFileName::GetPathSeparator();
-        if (p.Right(1) != psep) p += psep;
-
-        p += for_input_file.AfterLast(psep).BeforeLast('.') + "." + preferred_format;
-
-    }
-
-    else
-    {
-
-        //If last output path does not exists, use the input path
-        p = for_input_file.BeforeLast('.') + "." + preferred_format;
-
-    }*/
 
     //Ensure unique?
     if (preferred_unique) EnsureUniquePath(p);

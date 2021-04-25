@@ -36,12 +36,14 @@ typedef struct FFQ_CUTS
 {
 
     bool filter_first, //Filter placement first=true, last=false
-         keep; //Keep the parts or remove them?
+         keep, //Keep the parts or remove them?
+         quick; //Use quick cutting?
     unsigned int frame_time; //Time in milliseconds each frame is displayed
     wxString cuts; //The cuts
 
     FFQ_CUTS();
     FFQ_CUTS(wxString from);
+    wxString KeepParts(TIME_VALUE file_duration);
     void Reset();
     wxString ToString();
 

@@ -110,6 +110,7 @@ typedef struct FFQ_PRESET
     FFQ_PRESET();
     FFQ_PRESET(wxString &preset);
 
+    wxString GetFilters(wxUniChar separator = '\n');
     void Reset(bool newPreset);
     wxString SubsString();
     wxString ToString();

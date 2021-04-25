@@ -423,8 +423,8 @@ bool FFQLangEdit::SavePwdAndDesc()
 {
     wxString s = StrTrim(Description->GetValue());
     unsigned int r;
-    do { r = s.Replace("<br>", " "); } while (r > 0);
-    do { r = s.Replace("  ", " "); } while (r > 0);
+    do { r = s.Replace("<br>", SPACE); } while (r > 0);
+    do { r = s.Replace("  ", SPACE); } while (r > 0);
     s.Trim();
     if (s != m_EditLang->GetDescription())
     {

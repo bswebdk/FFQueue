@@ -141,7 +141,7 @@ ChannelMap::ChannelMap(wxWindow* parent) : FilterBasePanel(parent)
     for (unsigned int i = 0; i < CHANNEL_LAYOUT_COUNT; i++)
     {
         wxString s = CHANNEL_LAYOUTS[i];
-        GetToken(s, " "); //Remove layout name
+        GetToken(s, SPACE); //Remove layout name
         while (s.Len() > 0)
         {
             idx = Str2Long(s.Left(2), 0);
