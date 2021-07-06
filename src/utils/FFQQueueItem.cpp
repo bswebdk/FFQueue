@@ -324,6 +324,8 @@ FFQ_QUEUE_ITEM* FFQ_QUEUE_ITEM::Clone(FFQ_QUEUE_ITEM* item)
 
         case qtVIDSTAB_JOB: return new FFQ_VIDSTAB_JOB(*((LPFFQ_VIDSTAB_JOB)item)); //break;
 
+        case qtVID2GIF_JOB: return new FFQ_VID2GIF_JOB(*((LPFFQ_VID2GIF_JOB)item)); //break;
+
         default: return NULL;
 
     }

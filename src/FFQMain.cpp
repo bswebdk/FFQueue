@@ -2145,6 +2145,7 @@ void FFQMain::OnToolBarButtonClick(wxCommandEvent& event)
                 case qtCONCAT_JOB: if (!LaunchTool(ID_TOOLCONCAT, -1, item)) delete item; break;
                 case qtTHUMB_JOB: if (!LaunchTool(ID_TOOLTHUMBS, -1, item)) delete item; break;
                 case qtVIDSTAB_JOB: if (!LaunchTool(ID_TOOLVIDSTAB, -1, item)) delete item; break;
+                case qtVID2GIF_JOB: if (!LaunchTool(ID_TOOLVID2GIF, -1, item)) delete item; break;
                 default: ShowError(FFQS(SID_ITEM_CANNOT_BE_CLONED)); delete item; return;
 
             }
