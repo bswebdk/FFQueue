@@ -38,12 +38,12 @@ Phaser::Phaser(wxWindow* parent) : FilterBasePanel(parent)
 
         fgs2 = new wxFlexGridSizer(1, 4, 0, 0);
         MakeLabel(FFQS(SID_ECHO_GAIN_INPUT), fgs2);
-        m_InGain = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(80, -1), 0);
+        m_InGain = new wxTextCtrl(this, wxID_ANY);
         m_InGain->SetValidator(gainVal);
         fgs2->Add(m_InGain, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
 
         MakeLabel(FFQS(SID_ECHO_GAIN_OUTPUT), fgs2);
-        m_OutGain = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(80, -1), 0);
+        m_OutGain = new wxTextCtrl(this, wxID_ANY);
         m_OutGain->SetValidator(gainVal);
         fgs2->Add(m_OutGain, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
 
@@ -52,17 +52,17 @@ Phaser::Phaser(wxWindow* parent) : FilterBasePanel(parent)
     MakeLabel(FFQS(SID_FLANGER_DELAY), fgs1);
 
         fgs2 = new wxFlexGridSizer(1, 5, 0, 0);
-        m_Delay = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(80, -1), 0);
+        m_Delay = new wxTextCtrl(this, wxID_ANY);
         m_Delay->SetValidator(delayVal);
         fgs2->Add(m_Delay, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
 
         MakeLabel(FFQS(SID_PHASER_DECAY), fgs2);
-        m_Decay = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(80, -1), 0);
+        m_Decay = new wxTextCtrl(this, wxID_ANY);
         m_Decay->SetValidator(decayVal);
         fgs2->Add(m_Decay, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
 
         MakeLabel(FFQS(SID_FLANGER_SPEED), fgs2);
-        m_Speed = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(80, -1), 0);
+        m_Speed = new wxTextCtrl(this, wxID_ANY);
         m_Speed->SetValidator(speedVal);
         fgs2->Add(m_Speed, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
 

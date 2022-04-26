@@ -47,27 +47,27 @@ Decimate::Decimate(wxWindow* parent) : FilterBasePanel(parent)
     fgs->AddGrowableCol(0);
 
     MakeLabel(FFQS(SID_DECIMATE_CYCLE), fgs);
-    m_Cycle = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(80, -1));
+    m_Cycle = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(-1, -1));
     m_Cycle->SetValidator(iVal);
     fgs->Add(m_Cycle, 1, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 3);
 
     MakeLabel(FFQS(SID_DECIMATE_DUP_THRESHOLD), fgs);
-    m_DupThresh = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(80, -1));
+    m_DupThresh = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(-1, -1));
     m_DupThresh->SetValidator(fVal);
     fgs->Add(m_DupThresh, 1, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 3);
 
     MakeLabel(FFQS(SID_DECIMATE_SC_THRESHOLD), fgs);
-    m_ScThresh = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(80, -1));
+    m_ScThresh = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(-1, -1));
     m_ScThresh->SetValidator(iVal);
     fgs->Add(m_ScThresh, 1, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 3);
 
     MakeLabel(FFQS(SID_DECIMATE_BLOCK_SIZE), fgs);
         fgsx = new wxFlexGridSizer(1, 3, 0, 0);
-        m_BlockX = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(50, -1));
+        m_BlockX = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(-1, -1));
         m_BlockX->SetValidator(iVal);
         fgsx->Add(m_BlockX, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 0);
         MakeLabel(" X ", fgsx);
-        m_BlockY = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(50, -1));
+        m_BlockY = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(-1, -1));
         m_BlockY->SetValidator(iVal);
         fgsx->Add(m_BlockY, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 0);
     fgs->Add(fgsx, 1, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 3);

@@ -125,7 +125,7 @@ class FilterBasePanel : public wxPanel
 
         //Time limit functions
         FFQTimeEdit* m_TimeEditor;
-        wxHyperlinkCtrl *m_ShowTime1, *m_ShowTime2;
+        wxGenericHyperlinkCtrl *m_ShowTime1, *m_ShowTime2;
         wxFlexGridSizer *m_TimeSizer;
         TIME_VALUE m_Time1, m_Time2;
 

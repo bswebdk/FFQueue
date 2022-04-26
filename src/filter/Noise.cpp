@@ -46,7 +46,7 @@ Noise::Noise(wxWindow* parent) : FilterBasePanel(parent)
     {
         m_Seed[i].use = new wxCheckBox(this, wxID_ANY, cn[i]);
         fgsx->Add(m_Seed[i].use, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 0);
-        m_Seed[i].val = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(100, -1));
+        m_Seed[i].val = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(-1, -1));
         fgsx->Add(m_Seed[i].val, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 0);
         if (i == 0)
         {

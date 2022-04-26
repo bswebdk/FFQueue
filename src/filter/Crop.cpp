@@ -49,7 +49,7 @@ Crop::Crop(wxWindow* parent) : FilterBasePanel(parent)
 	fgs->Add(col, -1, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 3); //Spacer
 	fgs->Add(-1, -1, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 3); //Spacer
 	fgs->Add(-1, -1, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 3); //Spacer
-    m_Top = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(80, -1));
+    m_Top = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(-1, -1));
     m_Top->SetValidator(iVal);
     fgs->Add(m_Top, 1, wxALL|wxALIGN_CENTER|wxALIGN_CENTER_VERTICAL, 3);
 	fgs->Add(-1, -1, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 3); //Spacer
@@ -59,11 +59,11 @@ Crop::Crop(wxWindow* parent) : FilterBasePanel(parent)
     //Row 3 (left & right)
 	fgs->Add(col, -1, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 3); //Spacer
 	MakeLabel(FFQS(SID_CROP_LEFT), fgs, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL);
-    m_Left = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(80, -1));
+    m_Left = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(-1, -1));
     m_Left->SetValidator(iVal);
     fgs->Add(m_Left, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
 	fgs->Add(-1, -1, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 3); //Spacer
-    m_Right = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(80, -1));
+    m_Right = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(-1, -1));
     m_Right->SetValidator(iVal);
     fgs->Add(m_Right, 1, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 3);
 	MakeLabel(FFQS(SID_CROP_RIGHT), fgs, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL);
@@ -73,7 +73,7 @@ Crop::Crop(wxWindow* parent) : FilterBasePanel(parent)
 	fgs->Add(col, -1, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 3); //Spacer
 	fgs->Add(-1, -1, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 3); //Spacer
 	fgs->Add(-1, -1, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 3); //Spacer
-    m_Bottom = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(80, -1));
+    m_Bottom = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(-1, -1));
     m_Bottom->SetValidator(iVal);
     fgs->Add(m_Bottom, 1, wxALL|wxALIGN_CENTER|wxALIGN_CENTER_VERTICAL, 3);
 	fgs->Add(-1, -1, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 3); //Spacer

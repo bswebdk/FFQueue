@@ -34,22 +34,22 @@ Hqdn3d::Hqdn3d(wxWindow* parent) : FilterBasePanel(parent)
     fgs->AddGrowableCol(0);
 
     MakeLabel(FFQS(SID_HQDN3D_LUMA_SPARTIAL), fgs);
-    m_LumaS = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(80, -1));
+    m_LumaS = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(-1, -1));
     m_LumaS->SetValidator(fVal);
     fgs->Add(m_LumaS, 1, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 3);
 
     MakeLabel(FFQS(SID_HQDN3D_LUMA_TEMP), fgs);
-    m_LumaT = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(80, -1));
+    m_LumaT = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(-1, -1));
     m_LumaT->SetValidator(fVal);
     fgs->Add(m_LumaT, 1, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 3);
 
     MakeLabel(FFQS(SID_HQDN3D_CHROMA_SPARTIAL), fgs);
-    m_ChromaS = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(80, -1));
+    m_ChromaS = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(-1, -1));
     m_ChromaS->SetValidator(fVal);
     fgs->Add(m_ChromaS, 1, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 3);
 
     MakeLabel(FFQS(SID_HQDN3D_CHROMA_TEMP), fgs);
-    m_ChromaT = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(80, -1));
+    m_ChromaT = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(-1, -1));
     m_ChromaT->SetValidator(fVal);
     fgs->Add(m_ChromaT, 1, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 3);
 

@@ -63,9 +63,9 @@ const long FFQTimeEdit::ID_SUBTRACT = wxNewId();
 FFQTimeEdit::FFQTimeEdit(wxWindow* parent)
 {
 	//(*Initialize(FFQTimeEdit)
+	wxBoxSizer* BoxSizer1;
 	wxFlexGridSizer* FlexGridSizer1;
 	wxStaticBoxSizer* SBS1;
-	wxBoxSizer* BoxSizer1;
 
 	Create(parent, wxID_ANY, _T("Edit stream time"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE, _T("wxID_ANY"));
 	MainSizer = new wxFlexGridSizer(3, 1, 0, 0);
@@ -75,22 +75,22 @@ FFQTimeEdit::FFQTimeEdit(wxWindow* parent)
 	ST1->SetLabel(FFQS(SID_TIMEEDIT_HOURS));
 	SBS1->GetStaticBox()->SetLabel(FFQS(SID_TIMEEDIT_ENTER_VALUE));
 	FlexGridSizer1->Add(ST1, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-	Hours = new wxTextCtrl(this, ID_HOURS, wxEmptyString, wxDefaultPosition, wxSize(25,21), 0, wxDefaultValidator, _T("ID_HOURS"));
+	Hours = new wxTextCtrl(this, ID_HOURS, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_HOURS"));
 	FlexGridSizer1->Add(Hours, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	ST2 = new wxStaticText(this, ID_ST2, _T("M"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_ST2"));
 	ST2->SetLabel(FFQS(SID_TIMEEDIT_MINUTES));
 	FlexGridSizer1->Add(ST2, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-	Minutes = new wxTextCtrl(this, ID_MINUTES, wxEmptyString, wxDefaultPosition, wxSize(25,21), 0, wxDefaultValidator, _T("ID_MINUTES"));
+	Minutes = new wxTextCtrl(this, ID_MINUTES, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_MINUTES"));
 	FlexGridSizer1->Add(Minutes, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	ST3 = new wxStaticText(this, ID_ST3, _T("S"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_ST3"));
 	ST3->SetLabel(FFQS(SID_TIMEEDIT_SECONDS));
 	FlexGridSizer1->Add(ST3, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-	Seconds = new wxTextCtrl(this, ID_SECONDS, wxEmptyString, wxDefaultPosition, wxSize(25,21), 0, wxDefaultValidator, _T("ID_SECONDS"));
+	Seconds = new wxTextCtrl(this, ID_SECONDS, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_SECONDS"));
 	FlexGridSizer1->Add(Seconds, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	MillisLabel = new wxStaticText(this, ID_MILLISLABEL, _T("Ms"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_MILLISLABEL"));
 	MillisLabel->SetLabel(FFQS(SID_TIMEEDIT_MILLISECONDS));
 	FlexGridSizer1->Add(MillisLabel, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-	Millis = new wxTextCtrl(this, ID_MILLIS, wxEmptyString, wxDefaultPosition, wxSize(30,21), 0, wxDefaultValidator, _T("ID_MILLIS"));
+	Millis = new wxTextCtrl(this, ID_MILLIS, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_MILLIS"));
 	FlexGridSizer1->Add(Millis, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	SBS1->Add(FlexGridSizer1, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
 	MainSizer->Add(SBS1, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
@@ -223,7 +223,7 @@ bool FFQTimeEdit::DoExecute(TIME_VALUE &time, SUBTRACT_TIME subtract[], int coun
     }
 
     //Fit buttons in sizer
-    SubtractSizer->Layout();
+    //SubtractSizer->Layout();
 
     //Adjust tab order
     OKButton->MoveAfterInTabOrder((b == NULL) ? (wxWindow*)Millis : (wxWindow*)b);
@@ -232,11 +232,14 @@ bool FFQTimeEdit::DoExecute(TIME_VALUE &time, SUBTRACT_TIME subtract[], int coun
 
     //Hide button sizer if unused, and fit window
     MainSizer->Show(SubtractSizer, count > 0, true);
-    MainSizer->Fit(this);
+    //MainSizer->Fit(this);
 
     //Disable milliseconds if not required
     MillisLabel->Enable(allowMillis);
     Millis->Enable(allowMillis);
+
+    //This must be done to handle the resized text controls
+    SetSizerAndFit(MainSizer);
 
     UpdateControls();
     CenterOnParent();

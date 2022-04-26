@@ -130,6 +130,7 @@ const long FFQMain::ID_DEBUG_MAKEFILES = wxNewId();
 const long FFQMain::ID_DEBUG_BINRES = wxNewId();
 const long FFQMain::ID_DEBUG_TESTING = wxNewId();
 const long FFQMain::ID_DEBUG_ABOUT = wxNewId();
+const long FFQMain::ID_DEBUG_FILTERS = wxNewId();
 #endif
 
 const long FFQMain::ID_MENU_STOPSEL = wxNewId();
@@ -147,10 +148,12 @@ const double GAUGE_MAX = 10000.0;
 
 //---------------------------------------------------------------------------------------
 
-void PtrToBitmap(void* ptr, unsigned int len, wxBitmap &bmp)
+void PtrToBitmap(void* ptr, unsigned int len, wxBitmap &bmp, wxBitmapType type, wxSize fit)
 {
     wxMemoryInputStream *ms = new wxMemoryInputStream(ptr, len);
-	bmp = wxBitmap(wxImage(*ms, wxBITMAP_TYPE_PNG));
+    wxImage img = wxImage(*ms, type);
+    if ((fit.GetHeight() > 0) && (fit.GetWidth() > 0)) img = img.Scale(fit.GetWidth(), fit.GetHeight());
+	bmp = wxBitmap(img);
 	delete ms;
 }
 
@@ -190,6 +193,12 @@ FFQMain::FFQMain(wxWindow* parent, wxWindowID id)
           Never found a pretty solution to this so you will have to change
           _("FFQS(SID_...)") to FFQS(SID_...) to get the labels back!
 
+          ----------------------
+
+          This issue seems to have been resolved in recent versions of
+          wxWidgets, older versions of wx may cause problems with FFQ
+
+
     */
 
 
@@ -201,13 +210,13 @@ FFQMain::FFQMain(wxWindow* parent, wxWindowID id)
     SplitterWindow = new wxSplitterWindow(this, ID_SPLITTERWINDOW, wxPoint(184,256), wxDefaultSize, wxSP_3D|wxALWAYS_SHOW_SB, _T("ID_SPLITTERWINDOW"));
     SplitterWindow->SetMinSize(wxSize(100,100));
     SplitterWindow->SetSashGravity(0.5);
-    ListView = new wxListView(SplitterWindow, ID_LISTVIEW, wxDefaultPosition, wxDefaultSize, wxLC_REPORT|wxLC_NO_SORT_HEADER|wxNO_BORDER, wxDefaultValidator, _T("ID_LISTVIEW"));
+    ListView = new wxListView(SplitterWindow, ID_LISTVIEW, wxDefaultPosition, wxDefaultSize, wxLC_REPORT|wxLC_NO_SORT_HEADER|wxBORDER_NONE, wxDefaultValidator, _T("ID_LISTVIEW"));
     ListView->SetMinSize(wxSize(800,200));
-    BottomPan = new wxPanel(SplitterWindow, ID_BOTTOMPAN, wxDefaultPosition, wxDefaultSize, wxNO_BORDER|wxTAB_TRAVERSAL, _T("ID_BOTTOMPAN"));
+    BottomPan = new wxPanel(SplitterWindow, ID_BOTTOMPAN, wxDefaultPosition, wxDefaultSize, wxBORDER_NONE|wxTAB_TRAVERSAL, _T("ID_BOTTOMPAN"));
     FlexGridSizer1 = new wxFlexGridSizer(2, 1, 0, 0);
     FlexGridSizer1->AddGrowableCol(0);
     FlexGridSizer1->AddGrowableRow(0);
-    TextCtrl = new wxTextCtrl(BottomPan, ID_TEXTCTRL, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_READONLY|wxTE_RICH|wxTE_DONTWRAP|wxNO_BORDER, wxDefaultValidator, _T("ID_TEXTCTRL"));
+    TextCtrl = new wxTextCtrl(BottomPan, ID_TEXTCTRL, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_READONLY|wxTE_RICH|wxTE_DONTWRAP|wxBORDER_NONE, wxDefaultValidator, _T("ID_TEXTCTRL"));
     TextCtrl->SetMinSize(wxSize(800,100));
     wxFont TextCtrlFont(10,wxFONTFAMILY_TELETYPE,wxFONTSTYLE_NORMAL,wxFONTWEIGHT_NORMAL,false,_T("Monospace"),wxFONTENCODING_DEFAULT);
     TextCtrl->SetFont(TextCtrlFont);
@@ -218,7 +227,7 @@ FFQMain::FFQMain(wxWindow* parent, wxWindowID id)
     FlexGridSizer1->Fit(BottomPan);
     FlexGridSizer1->SetSizeHints(BottomPan);
     SplitterWindow->SplitHorizontally(ListView, BottomPan);
-    StatusBar = new wxStatusBar(this, ID_STATUSBAR, wxST_SIZEGRIP|wxNO_BORDER, _T("ID_STATUSBAR"));
+    StatusBar = new wxStatusBar(this, ID_STATUSBAR, wxST_SIZEGRIP|wxBORDER_NONE, _T("ID_STATUSBAR"));
     int __wxStatusBarWidths_1[3] = { 1, 250, -300 };
     int __wxStatusBarStyles_1[3] = { wxSB_FLAT, wxSB_NORMAL, wxSB_NORMAL };
     StatusBar->SetFieldsCount(3,__wxStatusBarWidths_1);
@@ -318,15 +327,30 @@ FFQMain::FFQMain(wxWindow* parent, wxWindowID id)
     Connect(wxEVT_SIZE,(wxObjectEventFunction)&FFQMain::OnFrameResize);
     //*)
 
+    /*ToolBarAdd->SetLabel(FFQS(SID_COMMON_ADD));
+    ToolBarBatch->SetLabel(FFQS(SID_MAINFRAME_TB_BATCH));
+    ToolBarRemove->SetLabel(FFQS(SID_COMMON_REMOVE));
+    ToolBarEdit->SetLabel(FFQS(SID_COMMON_EDIT));
+    ToolBarPreview->SetLabel(FFQS(SID_COMMON_PREVIEW));
+    ToolBarStart->SetLabel(FFQS(SID_MAINFRAME_TB_START));
+    ToolBarStop->SetLabel(FFQS(SID_MAINFRAME_TB_STOP));
+    ToolBarTools->SetLabel(FFQS(SID_MAINFRAME_TB_TOOLS));
+    ToolBarPresets->SetLabel(FFQS(SID_MAINFRAME_TB_PRESETS));
+    ToolBarOptions->SetLabel(FFQS(SID_MAINFRAME_TB_OPTIONS));
+    ToolBarAbout->SetLabel(FFQS(SID_MAINFRAME_TB_ABOUT));
+    ToolBar->Realize();*/
+
     #ifdef DEBUG
     m_DebugPopupMenu = new wxMenu();
     m_DebugPopupMenu->Append(new wxMenuItem(m_DebugPopupMenu, ID_DEBUG_TESTING, "Testing"));
+    m_DebugPopupMenu->Append(new wxMenuItem(m_DebugPopupMenu, ID_DEBUG_FILTERS, "Filters"));
     m_DebugPopupMenu->Append(new wxMenuItem(m_DebugPopupMenu, ID_DEBUG_ABOUT, "About"));
     m_DebugPopupMenu->Append(new wxMenuItem(m_DebugPopupMenu, ID_DEBUG_MAKEFILES, "Create makefiles"));
     m_DebugPopupMenu->Append(new wxMenuItem(m_DebugPopupMenu, ID_DEBUG_BINRES, "Create binary resources"));
     Connect(ID_DEBUG_MAKEFILES, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&FFQMain::OnToolBarButtonClick);
     Connect(ID_DEBUG_BINRES, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&FFQMain::OnToolBarButtonClick);
     Connect(ID_DEBUG_TESTING, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&FFQMain::OnToolBarButtonClick);
+    Connect(ID_DEBUG_FILTERS, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&FFQMain::OnToolBarButtonClick);
     Connect(ID_DEBUG_ABOUT, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&FFQMain::OnToolBarButtonClick);
     #endif // DEBUG
 
@@ -2347,6 +2371,29 @@ void FFQMain::OnToolBarButtonClick(wxCommandEvent& event)
         delete fe;*/
 
 
+    }
+
+    else if (evtId == ID_DEBUG_FILTERS) //DEBUG ONLY!!
+    {
+        bool ok = true;
+        unsigned int ftyp = 0;
+        FFQFilterEdit *fe = new FFQFilterEdit(this);
+        do
+        {
+            if ((ftyp == 4) || (ftyp == 30) || (ftyp == 42)) ftyp++;
+            FFMPEG_FILTER fltr;
+            fltr.type = (FILTER_TYPE)ftyp;
+            try
+            {
+                ok = fe->Execute(&fltr);
+            }
+            catch (...)
+            {
+                ok = true;
+            }
+        }
+        while (ok && (++ftyp < FILTER_COUNT));
+        delete fe;
     }
 
     else if (evtId == ID_DEBUG_ABOUT) //DEBUG ONLY!!

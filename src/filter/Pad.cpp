@@ -47,7 +47,7 @@ Pad::Pad(wxWindow* parent) : FilterBasePanel(parent)
     m_BlurSizer = new wxFlexGridSizer(1, 3, 0, 0);
         m_BlurSizer->AddGrowableCol(1);
         MakeLabel("-", m_BlurSizer);
-        m_Blur = new wxSlider(this, wxID_ANY, 2, 1, 10, wxDefaultPosition, wxSize(-1, 20));
+        m_Blur = new wxSlider(this, wxID_ANY, 2, 1, 10, wxDefaultPosition, wxSize(-1, -1));
         m_BlurSizer->Add(m_Blur, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 0);
         MakeLabel("+", m_BlurSizer);
     fgs->Add(m_BlurSizer, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 3);

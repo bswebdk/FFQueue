@@ -359,6 +359,7 @@ FFQLang::FFQLang(bool loadFile)
     SetString(SID_CANNOT_SAVE_ACTIVE_QUEUE_ITEM,"The item cannot be saved because it is active!");
     SetString(SID_INLINE_SHELL_CODE_WARNING,    "The command you are about to execute seems to contain inline shell code which may be harmful for your system. Are you sure that you want to take the risk?");
     SetString(SID_ADVANCED_CUTS_WARNING,        "You have combined advanced cuts with remapping (copy codec) and this will cause the job to fail. Continue anyway?");
+    SetString(SID_CONFIRM_SORT_PRESETS,         "This will re-arrange all presets alphabetically, do you want to continue?");
 
 
     //Log related messages

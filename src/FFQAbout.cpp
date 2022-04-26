@@ -100,7 +100,7 @@ FFQAbout::FFQAbout(wxWindow* parent,wxWindowID id)
 	wxFlexGridSizer* FlexGridSizer3;
 	wxFlexGridSizer* FlexGridSizer4;
 	wxFlexGridSizer* FlexGridSizer5;
-	wxHyperlinkCtrl* Link;
+	wxGenericHyperlinkCtrl* Link;
 
 	Create(parent, id, _("About FFQueue"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE, _T("id"));
 	FlexGridSizer1 = new wxFlexGridSizer(3, 1, 0, 0);
@@ -122,7 +122,7 @@ FFQAbout::FFQAbout(wxWindow* parent,wxWindowID id)
 	Info = new wxStaticText(this, wxID_ANY, _("gui"), wxDefaultPosition, wxDefaultSize, 0, _T("wxID_ANY"));
 	Info->SetLabel(GUI_2);
 	FlexGridSizer5->Add(Info, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
-	Link = new wxHyperlinkCtrl(this, wxID_ANY, _("www"), wxEmptyString, wxDefaultPosition, wxDefaultSize, wxHL_CONTEXTMENU|wxHL_ALIGN_CENTRE, _T("wxID_ANY"));
+	Link = new wxGenericHyperlinkCtrl(this, wxID_ANY, _("www"), wxEmptyString, wxDefaultPosition, wxDefaultSize, wxHL_CONTEXTMENU|wxHL_ALIGN_CENTRE, _T("wxID_ANY"));
 	Link->SetLabel(GUI_3);
 	Link->SetURL(GUI_4);
 	FlexGridSizer5->Add(Link, 1, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 5);
@@ -141,7 +141,7 @@ FFQAbout::FFQAbout(wxWindow* parent,wxWindowID id)
 	FlexGridSizer1->Add(TextCtrl, 0, wxALL|wxEXPAND, 5);
 	BoxSizer1 = new wxBoxSizer(wxHORIZONTAL);
 	BoxSizer1->Add(-1,-1,1, wxALL|wxEXPAND, 5);
-	CloseButton = new wxButton(this, ID_CLOSEBUTTON, _("C"), wxDefaultPosition, wxSize(150,40), 0, wxDefaultValidator, _T("ID_CLOSEBUTTON"));
+	CloseButton = new wxButton(this, ID_CLOSEBUTTON, _("C"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CLOSEBUTTON"));
 	CloseButton->SetDefault();
 	CloseButton->SetLabel(FFQS(SID_COMMON_CLOSE));
 	BoxSizer1->Add(CloseButton, 0, wxALL|wxEXPAND, 5);
@@ -179,6 +179,8 @@ FFQAbout::FFQAbout(wxWindow* parent,wxWindowID id)
 	wxBitmap bmp(img);
 	StaticBitmap->SetBitmap(bmp);
 	delete ms;
+
+	FFQCFG()->SetCtrlColors(Link);
 
 }
 

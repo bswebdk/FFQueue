@@ -33,7 +33,7 @@ FrameStep::FrameStep(wxWindow* parent) : FilterBasePanel(parent)
     wxFlexGridSizer *fgs = new wxFlexGridSizer(1, 3, 3, 3);
 
     MakeLabel(FFQS(SID_FRAMESTEP_SELECT), fgs);
-    m_Step = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(50, -1));
+    m_Step = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(-1, -1));
     m_Step->SetValidator(iVal);
     fgs->Add(m_Step, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
     MakeLabel(FFQS(SID_FRAMESTEP_FRAMES), fgs);

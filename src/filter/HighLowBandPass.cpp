@@ -44,7 +44,7 @@ HighLowBandPass::HighLowBandPass(wxWindow* parent) : FilterBasePanel(parent)
     m_MainLab = MakeLabel(SPACE, m_Sizer);
 
     MakeLabel(" " + FFQS(SID_BANDPASS_FREQUENCY), m_Sizer, wxRIGHT|wxALIGN_CENTER_VERTICAL);
-    m_Frequency = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(60, -1), 0);
+    m_Frequency = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(-1, -1), 0);
     m_Frequency ->SetValidator(iVal);
     m_Sizer->Add(m_Frequency, 1, wxRIGHT|wxALIGN_CENTER_VERTICAL, 5);
     SetControlPadding(20);
@@ -59,7 +59,7 @@ HighLowBandPass::HighLowBandPass(wxWindow* parent) : FilterBasePanel(parent)
     m_Sizer->Add(m_Poles, 1, wxRIGHT|wxALIGN_CENTER_VERTICAL, 20);
 
     m_WidthLab = MakeLabel(FFQS(SID_BANDPASS_BAND_WIDTH), m_Sizer, wxRIGHT|wxALIGN_CENTER_VERTICAL);
-    m_Width = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(60, -1), 0);
+    m_Width = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(-1, -1), 0);
     m_Width->SetValidator(fVal);
     m_Sizer->Add(m_Width, 1, wxRIGHT|wxALIGN_CENTER_VERTICAL, 2);
 

@@ -28,7 +28,6 @@
 							<object class="sizeritem">
 								<object class="wxButton" name="ID_BROWSESRC" variable="BrowseSrc" member="yes">
 									<label>...</label>
-									<size>50,-1</size>
 									<handler function="OnAction" entry="EVT_BUTTON" />
 								</object>
 								<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
@@ -115,7 +114,6 @@
 												<value>5</value>
 												<min>1</min>
 												<max>10</max>
-												<size>-1,20</size>
 												<handler function="OnSliderChange" entry="EVT_COMMAND_SLIDER_UPDATED" />
 											</object>
 											<flag>wxALL|wxEXPAND</flag>
@@ -145,7 +143,6 @@
 												<value>15</value>
 												<min>1</min>
 												<max>15</max>
-												<size>-1,20</size>
 												<handler function="OnSliderChange" entry="EVT_COMMAND_SLIDER_UPDATED" />
 											</object>
 											<flag>wxALL|wxEXPAND</flag>
@@ -175,7 +172,6 @@
 												<value>6</value>
 												<min>1</min>
 												<max>32</max>
-												<size>-1,20</size>
 												<handler function="OnSliderChange" entry="EVT_COMMAND_SLIDER_UPDATED" />
 											</object>
 											<flag>wxALL|wxEXPAND</flag>
@@ -203,7 +199,6 @@
 										<object class="sizeritem">
 											<object class="wxSlider" name="ID_MINCONTRAST" variable="MinContrast" member="yes">
 												<value>30</value>
-												<size>-1,20</size>
 												<handler function="OnSliderChange" entry="EVT_COMMAND_SLIDER_UPDATED" />
 											</object>
 											<flag>wxALL|wxEXPAND</flag>
@@ -241,7 +236,6 @@
 											<object class="wxSpinCtrl" name="ID_TRIPODFRAME" variable="TripodFrame" member="yes">
 												<value>0</value>
 												<max>10000000</max>
-												<size>100,-1</size>
 											</object>
 											<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
 											<border>3</border>
@@ -280,7 +274,6 @@
 											<object class="wxSpinCtrl" name="ID_SMOOTHING" variable="Smoothing" member="yes">
 												<value>10</value>
 												<max>10000000</max>
-												<size>100,-1</size>
 											</object>
 											<flag>wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL</flag>
 											<border>3</border>
@@ -300,7 +293,6 @@
 												<value>0</value>
 												<min>-1</min>
 												<max>1000000</max>
-												<size>100,-1</size>
 											</object>
 											<flag>wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL</flag>
 											<border>3</border>
@@ -320,7 +312,6 @@
 												<value>0</value>
 												<min>-1</min>
 												<max>180</max>
-												<size>100,-1</size>
 											</object>
 											<flag>wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL</flag>
 											<border>3</border>
@@ -339,7 +330,6 @@
 											<object class="wxSpinCtrl" name="ID_ZOOM" variable="Zoom" member="yes">
 												<value>0</value>
 												<min>-100</min>
-												<size>100,-1</size>
 											</object>
 											<flag>wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL</flag>
 											<border>3</border>
@@ -357,7 +347,6 @@
 										<object class="sizeritem">
 											<object class="wxSpinCtrl" name="ID_ZOOMSPEED" variable="ZoomSpeed" member="yes">
 												<value>0</value>
-												<size>100,-1</size>
 											</object>
 											<flag>wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL</flag>
 											<border>3</border>

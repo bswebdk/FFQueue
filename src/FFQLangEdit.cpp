@@ -92,11 +92,11 @@ FFQLangEdit::FFQLangEdit(wxWindow* parent)
 {
 	//(*Initialize(FFQLangEdit)
 	wxFlexGridSizer* FlexGridSizer1;
-	wxStaticBoxSizer* SBS1;
 	wxFlexGridSizer* FlexGridSizer2;
-	wxStaticBoxSizer* SBS2;
-	wxFlexGridSizer* FlexGridSizer4;
 	wxFlexGridSizer* FlexGridSizer3;
+	wxFlexGridSizer* FlexGridSizer4;
+	wxStaticBoxSizer* SBS1;
+	wxStaticBoxSizer* SBS2;
 
 	Create(parent, wxID_ANY, _T("FFQueue language editor"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL, _T("wxID_ANY"));
 	SetClientSize(wxSize(800,600));

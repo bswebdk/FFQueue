@@ -242,10 +242,10 @@ FFQConcat::FFQConcat(wxWindow* parent)
 	Sizer1->Add(ST1, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	SSSource = new wxTextCtrl(SlideshowPage, ID_IMGSRC, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_IMGSRC"));
 	Sizer1->Add(SSSource, 1, wxALL|wxEXPAND, 3);
-	SSBrowseImg = new wxButton(SlideshowPage, ID_SSBROWSEIMG, _T("..."), wxDefaultPosition, wxSize(50,-1), 0, wxDefaultValidator, _T("ID_SSBROWSEIMG"));
+	SSBrowseImg = new wxButton(SlideshowPage, ID_SSBROWSEIMG, _T("..."), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_SSBROWSEIMG"));
 	Sizer1->Add(SSBrowseImg, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
 	Sizer1->Add(-1,-1,1, wxALL|wxEXPAND, 0);
-	SSFrameStatus = new wxHyperlinkCtrl(SlideshowPage, ID_SSFRAMESTATUS, _T("link"), wxEmptyString, wxDefaultPosition, wxDefaultSize, wxHL_CONTEXTMENU|wxHL_ALIGN_CENTRE|wxNO_BORDER, _T("ID_SSFRAMESTATUS"));
+	SSFrameStatus = new wxGenericHyperlinkCtrl(SlideshowPage, ID_SSFRAMESTATUS, _T("link"), wxEmptyString, wxDefaultPosition, wxDefaultSize, wxHL_CONTEXTMENU|wxHL_ALIGN_CENTRE, _T("ID_SSFRAMESTATUS"));
 	Sizer1->Add(SSFrameStatus, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
 	Sizer1->Add(-1,-1,1, wxALL|wxEXPAND, 0);
 	FlexGridSizer5->Add(Sizer1, 1, wxALL|wxEXPAND, 3);
@@ -260,11 +260,11 @@ FFQConcat::FFQConcat(wxWindow* parent)
 	ST2 = new wxStaticText(SlideshowPage, ID_ST2, _T("Si"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_ST2"));
 	ST2->SetLabel(FFQS(SID_CONCAT_SIZE));
 	SSSizer1->Add(ST2, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
-	SSWidth = new wxTextCtrl(SlideshowPage, ID_TEXTCTRL1, wxEmptyString, wxDefaultPosition, wxSize(75,-1), 0, wxDefaultValidator, _T("ID_TEXTCTRL1"));
+	SSWidth = new wxTextCtrl(SlideshowPage, ID_TEXTCTRL1, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_TEXTCTRL1"));
 	SSSizer1->Add(SSWidth, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
 	ST22 = new wxStaticText(SlideshowPage, ID_ST22, _T("X"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_ST22"));
 	SSSizer1->Add(ST22, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
-	SSHeight = new wxTextCtrl(SlideshowPage, ID_TEXTCTRL2, wxEmptyString, wxDefaultPosition, wxSize(75,-1), 0, wxDefaultValidator, _T("ID_TEXTCTRL2"));
+	SSHeight = new wxTextCtrl(SlideshowPage, ID_TEXTCTRL2, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_TEXTCTRL2"));
 	SSSizer1->Add(SSHeight, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
 	ST3 = new wxStaticText(SlideshowPage, ID_ST3, _T("Fi"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_ST3"));
 	ST3->SetLabel(FFQS(SID_CONCAT_FILL_COLOR));
@@ -280,7 +280,7 @@ FFQConcat::FFQConcat(wxWindow* parent)
 	ST5 = new wxStaticText(SlideshowPage, ID_ST5, _T("Ft"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_ST5"));
 	ST5->SetLabel(FFQS(SID_CONCAT_FRAME_TIME));
 	FlexGridSizer7->Add(ST5, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
-	SSFrameTime = new wxTextCtrl(SlideshowPage, ID_SSFRAMETIME, wxEmptyString, wxDefaultPosition, wxSize(75,-1), 0, wxDefaultValidator, _T("ID_SSFRAMETIME"));
+	SSFrameTime = new wxTextCtrl(SlideshowPage, ID_SSFRAMETIME, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_SSFRAMETIME"));
 	FlexGridSizer7->Add(SSFrameTime, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
 	ST6 = new wxStaticText(SlideshowPage, ID_ST6, _T("s"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_ST6"));
 	ST6->SetLabel(FFQS(SID_CONCAT_SECONDS));
@@ -298,7 +298,7 @@ FFQConcat::FFQConcat(wxWindow* parent)
 	FlexGridSizer10->AddGrowableCol(0);
 	SSAudio = new wxTextCtrl(SlideshowPage, ID_SSAUDIO, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_SSAUDIO"));
 	FlexGridSizer10->Add(SSAudio, 1, wxALL|wxEXPAND, 3);
-	SSBrowseAudio = new wxButton(SlideshowPage, ID_SSBROWSEAUDIO, _T("..."), wxDefaultPosition, wxSize(50,-1), 0, wxDefaultValidator, _T("ID_SSBROWSEAUDIO"));
+	SSBrowseAudio = new wxButton(SlideshowPage, ID_SSBROWSEAUDIO, _T("..."), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_SSBROWSEAUDIO"));
 	FlexGridSizer10->Add(SSBrowseAudio, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
 	SBS2->Add(FlexGridSizer10, 1, wxALL|wxEXPAND, 0);
 	SSLoopFrames = new wxCheckBox(SlideshowPage, ID_SSLOOPFRAMES, _T("Loop"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_SSLOOPFRAMES"));
@@ -421,7 +421,7 @@ FFQConcat::FFQConcat(wxWindow* parent)
 	FlexGridSizer8->Add(ST7, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
 	DestFile = new wxTextCtrl(this, ID_DESTFILE, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_DESTFILE"));
 	FlexGridSizer8->Add(DestFile, 1, wxALL|wxEXPAND, 3);
-	BrowseDest = new wxButton(this, ID_BROWSEDEST, _T("..."), wxDefaultPosition, wxSize(50,-1), 0, wxDefaultValidator, _T("ID_BROWSEDEST"));
+	BrowseDest = new wxButton(this, ID_BROWSEDEST, _T("..."), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_BROWSEDEST"));
 	FlexGridSizer8->Add(BrowseDest, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
 	SBS3->Add(FlexGridSizer8, 1, wxBOTTOM|wxEXPAND, 2);
 	Sizer3 = new wxFlexGridSizer(1, 2, 0, 0);
@@ -436,7 +436,7 @@ FFQConcat::FFQConcat(wxWindow* parent)
 	Sizer2 = new wxFlexGridSizer(1, 1, 0, 0);
 	Sizer2->AddGrowableCol(0);
 	Sizer2->AddGrowableRow(0);
-	LimitDest = new wxHyperlinkCtrl(this, ID_LIMITDEST, _T("limit"), wxEmptyString, wxDefaultPosition, wxDefaultSize, wxHL_CONTEXTMENU|wxHL_ALIGN_CENTRE|wxNO_BORDER, _T("ID_LIMITDEST"));
+	LimitDest = new wxGenericHyperlinkCtrl(this, ID_LIMITDEST, _T("limit"), wxEmptyString, wxDefaultPosition, wxDefaultSize, wxHL_CONTEXTMENU|wxHL_ALIGN_CENTRE, _T("ID_LIMITDEST"));
 	Sizer2->Add(LimitDest, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
 	SBS3->Add(Sizer2, 1, wxBOTTOM|wxEXPAND, 2);
 	SaveLog = new wxCheckBox(this, ID_SAVELOG, _T("Log"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_SAVELOG"));
@@ -455,10 +455,12 @@ FFQConcat::FFQConcat(wxWindow* parent)
 	BoxSizer1->Add(CancelButton, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	FlexGridSizer1->Add(BoxSizer1, 1, wxALL|wxEXPAND, 5);
 	SetSizer(FlexGridSizer1);
-	OpenFileDlg = new wxFileDialog(this, wxEmptyString, wxEmptyString, wxEmptyString, wxFileSelectorDefaultWildcardStr, wxFD_DEFAULT_STYLE|wxFD_OPEN|wxFD_FILE_MUST_EXIST, wxDefaultPosition, wxDefaultSize, _T("wxFileDialog"));
-	OpenFileDlg->SetMessage(FFQS(SID_COMMON_SELECT_INPUT_FILE));
+	OpenOneDlg = new wxFileDialog(this, wxEmptyString, wxEmptyString, wxEmptyString, wxFileSelectorDefaultWildcardStr, wxFD_DEFAULT_STYLE|wxFD_OPEN|wxFD_FILE_MUST_EXIST, wxDefaultPosition, wxDefaultSize, _T("wxFileDialog"));
+	OpenOneDlg->SetMessage(FFQS(SID_COMMON_SELECT_INPUT_FILE));
 	SaveFileDlg = new wxFileDialog(this, _T("Select destination file"), wxEmptyString, wxEmptyString, wxFileSelectorDefaultWildcardStr, wxFD_SAVE, wxDefaultPosition, wxDefaultSize, _T("wxFileDialog"));
 	SaveFileDlg->SetMessage(FFQS(SID_COMMON_SELECT_OUTPUT_FILE));
+	OpenMoreDlg = new wxFileDialog(this, _T("Select file"), wxEmptyString, wxEmptyString, wxFileSelectorDefaultWildcardStr, wxFD_DEFAULT_STYLE|wxFD_OPEN|wxFD_FILE_MUST_EXIST|wxFD_MULTIPLE, wxDefaultPosition, wxDefaultSize, _T("wxFileDialog"));
+	OpenMoreDlg->SetMessage(FFQS(SID_COMMON_SELECT_INPUT_FILE));
 	FlexGridSizer1->Fit(this);
 	FlexGridSizer1->SetSizeHints(this);
 
@@ -492,6 +494,9 @@ FFQConcat::FFQConcat(wxWindow* parent)
     CCSources->Connect(wxEVT_DROP_FILES, wxDropFilesEventHandler(FFQConcat::OnDropFiles), NULL, this);
 
 	Connect(wxID_ANY, wxEVT_IDLE, (wxObjectEventFunction)&FFQConcat::OnIdle);
+
+	FFQCFG()->SetCtrlColors(LimitDest);
+	FFQCFG()->SetCtrlColors(SSFrameStatus);
 
     m_EditJob = NULL;
     m_DoIdleTask = false;
@@ -1326,10 +1331,10 @@ void FFQConcat::OnAction(wxCommandEvent& event)
 
     if (evtId == ID_SSBROWSEIMG)
     {
-        OpenFileDlg->SetPath(SSSource->GetValue());
-        if (OpenFileDlg->ShowModal() != wxID_CANCEL)
+        OpenOneDlg->SetPath(SSSource->GetValue());
+        if (OpenOneDlg->ShowModal() != wxID_CANCEL)
         {
-            SSSource->SetValue(OpenFileDlg->GetPath());
+            SSSource->SetValue(OpenOneDlg->GetPath());
             EnumSlideshowFrames();
         }
     }
@@ -1338,22 +1343,22 @@ void FFQConcat::OnAction(wxCommandEvent& event)
 
     else if (evtId == ID_SSBROWSEAUDIO)
     {
-        OpenFileDlg->SetPath(SSAudio->GetValue());
-        if (OpenFileDlg->ShowModal() != wxID_CANCEL) SSAudio->SetValue(OpenFileDlg->GetPath());
+        OpenOneDlg->SetPath(SSAudio->GetValue());
+        if (OpenOneDlg->ShowModal() != wxID_CANCEL) SSAudio->SetValue(OpenOneDlg->GetPath());
     }
 
     else if (evtId == ID_CCADD)
     {
 
-        long style = OpenFileDlg->GetWindowStyleFlag();
-        OpenFileDlg->SetWindowStyleFlag(style | wxFD_MULTIPLE);
-        if (OpenFileDlg->ShowModal() != wxID_CANCEL)
+        //long style = OpenFileDlg->GetWindowStyleFlag();
+        //OpenFileDlg->SetWindowStyleFlag(style | wxFD_MULTIPLE);
+        if (OpenMoreDlg->ShowModal() != wxID_CANCEL)
         {
             wxArrayString *paths = new wxArrayString();
-            OpenFileDlg->GetPaths(*paths);
+            OpenMoreDlg->GetPaths(*paths);
             AddConcatSources(paths);
         }
-        OpenFileDlg->SetWindowStyleFlag(style);
+        //OpenFileDlg->SetWindowStyleFlag(style);
 
     }
 

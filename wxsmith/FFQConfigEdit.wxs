@@ -32,7 +32,6 @@
 							<object class="sizeritem">
 								<object class="wxButton" name="ID_BROWSEFFMPEG" variable="BrowseFFMpeg" member="yes">
 									<label>...</label>
-									<size>50,-1</size>
 									<handler function="OnButtonClick" entry="EVT_BUTTON" />
 								</object>
 								<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
@@ -71,7 +70,6 @@
 							<object class="sizeritem">
 								<object class="wxButton" name="ID_BROWSECUSTPLAYER" variable="BrowseCustPlayer" member="yes">
 									<label>...</label>
-									<size>50,-1</size>
 									<handler function="OnButtonClick" entry="EVT_BUTTON" />
 								</object>
 								<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
@@ -154,7 +152,6 @@
 									<object class="sizeritem">
 										<object class="wxButton" name="ID_BROWSETEMP" variable="BrowseTemp" member="yes">
 											<label>...</label>
-											<size>50,-1</size>
 											<handler function="OnButtonClick" entry="EVT_BUTTON" />
 										</object>
 										<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
@@ -228,7 +225,7 @@
 				<object class="wxCheckListBox" name="ID_CHECKLIST" variable="CheckList" member="yes">
 					<maxsize>-1,180</maxsize>
 					<extra_code>CheckList-&gt;SetBackgroundColour(GetBackgroundColour());&#x0A;CheckList-&gt;Append(FFQS(SID__OPTIONS__SAVE__JOBS__ON__EXIT));&#x0A;CheckList-&gt;Append(FFQS(SID__OPTIONS__SAVE__JOBS__ON__MODIFY));&#x0A;CheckList-&gt;Append(FFQS(SID__OPTIONS__REMOVE__FINISHED__JOBS));&#x0A;CheckList-&gt;Append(FFQS(SID__OPTIONS__VALIDATE__ON__LOAD));&#x0A;CheckList-&gt;Append(FFQS(SID__OPTIONS__LIMIT__STATISTICS));&#x0A;CheckList-&gt;Append(FFQS(SID__OPTIONS__SHOW__BANNER__INFO));&#x0A;CheckList-&gt;Append(FFQS(SID__OPTIONS__SAVE__WINDOW__POS));&#x0A;CheckList-&gt;Append(FFQS(SID__OPTIONS__FULL__CODEC__LIST));&#x0A;CheckList-&gt;Append(FFQS(SID__OPTIONS__ALWAYS__UNIQUE__NAMES));&#x0A;CheckList-&gt;Append(FFQS(SID__OPTIONS__KEEP__CONSOLE__OPEN));&#x0A;CheckList-&gt;Append(FFQS(SID__OPTIONS__SILENT__QUEUE__FINISH));&#x0A;CheckList-&gt;Append(FFQS(SID__OPTIONS__CONFIRM__DELETE__JOBS));&#x0A;CheckList-&gt;Append(FFQS(SID__OPTIONS__PREVIEW__MAP__SUBS));&#x0A;</extra_code>
-					<style>wxNO_BORDER|wxTAB_TRAVERSAL|wxVSCROLL</style>
+					<style>wxBORDER_NONE|wxTAB_TRAVERSAL|wxVSCROLL</style>
 				</object>
 				<flag>wxALL|wxEXPAND</flag>
 				<border>3</border>

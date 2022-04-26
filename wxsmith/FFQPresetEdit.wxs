@@ -176,7 +176,6 @@
 													</object>
 													<object class="sizeritem">
 														<object class="wxSlider" name="ID_VIDEOQSCALE" variable="VideoQScale" member="yes">
-															<size>-1,20</size>
 															<handler function="OnSubsScaleChange" entry="EVT_COMMAND_SLIDER_UPDATED" />
 														</object>
 														<flag>wxALL|wxEXPAND</flag>
@@ -203,7 +202,6 @@
 													</object>
 													<object class="sizeritem">
 														<object class="wxSlider" name="ID_CONSTRATE" variable="ConstRate" member="yes">
-															<size>-1,20</size>
 															<handler function="OnSubsScaleChange" entry="EVT_COMMAND_SLIDER_UPDATED" />
 														</object>
 														<flag>wxALL|wxEXPAND</flag>
@@ -230,7 +228,6 @@
 													</object>
 													<object class="sizeritem">
 														<object class="wxSlider" name="ID_MINCONSTRATE" variable="MinConstRate" member="yes">
-															<size>-1,20</size>
 															<handler function="OnSubsScaleChange" entry="EVT_COMMAND_SLIDER_UPDATED" />
 														</object>
 														<flag>wxALL|wxEXPAND</flag>
@@ -257,7 +254,6 @@
 													</object>
 													<object class="sizeritem">
 														<object class="wxSlider" name="ID_QMIN" variable="QMin" member="yes">
-															<size>-1,20</size>
 															<handler function="OnSubsScaleChange" entry="EVT_COMMAND_SLIDER_UPDATED" />
 														</object>
 														<flag>wxALL|wxEXPAND</flag>
@@ -284,7 +280,6 @@
 													</object>
 													<object class="sizeritem">
 														<object class="wxSlider" name="ID_QMAX" variable="QMax" member="yes">
-															<size>-1,20</size>
 															<handler function="OnSubsScaleChange" entry="EVT_COMMAND_SLIDER_UPDATED" />
 														</object>
 														<flag>wxALL|wxEXPAND</flag>
@@ -311,7 +306,6 @@
 													</object>
 													<object class="sizeritem">
 														<object class="wxSlider" name="ID_QDIFF" variable="QDiff" member="yes">
-															<size>-1,20</size>
 															<handler function="OnSubsScaleChange" entry="EVT_COMMAND_SLIDER_UPDATED" />
 														</object>
 														<flag>wxALL|wxEXPAND</flag>
@@ -350,9 +344,7 @@
 																<option>1</option>
 															</object>
 															<object class="sizeritem">
-																<object class="wxTextCtrl" name="ID_KEYFRAMEMIN" variable="KeyFrameMin" member="yes">
-																	<size>100,21</size>
-																</object>
+																<object class="wxTextCtrl" name="ID_KEYFRAMEMIN" variable="KeyFrameMin" member="yes" />
 																<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
 																<border>3</border>
 																<option>1</option>
@@ -376,9 +368,7 @@
 																<option>1</option>
 															</object>
 															<object class="sizeritem">
-																<object class="wxTextCtrl" name="ID_KEYFRAMEMAX" variable="KeyFrameMax" member="yes">
-																	<size>100,21</size>
-																</object>
+																<object class="wxTextCtrl" name="ID_KEYFRAMEMAX" variable="KeyFrameMax" member="yes" />
 																<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
 																<border>3</border>
 																<option>1</option>
@@ -402,9 +392,7 @@
 																<option>1</option>
 															</object>
 															<object class="sizeritem">
-																<object class="wxChoice" name="ID_KEYFRAMEMAXB" variable="KeyFrameMaxB" member="yes">
-																	<size>100,-1</size>
-																</object>
+																<object class="wxChoice" name="ID_KEYFRAMEMAXB" variable="KeyFrameMaxB" member="yes" />
 																<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
 																<border>3</border>
 																<option>1</option>
@@ -423,9 +411,7 @@
 																<option>1</option>
 															</object>
 															<object class="sizeritem">
-																<object class="wxChoice" name="ID_KEYFRAMEMAXP" variable="KeyFrameMaxP" member="yes">
-																	<size>100,-1</size>
-																</object>
+																<object class="wxChoice" name="ID_KEYFRAMEMAXP" variable="KeyFrameMaxP" member="yes" />
 																<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
 																<border>3</border>
 																<option>1</option>
@@ -468,7 +454,6 @@
 																		<item>umh</item>
 																		<item>iter</item>
 																	</content>
-																	<size>100,21</size>
 																</object>
 																<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
 																<border>3</border>
@@ -511,7 +496,7 @@
 																	<object class="sizeritem">
 																		<object class="wxSlider" name="ID_SCENECHANGESENS" variable="SceneChangeSens" member="yes">
 																			<max>99</max>
-																			<size>200,20</size>
+																			<size>200,-1</size>
 																			<handler function="OnSubsScaleChange" entry="EVT_COMMAND_SLIDER_UPDATED" />
 																		</object>
 																		<flag>wxALL|wxEXPAND</flag>
@@ -604,9 +589,7 @@
 															<growablecols>1</growablecols>
 															<growablerows>0</growablerows>
 															<object class="sizeritem">
-																<object class="wxTextCtrl" name="ID_FRAMERATE" variable="FrameRate" member="yes">
-																	<size>80,21</size>
-																</object>
+																<object class="wxTextCtrl" name="ID_FRAMERATE" variable="FrameRate" member="yes" />
 																<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
 																<border>3</border>
 																<option>1</option>
@@ -622,7 +605,6 @@
 															</object>
 														</object>
 														<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
-														<border>3</border>
 														<option>1</option>
 													</object>
 													<object class="sizeritem">
@@ -636,7 +618,6 @@
 													</object>
 													<object class="sizeritem">
 														<object class="wxComboBox" name="ID_PIXFMT" variable="PixFmt" member="yes">
-															<size>150,-1</size>
 															<handler function="OnChoiceChange" entry="EVT_COMBOBOX" />
 															<handler function="OnChoiceChange" entry="EVT_TEXT" />
 														</object>
@@ -655,7 +636,6 @@
 													</object>
 													<object class="sizeritem">
 														<object class="wxChoice" name="ID_TRELLIS" variable="Trellis" member="yes">
-															<size>150,-1</size>
 															<extra_code>wxString *trl = FFQL()-&gt;GetStringArray(SID__PRESET__TRELLIS__LIST, 4);&#x0A;Trellis-&gt;Append(4, trl);&#x0A;Trellis-&gt;SetSelection(0);</extra_code>
 														</object>
 														<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
@@ -678,7 +658,6 @@
 															<growablecols>2</growablecols>
 															<object class="sizeritem">
 																<object class="wxComboBox" name="ID_SPEEDPRESET" variable="SpeedPreset" member="yes">
-																	<size>150,-1</size>
 																	<extra_code>SpeedPreset-&gt;Append(ENCODER__PRESET__COUNT, ENCODER__PRESETS);</extra_code>
 																</object>
 																<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
@@ -696,7 +675,6 @@
 															</object>
 															<object class="sizeritem">
 																<object class="wxComboBox" name="ID_VIDEOTUNING" variable="VideoTuning" member="yes">
-																	<size>150,-1</size>
 																	<extra_code>VideoTuning-&gt;Append(ENCODER__TUNINGS__COUNT, ENCODER__TUNINGS);</extra_code>
 																</object>
 																<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
@@ -816,7 +794,7 @@
 					</object>
 					<object class="notebookpage">
 						<object class="wxPanel" name="ID_AUDIOPAGE" variable="AudioPage" member="yes">
-							<style>wxNO_BORDER|wxTAB_TRAVERSAL</style>
+							<style>wxBORDER_NONE|wxTAB_TRAVERSAL</style>
 							<object class="wxFlexGridSizer" variable="FlexGridSizer3" member="no">
 								<cols>1</cols>
 								<rows>4</rows>
@@ -902,7 +880,6 @@
 														</object>
 														<object class="sizeritem">
 															<object class="wxSlider" name="ID_AUDIOQSCALE" variable="AudioQScale" member="yes">
-																<size>-1,20</size>
 																<handler function="OnSubsScaleChange" entry="EVT_COMMAND_SLIDER_UPDATED" />
 															</object>
 															<flag>wxALL|wxEXPAND</flag>
@@ -956,9 +933,7 @@
 													<option>1</option>
 												</object>
 												<object class="sizeritem">
-													<object class="wxTextCtrl" name="ID_AUDIOCHANNELS" variable="AudioChannels" member="yes">
-														<size>45,21</size>
-													</object>
+													<object class="wxTextCtrl" name="ID_AUDIOCHANNELS" variable="AudioChannels" member="yes" />
 													<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
 													<border>3</border>
 													<option>1</option>
@@ -1140,9 +1115,7 @@
 																<option>1</option>
 															</object>
 															<object class="sizeritem">
-																<object class="wxTextCtrl" name="ID_SUBSWIDTH" variable="SubsWidth" member="yes">
-																	<size>50,-1</size>
-																</object>
+																<object class="wxTextCtrl" name="ID_SUBSWIDTH" variable="SubsWidth" member="yes" />
 																<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
 																<option>1</option>
 															</object>
@@ -1155,9 +1128,7 @@
 																<option>1</option>
 															</object>
 															<object class="sizeritem">
-																<object class="wxTextCtrl" name="ID_SUBSHEIGHT" variable="SubsHeight" member="yes">
-																	<size>50,-1</size>
-																</object>
+																<object class="wxTextCtrl" name="ID_SUBSHEIGHT" variable="SubsHeight" member="yes" />
 																<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
 																<option>1</option>
 															</object>
@@ -1476,7 +1447,7 @@
 										<label>Fcc</label>
 										<object class="sizeritem">
 											<object class="wxFlexGridSizer" variable="FlexGridSizer15" member="no">
-												<cols>5</cols>
+												<cols>6</cols>
 												<rows>1</rows>
 												<growablecols>4</growablecols>
 												<object class="sizeritem">
@@ -1491,11 +1462,15 @@
 												<object class="sizeritem">
 													<object class="wxTextCtrl" name="ID_FOURCC_VID" variable="FOURCC_Vid" member="yes">
 														<maxlength>4</maxlength>
-														<size>60,-1</size>
 													</object>
-													<flag>wxRIGHT|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
-													<border>20</border>
+													<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<border>3</border>
 													<option>1</option>
+												</object>
+												<object class="spacer">
+													<flag>wxALL|wxEXPAND</flag>
+													<option>1</option>
+													<size>25,-1</size>
 												</object>
 												<object class="sizeritem">
 													<object class="wxStaticText" name="ID_ST52" variable="ST52" member="yes">
@@ -1509,9 +1484,9 @@
 												<object class="sizeritem">
 													<object class="wxTextCtrl" name="ID_FOURCC_AUD" variable="FOURCC_Aud" member="yes">
 														<maxlength>4</maxlength>
-														<size>60,-1</size>
 													</object>
 													<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+													<border>3</border>
 													<option>1</option>
 												</object>
 												<object class="spacer">
@@ -1520,6 +1495,7 @@
 												</object>
 											</object>
 											<flag>wxALL|wxEXPAND</flag>
+											<border>3</border>
 											<option>1</option>
 										</object>
 									</object>
@@ -1814,7 +1790,6 @@
 						<object class="wxButton" name="ID_OKBUTTON" variable="OKButton" member="yes">
 							<label>O</label>
 							<default>1</default>
-							<size>100,-1</size>
 							<extra_code>OKButton-&gt;SetLabel(FFQS(SID__COMMON__OK));</extra_code>
 							<handler function="OnButtonClick" entry="EVT_BUTTON" />
 						</object>
@@ -1825,7 +1800,6 @@
 					<object class="sizeritem">
 						<object class="wxButton" name="ID_CANCELBUTTON" variable="CancelButton" member="yes">
 							<label>C</label>
-							<size>100,-1</size>
 							<extra_code>CancelButton-&gt;SetLabel(FFQS(SID__COMMON__CANCEL));</extra_code>
 							<handler function="OnButtonClick" entry="EVT_BUTTON" />
 						</object>

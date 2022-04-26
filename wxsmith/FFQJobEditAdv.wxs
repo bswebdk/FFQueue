@@ -167,14 +167,14 @@
 							<object class="sizeritem">
 								<object class="wxButton" name="ID_BROWSEOUTPUT" variable="BrowseOutput" member="yes">
 									<label>...</label>
-									<size>50,-1</size>
+									<size>-1,-1</size>
 									<handler function="OnAction" entry="EVT_BUTTON" />
 								</object>
 								<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
 								<border>3</border>
 							</object>
 							<object class="sizeritem">
-								<object class="wxHyperlinkCtrl" name="ID_OUTPUTLENGTH" variable="OutputLength" member="yes">
+								<object class="wxHyperlinkCtrl" name="ID_OUTPUTLENGTH" subclass="wxGenericHyperlinkCtrl" variable="OutputLength" member="yes">
 									<label>OutL</label>
 									<handler function="OnAction" entry="EVT_HYPERLINK" />
 								</object>

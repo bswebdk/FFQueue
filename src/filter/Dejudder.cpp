@@ -47,7 +47,7 @@ Dejudder::Dejudder(wxWindow* parent) : FilterBasePanel(parent)
         fgs->AddGrowableCol(1);
         m_Custom = new wxRadioButton(this, wxID_ANY, FFQS(SID_DEJUDDER_CUSTOM), wxDefaultPosition, wxDefaultSize, 0);
         fgs->Add(m_Custom, 1, wxALL|wxALIGN_LEFT/*|wxALIGN_CENTER_VERTICAL*/, 3);
-        m_Cycle = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(80, -1), 0);
+        m_Cycle = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(-1, -1), 0);
         m_Cycle->SetValidator(iVal);
         fgs->Add(m_Cycle, 1, wxALL|wxALIGN_LEFT/*|wxALIGN_CENTER_VERTICAL*/, 3);
 

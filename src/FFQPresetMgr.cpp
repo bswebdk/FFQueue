@@ -93,10 +93,10 @@ FFQPresetMgr* FFQPresetMgr::Get()
 FFQPresetMgr::FFQPresetMgr(wxWindow* parent,wxWindowID id)
 {
 	//(*Initialize(FFQPresetMgr)
-	wxFlexGridSizer* FlexGridSizer1;
-	wxBoxSizer* BoxSizer2;
-	wxFlexGridSizer* FlexGridSizer3;
 	wxBoxSizer* BoxSizer1;
+	wxBoxSizer* BoxSizer2;
+	wxFlexGridSizer* FlexGridSizer1;
+	wxFlexGridSizer* FlexGridSizer3;
 
 	Create(parent, id, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE, _T("id"));
 	FlexGridSizer1 = new wxFlexGridSizer(2, 1, 0, 0);
@@ -432,8 +432,9 @@ void AddSorted(std::vector<LPFFQ_PRESET> &addTo, LPFFQ_PRESET add)
     addTo.push_back(add);
 }
 
-void FFQPresetMgr::SortPresets()
+void FFQPresetMgr::SortPresets(bool prompt)
 {
+    if (prompt && (!DoConfirm(this, FFQS(SID_CONFIRM_SORT_PRESETS)))) return;
     Presets->Freeze();
     std::vector<LPFFQ_PRESET> temp;
     for (unsigned int i = 0; i < Presets->GetCount(); i++) AddSorted(temp, (LPFFQ_PRESET)Presets->GetClientData(i));
@@ -620,7 +621,7 @@ void FFQPresetMgr::OnButtonClick(wxCommandEvent& event)
 
     else if (evtId == ID_DOWNBUTTON) ListBoxMoveSelectedItems(Presets, false, false);// MoveSelectedPresets(1);
 
-    else if (evtId == ID_SORTBUTTON) SortPresets();
+    else if (evtId == ID_SORTBUTTON) SortPresets(true);
 
     else if (evtId == ID_CLOSEBUTTON)
     {

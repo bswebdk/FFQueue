@@ -28,9 +28,9 @@
 
 #ifndef WX_PRECOMP
 	//(*HeadersPCH(FFQFilterEdit)
+	#include <wx/button.h>
 	#include <wx/dialog.h>
 	#include <wx/sizer.h>
-	#include <wx/button.h>
 	//*)
 #endif
 //(*Headers(FFQFilterEdit)
@@ -49,9 +49,9 @@ class FFQFilterEdit: public wxDialog
 
 		//(*Declarations(FFQFilterEdit)
 		wxButton* CancelButton;
-		wxStaticBoxSizer* FilterContainer;
-		wxFlexGridSizer* GridSizer;
 		wxButton* OKButton;
+		wxFlexGridSizer* GridSizer;
+		wxStaticBoxSizer* FilterContainer;
 		//*)
 
 	protected:

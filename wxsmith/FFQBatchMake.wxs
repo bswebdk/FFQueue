@@ -325,7 +325,6 @@
 									<object class="sizeritem">
 										<object class="wxButton" name="ID_BROWSEBUTTON" variable="BrowseButton" member="yes">
 											<label>...</label>
-											<size>50,-1</size>
 											<handler function="OnAction" entry="EVT_BUTTON" />
 										</object>
 										<flag>wxLEFT|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL</flag>
@@ -422,7 +421,7 @@
 			<object class="sizeritem">
 				<object class="wxGauge" name="ID_GAUGE" variable="Gauge" member="yes">
 					<range>1000</range>
-					<size>450,15</size>
+					<size>450,-1</size>
 				</object>
 				<flag>wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND</flag>
 				<border>5</border>

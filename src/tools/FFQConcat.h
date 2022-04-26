@@ -100,7 +100,8 @@ class FFQConcat: public wxDialog
 		wxCheckBox* SaveLog;
 		wxColourPickerCtrl* CCPadColor;
 		wxColourPickerCtrl* SSPadding;
-		wxFileDialog* OpenFileDlg;
+		wxFileDialog* OpenMoreDlg;
+		wxFileDialog* OpenOneDlg;
 		wxFileDialog* SaveFileDlg;
 		wxFlexGridSizer* CCBlurSizer;
 		wxFlexGridSizer* CCPadSizer;
@@ -109,8 +110,8 @@ class FFQConcat: public wxDialog
 		wxFlexGridSizer* Sizer2;
 		wxFlexGridSizer* Sizer3;
 		wxFlexGridSizer* Sizer4;
-		wxHyperlinkCtrl* LimitDest;
-		wxHyperlinkCtrl* SSFrameStatus;
+		wxGenericHyperlinkCtrl* LimitDest;
+		wxGenericHyperlinkCtrl* SSFrameStatus;
 		wxListBox* CCSources;
 		wxNotebook* Pages;
 		wxPanel* MergePage;

@@ -61,6 +61,8 @@ const unsigned int LOG_COLORS[LOG_COLOR_COUNT] = { COLOR_GRAY, COLOR_BLUE, COLOR
 
 typedef enum DEFINE_SELECT {dsNOSELECT, dsUNIQUE, dsAPPEND} DEFINE_SELECT;
 
+void PtrToBitmap(void* ptr, unsigned int len, wxBitmap &bmp, wxBitmapType type = wxBITMAP_TYPE_PNG, wxSize fit = wxSize(-1,-1));
+
 class FFQMain: public wxFrame
 {
     public:
@@ -85,6 +87,7 @@ class FFQMain: public wxFrame
         static const long ID_DEBUG_MAKEFILES;
         static const long ID_DEBUG_BINRES;
         static const long ID_DEBUG_TESTING;
+        static const long ID_DEBUG_FILTERS;
         static const long ID_DEBUG_ABOUT;
         wxMenu *m_DebugPopupMenu;
         #endif

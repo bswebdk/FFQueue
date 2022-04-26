@@ -221,6 +221,8 @@ bool MakeBinaryResources()
     s += MakeArrayName("TOOL_PRESETS", 0, true) + CRLF;
     s += MakeArrayName("ICON_JOB", 0, true) + CRLF;
     s += MakeArrayName("ICON_TOOL", 0, true) + CRLF;
+    s += MakeArrayName("ICON_PLAY_DARK", 0, true) + CRLF;
+    s += MakeArrayName("ICON_PLAY_LIGHT", 0, true) + CRLF;
     s += MakeArrayName("FLAG_ANIM", 0, true) + CRLF;
     s += MakeArrayName("MAIN_LOGO", 0, true) + CRLF;
     s += MakeArrayName("FONTS_CONF", 0, true) + CRLF;
@@ -261,6 +263,8 @@ bool MakeBinaryResources()
     s += FileToArray("res/preset.png", "TOOL_PRESETS") + CRLF + CRLF;
     s += FileToArray("res/icon_job.png", "ICON_JOB") + CRLF + CRLF;
     s += FileToArray("res/icon_tool.png", "ICON_TOOL") + CRLF + CRLF;
+    s += FileToArray("res/play_dark.png", "ICON_PLAY_DARK") + CRLF + CRLF;
+    s += FileToArray("res/play_light.png", "ICON_PLAY_LIGHT") + CRLF + CRLF;
     s += FileToArray("res/DK_Flag_Anim_Hjerte.gif", "FLAG_ANIM") + CRLF + CRLF;
     s += FileToArray("res/MainLogo.png", "MAIN_LOGO") + CRLF + CRLF;
     s += FileToArray("res/fonts.conf", "FONTS_CONF") + CRLF + CRLF;

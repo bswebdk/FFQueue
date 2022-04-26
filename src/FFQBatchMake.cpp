@@ -228,7 +228,7 @@ FFQBatchMake::FFQBatchMake(wxWindow* parent,wxWindowID id)
 	FlexGridSizer7->Add(ST4, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
 	OutputPath = new wxTextCtrl(this, ID_OUTPUTPATH, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_OUTPUTPATH"));
 	FlexGridSizer7->Add(OutputPath, 1, wxALL|wxEXPAND, 0);
-	BrowseButton = new wxButton(this, ID_BROWSEBUTTON, _T("..."), wxDefaultPosition, wxSize(50,-1), 0, wxDefaultValidator, _T("ID_BROWSEBUTTON"));
+	BrowseButton = new wxButton(this, ID_BROWSEBUTTON, _T("..."), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_BROWSEBUTTON"));
 	FlexGridSizer7->Add(BrowseButton, 1, wxLEFT|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 5);
 	FlexGridSizer3->Add(FlexGridSizer7, 1, wxALL|wxEXPAND, 3);
 	FlexGridSizer6 = new wxFlexGridSizer(1, 2, 0, 0);
@@ -254,7 +254,7 @@ FFQBatchMake::FFQBatchMake(wxWindow* parent,wxWindowID id)
 	CancelButton->SetLabel(FFQS(SID_COMMON_CANCEL));
 	BoxSizer1->Add(CancelButton, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	MainSizer->Add(BoxSizer1, 1, wxALL|wxEXPAND, 5);
-	Gauge = new wxGauge(this, ID_GAUGE, 1000, wxDefaultPosition, wxSize(450,15), 0, wxDefaultValidator, _T("ID_GAUGE"));
+	Gauge = new wxGauge(this, ID_GAUGE, 1000, wxDefaultPosition, wxSize(450,-1), 0, wxDefaultValidator, _T("ID_GAUGE"));
 	MainSizer->Add(Gauge, 1, wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND, 5);
 	SetSizer(MainSizer);
 	DestPathDlg = new wxDirDialog(this, _T("Select destination folder"), wxEmptyString, wxDD_DEFAULT_STYLE|wxDD_DIR_MUST_EXIST, wxDefaultPosition, wxDefaultSize, _T("wxDirDialog"));

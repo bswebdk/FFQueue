@@ -71,7 +71,7 @@ class FFQThumbPanel: public wxPanel
 		wxFlexGridSizer* MosaicSizer;
 		wxFlexGridSizer* TimeSizer;
 		wxFlexGridSizer* WidthSizer;
-		wxHyperlinkCtrl* StartTime;
+		wxGenericHyperlinkCtrl* StartTime;
 		wxRadioButton* EveryCustom;
 		wxRadioButton* EveryScene;
 		wxStaticText* ST1;

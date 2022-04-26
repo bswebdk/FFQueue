@@ -34,8 +34,8 @@
 	//*)
 #endif
 //(*InternalHeaders(FFQJobEditAdvPopup)
-#include <wx/settings.h>
 #include <wx/font.h>
+#include <wx/settings.h>
 //*)
 
 //(*IdInit(FFQJobEditAdvPopup)
@@ -57,14 +57,14 @@ FFQJobEditAdvPopup::FFQJobEditAdvPopup(wxWindow* parent)
 {
 
 	//(*Initialize(FFQJobEditAdvPopup)
+	wxBoxSizer* BoxSizer1;
+	wxBoxSizer* BoxSizer2;
 	wxFlexGridSizer* FlexGridSizer1;
 	wxFlexGridSizer* FlexGridSizer2;
-	wxBoxSizer* BoxSizer2;
-	wxFlexGridSizer* FlexGridSizer4;
 	wxFlexGridSizer* FlexGridSizer3;
-	wxBoxSizer* BoxSizer1;
+	wxFlexGridSizer* FlexGridSizer4;
 
-	Create(parent, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL|wxSTATIC_BORDER|wxWANTS_CHARS, _T("wxID_ANY"));
+	Create(parent, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL|wxBORDER_STATIC|wxWANTS_CHARS, _T("wxID_ANY"));
 	FlexGridSizer4 = new wxFlexGridSizer(7, 1, 0, 0);
 	FlexGridSizer4->AddGrowableCol(0);
 	Panel1 = new wxPanel(this, ID_PANEL1, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, _T("ID_PANEL1"));
@@ -84,7 +84,7 @@ FFQJobEditAdvPopup::FFQJobEditAdvPopup(wxWindow* parent)
 	ST1 = new wxStaticText(this, wxID_ANY, _T("L1"), wxDefaultPosition, wxDefaultSize, 0, _T("wxID_ANY"));
 	ST1->SetLabel(FFQS(SID_JOBEDIT_ADV_ITSOFFSET));
 	FlexGridSizer2->Add(ST1, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
-	ItsOffset = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(75,-1), 0, wxDefaultValidator, _T("wxID_ANY"));
+	ItsOffset = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("wxID_ANY"));
 	FlexGridSizer2->Add(ItsOffset, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
 	ST2 = new wxStaticText(this, wxID_ANY, _T("L2"), wxDefaultPosition, wxDefaultSize, 0, _T("wxID_ANY"));
 	ST2->SetLabel(FFQS(SID_JOBEDIT_ADV_MILLISECONDS));
@@ -92,7 +92,7 @@ FFQJobEditAdvPopup::FFQJobEditAdvPopup(wxWindow* parent)
 	ST3 = new wxStaticText(this, wxID_ANY, _T("L3"), wxDefaultPosition, wxDefaultSize, 0, _T("wxID_ANY"));
 	ST3->SetLabel(FFQS(SID_JOBEDIT_ADV_FRAMERATE));
 	FlexGridSizer2->Add(ST3, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
-	FrameRate = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(75,-1), 0, wxDefaultValidator, _T("wxID_ANY"));
+	FrameRate = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("wxID_ANY"));
 	FlexGridSizer2->Add(FrameRate, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
 	ST4 = new wxStaticText(this, wxID_ANY, _T("L4"), wxDefaultPosition, wxDefaultSize, 0, _T("wxID_ANY"));
 	ST4->SetLabel(FFQS(SID_JOBEDIT_ADV_FPS));

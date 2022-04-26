@@ -9,13 +9,12 @@
 			<growablerows>0</growablerows>
 			<object class="sizeritem">
 				<object class="wxChoice" name="ID_PRESETS" variable="Presets" member="yes" />
-				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<flag>wxALL|wxEXPAND</flag>
 				<option>1</option>
 			</object>
 			<object class="sizeritem">
 				<object class="wxButton" name="ID_MGRBUTTON" variable="MgrButton" member="yes">
 					<label>...</label>
-					<size>50,-1</size>
 					<handler function="OnAction" entry="EVT_BUTTON" />
 				</object>
 				<flag>wxLEFT|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>

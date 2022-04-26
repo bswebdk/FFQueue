@@ -50,7 +50,7 @@ LensCorrection::LensCorrection(wxWindow* parent) : FilterBasePanel(parent)
 
     MakeLabel(FFQS(SID_LENSCORRECTION_CY), fgs);
     MakeLabel(as[2], fgs);
-    m_CY = new wxSlider(this, wxID_ANY, 200, 0, 400, wxDefaultPosition, wxSize(450, -1));
+    m_CY = new wxSlider(this, wxID_ANY, 200, 0, 400, wxDefaultPosition, wxSize(-1, -1));
     fgs->Add(m_CY, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 3);
     MakeLabel(as[3], fgs);
     fgs->Add(20, -1);
@@ -62,7 +62,7 @@ LensCorrection::LensCorrection(wxWindow* parent) : FilterBasePanel(parent)
 
     MakeLabel(FFQS(SID_LENSCORRECTION_K1), fgs);
     MakeLabel(as[0], fgs);
-    m_K1 = new wxSlider(this, wxID_ANY, 200, 0, 400, wxDefaultPosition, wxSize(450, -1));
+    m_K1 = new wxSlider(this, wxID_ANY, 200, 0, 400, wxDefaultPosition, wxSize(-1, -1));
     fgs->Add(m_K1, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 3);
     MakeLabel(as[1], fgs);
     fgs->Add(20, -1);
@@ -71,7 +71,7 @@ LensCorrection::LensCorrection(wxWindow* parent) : FilterBasePanel(parent)
 
     MakeLabel(FFQS(SID_LENSCORRECTION_K2), fgs);
     MakeLabel(as[0], fgs);
-    m_K2 = new wxSlider(this, wxID_ANY, 200, 0, 400, wxDefaultPosition, wxSize(450, -1));
+    m_K2 = new wxSlider(this, wxID_ANY, 200, 0, 400, wxDefaultPosition, wxSize(-1, -1));
     fgs->Add(m_K2, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 3);
     MakeLabel(as[1], fgs);
     fgs->Add(20, -1);

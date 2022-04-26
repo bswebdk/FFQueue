@@ -31,12 +31,12 @@
 
 #ifndef WX_PRECOMP
 	//(*HeadersPCH(FFQVideoToGIF)
+	#include <wx/button.h>
 	#include <wx/checkbox.h>
 	#include <wx/dialog.h>
-	#include <wx/sizer.h>
-	#include <wx/button.h>
-	#include <wx/hyperlink.h>
 	#include <wx/filedlg.h>
+	#include <wx/hyperlink.h>
+	#include <wx/sizer.h>
 	#include <wx/stattext.h>
 	#include <wx/textctrl.h>
 	//*)
@@ -54,28 +54,28 @@ class FFQVideoToGIF: public wxDialog
 		bool Execute(LPFFQ_VID2GIF_JOB job);
 
 		//(*Declarations(FFQVideoToGIF)
-		wxHyperlinkCtrl* LimitLen;
-		wxCheckBox* PreciseCuts;
-		wxTextCtrl* Source;
-		wxTextCtrl* Dest;
-		wxStaticText* ST7;
-		wxTextCtrl* Width;
-		wxFlexGridSizer* TopSizer;
-		wxStaticText* ST8;
-		wxFileDialog* OpenFile;
-		wxCheckBox* SaveLog;
-		wxButton* OkBtn;
-		wxCheckBox* TwoPass;
-		wxTextCtrl* Height;
-		wxStaticText* ST9;
-		wxStaticText* FileInfo;
-		wxTextCtrl* FrameRate;
-		wxFlexGridSizer* MidSizer;
-		wxFileDialog* SaveFile;
-		wxHyperlinkCtrl* StartTime;
-		wxButton* NoBtn;
 		wxButton* BrowseDst;
 		wxButton* BrowseSrc;
+		wxButton* NoBtn;
+		wxButton* OkBtn;
+		wxCheckBox* PreciseCuts;
+		wxCheckBox* SaveLog;
+		wxCheckBox* TwoPass;
+		wxFileDialog* OpenFile;
+		wxFileDialog* SaveFile;
+		wxFlexGridSizer* MidSizer;
+		wxFlexGridSizer* TopSizer;
+		wxGenericHyperlinkCtrl* LimitLen;
+		wxGenericHyperlinkCtrl* StartTime;
+		wxStaticText* FileInfo;
+		wxStaticText* ST7;
+		wxStaticText* ST8;
+		wxStaticText* ST9;
+		wxTextCtrl* Dest;
+		wxTextCtrl* FrameRate;
+		wxTextCtrl* Height;
+		wxTextCtrl* Source;
+		wxTextCtrl* Width;
 		//*)
 
 	protected:

@@ -28,12 +28,12 @@
 
 #ifndef WX_PRECOMP
 	//(*HeadersPCH(FFQLangEdit)
-	#include <wx/sizer.h>
+	#include <wx/frame.h>
 	#include <wx/listctrl.h>
 	#include <wx/panel.h>
-	#include <wx/statusbr.h>
-	#include <wx/frame.h>
+	#include <wx/sizer.h>
 	#include <wx/stattext.h>
+	#include <wx/statusbr.h>
 	#include <wx/textctrl.h>
 	//*)
 #endif
@@ -60,17 +60,17 @@ class FFQLangEdit: public wxFrame
 
 
 		//(*Declarations(FFQLangEdit)
-		wxStaticText* Info;
-		wxStaticText* ST2;
-		wxTextCtrl* Password2;
 		wxListView* ListView;
 		wxPanel* TabPanel;
-		wxStaticText* ST4;
-		wxTextCtrl* StrEdit;
-		wxStatusBar* SB;
-		wxTextCtrl* Password1;
+		wxStaticText* Info;
+		wxStaticText* ST2;
 		wxStaticText* ST3;
+		wxStaticText* ST4;
+		wxStatusBar* SB;
 		wxTextCtrl* Description;
+		wxTextCtrl* Password1;
+		wxTextCtrl* Password2;
+		wxTextCtrl* StrEdit;
 		//*)
 
 	protected:

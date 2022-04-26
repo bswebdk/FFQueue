@@ -92,7 +92,7 @@ FFQConfigEdit::FFQConfigEdit(wxWindow* parent,wxWindowID id)
 	SBS1->GetStaticBox()->SetLabel(FFQS(SID_OPTIONS_FFMPEG_PATH));
 	FlexGridSizer2->Add(FFMpegPath, 0, wxALL|wxEXPAND, 0);
 	FlexGridSizer2->Add(5,-1,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
-	BrowseFFMpeg = new wxButton(this, ID_BROWSEFFMPEG, _("..."), wxDefaultPosition, wxSize(50,-1), 0, wxDefaultValidator, _T("ID_BROWSEFFMPEG"));
+	BrowseFFMpeg = new wxButton(this, ID_BROWSEFFMPEG, _("..."), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_BROWSEFFMPEG"));
 	FlexGridSizer2->Add(BrowseFFMpeg, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
 	SBS1->Add(FlexGridSizer2, 1, wxALL|wxEXPAND, 3);
 	FlexGridSizer1->Add(SBS1, 1, wxALL|wxEXPAND, 3);
@@ -103,7 +103,7 @@ FFQConfigEdit::FFQConfigEdit(wxWindow* parent,wxWindowID id)
 	SBS4->GetStaticBox()->SetLabel(FFQS(SID_OPTIONS_CUSTOM_PLAYER));
 	FlexGridSizer5->Add(CustPlayer, 1, wxALL|wxEXPAND, 0);
 	FlexGridSizer5->Add(5,-1,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
-	BrowseCustPlayer = new wxButton(this, ID_BROWSECUSTPLAYER, _("..."), wxDefaultPosition, wxSize(50,-1), 0, wxDefaultValidator, _T("ID_BROWSECUSTPLAYER"));
+	BrowseCustPlayer = new wxButton(this, ID_BROWSECUSTPLAYER, _("..."), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_BROWSECUSTPLAYER"));
 	FlexGridSizer5->Add(BrowseCustPlayer, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
 	SBS4->Add(FlexGridSizer5, 1, wxALL|wxEXPAND, 3);
 	FlexGridSizer1->Add(SBS4, 1, wxALL|wxEXPAND, 3);
@@ -133,7 +133,7 @@ FFQConfigEdit::FFQConfigEdit(wxWindow* parent,wxWindowID id)
 	CustomTemp = new wxTextCtrl(this, ID_CUSTOMTEMP, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CUSTOMTEMP"));
 	FlexGridSizer6->Add(CustomTemp, 1, wxALL|wxEXPAND, 0);
 	FlexGridSizer6->Add(3,0,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
-	BrowseTemp = new wxButton(this, ID_BROWSETEMP, _("..."), wxDefaultPosition, wxSize(50,-1), 0, wxDefaultValidator, _T("ID_BROWSETEMP"));
+	BrowseTemp = new wxButton(this, ID_BROWSETEMP, _("..."), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_BROWSETEMP"));
 	FlexGridSizer6->Add(BrowseTemp, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
 	FlexGridSizer4->Add(FlexGridSizer6, 1, wxALL|wxEXPAND, 3);
 	SBS2->Add(FlexGridSizer4, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
@@ -153,7 +153,7 @@ FFQConfigEdit::FFQConfigEdit(wxWindow* parent,wxWindowID id)
 	SBS5->GetStaticBox()->SetLabel(FFQS(SID_OPTIONS_CUSTOM_CONSOLE_CMD));
 	SBS5->Add(ConsoleCmd, 1, wxALL|wxEXPAND, 3);
 	FlexGridSizer1->Add(SBS5, 1, wxALL|wxEXPAND, 3);
-	CheckList = new wxCheckListBox(this, ID_CHECKLIST, wxDefaultPosition, wxDefaultSize, 0, 0, wxNO_BORDER|wxTAB_TRAVERSAL|wxVSCROLL, wxDefaultValidator, _T("ID_CHECKLIST"));
+	CheckList = new wxCheckListBox(this, ID_CHECKLIST, wxDefaultPosition, wxDefaultSize, 0, 0, wxBORDER_NONE|wxTAB_TRAVERSAL|wxVSCROLL, wxDefaultValidator, _T("ID_CHECKLIST"));
 	CheckList->SetMaxSize(wxSize(-1,180));
 	CheckList->SetBackgroundColour(GetBackgroundColour());
 	CheckList->Append(FFQS(SID_OPTIONS_SAVE_JOBS_ON_EXIT));

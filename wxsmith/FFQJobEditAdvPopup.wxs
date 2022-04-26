@@ -2,7 +2,7 @@
 <wxsmith>
 	<object class="wxDialog" name="FFQJobEditAdvPopup">
 		<id_arg>0</id_arg>
-		<style>wxTAB_TRAVERSAL|wxSTATIC_BORDER|wxWANTS_CHARS</style>
+		<style>wxTAB_TRAVERSAL|wxBORDER_STATIC|wxWANTS_CHARS</style>
 		<handler function="OnChar" entry="EVT_CHAR" />
 		<object class="wxFlexGridSizer" variable="FlexGridSizer4" member="no">
 			<cols>1</cols>
@@ -48,9 +48,7 @@
 						<option>1</option>
 					</object>
 					<object class="sizeritem">
-						<object class="wxTextCtrl" name="wxID_ANY" variable="ItsOffset" member="yes">
-							<size>75,-1</size>
-						</object>
+						<object class="wxTextCtrl" name="wxID_ANY" variable="ItsOffset" member="yes" />
 						<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
 						<border>3</border>
 						<option>1</option>
@@ -74,9 +72,7 @@
 						<option>1</option>
 					</object>
 					<object class="sizeritem">
-						<object class="wxTextCtrl" name="wxID_ANY" variable="FrameRate" member="yes">
-							<size>75,-1</size>
-						</object>
+						<object class="wxTextCtrl" name="wxID_ANY" variable="FrameRate" member="yes" />
 						<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
 						<border>3</border>
 						<option>1</option>

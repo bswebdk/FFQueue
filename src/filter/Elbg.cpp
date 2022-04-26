@@ -34,12 +34,12 @@ Elbg::Elbg(wxWindow* parent) : FilterBasePanel(parent)
     iVal.SetRange(0, 0xFFFFFFFF);
 
     MakeLabel(FFQS(SID_ELBG_COLORS), fgs);
-    m_Colors = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(80, -1));
+    m_Colors = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(-1, -1));
     m_Colors->SetValidator(iVal);
     fgs->Add(m_Colors, 1, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 5);
 
     MakeLabel(FFQS(SID_ELBG_ITERATIONS), fgs);
-    m_Iterations = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(80, -1));
+    m_Iterations = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(-1, -1));
     m_Iterations->SetValidator(iVal);
     fgs->Add(m_Iterations, 1, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 5);
 

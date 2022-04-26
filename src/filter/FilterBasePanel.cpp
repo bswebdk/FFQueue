@@ -190,7 +190,7 @@ bool FilterBasePanel::BrowseForFile(wxString &file)
 wxStaticText* FilterBasePanel::MakeLabel(wxString text, wxSizer *addToSizer, int addSizerFlags)
 {
 
-    wxStaticText *st = new wxStaticText(m_CtrlParent, wxID_ANY, text, wxDefaultPosition, wxDefaultSize, 0);
+    wxStaticText *st = new wxStaticText(m_CtrlParent, wxID_ANY, text);
 
     if (addToSizer != NULL)
     {
@@ -260,19 +260,21 @@ wxSizer* FilterBasePanel::GetTimeLimitControls(bool AddLabelThis)
      if (AddLabelThis)
      {
 
-        st = new wxStaticText(m_CtrlParent, wxID_ANY, FFQS(SID_FILTER_THIS) + SPACE, wxDefaultPosition, wxDefaultSize, 0);
+        st = new wxStaticText(m_CtrlParent, wxID_ANY, FFQS(SID_FILTER_THIS) + SPACE);
         m_TimeSizer->Add(st, 1, wxTOP|/*wxBOTTOM|*/wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, m_Padding);
 
      }
 
-     st = new wxStaticText(m_CtrlParent, wxID_ANY, FFQS(SID_FILTER_TIME_LIMIT_FROM) + SPACE, wxDefaultPosition, wxDefaultSize, 0);
+     st = new wxStaticText(m_CtrlParent, wxID_ANY, FFQS(SID_FILTER_TIME_LIMIT_FROM) + SPACE);
      m_TimeSizer->Add(st, 1, wxTOP|/*wxBOTTOM|*/wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, m_Padding);
-     m_ShowTime1 = new wxHyperlinkCtrl(m_CtrlParent, 1000, _(SPACE), wxEmptyString, wxDefaultPosition, wxDefaultSize, wxHL_DEFAULT_STYLE);
+     m_ShowTime1 = new wxGenericHyperlinkCtrl(m_CtrlParent, 1000, _(SPACE), wxEmptyString);//, wxDefaultPosition, wxDefaultSize, wxHL_DEFAULT_STYLE);
+     FFQCFG()->SetCtrlColors(m_ShowTime1);
      m_TimeSizer->Add(m_ShowTime1, 1, wxTOP|/*wxBOTTOM|*/wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, m_Padding);
 
-     st = new wxStaticText(m_CtrlParent, wxID_ANY, " " + FFQS(SID_FILTER_TIME_LIMIT_TO) + SPACE, wxDefaultPosition, wxDefaultSize, 0);
+     st = new wxStaticText(m_CtrlParent, wxID_ANY, " " + FFQS(SID_FILTER_TIME_LIMIT_TO) + SPACE);
      m_TimeSizer->Add(st, 1, wxTOP|/*wxBOTTOM|*/wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, m_Padding);
-     m_ShowTime2 = new wxHyperlinkCtrl(m_CtrlParent, 1001, _(SPACE), wxEmptyString, wxDefaultPosition, wxDefaultSize, wxHL_DEFAULT_STYLE);
+     m_ShowTime2 = new wxGenericHyperlinkCtrl(m_CtrlParent, 1001, _(SPACE), wxEmptyString);//, wxDefaultPosition, wxDefaultSize, wxHL_DEFAULT_STYLE);
+     FFQCFG()->SetCtrlColors(m_ShowTime2);
      m_TimeSizer->Add(m_ShowTime2, 1, wxTOP|/*wxBOTTOM|*/wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, m_Padding);
 
      Connect(1000, wxEVT_HYPERLINK, (wxObjectEventFunction)&FilterBasePanel::OnTimeLinkClick);
@@ -446,13 +448,13 @@ wxSizer* FilterBasePanel::GetLeftAndTopControls(wxValidator &val)
 
         MakeLabel(FFQS(SID_FILTER_POSITION_LEFT), m_PosSizer, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL);
 
-        m_Left = new wxTextCtrl(m_CtrlParent, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(80, -1));
+        m_Left = new wxTextCtrl(m_CtrlParent, wxID_ANY);
         m_Left->SetValidator(val);
         m_PosSizer->Add(m_Left, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, m_Padding);
 
         MakeLabel(FFQS(SID_FILTER_POSITION_TOP), m_PosSizer, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL);
 
-        m_Top = new wxTextCtrl(m_CtrlParent, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(80, -1));
+        m_Top = new wxTextCtrl(m_CtrlParent, wxID_ANY);
         m_Top->SetValidator(val);
         m_PosSizer->Add(m_Top, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, m_Padding);
 
@@ -503,13 +505,13 @@ wxSizer* FilterBasePanel::GetWidthAndHeightControls(wxValidator &val)
 
         MakeLabel(FFQS(SID_FILTER_POSITION_WIDTH), m_DimSizer, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL);
 
-        m_Width = new wxTextCtrl(m_CtrlParent, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(80, -1));
+        m_Width = new wxTextCtrl(m_CtrlParent, wxID_ANY);
         m_Width->SetValidator(val);
         m_DimSizer->Add(m_Width, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, m_Padding);
 
         MakeLabel(FFQS(SID_FILTER_POSITION_HEIGHT), m_DimSizer, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL);
 
-        m_Height = new wxTextCtrl(m_CtrlParent, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(80, -1));
+        m_Height = new wxTextCtrl(m_CtrlParent, wxID_ANY);
         m_Height->SetValidator(val);
         m_DimSizer->Add(m_Height, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, m_Padding);
 

@@ -94,7 +94,7 @@ Delogo::Delogo(wxWindow* parent) : FilterBasePanel(parent)
     fgsxx->AddGrowableCol(0);
     m_ImgMask = new wxTextCtrl(this, wxID_ANY);
     fgsxx->Add(m_ImgMask, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 3);
-    m_BrowseImg = new wxButton(this, wxID_ANY, "...", wxDefaultPosition, wxSize(30, 21));
+    m_BrowseImg = new wxButton(this, wxID_ANY, "...", wxDefaultPosition, wxSize(-1, -1));
     m_BrowseImg->Bind(wxEVT_BUTTON, &Delogo::OnAction, this, wxID_ANY);
     fgsxx->Add(m_BrowseImg, 1, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 3);
 

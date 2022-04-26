@@ -23,9 +23,7 @@
 								<option>1</option>
 							</object>
 							<object class="sizeritem">
-								<object class="wxTextCtrl" name="ID_HOURS" variable="Hours" member="yes">
-									<size>25,21</size>
-								</object>
+								<object class="wxTextCtrl" name="ID_HOURS" variable="Hours" member="yes" />
 								<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
 								<border>5</border>
 								<option>1</option>
@@ -40,9 +38,7 @@
 								<option>1</option>
 							</object>
 							<object class="sizeritem">
-								<object class="wxTextCtrl" name="ID_MINUTES" variable="Minutes" member="yes">
-									<size>25,21</size>
-								</object>
+								<object class="wxTextCtrl" name="ID_MINUTES" variable="Minutes" member="yes" />
 								<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
 								<border>5</border>
 								<option>1</option>
@@ -57,9 +53,7 @@
 								<option>1</option>
 							</object>
 							<object class="sizeritem">
-								<object class="wxTextCtrl" name="ID_SECONDS" variable="Seconds" member="yes">
-									<size>25,21</size>
-								</object>
+								<object class="wxTextCtrl" name="ID_SECONDS" variable="Seconds" member="yes" />
 								<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
 								<border>5</border>
 								<option>1</option>
@@ -74,9 +68,7 @@
 								<option>1</option>
 							</object>
 							<object class="sizeritem">
-								<object class="wxTextCtrl" name="ID_MILLIS" variable="Millis" member="yes">
-									<size>30,21</size>
-								</object>
+								<object class="wxTextCtrl" name="ID_MILLIS" variable="Millis" member="yes" />
 								<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
 								<border>5</border>
 								<option>1</option>
@@ -96,7 +88,7 @@
 					<label>Sub</label>
 					<orient>wxVERTICAL</orient>
 				</object>
-				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<flag>wxALL|wxEXPAND</flag>
 				<border>5</border>
 				<option>1</option>
 			</object>
@@ -119,7 +111,7 @@
 							<extra_code>OKButton-&gt;SetLabel(FFQS(SID__COMMON__OK));</extra_code>
 							<handler function="OnButtonClick" entry="EVT_BUTTON" />
 						</object>
-						<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<flag>wxALL|wxEXPAND</flag>
 						<border>5</border>
 						<option>1</option>
 					</object>
@@ -129,12 +121,12 @@
 							<extra_code>CancelButton-&gt;SetLabel(FFQS(SID__COMMON__CANCEL));</extra_code>
 							<handler function="OnButtonClick" entry="EVT_BUTTON" />
 						</object>
-						<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<flag>wxALL|wxEXPAND</flag>
 						<border>5</border>
 						<option>1</option>
 					</object>
 				</object>
-				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<flag>wxALL|wxEXPAND</flag>
 				<border>5</border>
 				<option>1</option>
 			</object>

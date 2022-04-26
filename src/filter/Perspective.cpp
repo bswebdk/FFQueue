@@ -40,17 +40,17 @@ Perspective::Perspective(wxWindow* parent) : FilterBasePanel(parent)
 
     //Right
     MakeLabel(FFQS(SID_PERSPECTIVE_RIGHT), fgs);
-    m_Right = new wxSlider(this, wxID_ANY, 100, 0, 200, wxDefaultPosition, wxSize(300, -1));
+    m_Right = new wxSlider(this, wxID_ANY, 100, 0, 200);
     fgs->Add(m_Right, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 3);
 
     //Top
     MakeLabel(FFQS(SID_PERSPECTIVE_TOP), fgs);
-    m_Top = new wxSlider(this, wxID_ANY, 100, 0, 200, wxDefaultPosition, wxSize(300, -1));
+    m_Top = new wxSlider(this, wxID_ANY, 100, 0, 200);
     fgs->Add(m_Top, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 3);
 
     //Bottom
     MakeLabel(FFQS(SID_PERSPECTIVE_BOTTOM), fgs);
-    m_Bottom = new wxSlider(this, wxID_ANY, 100, 0, 200, wxDefaultPosition, wxSize(300, -1));
+    m_Bottom = new wxSlider(this, wxID_ANY, 100, 0, 200);
     fgs->Add(m_Bottom, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 3);
 
     //Interpolation

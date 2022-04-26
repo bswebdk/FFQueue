@@ -37,20 +37,20 @@ Hue::Hue(wxWindow* parent) : FilterBasePanel(parent)
 
 
     MakeLabel(FFQS(SID_HUE_HUE), fgs);
-    m_Hue = new wxSlider(this, wxID_ANY, 0, 0, 360, wxDefaultPosition, wxSize(400, -1));
+    m_Hue = new wxSlider(this, wxID_ANY, 0, 0, 360, wxDefaultPosition, wxSize(450, -1));
     fgs->Add(m_Hue, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 3);
     m_HueText = MakeLabel("000000", fgs);
     wxSize ms = wxSize(m_HueText->GetSize().GetWidth(), -1);
     m_HueText->SetMinSize(ms);
 
     MakeLabel(FFQS(SID_HUE_SATURATION), fgs);
-    m_Sat = new wxSlider(this, wxID_ANY, 200, 0, 400, wxDefaultPosition, wxSize(400, -1));
+    m_Sat = new wxSlider(this, wxID_ANY, 200, 0, 400, wxDefaultPosition, wxSize(-1, -1));
     fgs->Add(m_Sat, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 3);
     m_SatText = MakeLabel("", fgs);
     m_SatText->SetMinSize(ms);
 
     MakeLabel(FFQS(SID_HUE_BRIGHTNESS), fgs);
-    m_Bright = new wxSlider(this, wxID_ANY, 200, 0, 400, wxDefaultPosition, wxSize(400, -1));
+    m_Bright = new wxSlider(this, wxID_ANY, 200, 0, 400, wxDefaultPosition, wxSize(-1, -1));
     fgs->Add(m_Bright, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 3);
     m_BrightText = MakeLabel("", fgs);
     m_BrightText->SetMinSize(ms);

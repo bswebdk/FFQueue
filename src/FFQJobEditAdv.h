@@ -61,11 +61,13 @@ typedef struct INPUT_CTRLS
 
     wxPanel *panel;
     wxTextCtrl *input;//, *itsoffset, *framerate;
-    wxFlexGridSizer *sizer;
+    //wxFlexGridSizer *sizer;
+    wxBoxSizer *sizer;
     wxString validated_path, itsoffset, framerate;
     bool valid, discard_corrupt, genpts, igndts, ignidx, can_cut;
     wxButton *browse;
-    wxHyperlinkCtrl *start, *cuts, *more;
+    wxBitmapButton *play;
+    wxGenericHyperlinkCtrl *start, *cuts, *more;
     TIME_VALUE start_val;
     FFQ_CUTS cut_cfg;
     //wxCheckBox *discard_corrupt, *genpts, *igndts, *ignidx;
@@ -108,7 +110,7 @@ class FFQJobEditAdv: public wxDialog
 		wxFileDialog* OpenFile;
 		wxFileDialog* SaveFile;
 		wxFlexGridSizer* OutputSizer;
-		wxHyperlinkCtrl* OutputLength;
+		wxGenericHyperlinkCtrl* OutputLength;
 		wxNotebook* Inputs;
 		wxStaticText* ST3;
 		wxStaticText* ST4;
@@ -140,6 +142,7 @@ class FFQJobEditAdv: public wxDialog
 		//*)
 
 		static const long ID_BROWSE;
+		static const long ID_PLAY;
 		static const long ID_START;
 		static const long ID_CUTS;
 		static const long ID_MORE;

@@ -26,6 +26,7 @@
 
 #include <wx/string.h>
 #include <wx/window.h>
+#include <wx/hyperlink.h>
 #include "FFQPixFmt.h"
 #include "FFQPreset.h"
 #include "FFQCodecInfo.h"
@@ -107,6 +108,7 @@ class FFQConfig
 	    wxString user_locale;
 	    wxString share_data_dir;
 
+	    bool dark_theme;
 	    uint32_t colors[COLOR_COUNT];
 
 		//Methods to access options not stored in public vars
@@ -138,6 +140,7 @@ class FFQConfig
 	    void            LoadConfig();
 	    bool            SaveArrayString(wxString filename, wxArrayString* array_string);
 	    void            SaveConfig();
+	    void            SetCtrlColors(wxGenericHyperlinkCtrl *ctrl);
 	    bool            SetSaveLog(bool log, bool save_config = true);
 	    void            SetPreferredAndSave(wxString format, wxString path, bool save_always = false);
 	    bool            ValidateFFMpegPath(wxString path, bool set_config_path_if_valid);

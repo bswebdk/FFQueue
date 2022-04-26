@@ -37,7 +37,7 @@ Vignette::Vignette(wxWindow* parent) : FilterBasePanel(parent)
     fgs->AddGrowableCol(1);
 
     MakeLabel(FFQS(SID_VIGNETTE_ANGLE), fgs);
-    m_Angle = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(80, -1), 0);
+    m_Angle = new wxTextCtrl(this, wxID_ANY); //, wxEmptyString, wxDefaultPosition, wxSize(-1, -1), 0
     m_Angle->SetValidator(fVal);
     fgs->Add(m_Angle, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
 

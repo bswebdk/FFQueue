@@ -28,10 +28,10 @@
 
 #ifndef WX_PRECOMP
 	//(*HeadersPCH(FFQPresetMgr)
-	#include <wx/dialog.h>
-	#include <wx/sizer.h>
 	#include <wx/button.h>
+	#include <wx/dialog.h>
 	#include <wx/listbox.h>
+	#include <wx/sizer.h>
 	//*)
 #endif
 //(*Headers(FFQPresetMgr)
@@ -64,16 +64,16 @@ class FFQPresetMgr: public wxDialog
 		long IndexOf(LPFFQ_PRESET pst);
 
 		//(*Declarations(FFQPresetMgr)
+		wxButton* CloseButton;
 		wxButton* CopyButton;
+		wxButton* DeleteButton;
+		wxButton* DownButton;
+		wxButton* EditButton;
+		wxButton* NewButton;
+		wxButton* PasteButton;
+		wxButton* SortButton;
 		wxButton* UpButton;
 		wxListBox* Presets;
-		wxButton* EditButton;
-		wxButton* DeleteButton;
-		wxButton* CloseButton;
-		wxButton* SortButton;
-		wxButton* NewButton;
-		wxButton* DownButton;
-		wxButton* PasteButton;
 		//*)
 
 	protected:
@@ -104,7 +104,7 @@ class FFQPresetMgr: public wxDialog
 
 		//void MoveSelectedPresets(int by);
 		unsigned int SetListItem(long idx, LPFFQ_PRESET pst, bool select = false);
-		void SortPresets();
+		void SortPresets(bool prompt);
 		//void SwapPresets(size_t idx1, size_t idx2);
 		void UpdateControls();
 

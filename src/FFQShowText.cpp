@@ -49,7 +49,7 @@ FFQShowText::FFQShowText(wxWindow* parent)
 
 	Create(parent, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX, _T("wxID_ANY"));
 	BoxSizer1 = new wxBoxSizer(wxHORIZONTAL);
-	Text = new wxTextCtrl(this, ID_TEXT, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_READONLY|wxTE_RICH|wxTE_DONTWRAP|wxNO_BORDER, wxDefaultValidator, _T("ID_TEXT"));
+	Text = new wxTextCtrl(this, ID_TEXT, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_READONLY|wxTE_RICH|wxTE_DONTWRAP|wxBORDER_NONE, wxDefaultValidator, _T("ID_TEXT"));
 	Text->SetMinSize(wxSize(450,550));
 	BoxSizer1->Add(Text, 1, wxEXPAND, 5);
 	SetSizer(BoxSizer1);

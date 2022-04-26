@@ -68,6 +68,12 @@ extern const unsigned char ICON_JOB[];
 extern const uint32_t ICON_TOOL_SIZE;
 extern const unsigned char ICON_TOOL[];
 
+extern const uint32_t ICON_PLAY_DARK_SIZE;
+extern const unsigned char ICON_PLAY_DARK[];
+
+extern const uint32_t ICON_PLAY_LIGHT_SIZE;
+extern const unsigned char ICON_PLAY_LIGHT[];
+
 extern const uint32_t FLAG_ANIM_SIZE;
 extern const unsigned char FLAG_ANIM[];
 

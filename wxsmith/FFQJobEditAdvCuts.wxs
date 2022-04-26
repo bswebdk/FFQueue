@@ -189,7 +189,6 @@
 													<object class="sizeritem">
 														<object class="wxButton" name="ID_ADDCUT" variable="AddCut" member="yes">
 															<label>+</label>
-															<size>50,-1</size>
 															<handler function="ActionClick" entry="EVT_BUTTON" />
 														</object>
 														<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
@@ -199,7 +198,6 @@
 													<object class="sizeritem">
 														<object class="wxButton" name="ID_REMOVECUT" variable="RemoveCut" member="yes">
 															<label>-</label>
-															<size>50,-1</size>
 															<handler function="ActionClick" entry="EVT_BUTTON" />
 														</object>
 														<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>

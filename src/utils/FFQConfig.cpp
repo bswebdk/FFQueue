@@ -466,8 +466,8 @@ void FFQConfig::DefaultOptions()
     subs_charenc = "";
     user_locale = "";
 
-    bool dark = LUMINANCE(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOWTEXT)) - LUMINANCE(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW)) > 0.2;
-    memcpy(colors, dark ? DEFAULT_COLORS_DARK : DEFAULT_COLORS, sizeof(uint32_t) * COLOR_COUNT);
+    dark_theme = LUMINANCE(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOWTEXT)) - LUMINANCE(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW)) > 0.2;
+    memcpy(colors, dark_theme ? DEFAULT_COLORS_DARK : DEFAULT_COLORS, sizeof(uint32_t) * COLOR_COUNT);
 
 	//Private config
     if (m_CodecInfo) delete m_CodecInfo;
@@ -1308,6 +1308,16 @@ void FFQConfig::SaveConfig()
 
 //---------------------------------------------------------------------------------------
 
+void FFQConfig::SetCtrlColors(wxGenericHyperlinkCtrl *ctrl)
+{
+    wxColor def = dark_theme ? wxColor(0xFF9999) : wxColor(0xAA0000);
+    wxColor hot = dark_theme ? wxColor(0xFFEEEE) : wxColor(0xFF5555);
+    ctrl->SetNormalColour(def);
+    ctrl->SetVisitedColour(def);
+    ctrl->SetHoverColour(hot);
+}
+
+//---------------------------------------------------------------------------------------
 bool FFQConfig::SetSaveLog(bool log, bool save_config)
 {
 

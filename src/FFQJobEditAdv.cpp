@@ -31,6 +31,7 @@
 #include "utils/FFQMisc.h"
 #include "utils/FFQHash.h"
 #include "utils/FFQBuildCmd.h"
+#include "bin_res.h"
 
 #include <wx/filename.h>
 #include <wx/tooltip.h>
@@ -66,6 +67,7 @@ const long FFQJobEditAdv::ID_CANCELDLG = wxNewId();
 
 //Assign static ID's
 const long FFQJobEditAdv::ID_BROWSE = wxNewId();
+const long FFQJobEditAdv::ID_PLAY = wxNewId();
 const long FFQJobEditAdv::ID_START = wxNewId();
 const long FFQJobEditAdv::ID_CUTS = wxNewId();
 const long FFQJobEditAdv::ID_MORE = wxNewId();
@@ -149,9 +151,9 @@ FFQJobEditAdv::FFQJobEditAdv(wxWindow* parent)
 	OutputSizer->AddGrowableCol(0);
 	Output = new wxTextCtrl(this, ID_OUTPUT, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_OUTPUT"));
 	OutputSizer->Add(Output, 0, wxALL|wxEXPAND, 3);
-	BrowseOutput = new wxButton(this, ID_BROWSEOUTPUT, _T("..."), wxDefaultPosition, wxSize(50,-1), 0, wxDefaultValidator, _T("ID_BROWSEOUTPUT"));
+	BrowseOutput = new wxButton(this, ID_BROWSEOUTPUT, _T("..."), wxDefaultPosition, wxSize(-1,-1), 0, wxDefaultValidator, _T("ID_BROWSEOUTPUT"));
 	OutputSizer->Add(BrowseOutput, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
-	OutputLength = new wxHyperlinkCtrl(this, ID_OUTPUTLENGTH, _T("OutL"), wxEmptyString, wxDefaultPosition, wxDefaultSize, wxHL_CONTEXTMENU|wxHL_ALIGN_CENTRE|wxNO_BORDER, _T("ID_OUTPUTLENGTH"));
+	OutputLength = new wxGenericHyperlinkCtrl(this, ID_OUTPUTLENGTH, _T("OutL"), wxEmptyString, wxDefaultPosition, wxDefaultSize, wxHL_CONTEXTMENU|wxHL_ALIGN_CENTRE, _T("ID_OUTPUTLENGTH"));
 	OutputSizer->Add(OutputLength, 0, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
 	OutputSizer->Add(-1,-1,1, wxALL|wxEXPAND, 0);
 	SBS3->Add(OutputSizer, 1, wxALL|wxEXPAND, 3);
@@ -231,6 +233,7 @@ FFQJobEditAdv::FFQJobEditAdv(wxWindow* parent)
     m_CutEdit = NULL;
     m_PopupCtrls = new FFQJobEditAdvPopup(this);
     m_PopupValidate = false;
+    FFQCFG()->SetCtrlColors(OutputLength);
     //m_Process = new FFQProcess();
 
 	//Connect(wxID_ANY, wxEVT_IDLE, (wxObjectEventFunction)&FFQJobEditAdv::OnIdle);
@@ -455,22 +458,57 @@ void FFQJobEditAdv::AddInputFile(LPFFQ_INPUT_FILE in_file, bool select)
     //Create the panel to hold the controls
 	ctrls->panel = new wxPanel(Inputs, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
 
-	//Create sizers and handy vars
-	//wxFlexGridSizer /*s_main,*/ *s_input;//, *s_offsrate, *s_flags;
-	//wxStaticText *lab;
-	//wxStaticLine *sline;
+	//Outer sizer
+	ctrls->sizer = new wxBoxSizer(wxVERTICAL);
 
-	//Main (outer) sizer
-	//s_main = new wxFlexGridSizer(1, 1, 0, 0);
-	//s_main->AddGrowableCol(0);
+    //File, browse and play
+    wxFlexGridSizer *fgs = new wxFlexGridSizer(1, 3, 0, 0);
+	fgs->AddGrowableCol(0);
+	//fgs->AddGrowableCol(1);
+	fgs->AddGrowableRow(0);
+	ctrls->input = new wxTextCtrl(ctrls->panel, wxID_ANY, (in_file == NULL) ? "" : in_file->path);
+	ctrls->input->SetMinSize(wxSize(500,-1));
+	fgs->Add(ctrls->input, 1, wxALL|wxEXPAND, 3);
+
+	ctrls->browse = new wxButton(ctrls->panel, ID_BROWSE, _T("..."), wxDefaultPosition, wxSize(-1/*50*/,-1));
+	ctrls->browse->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &FFQJobEditAdv::OnAction, this);
+	fgs->Add(ctrls->browse, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+
+	wxBitmap bmp;
+	if (FFQCFG()->dark_theme) PtrToBitmap((void*)&ICON_PLAY_LIGHT, ICON_PLAY_LIGHT_SIZE, bmp, wxBITMAP_TYPE_PNG, wxSize(16, 16));
+	else PtrToBitmap((void*)&ICON_PLAY_DARK, ICON_PLAY_DARK_SIZE, bmp, wxBITMAP_TYPE_PNG, wxSize(16, 16));
+	ctrls->play = new wxBitmapButton(ctrls->panel, ID_PLAY, bmp, wxDefaultPosition, wxSize(-1, ctrls->browse->GetSize().GetHeight()));
+	ctrls->play->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &FFQJobEditAdv::OnAction, this);
+	fgs->Add(ctrls->play, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+
+	ctrls->sizer->Add(fgs, 1, wxALL|wxEXPAND, 0);
+
+    fgs = new wxFlexGridSizer(1, 3, 0, 0);
+	fgs->AddGrowableCol(0);
+	fgs->AddGrowableRow(0);
+	ctrls->start = new wxGenericHyperlinkCtrl(ctrls->panel, ID_START, "W", wxEmptyString, wxDefaultPosition, wxDefaultSize, wxHL_DEFAULT_STYLE);
+	ctrls->start->Bind(wxEVT_COMMAND_HYPERLINK, &FFQJobEditAdv::OnAction, this);
+	FFQCFG()->SetCtrlColors(ctrls->start);
+	fgs->Add(ctrls->start, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
+	ctrls->cuts = new wxGenericHyperlinkCtrl(ctrls->panel, ID_CUTS, FFQS(SID_JOBEDIT_ADV_CUTS), wxEmptyString, wxDefaultPosition, wxDefaultSize, wxHL_DEFAULT_STYLE);
+	ctrls->cuts->Bind(wxEVT_COMMAND_HYPERLINK, &FFQJobEditAdv::OnAction, this);
+	FFQCFG()->SetCtrlColors(ctrls->cuts);
+	fgs->Add(ctrls->cuts, 1, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 3);
+	ctrls->more = new wxGenericHyperlinkCtrl(ctrls->panel, ID_MORE, FFQS(SID_JOBEDIT_ADV_MORE), wxEmptyString, wxDefaultPosition, wxDefaultSize, wxHL_DEFAULT_STYLE);
+	ctrls->more->Bind(wxEVT_COMMAND_HYPERLINK, &FFQJobEditAdv::OnAction, this);
+	FFQCFG()->SetCtrlColors(ctrls->more);
+	fgs->Add(ctrls->more, 1, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 3);
+
+	ctrls->sizer->Add(fgs, 1, wxALL|wxEXPAND, 0);
+
 
 	//Sizer for input file and start time
-	ctrls->sizer = new wxFlexGridSizer(2, 2, 0, 0);
+	/*ctrls->sizer = new wxFlexGridSizer(2, 2, 0, 0);
 	ctrls->sizer->AddGrowableCol(0);
 	//ctrls->sizer->AddGrowableRow(0);
 	ctrls->input = new wxTextCtrl(ctrls->panel, wxID_ANY, (in_file == NULL) ? "" : in_file->path);
 	ctrls->input->SetMinSize(wxSize(500,-1));
-	ctrls->sizer->Add(ctrls->input, 1, wxALL|wxEXPAND/*|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL*/, 3);
+	ctrls->sizer->Add(ctrls->input, 1, wxALL|wxEXPAND, 3);
 	ctrls->browse = new wxButton(ctrls->panel, ID_BROWSE, _T("..."), wxDefaultPosition, wxSize(50,-1));
 	ctrls->sizer->Add(ctrls->browse, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
 	ctrls->browse->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &FFQJobEditAdv::OnAction, this);
@@ -489,7 +527,7 @@ void FFQJobEditAdv::AddInputFile(LPFFQ_INPUT_FILE in_file, bool select)
 
 	ctrls->more = new wxHyperlinkCtrl(ctrls->panel, ID_MORE, FFQS(SID_JOBEDIT_ADV_MORE), wxEmptyString, wxDefaultPosition, wxDefaultSize, wxHL_DEFAULT_STYLE);
 	ctrls->sizer->Add(ctrls->more, 1, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 3);
-	ctrls->more->Bind(wxEVT_COMMAND_HYPERLINK, &FFQJobEditAdv::OnAction, this);
+	ctrls->more->Bind(wxEVT_COMMAND_HYPERLINK, &FFQJobEditAdv::OnAction, this);*/
 
 	ctrls->panel->SetSizer(ctrls->sizer);
 	ctrls->sizer->Fit(ctrls->panel);
@@ -1049,6 +1087,7 @@ void FFQJobEditAdv::UpdateControls()
         TIME_VALUE dur;
         if ((!ctrls->valid) || (!ctrls->probe.GetDuration(dur))) dur = 0;
         ctrls->cuts->Enable(m_CanCut && ctrls->can_cut && (dur.ToMilliseconds() > 0));
+        ctrls->play->Enable(dur.ToMilliseconds() > 0);
         ctrls->start->Enable((ctrls->cut_cfg.cuts.Len() == 0) || (!ctrls->cut_cfg.quick));
 
     }
@@ -1070,8 +1109,8 @@ void FFQJobEditAdv::UpdateLink(int index)
 {
 
     //Update a link to the specified time value
-    wxHyperlinkCtrl *link;
-    wxFlexGridSizer *sizer;
+    wxGenericHyperlinkCtrl *link;
+    wxSizer *sizer;
     wxString l;
 
     if (index == LINK_LIMIT_LEN)
@@ -1411,6 +1450,15 @@ void FFQJobEditAdv::OnAction(wxCommandEvent& event)
 
         }
 
+
+    }
+
+    else if (evtId == ID_PLAY)
+    {
+
+        //Play input file with system default player
+        LPINPUT_CTRLS ctrls = GetCtrlData();
+        wxLaunchDefaultApplication(ctrls->input->GetValue());
 
     }
 

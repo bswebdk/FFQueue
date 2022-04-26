@@ -28,6 +28,7 @@
 #include "utils/FFQBuildCmd.h"
 #include "utils/FFQMisc.h"
 #include "utils/FFQConst.h"
+#include <wx/display.h>
 
 #ifndef WX_PRECOMP
 	//(*InternalHeadersPCH(FFQPresetEdit)
@@ -312,7 +313,7 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 	UseVideoQScale->SetValue(false);
 	UseVideoQScale->SetLabel(FFQS(SID_PRESET_QUALITY_SCALE));
 	VideoQualitySizer->Add(UseVideoQScale, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
-	VideoQScale = new wxSlider(QualityPage, ID_VIDEOQSCALE, 0, 0, 100, wxDefaultPosition, wxSize(-1,20), 0, wxDefaultValidator, _T("ID_VIDEOQSCALE"));
+	VideoQScale = new wxSlider(QualityPage, ID_VIDEOQSCALE, 0, 0, 100, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_VIDEOQSCALE"));
 	VideoQualitySizer->Add(VideoQScale, 1, wxALL|wxEXPAND, 3);
 	VideoQScaleVal = new wxStaticText(QualityPage, ID_VIDEOQSCALEVAL, _T("X"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_VIDEOQSCALEVAL"));
 	VideoQualitySizer->Add(VideoQScaleVal, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
@@ -320,7 +321,7 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 	UseConstRate->SetValue(false);
 	UseConstRate->SetLabel(FFQS(SID_PRESET_CONSTANT_RATE));
 	VideoQualitySizer->Add(UseConstRate, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
-	ConstRate = new wxSlider(QualityPage, ID_CONSTRATE, 0, 0, 100, wxDefaultPosition, wxSize(-1,20), 0, wxDefaultValidator, _T("ID_CONSTRATE"));
+	ConstRate = new wxSlider(QualityPage, ID_CONSTRATE, 0, 0, 100, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CONSTRATE"));
 	VideoQualitySizer->Add(ConstRate, 1, wxALL|wxEXPAND, 3);
 	ConstRateVal = new wxStaticText(QualityPage, ID_CONSTRATEVAL, _T("X"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_CONSTRATEVAL"));
 	VideoQualitySizer->Add(ConstRateVal, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
@@ -328,7 +329,7 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 	UseMinConstRate->SetValue(false);
 	UseMinConstRate->SetLabel(FFQS(SID_PRESET_MIN_CONSTANT_RATE));
 	VideoQualitySizer->Add(UseMinConstRate, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
-	MinConstRate = new wxSlider(QualityPage, ID_MINCONSTRATE, 0, 0, 100, wxDefaultPosition, wxSize(-1,20), 0, wxDefaultValidator, _T("ID_MINCONSTRATE"));
+	MinConstRate = new wxSlider(QualityPage, ID_MINCONSTRATE, 0, 0, 100, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_MINCONSTRATE"));
 	VideoQualitySizer->Add(MinConstRate, 1, wxALL|wxEXPAND, 3);
 	MinConstRateVal = new wxStaticText(QualityPage, ID_MINCONSTRATEVAL, _T("X"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_MINCONSTRATEVAL"));
 	VideoQualitySizer->Add(MinConstRateVal, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
@@ -336,7 +337,7 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 	UseQMin->SetValue(false);
 	UseQMin->SetLabel(FFQS(SID_PRESET_QUANTIZER_MIN));
 	VideoQualitySizer->Add(UseQMin, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
-	QMin = new wxSlider(QualityPage, ID_QMIN, 0, 0, 100, wxDefaultPosition, wxSize(-1,20), 0, wxDefaultValidator, _T("ID_QMIN"));
+	QMin = new wxSlider(QualityPage, ID_QMIN, 0, 0, 100, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_QMIN"));
 	VideoQualitySizer->Add(QMin, 1, wxALL|wxEXPAND, 3);
 	QMinVal = new wxStaticText(QualityPage, ID_QMINVAL, _T("X"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_QMINVAL"));
 	VideoQualitySizer->Add(QMinVal, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
@@ -344,7 +345,7 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 	UseQMax->SetValue(false);
 	UseQMax->SetLabel(FFQS(SID_PRESET_QUANTIZER_MAX));
 	VideoQualitySizer->Add(UseQMax, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
-	QMax = new wxSlider(QualityPage, ID_QMAX, 0, 0, 100, wxDefaultPosition, wxSize(-1,20), 0, wxDefaultValidator, _T("ID_QMAX"));
+	QMax = new wxSlider(QualityPage, ID_QMAX, 0, 0, 100, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_QMAX"));
 	VideoQualitySizer->Add(QMax, 1, wxALL|wxEXPAND, 3);
 	QMaxVal = new wxStaticText(QualityPage, ID_QMAXVAL, _T("X"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_QMAXVAL"));
 	VideoQualitySizer->Add(QMaxVal, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
@@ -352,7 +353,7 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 	UseQDiff->SetValue(false);
 	UseQDiff->SetLabel(FFQS(SID_PRESET_QUANTIZER_MAX_DIFF));
 	VideoQualitySizer->Add(UseQDiff, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
-	QDiff = new wxSlider(QualityPage, ID_QDIFF, 0, 0, 100, wxDefaultPosition, wxSize(-1,20), 0, wxDefaultValidator, _T("ID_QDIFF"));
+	QDiff = new wxSlider(QualityPage, ID_QDIFF, 0, 0, 100, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_QDIFF"));
 	VideoQualitySizer->Add(QDiff, 1, wxALL|wxEXPAND, 3);
 	QDiffVal = new wxStaticText(QualityPage, ID_QDIFFVAL, _T("X"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_QDIFFVAL"));
 	VideoQualitySizer->Add(QDiffVal, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
@@ -366,7 +367,7 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 	KST1 = new wxStaticText(KeyFramesPage, wxID_ANY, _T("KfMin"), wxDefaultPosition, wxDefaultSize, 0, _T("wxID_ANY"));
 	KST1->SetLabel(FFQS(SID_PRESET_KEYFRAME_MINIMUM));
 	FlexGridSizer4->Add(KST1, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
-	KeyFrameMin = new wxTextCtrl(KeyFramesPage, ID_KEYFRAMEMIN, wxEmptyString, wxDefaultPosition, wxSize(100,21), 0, wxDefaultValidator, _T("ID_KEYFRAMEMIN"));
+	KeyFrameMin = new wxTextCtrl(KeyFramesPage, ID_KEYFRAMEMIN, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_KEYFRAMEMIN"));
 	FlexGridSizer4->Add(KeyFrameMin, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
 	KST2 = new wxStaticText(KeyFramesPage, wxID_ANY, _T("KfInf"), wxDefaultPosition, wxDefaultSize, 0, _T("wxID_ANY"));
 	KST2->SetLabel(FFQS(SID_PRESET_KEYFRAME_INFO));
@@ -374,7 +375,7 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 	KST3 = new wxStaticText(KeyFramesPage, wxID_ANY, _T("KfMax"), wxDefaultPosition, wxDefaultSize, 0, _T("wxID_ANY"));
 	KST3->SetLabel(FFQS(SID_PRESET_KEYFRAME_MAXIMUM));
 	FlexGridSizer4->Add(KST3, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
-	KeyFrameMax = new wxTextCtrl(KeyFramesPage, ID_KEYFRAMEMAX, wxEmptyString, wxDefaultPosition, wxSize(100,21), 0, wxDefaultValidator, _T("ID_KEYFRAMEMAX"));
+	KeyFrameMax = new wxTextCtrl(KeyFramesPage, ID_KEYFRAMEMAX, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_KEYFRAMEMAX"));
 	FlexGridSizer4->Add(KeyFrameMax, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
 	KST4 = new wxStaticText(KeyFramesPage, wxID_ANY, _T("KfInf"), wxDefaultPosition, wxDefaultSize, 0, _T("wxID_ANY"));
 	KST4->SetLabel(FFQS(SID_PRESET_KEYFRAME_INFO));
@@ -382,13 +383,13 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 	KST8 = new wxStaticText(KeyFramesPage, wxID_ANY, _T("MaxB"), wxDefaultPosition, wxDefaultSize, 0, _T("wxID_ANY"));
 	KST8->SetLabel(FFQS(SID_PRESET_KEYFRAME_MAX_B_FRAMES));
 	FlexGridSizer4->Add(KST8, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
-	KeyFrameMaxB = new wxChoice(KeyFramesPage, ID_KEYFRAMEMAXB, wxDefaultPosition, wxSize(100,-1), 0, 0, 0, wxDefaultValidator, _T("ID_KEYFRAMEMAXB"));
+	KeyFrameMaxB = new wxChoice(KeyFramesPage, ID_KEYFRAMEMAXB, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator, _T("ID_KEYFRAMEMAXB"));
 	FlexGridSizer4->Add(KeyFrameMaxB, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
 	FlexGridSizer4->Add(-1,-1,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
 	KST9 = new wxStaticText(KeyFramesPage, wxID_ANY, _T("MaxP"), wxDefaultPosition, wxDefaultSize, 0, _T("wxID_ANY"));
 	KST9->SetLabel(FFQS(SID_PRESET_KEYFRAME_MAX_P_REFS));
 	FlexGridSizer4->Add(KST9, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
-	KeyFrameMaxP = new wxChoice(KeyFramesPage, ID_KEYFRAMEMAXP, wxDefaultPosition, wxSize(100,-1), 0, 0, 0, wxDefaultValidator, _T("ID_KEYFRAMEMAXP"));
+	KeyFrameMaxP = new wxChoice(KeyFramesPage, ID_KEYFRAMEMAXP, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator, _T("ID_KEYFRAMEMAXP"));
 	FlexGridSizer4->Add(KeyFrameMaxP, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
 	FlexGridSizer4->Add(-1,-1,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
 	KeyFrameSizer->Add(FlexGridSizer4, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
@@ -396,7 +397,7 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 	KST5 = new wxStaticText(KeyFramesPage, wxID_ANY, _T("M-est"), wxDefaultPosition, wxDefaultSize, 0, _T("wxID_ANY"));
 	KST5->SetLabel(FFQS(SID_PRESET_MOTION_EST_METHOD));
 	FlexGridSizer21->Add(KST5, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
-	MotionEstimation = new wxComboBox(KeyFramesPage, ID_MOTIONESTIMATION, wxEmptyString, wxDefaultPosition, wxSize(100,21), 0, 0, 0, wxDefaultValidator, _T("ID_MOTIONESTIMATION"));
+	MotionEstimation = new wxComboBox(KeyFramesPage, ID_MOTIONESTIMATION, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator, _T("ID_MOTIONESTIMATION"));
 	MotionEstimation->Append(_T("zero"));
 	MotionEstimation->Append(_T("full"));
 	MotionEstimation->Append(_T("epzs"));
@@ -422,7 +423,7 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 	KST6 = new wxStaticText(KeyFramesPage, wxID_ANY, _T("L"), wxDefaultPosition, wxDefaultSize, 0, _T("wxID_ANY"));
 	KST6->SetLabel(FFQS(SID_PRESET_LOW));
 	SceneChangeSizer->Add(KST6, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
-	SceneChangeSens = new wxSlider(KeyFramesPage, ID_SCENECHANGESENS, 0, 0, 99, wxDefaultPosition, wxSize(200,20), 0, wxDefaultValidator, _T("ID_SCENECHANGESENS"));
+	SceneChangeSens = new wxSlider(KeyFramesPage, ID_SCENECHANGESENS, 0, 0, 99, wxDefaultPosition, wxSize(200,-1), 0, wxDefaultValidator, _T("ID_SCENECHANGESENS"));
 	SceneChangeSizer->Add(SceneChangeSens, 1, wxALL|wxEXPAND, 0);
 	KST7 = new wxStaticText(KeyFramesPage, wxID_ANY, _T("H"), wxDefaultPosition, wxDefaultSize, 0, _T("wxID_ANY"));
 	KST7->SetLabel(FFQS(SID_PRESET_HIGH));
@@ -459,21 +460,21 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 	FlexGridSizer22 = new wxFlexGridSizer(1, 2, 0, 0);
 	FlexGridSizer22->AddGrowableCol(1);
 	FlexGridSizer22->AddGrowableRow(0);
-	FrameRate = new wxTextCtrl(OtherPage, ID_FRAMERATE, wxEmptyString, wxDefaultPosition, wxSize(80,21), 0, wxDefaultValidator, _T("ID_FRAMERATE"));
+	FrameRate = new wxTextCtrl(OtherPage, ID_FRAMERATE, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_FRAMERATE"));
 	FlexGridSizer22->Add(FrameRate, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
 	OST2 = new wxStaticText(OtherPage, ID_OST2, _T("FPS"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_OST2"));
 	OST2->SetLabel(FFQS(SID_PRESET_FPS));
 	FlexGridSizer22->Add(OST2, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-	VideoOtherSizer->Add(FlexGridSizer22, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
+	VideoOtherSizer->Add(FlexGridSizer22, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 0);
 	OST4 = new wxStaticText(OtherPage, ID_OST4, _T("Pf"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_OST4"));
 	OST4->SetLabel(FFQS(SID_PRESET_PIXEL_FORMAT));
 	VideoOtherSizer->Add(OST4, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
-	PixFmt = new wxComboBox(OtherPage, ID_PIXFMT, wxEmptyString, wxDefaultPosition, wxSize(150,-1), 0, 0, 0, wxDefaultValidator, _T("ID_PIXFMT"));
+	PixFmt = new wxComboBox(OtherPage, ID_PIXFMT, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator, _T("ID_PIXFMT"));
 	VideoOtherSizer->Add(PixFmt, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
 	OST6 = new wxStaticText(OtherPage, ID_OST6, _T("Tr"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_OST6"));
 	OST6->SetLabel(FFQS(SID_PRESET_TRELLIS));
 	VideoOtherSizer->Add(OST6, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
-	Trellis = new wxChoice(OtherPage, ID_TRELLIS, wxDefaultPosition, wxSize(150,-1), 0, 0, 0, wxDefaultValidator, _T("ID_TRELLIS"));
+	Trellis = new wxChoice(OtherPage, ID_TRELLIS, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator, _T("ID_TRELLIS"));
 	wxString *trl = FFQL()->GetStringArray(SID_PRESET_TRELLIS_LIST, 4);
 	Trellis->Append(4, trl);
 	Trellis->SetSelection(0);
@@ -483,13 +484,13 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 	VideoOtherSizer->Add(OST7, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
 	PresetTuneSizer = new wxFlexGridSizer(1, 3, 0, 0);
 	PresetTuneSizer->AddGrowableCol(2);
-	SpeedPreset = new wxComboBox(OtherPage, ID_SPEEDPRESET, wxEmptyString, wxDefaultPosition, wxSize(150,-1), 0, 0, 0, wxDefaultValidator, _T("ID_SPEEDPRESET"));
+	SpeedPreset = new wxComboBox(OtherPage, ID_SPEEDPRESET, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator, _T("ID_SPEEDPRESET"));
 	SpeedPreset->Append(ENCODER_PRESET_COUNT, ENCODER_PRESETS);
 	PresetTuneSizer->Add(SpeedPreset, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
 	OST8 = new wxStaticText(OtherPage, ID_OST8, _T("Tun"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_OST8"));
 	OST8->SetLabel(FFQS(SID_PRESET_VIDEO_TUNING));
 	PresetTuneSizer->Add(OST8, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
-	VideoTuning = new wxComboBox(OtherPage, ID_VIDEOTUNING, wxEmptyString, wxDefaultPosition, wxSize(150,-1), 0, 0, 0, wxDefaultValidator, _T("ID_VIDEOTUNING"));
+	VideoTuning = new wxComboBox(OtherPage, ID_VIDEOTUNING, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator, _T("ID_VIDEOTUNING"));
 	VideoTuning->Append(ENCODER_TUNINGS_COUNT, ENCODER_TUNINGS);
 	PresetTuneSizer->Add(VideoTuning, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
 	VideoOtherSizer->Add(PresetTuneSizer, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 0);
@@ -571,7 +572,7 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 	AST1 = new wxStaticText(AudioPage, ID_AST1, _T("L"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_AST1"));
 	AST1->SetLabel(FFQS(SID_PRESET_LOW));
 	AudioQScaleSizer->Add(AST1, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
-	AudioQScale = new wxSlider(AudioPage, ID_AUDIOQSCALE, 0, 0, 100, wxDefaultPosition, wxSize(-1,20), 0, wxDefaultValidator, _T("ID_AUDIOQSCALE"));
+	AudioQScale = new wxSlider(AudioPage, ID_AUDIOQSCALE, 0, 0, 100, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_AUDIOQSCALE"));
 	AudioQScaleSizer->Add(AudioQScale, 1, wxALL|wxEXPAND, 3);
 	AST2 = new wxStaticText(AudioPage, ID_AST2, _T("H"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_AST2"));
 	AST2->SetLabel(FFQS(SID_PRESET_HIGH));
@@ -587,7 +588,7 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 	ASBS4->GetStaticBox()->SetLabel(FFQS(SID_PRESET_OTHER));
 	AST4->SetLabel(FFQS(SID_PRESET_NUM_AUDIO_CHANNELS));
 	FlexGridSizer25->Add(AST4, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
-	AudioChannels = new wxTextCtrl(AudioPage, ID_AUDIOCHANNELS, wxEmptyString, wxDefaultPosition, wxSize(45,21), 0, wxDefaultValidator, _T("ID_AUDIOCHANNELS"));
+	AudioChannels = new wxTextCtrl(AudioPage, ID_AUDIOCHANNELS, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_AUDIOCHANNELS"));
 	FlexGridSizer25->Add(AudioChannels, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
 	AST5 = new wxStaticText(AudioPage, ID_AST5, _T("Ap"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_AST5"));
 	AST5->SetLabel(FFQS(SID_PRESET_AUDIO_PROFILE));
@@ -660,11 +661,11 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 	SubsSizeCust = new wxRadioButton(SubsSizePan, ID_SUBSSIZECUST, _T("Cust"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_SUBSSIZECUST"));
 	SubsSizeCust->SetLabel(FFQS(SID_PRESET_SUBTITLE_SIZE_CUSTOM));
 	SubsSizer3->Add(SubsSizeCust, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
-	SubsWidth = new wxTextCtrl(SubsSizePan, ID_SUBSWIDTH, wxEmptyString, wxDefaultPosition, wxSize(50,-1), 0, wxDefaultValidator, _T("ID_SUBSWIDTH"));
+	SubsWidth = new wxTextCtrl(SubsSizePan, ID_SUBSWIDTH, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_SUBSWIDTH"));
 	SubsSizer3->Add(SubsWidth, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
 	SubsLab3 = new wxStaticText(SubsSizePan, ID_STATICTEXT11, _T("X"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT11"));
 	SubsSizer3->Add(SubsLab3, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 2);
-	SubsHeight = new wxTextCtrl(SubsSizePan, ID_SUBSHEIGHT, wxEmptyString, wxDefaultPosition, wxSize(50,-1), 0, wxDefaultValidator, _T("ID_SUBSHEIGHT"));
+	SubsHeight = new wxTextCtrl(SubsSizePan, ID_SUBSHEIGHT, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_SUBSHEIGHT"));
 	SubsSizer3->Add(SubsHeight, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 0);
 	SubsSizePan->SetSizer(SubsSizer3);
 	SubsSizer3->Fit(SubsSizePan);
@@ -782,23 +783,24 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 	FlexGridSizer14 = new wxFlexGridSizer(4, 1, 0, 0);
 	FlexGridSizer14->AddGrowableCol(0);
 	FourCCSizer = new wxStaticBoxSizer(wxHORIZONTAL, MiscPage, _T("Fcc"));
-	FlexGridSizer15 = new wxFlexGridSizer(1, 5, 0, 0);
+	FlexGridSizer15 = new wxFlexGridSizer(1, 6, 0, 0);
 	FlexGridSizer15->AddGrowableCol(4);
 	ST51 = new wxStaticText(MiscPage, ID_ST51, _T("V"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_ST51"));
 	ST51->SetLabel(FFQS(SID_PRESET_FOURCC_VIDS));
 	FourCCSizer->GetStaticBox()->SetLabel(FFQS(SID_PRESET_DEFINE_FOURCC));
 	FlexGridSizer15->Add(ST51, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-	FOURCC_Vid = new wxTextCtrl(MiscPage, ID_FOURCC_VID, wxEmptyString, wxDefaultPosition, wxSize(60,-1), 0, wxDefaultValidator, _T("ID_FOURCC_VID"));
+	FOURCC_Vid = new wxTextCtrl(MiscPage, ID_FOURCC_VID, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_FOURCC_VID"));
 	FOURCC_Vid->SetMaxLength(4);
-	FlexGridSizer15->Add(FOURCC_Vid, 1, wxRIGHT|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 20);
+	FlexGridSizer15->Add(FOURCC_Vid, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+	FlexGridSizer15->Add(25,-1,1, wxALL|wxEXPAND, 0);
 	ST52 = new wxStaticText(MiscPage, ID_ST52, _T("A"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_ST52"));
 	ST52->SetLabel(FFQS(SID_PRESET_FOURCC_AUDS));
 	FlexGridSizer15->Add(ST52, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
-	FOURCC_Aud = new wxTextCtrl(MiscPage, ID_FOURCC_AUD, wxEmptyString, wxDefaultPosition, wxSize(60,-1), 0, wxDefaultValidator, _T("ID_FOURCC_AUD"));
+	FOURCC_Aud = new wxTextCtrl(MiscPage, ID_FOURCC_AUD, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_FOURCC_AUD"));
 	FOURCC_Aud->SetMaxLength(4);
-	FlexGridSizer15->Add(FOURCC_Aud, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 0);
+	FlexGridSizer15->Add(FOURCC_Aud, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
 	FlexGridSizer15->Add(-1,-1,1, wxALL|wxEXPAND, 0);
-	FourCCSizer->Add(FlexGridSizer15, 1, wxALL|wxEXPAND, 0);
+	FourCCSizer->Add(FlexGridSizer15, 1, wxALL|wxEXPAND, 3);
 	FlexGridSizer14->Add(FourCCSizer, 1, wxALL|wxEXPAND, 5);
 	SBS52 = new wxStaticBoxSizer(wxHORIZONTAL, MiscPage, _T("CArgs"));
 	FlexGridSizer20 = new wxFlexGridSizer(2, 2, 0, 0);
@@ -911,11 +913,11 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 	BoxSizer1 = new wxBoxSizer(wxHORIZONTAL);
 	BoxSizer1->Add(-1,-1,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	BoxSizer1->Add(-1,-1,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-	OKButton = new wxButton(this, ID_OKBUTTON, _T("O"), wxDefaultPosition, wxSize(100,-1), 0, wxDefaultValidator, _T("ID_OKBUTTON"));
+	OKButton = new wxButton(this, ID_OKBUTTON, _T("O"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_OKBUTTON"));
 	OKButton->SetDefault();
 	OKButton->SetLabel(FFQS(SID_COMMON_OK));
 	BoxSizer1->Add(OKButton, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-	CancelButton = new wxButton(this, ID_CANCELBUTTON, _T("C"), wxDefaultPosition, wxSize(100,-1), 0, wxDefaultValidator, _T("ID_CANCELBUTTON"));
+	CancelButton = new wxButton(this, ID_CANCELBUTTON, _T("C"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CANCELBUTTON"));
 	CancelButton->SetLabel(FFQS(SID_COMMON_CANCEL));
 	BoxSizer1->Add(CancelButton, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	FlexGridSizer1->Add(BoxSizer1, 1, wxALL|wxEXPAND, 5);
@@ -970,6 +972,13 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 	//*)
 
 	SetTitle(FFQS(SID_PRESET_TITLE));
+
+	//EXPERIMENTAL START
+	wxDisplay dsp(wxDisplay::GetFromWindow(this));
+	int w = dsp.GetClientArea().GetWidth() / 3;
+	wxSize sz = PresetName->GetSize();
+	if (w > sz.GetWidth()) PresetName->SetSize(wxSize(w, sz.GetHeight()));
+	//EXPERIMENTAL END
 
 	Pages->SetPageText(Pages->FindPage(VideoPage), FFQS(SID_COMMON_VIDEO));
 	Pages->SetPageText(Pages->FindPage(AudioPage), FFQS(SID_COMMON_AUDIO));

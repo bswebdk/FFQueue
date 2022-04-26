@@ -74,12 +74,12 @@ Deshake::Deshake(wxWindow* parent) : FilterBasePanel(parent)
     fgs->Add(m_FillEdge, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 6);
 
     MakeLabel(FFQS(SID_DESHAKE_BLOCK_SIZE), fgs);
-    m_BlockSize = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(80, -1));
+    m_BlockSize = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(-1, -1));
     m_BlockSize->SetValidator(blockVal);
     fgs->Add(m_BlockSize, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 6);
 
     MakeLabel(FFQS(SID_DESHAKE_MIN_CONTRAST), fgs);
-    m_Contrast = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(80, -1));
+    m_Contrast = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(-1, -1));
     m_Contrast->SetValidator(contrastVal);
     fgs->Add(m_Contrast, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 6);
 

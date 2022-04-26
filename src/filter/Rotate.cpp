@@ -35,20 +35,20 @@ Rotate::Rotate(wxWindow* parent) : FilterBasePanel(parent)
     fgs1->AddGrowableCol(1);
 
     MakeLabel(FFQS(SID_ROTATE_FILL_COLOR), fgs1);
-    m_FillColor = new wxColourPickerCtrl(this, wxID_ANY, *wxBLACK, wxDefaultPosition, wxDefaultSize, 0);
+    m_FillColor = new wxColourPickerCtrl(this, wxID_ANY, *wxBLACK);
     fgs1->Add(m_FillColor, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 5);
 
     MakeLabel(FFQS(SID_ROTATE_ROTATE_ANGLE), fgs1);
-    m_Angle = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(80, -1), 0);
+    m_Angle = new wxTextCtrl(this, wxID_ANY);
     m_Angle->SetValidator(fVal);
     fgs1->Add(m_Angle, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
 
     fgs1->Add(-1, -1, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
-    m_Bilinear = new wxCheckBox(this, wxID_ANY, FFQS(SID_ROTATE_BILINEAR_INTERPOLATE), wxDefaultPosition, wxDefaultSize, 0);
+    m_Bilinear = new wxCheckBox(this, wxID_ANY, FFQS(SID_ROTATE_BILINEAR_INTERPOLATE));
     fgs1->Add(m_Bilinear, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
 
     fgs1->Add(-1, -1, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
-    m_CounterClock = new wxCheckBox(this, wxID_ANY, FFQS(SID_ROTATE_ROTATE_CCW), wxDefaultPosition, wxDefaultSize, 0);
+    m_CounterClock = new wxCheckBox(this, wxID_ANY, FFQS(SID_ROTATE_ROTATE_CCW));
     fgs1->Add(m_CounterClock, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
 
     MakeLabel(FFQS(SID_FILTER_TIME_LIMIT), fgs1);

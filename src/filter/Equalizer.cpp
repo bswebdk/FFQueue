@@ -111,7 +111,7 @@ Equalizer::Equalizer(wxWindow* parent) : FilterBasePanel(parent)
     fgs2 = new wxFlexGridSizer(1, 3, 0, 0);
     MakeLabel(FFQS(SID_EQUALIZER_BAND_WIDTH), fgs2);
 
-    m_BandWidth = new wxTextCtrl(this, wxID_ANY, "1.5", wxDefaultPosition, wxSize(80, -1));
+    m_BandWidth = new wxTextCtrl(this, wxID_ANY, "1.5", wxDefaultPosition, wxSize(-1, -1));
     wxFloatingPointValidator<float> fVal(NULL, wxNUM_VAL_NO_TRAILING_ZEROES);
     fVal.SetRange(0, 99999);
     m_BandWidth->SetValidator(fVal);

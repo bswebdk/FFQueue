@@ -28,10 +28,10 @@
 
 #ifndef WX_PRECOMP
 	//(*HeadersPCH(FFQPresetPanel)
-	#include <wx/sizer.h>
 	#include <wx/button.h>
-	#include <wx/panel.h>
 	#include <wx/choice.h>
+	#include <wx/panel.h>
+	#include <wx/sizer.h>
 	//*)
 #endif
 //(*Headers(FFQPresetPanel)

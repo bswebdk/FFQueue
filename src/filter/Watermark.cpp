@@ -43,7 +43,7 @@ Watermark::Watermark(wxWindow* parent) : FilterBasePanel(parent)
         fgs2->AddGrowableCol(1);
         m_File = new wxTextCtrl(this, wxID_ANY, _T(""), wxDefaultPosition, wxSize(300, -1), 0);
         fgs2->Add(m_File, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 3);
-        m_Browse = new wxButton(this, 1000, _T("..."), wxDefaultPosition, wxSize(30, 21), 0);
+        m_Browse = new wxButton(this, 1000, _T("..."));
         fgs2->Add(m_Browse, 1, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 3);
 
     fgs1->Add(fgs2, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 3);

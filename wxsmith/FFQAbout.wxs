@@ -16,7 +16,7 @@
 					<object class="sizeritem">
 						<object class="wxStaticBitmap" name="ID_STATICBITMAP" variable="StaticBitmap" member="yes">
 							<size>100,100</size>
-							<style>wxNO_BORDER</style>
+							<style>wxBORDER_NONE</style>
 						</object>
 						<flag>wxALL|wxALIGN_LEFT|wxALIGN_TOP</flag>
 						<border>5</border>
@@ -58,7 +58,7 @@
 										<option>1</option>
 									</object>
 									<object class="sizeritem">
-										<object class="wxHyperlinkCtrl" name="wxID_ANY" variable="Link" member="no">
+										<object class="wxHyperlinkCtrl" name="wxID_ANY" subclass="wxGenericHyperlinkCtrl" variable="Link" member="no">
 											<label>www</label>
 											<extra_code>Link-&gt;SetLabel(GUI__3);&#x0A;Link-&gt;SetURL(GUI__4);</extra_code>
 										</object>
@@ -86,7 +86,7 @@
 									</object>
 									<object class="sizeritem">
 										<object class="wxPanel" name="ID_ANIMPANEL" variable="AnimPanel" member="yes">
-											<style>wxNO_BORDER|wxTAB_TRAVERSAL</style>
+											<style>wxBORDER_NONE|wxTAB_TRAVERSAL</style>
 										</object>
 										<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
 										<border>5</border>
@@ -109,7 +109,7 @@
 			<object class="sizeritem">
 				<object class="wxTextCtrl" name="ID_TEXTCTRL" variable="TextCtrl" member="yes">
 					<size>500,300</size>
-					<style>wxTE_MULTILINE|wxTE_READONLY|wxTE_RICH|wxSTATIC_BORDER</style>
+					<style>wxTE_MULTILINE|wxTE_READONLY|wxTE_RICH|wxBORDER_STATIC</style>
 				</object>
 				<flag>wxALL|wxEXPAND</flag>
 				<border>5</border>
@@ -125,7 +125,6 @@
 						<object class="wxButton" name="ID_CLOSEBUTTON" variable="CloseButton" member="yes">
 							<label>C</label>
 							<default>1</default>
-							<size>150,40</size>
 							<extra_code>CloseButton-&gt;SetLabel(FFQS(SID__COMMON__CLOSE));</extra_code>
 							<handler function="OnButtonCloseClick" entry="EVT_BUTTON" />
 						</object>

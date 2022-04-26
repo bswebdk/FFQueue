@@ -58,7 +58,7 @@
 							<selection>0</selection>
 							<extra_code>ImgDest-&gt;SetSelection( ImgDest-&gt;Append(FFQS(SID__THUMBS__DEST__NEW__UNIQUE)) );&#x0A;ImgDest-&gt;Append(FFQS(SID__THUMBS__DEST__SAME));&#x0A;ImgDest-&gt;Append(FFQS(SID__THUMBS__DEST__THUMBS));&#x0A;</extra_code>
 						</object>
-						<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<flag>wxALL|wxEXPAND</flag>
 						<border>2</border>
 						<option>1</option>
 					</object>
@@ -85,7 +85,7 @@
 							</content>
 							<selection>0</selection>
 						</object>
-						<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<flag>wxALL|wxEXPAND</flag>
 						<border>2</border>
 						<option>1</option>
 					</object>
@@ -110,10 +110,9 @@
 					</object>
 					<object class="sizeritem">
 						<object class="wxTextCtrl" name="ID_WIDTH" variable="Width" member="yes">
-							<size>50,-1</size>
 							<validator>iVal</validator>
 						</object>
-						<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<flag>wxALL|wxEXPAND</flag>
 						<border>2</border>
 						<option>1</option>
 					</object>
@@ -128,7 +127,7 @@
 						<option>1</option>
 					</object>
 				</object>
-				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<flag>wxALL|wxEXPAND</flag>
 				<border>3</border>
 				<option>1</option>
 			</object>
@@ -139,7 +138,7 @@
 					<growablecols>0</growablecols>
 					<growablerows>0</growablerows>
 					<object class="sizeritem">
-						<object class="wxHyperlinkCtrl" name="ID_STARTTIME" variable="StartTime" member="yes">
+						<object class="wxHyperlinkCtrl" name="ID_STARTTIME" subclass="wxGenericHyperlinkCtrl" variable="StartTime" member="yes">
 							<label>Start Time</label>
 							<handler function="OnAction" entry="EVT_HYPERLINK" />
 						</object>
@@ -148,7 +147,7 @@
 						<option>1</option>
 					</object>
 				</object>
-				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<flag>wxALL|wxEXPAND</flag>
 				<border>2</border>
 				<option>1</option>
 			</object>
@@ -173,7 +172,6 @@
 							</object>
 							<object class="sizeritem">
 								<object class="wxTextCtrl" name="ID_CUSTFREQ" variable="CustFreq" member="yes">
-									<size>60,-1</size>
 									<validator>fVal</validator>
 								</object>
 								<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
@@ -185,12 +183,12 @@
 									<selection>0</selection>
 									<extra_code>CustFreqType-&gt;SetSelection( CustFreqType-&gt;Append(FFQS(SID__THUMBS__INTERVAL__FRAME)) );&#x0A;CustFreqType-&gt;Append(FFQS(SID__THUMBS__INTERVAL__SECOND));&#x0A;CustFreqType-&gt;Append(FFQS(SID__THUMBS__INTERVAL__MINUTE));</extra_code>
 								</object>
-								<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<flag>wxALL|wxEXPAND</flag>
 								<border>2</border>
 								<option>1</option>
 							</object>
 						</object>
-						<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<flag>wxALL|wxEXPAND</flag>
 						<border>2</border>
 						<option>1</option>
 					</object>
@@ -231,7 +229,6 @@
 					</object>
 					<object class="sizeritem">
 						<object class="wxTextCtrl" name="ID_MAXTHUMBS" variable="MaxThumbs" member="yes">
-							<size>50,-1</size>
 							<validator>iVal</validator>
 						</object>
 						<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
@@ -249,7 +246,6 @@
 					</object>
 					<object class="sizeritem">
 						<object class="wxTextCtrl" name="ID_MAXTILES" variable="MaxTiles" member="yes">
-							<size>50,-1</size>
 							<validator>iVal</validator>
 						</object>
 						<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
@@ -276,10 +272,9 @@
 					</object>
 					<object class="sizeritem">
 						<object class="wxTextCtrl" name="ID_ROWS" variable="Rows" member="yes">
-							<size>50,-1</size>
 							<validator>iVal</validator>
 						</object>
-						<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<flag>wxALL|wxEXPAND</flag>
 						<border>2</border>
 						<option>1</option>
 					</object>
@@ -294,10 +289,9 @@
 					</object>
 					<object class="sizeritem">
 						<object class="wxTextCtrl" name="ID_COLUMNS" variable="Columns" member="yes">
-							<size>50,-1</size>
 							<validator>iVal</validator>
 						</object>
-						<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<flag>wxALL|wxEXPAND</flag>
 						<border>2</border>
 						<option>1</option>
 					</object>

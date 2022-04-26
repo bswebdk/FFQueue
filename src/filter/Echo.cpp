@@ -37,12 +37,12 @@ Echo::Echo(wxWindow* parent) : FilterBasePanel(parent)
 
         fgs2 = new wxFlexGridSizer(1, 4, 0, 0);
         MakeLabel(FFQS(SID_ECHO_GAIN_INPUT), fgs2);
-        m_InGain = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(80, -1), 0);
+        m_InGain = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(-1, -1), 0);
         m_InGain->SetValidator(gainVal);
         fgs2->Add(m_InGain, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
 
         MakeLabel(FFQS(SID_ECHO_GAIN_OUTPUT), fgs2);
-        m_OutGain = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(80, -1), 0);
+        m_OutGain = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(-1, -1), 0);
         m_OutGain->SetValidator(gainVal);
         fgs2->Add(m_OutGain, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
 
@@ -53,7 +53,7 @@ Echo::Echo(wxWindow* parent) : FilterBasePanel(parent)
         fgs2 = new wxFlexGridSizer(1, DELAY_COUNT, 0, 0);
         for (int i = 0; i < DELAY_COUNT; i++)
         {
-            m_Delays[i] = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(60, -1), 0);
+            m_Delays[i] = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(-1, -1), 0);
             m_Delays[i]->SetValidator(delayVal);
             fgs2->Add(m_Delays[i], 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
         }
@@ -65,7 +65,7 @@ Echo::Echo(wxWindow* parent) : FilterBasePanel(parent)
         fgs2 = new wxFlexGridSizer(1, DECAY_COUNT, 0, 0);
         for (int i = 0; i < DECAY_COUNT; i++)
         {
-            m_Decays[i] = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(60, -1), 0);
+            m_Decays[i] = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(-1, -1), 0);
             m_Decays[i]->SetValidator(decayVal);
             fgs2->Add(m_Decays[i], 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
         }

@@ -52,11 +52,11 @@ END_EVENT_TABLE()
 FFQThumbMake::FFQThumbMake(wxWindow* parent)
 {
 	//(*Initialize(FFQThumbMake)
+	wxBoxSizer* BoxSizer1;
 	wxFlexGridSizer* FlexGridSizer1;
-	wxStaticBoxSizer* SBS1;
 	wxFlexGridSizer* FlexGridSizer2;
 	wxFlexGridSizer* FlexGridSizer3;
-	wxBoxSizer* BoxSizer1;
+	wxStaticBoxSizer* SBS1;
 
 	Create(parent, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE, _T("wxID_ANY"));
 	FlexGridSizer1 = new wxFlexGridSizer(4, 1, 0, 0);
@@ -69,7 +69,7 @@ FFQThumbMake::FFQThumbMake(wxWindow* parent)
 	InFile = new wxTextCtrl(this, ID_INFILE, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_INFILE"));
 	SBS1->GetStaticBox()->SetLabel(FFQS(SID_THUMBS_INPUT_FILE));
 	FlexGridSizer2->Add(InFile, 1, wxALL|wxEXPAND, 0);
-	BrowseButton = new wxButton(this, ID_BROWSEBUTTON, _T("..."), wxDefaultPosition, wxSize(50,-1), 0, wxDefaultValidator, _T("ID_BROWSEBUTTON"));
+	BrowseButton = new wxButton(this, ID_BROWSEBUTTON, _T("..."), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_BROWSEBUTTON"));
 	FlexGridSizer2->Add(BrowseButton, 1, wxLEFT|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
 	SBS1->Add(FlexGridSizer2, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
 	FlexGridSizer1->Add(SBS1, 1, wxALL|wxEXPAND, 5);

@@ -186,9 +186,9 @@ FFQJobEditAdvCuts::FFQJobEditAdvCuts(wxWindow* parent)
 	FlexGridSizer2->Add(ST2, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
 	ToTime = new wxTextCtrl(this, ID_TOTIME, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER|wxTE_RIGHT, wxDefaultValidator, _T("ID_TOTIME"));
 	FlexGridSizer2->Add(ToTime, 1, wxALL|wxEXPAND, 3);
-	AddCut = new wxButton(this, ID_ADDCUT, _T("+"), wxDefaultPosition, wxSize(50,-1), 0, wxDefaultValidator, _T("ID_ADDCUT"));
+	AddCut = new wxButton(this, ID_ADDCUT, _T("+"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_ADDCUT"));
 	FlexGridSizer2->Add(AddCut, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
-	RemoveCut = new wxButton(this, ID_REMOVECUT, _T("-"), wxDefaultPosition, wxSize(50,-1), 0, wxDefaultValidator, _T("ID_REMOVECUT"));
+	RemoveCut = new wxButton(this, ID_REMOVECUT, _T("-"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_REMOVECUT"));
 	FlexGridSizer2->Add(RemoveCut, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
 	FlexGridSizer6->Add(FlexGridSizer2, 1, wxALL|wxEXPAND, 0);
 	FrameConv = new wxCheckBox(this, ID_FRAMECONV, _T("FRC"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_FRAMECONV"));

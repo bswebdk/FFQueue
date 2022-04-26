@@ -25,7 +25,6 @@
 							<object class="sizeritem">
 								<object class="wxButton" name="ID_BROWSESRC" variable="BrowseSrc" member="yes">
 									<label>...</label>
-									<size>50,-1</size>
 									<handler function="OnAction" entry="EVT_BUTTON" />
 								</object>
 								<flag>wxLEFT|wxEXPAND</flag>
@@ -46,9 +45,9 @@
 								<size>20,10</size>
 							</object>
 							<object class="sizeritem">
-								<object class="wxHyperlinkCtrl" name="ID_STARTTIME" variable="StartTime" member="yes">
+								<object class="wxHyperlinkCtrl" name="ID_STARTTIME" subclass="wxGenericHyperlinkCtrl" variable="StartTime" member="yes">
 									<label>St</label>
-									<style>wxHL_ALIGN_CENTRE|wxNO_BORDER</style>
+									<style>wxHL_ALIGN_CENTRE|wxBORDER_NONE</style>
 									<handler function="OnAction" entry="EVT_HYPERLINK" />
 								</object>
 								<flag>wxTOP|wxBOTTOM</flag>
@@ -92,9 +91,7 @@
 										<option>1</option>
 									</object>
 									<object class="sizeritem">
-										<object class="wxTextCtrl" name="ID_WIDTH" variable="Width" member="yes">
-											<size>50,-1</size>
-										</object>
+										<object class="wxTextCtrl" name="ID_WIDTH" variable="Width" member="yes" />
 										<flag>wxRIGHT|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
 										<border>5</border>
 										<option>1</option>
@@ -109,9 +106,7 @@
 										<option>1</option>
 									</object>
 									<object class="sizeritem">
-										<object class="wxTextCtrl" name="ID_HEIGHT" variable="Height" member="yes">
-											<size>50,-1</size>
-										</object>
+										<object class="wxTextCtrl" name="ID_HEIGHT" variable="Height" member="yes" />
 										<flag>wxRIGHT|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
 										<border>5</border>
 										<option>1</option>
@@ -126,9 +121,7 @@
 										<option>1</option>
 									</object>
 									<object class="sizeritem">
-										<object class="wxTextCtrl" name="ID_FRAMERATE" variable="FrameRate" member="yes">
-											<size>50,-1</size>
-										</object>
+										<object class="wxTextCtrl" name="ID_FRAMERATE" variable="FrameRate" member="yes" />
 										<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
 										<border>3</border>
 										<option>1</option>
@@ -157,7 +150,7 @@
 								<option>1</option>
 							</object>
 							<object class="sizeritem">
-								<object class="wxHyperlinkCtrl" name="ID_LIMITLEN" variable="LimitLen" member="yes">
+								<object class="wxHyperlinkCtrl" name="ID_LIMITLEN" subclass="wxGenericHyperlinkCtrl" variable="LimitLen" member="yes">
 									<label>Len</label>
 									<handler function="OnAction" entry="EVT_HYPERLINK" />
 								</object>
@@ -194,7 +187,6 @@
 							<object class="sizeritem">
 								<object class="wxButton" name="ID_BROWSEDST" variable="BrowseDst" member="yes">
 									<label>...</label>
-									<size>50,-1</size>
 									<handler function="OnAction" entry="EVT_BUTTON" />
 								</object>
 								<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>

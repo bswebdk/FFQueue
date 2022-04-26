@@ -17,7 +17,6 @@
 			</object>
 			<object class="sizeritem">
 				<object class="wxChoice" name="ID_BITRATETYPE" variable="BitRateType" member="yes">
-					<size>100,-1</size>
 					<extra_code>BitRateType-&gt;Append(FFQS(SID__PRESET__BITRATE__BIT__SEC));&#x0A;BitRateType-&gt;SetSelection( BitRateType-&gt;Append(FFQS(SID__PRESET__BITRATE__KBIT__SEC)) );&#x0A;BitRateType-&gt;Append(FFQS(SID__PRESET__BITRATE__MBIT__SEC));&#x0A;BitRateType-&gt;Append(FFQS(SID__PRESET__BITRATE__BYTE__SEC));&#x0A;BitRateType-&gt;Append(FFQS(SID__PRESET__BITRATE__KBYTE__SEC));&#x0A;BitRateType-&gt;Append(FFQS(SID__PRESET__BITRATE__MBYTE__SEC));</extra_code>
 					<handler function="OnChoiceChange" entry="EVT_CHOICE" />
 				</object>
@@ -53,9 +52,7 @@
 				<option>1</option>
 			</object>
 			<object class="sizeritem">
-				<object class="wxTextCtrl" name="ID_BITRATE" variable="BitRate" member="yes">
-					<size>100,-1</size>
-				</object>
+				<object class="wxTextCtrl" name="ID_BITRATE" variable="BitRate" member="yes" />
 				<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
 				<border>2</border>
 				<option>1</option>
@@ -78,9 +75,7 @@
 				<option>1</option>
 			</object>
 			<object class="sizeritem">
-				<object class="wxTextCtrl" name="ID_MINRATE" variable="MinRate" member="yes">
-					<size>100,-1</size>
-				</object>
+				<object class="wxTextCtrl" name="ID_MINRATE" variable="MinRate" member="yes" />
 				<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
 				<border>2</border>
 				<option>1</option>
@@ -103,9 +98,7 @@
 				<option>1</option>
 			</object>
 			<object class="sizeritem">
-				<object class="wxTextCtrl" name="ID_BUFSIZE" variable="BufSize" member="yes">
-					<size>100,-1</size>
-				</object>
+				<object class="wxTextCtrl" name="ID_BUFSIZE" variable="BufSize" member="yes" />
 				<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
 				<border>2</border>
 				<option>1</option>
@@ -128,9 +121,7 @@
 				<option>1</option>
 			</object>
 			<object class="sizeritem">
-				<object class="wxTextCtrl" name="ID_MAXRATE" variable="MaxRate" member="yes">
-					<size>100,-1</size>
-				</object>
+				<object class="wxTextCtrl" name="ID_MAXRATE" variable="MaxRate" member="yes" />
 				<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
 				<border>2</border>
 				<option>1</option>

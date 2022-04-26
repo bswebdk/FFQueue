@@ -42,7 +42,7 @@ AudioDelay::AudioDelay(wxWindow* parent) : FilterBasePanel(parent)
 
         MakeLabel(ToStr(i+1), fgs, wxALL|wxALIGN_CENTER|wxALIGN_CENTER_VERTICAL);
         fgs->Add(10, -1);
-        m_Delays[i] = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(80, -1));
+        m_Delays[i] = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(-1, -1));
         m_Delays[i]->SetValidator(iVal);
         fgs->Add(m_Delays[i], 1, wxALL|wxALIGN_CENTER|wxALIGN_CENTER_VERTICAL, 3);
 

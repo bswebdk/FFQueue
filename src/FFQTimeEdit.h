@@ -28,9 +28,9 @@
 
 #ifndef WX_PRECOMP
 	//(*HeadersPCH(FFQTimeEdit)
+	#include <wx/button.h>
 	#include <wx/dialog.h>
 	#include <wx/sizer.h>
-	#include <wx/button.h>
 	#include <wx/stattext.h>
 	#include <wx/textctrl.h>
 	//*)
@@ -56,18 +56,18 @@ class FFQTimeEdit: public wxDialog
 
 		//(*Declarations(FFQTimeEdit)
 		wxButton* CancelButton;
-		wxTextCtrl* Millis;
-		wxTextCtrl* Hours;
-		wxStaticText* ST2;
-		wxStaticText* ST1;
-		wxTextCtrl* Seconds;
-		wxTextCtrl* Minutes;
 		wxButton* ClearButton;
-		wxStaticText* MillisLabel;
-		wxStaticText* ST3;
 		wxButton* OKButton;
-		wxStaticBoxSizer* SubtractSizer;
 		wxFlexGridSizer* MainSizer;
+		wxStaticBoxSizer* SubtractSizer;
+		wxStaticText* MillisLabel;
+		wxStaticText* ST1;
+		wxStaticText* ST2;
+		wxStaticText* ST3;
+		wxTextCtrl* Hours;
+		wxTextCtrl* Millis;
+		wxTextCtrl* Minutes;
+		wxTextCtrl* Seconds;
 		//*)
 
 		bool Execute(TIME_VALUE &timeVal, bool allowMilliseconds = true);

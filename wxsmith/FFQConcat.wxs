@@ -50,7 +50,6 @@
 														<object class="sizeritem">
 															<object class="wxButton" name="ID_SSBROWSEIMG" variable="SSBrowseImg" member="yes">
 																<label>...</label>
-																<size>50,-1</size>
 																<handler function="OnAction" entry="EVT_BUTTON" />
 															</object>
 															<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
@@ -62,7 +61,7 @@
 															<option>1</option>
 														</object>
 														<object class="sizeritem">
-															<object class="wxHyperlinkCtrl" name="ID_SSFRAMESTATUS" variable="SSFrameStatus" member="yes">
+															<object class="wxHyperlinkCtrl" name="ID_SSFRAMESTATUS" subclass="wxGenericHyperlinkCtrl" variable="SSFrameStatus" member="yes">
 																<label>link</label>
 																<handler function="OnAction" entry="EVT_HYPERLINK" />
 															</object>
@@ -112,9 +111,7 @@
 																	<option>1</option>
 																</object>
 																<object class="sizeritem">
-																	<object class="wxTextCtrl" name="ID_TEXTCTRL1" variable="SSWidth" member="yes">
-																		<size>75,-1</size>
-																	</object>
+																	<object class="wxTextCtrl" name="ID_TEXTCTRL1" variable="SSWidth" member="yes" />
 																	<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
 																	<border>3</border>
 																	<option>1</option>
@@ -128,9 +125,7 @@
 																	<option>1</option>
 																</object>
 																<object class="sizeritem">
-																	<object class="wxTextCtrl" name="ID_TEXTCTRL2" variable="SSHeight" member="yes">
-																		<size>75,-1</size>
-																	</object>
+																	<object class="wxTextCtrl" name="ID_TEXTCTRL2" variable="SSHeight" member="yes" />
 																	<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
 																	<border>3</border>
 																	<option>1</option>
@@ -181,9 +176,7 @@
 																	<option>1</option>
 																</object>
 																<object class="sizeritem">
-																	<object class="wxTextCtrl" name="ID_SSFRAMETIME" variable="SSFrameTime" member="yes">
-																		<size>75,-1</size>
-																	</object>
+																	<object class="wxTextCtrl" name="ID_SSFRAMETIME" variable="SSFrameTime" member="yes" />
 																	<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
 																	<border>3</border>
 																	<option>1</option>
@@ -243,7 +236,6 @@
 												<object class="sizeritem">
 													<object class="wxButton" name="ID_SSBROWSEAUDIO" variable="SSBrowseAudio" member="yes">
 														<label>...</label>
-														<size>50,-1</size>
 														<handler function="OnAction" entry="EVT_BUTTON" />
 													</object>
 													<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
@@ -592,7 +584,6 @@
 							<object class="sizeritem">
 								<object class="wxButton" name="ID_BROWSEDEST" variable="BrowseDest" member="yes">
 									<label>...</label>
-									<size>50,-1</size>
 									<handler function="OnAction" entry="EVT_BUTTON" />
 								</object>
 								<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
@@ -642,7 +633,7 @@
 							<growablecols>0</growablecols>
 							<growablerows>0</growablerows>
 							<object class="sizeritem">
-								<object class="wxHyperlinkCtrl" name="ID_LIMITDEST" variable="LimitDest" member="yes">
+								<object class="wxHyperlinkCtrl" name="ID_LIMITDEST" subclass="wxGenericHyperlinkCtrl" variable="LimitDest" member="yes">
 									<label>limit</label>
 									<handler function="OnAction" entry="EVT_HYPERLINK" />
 								</object>
@@ -703,14 +694,19 @@
 				<option>1</option>
 			</object>
 		</object>
-		<object class="wxFileDialog" variable="OpenFileDlg" member="yes">
-			<extra_code>OpenFileDlg-&gt;SetMessage(FFQS(SID__COMMON__SELECT__INPUT__FILE));</extra_code>
+		<object class="wxFileDialog" variable="OpenOneDlg" member="yes">
+			<extra_code>OpenOneDlg-&gt;SetMessage(FFQS(SID__COMMON__SELECT__INPUT__FILE));</extra_code>
 			<style>wxFD_DEFAULT_STYLE|wxFD_OPEN|wxFD_FILE_MUST_EXIST</style>
 		</object>
 		<object class="wxFileDialog" variable="SaveFileDlg" member="yes">
 			<message>Select destination file</message>
 			<extra_code>SaveFileDlg-&gt;SetMessage(FFQS(SID__COMMON__SELECT__OUTPUT__FILE));</extra_code>
 			<style>wxFD_SAVE</style>
+		</object>
+		<object class="wxFileDialog" variable="OpenMoreDlg" member="yes">
+			<message>Select file</message>
+			<extra_code>OpenMoreDlg-&gt;SetMessage(FFQS(SID__COMMON__SELECT__INPUT__FILE));</extra_code>
+			<style>wxFD_DEFAULT_STYLE|wxFD_OPEN|wxFD_FILE_MUST_EXIST|wxFD_MULTIPLE</style>
 		</object>
 	</object>
 </wxsmith>
