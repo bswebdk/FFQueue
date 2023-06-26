@@ -15,7 +15,7 @@
 					<object class="sizeritem">
 						<object class="wxFlexGridSizer" variable="FlexGridSizer2" member="no">
 							<cols>3</cols>
-							<rows>1</rows>
+							<rows>2</rows>
 							<growablecols>0</growablecols>
 							<object class="sizeritem">
 								<object class="wxTextCtrl" name="ID_FFMPEGPATH" variable="FFMpegPath" member="yes">
@@ -35,6 +35,35 @@
 									<handler function="OnButtonClick" entry="EVT_BUTTON" />
 								</object>
 								<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+							</object>
+						</object>
+						<flag>wxALL|wxEXPAND</flag>
+						<border>3</border>
+						<option>1</option>
+					</object>
+					<object class="sizeritem">
+						<object class="wxFlexGridSizer" variable="FlexGridSizer3" member="no">
+							<cols>2</cols>
+							<rows>1</rows>
+							<growablecols>0</growablecols>
+							<growablerows>0</growablerows>
+							<object class="sizeritem">
+								<object class="wxStaticText" name="wxID_ANY" variable="ST1" member="yes">
+									<label>NES</label>
+									<extra_code>ST1-&gt;SetLabelText(FFQS(SID__OPTIONS__NUM__ENCODING__SLOTS));</extra_code>
+								</object>
+								<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+								<border>3</border>
+								<option>1</option>
+							</object>
+							<object class="sizeritem">
+								<object class="wxSpinCtrl" name="ID_NUMENCODESLOTS" variable="NumEncodeSlots" member="yes">
+									<value>1</value>
+									<min>1</min>
+									<max>256</max>
+								</object>
+								<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<option>1</option>
 							</object>
 						</object>
 						<flag>wxALL|wxEXPAND</flag>

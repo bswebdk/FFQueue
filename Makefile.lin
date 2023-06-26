@@ -8,6 +8,7 @@ LINKER:=$(CXX)
 
 # You may need to change the location to wxWidgets root / build folder in the following line:
 WX:=../wxWidgets/gtk-build
+WXVER:=32
 
 # If you want to change the default build / output folder you can do it in the following line:
 MAKEROOT:=build

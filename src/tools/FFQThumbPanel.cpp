@@ -322,6 +322,7 @@ void FFQThumbPanel::UpdateControls()
 {
 
     StartTime->SetLabelText(FFQSF(SID_CREATE_FIRST_THUMB_FROM,  (m_StartTime.IsUndefined() ? FFQS(SID_THE_BEGINNING) : m_StartTime.ToString())));
+    StartTime->Refresh(); //2023
     //TimeSizer->RecalcSizes();
     TimeSizer->Layout();
 

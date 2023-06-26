@@ -81,7 +81,11 @@ void FFQPresetPanel::FillAndSelect(wxString selectId)
 {
     Presets->SetMaxSize(Presets->GetSize());
     FFQPresetMgr::Get()->FillChoice(Presets, selectId);
-    if (m_FixedFirst.Len() > 0) Presets->Insert(m_FixedFirst, 0);
+    if (m_FixedFirst.Len() > 0)
+    {
+        Presets->Insert(m_FixedFirst, 0);
+        if (selectId.Length() == 0) Presets->SetSelection(0);
+    }
 }
 
 //---------------------------------------------------------------------------------------

@@ -40,6 +40,7 @@
 //(*IdInit(FFQConfigEdit)
 const long FFQConfigEdit::ID_FFMPEGPATH = wxNewId();
 const long FFQConfigEdit::ID_BROWSEFFMPEG = wxNewId();
+const long FFQConfigEdit::ID_NUMENCODESLOTS = wxNewId();
 const long FFQConfigEdit::ID_CUSTPLAYER = wxNewId();
 const long FFQConfigEdit::ID_BROWSECUSTPLAYER = wxNewId();
 const long FFQConfigEdit::ID_TP_SYSTEM = wxNewId();
@@ -71,6 +72,7 @@ FFQConfigEdit::FFQConfigEdit(wxWindow* parent,wxWindowID id)
 	wxBoxSizer* BoxSizer2;
 	wxFlexGridSizer* FlexGridSizer1;
 	wxFlexGridSizer* FlexGridSizer2;
+	wxFlexGridSizer* FlexGridSizer3;
 	wxFlexGridSizer* FlexGridSizer4;
 	wxFlexGridSizer* FlexGridSizer5;
 	wxFlexGridSizer* FlexGridSizer6;
@@ -86,7 +88,7 @@ FFQConfigEdit::FFQConfigEdit(wxWindow* parent,wxWindowID id)
 	FlexGridSizer1->AddGrowableCol(0);
 	FlexGridSizer1->AddGrowableRow(1);
 	SBS1 = new wxStaticBoxSizer(wxVERTICAL, this, _("FFP"));
-	FlexGridSizer2 = new wxFlexGridSizer(1, 3, 0, 0);
+	FlexGridSizer2 = new wxFlexGridSizer(2, 3, 0, 0);
 	FlexGridSizer2->AddGrowableCol(0);
 	FFMpegPath = new wxTextCtrl(this, ID_FFMPEGPATH, wxEmptyString, wxDefaultPosition, wxSize(420,-1), 0, wxDefaultValidator, _T("ID_FFMPEGPATH"));
 	SBS1->GetStaticBox()->SetLabel(FFQS(SID_OPTIONS_FFMPEG_PATH));
@@ -95,6 +97,16 @@ FFQConfigEdit::FFQConfigEdit(wxWindow* parent,wxWindowID id)
 	BrowseFFMpeg = new wxButton(this, ID_BROWSEFFMPEG, _("..."), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_BROWSEFFMPEG"));
 	FlexGridSizer2->Add(BrowseFFMpeg, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
 	SBS1->Add(FlexGridSizer2, 1, wxALL|wxEXPAND, 3);
+	FlexGridSizer3 = new wxFlexGridSizer(1, 2, 0, 0);
+	FlexGridSizer3->AddGrowableCol(0);
+	FlexGridSizer3->AddGrowableRow(0);
+	ST1 = new wxStaticText(this, wxID_ANY, _("NES"), wxDefaultPosition, wxDefaultSize, 0, _T("wxID_ANY"));
+	ST1->SetLabelText(FFQS(SID_OPTIONS_NUM_ENCODING_SLOTS));
+	FlexGridSizer3->Add(ST1, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
+	NumEncodeSlots = new wxSpinCtrl(this, ID_NUMENCODESLOTS, _T("1"), wxDefaultPosition, wxDefaultSize, 0, 1, 256, 1, _T("ID_NUMENCODESLOTS"));
+	NumEncodeSlots->SetValue(_T("1"));
+	FlexGridSizer3->Add(NumEncodeSlots, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
+	SBS1->Add(FlexGridSizer3, 1, wxALL|wxEXPAND, 3);
 	FlexGridSizer1->Add(SBS1, 1, wxALL|wxEXPAND, 3);
 	SBS4 = new wxStaticBoxSizer(wxVERTICAL, this, _("Playr"));
 	FlexGridSizer5 = new wxFlexGridSizer(1, 3, 0, 0);
@@ -220,6 +232,7 @@ bool FFQConfigEdit::Execute()
 
     //Reset form to stored options
     FFMpegPath->SetValue(FFQCFG()->GetFFMpegCommand());
+    NumEncodeSlots->SetValue(FFQCFG()->num_encode_slots);
     CustPlayer->SetValue(FFQCFG()->cust_player);
 
     wxString s = FFQCFG()->temp_path;
@@ -256,6 +269,7 @@ bool FFQConfigEdit::Execute()
 
         //Save changes
         //FFQCFG()->strFFMpegPath = FFMpegPath->GetValue(); is set in OnButtonClick
+        FFQCFG()->num_encode_slots = NumEncodeSlots->GetValue();
         FFQCFG()->cust_player = CustPlayer->GetValue();
 
         if (TP_System->GetValue()) FFQCFG()->temp_path = TEMP_PATH_SYST;

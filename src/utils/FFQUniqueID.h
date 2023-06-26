@@ -54,7 +54,9 @@ typedef struct UNIQUE_ID
 
     //Handy operators for comparison and assignment
     bool operator ==(UNIQUE_ID &src) const { return (id[0] == src.id[0]) && (id[1] == src.id[1]); };
+    bool operator !=(UNIQUE_ID &src) const { return (id[0] != src.id[0]) || (id[1] != src.id[1]); };
     bool operator ==(long src) const { return (id[0] == src) && (id[1] == src); };
+    bool operator !=(long src) const { return (id[0] != src) || (id[1] != src); };
     void operator =(const UNIQUE_ID src) { memcpy(&id, &src.id, sizeof(id)); };
 
 } UNIQUE_ID, *LPUNIQUE_ID;

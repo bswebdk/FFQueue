@@ -427,8 +427,9 @@ void FilterBasePanel::UpdateTimeLimitLinks()
     wxString t1, t2;
     GetTimeLimitFriendly(t1, t2);
     m_ShowTime1->SetLabelText(t1);
+    m_ShowTime1->Refresh(); //2023
     m_ShowTime2->SetLabelText(t2);
-    //m_TimeSizer->RecalcSizes();
+    m_ShowTime2->Refresh(); //2023
     m_TimeSizer->Layout();
     //Layout();
 

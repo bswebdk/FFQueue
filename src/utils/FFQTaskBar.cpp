@@ -37,7 +37,7 @@
 #include <shobjidl.h>
 #include <shlobj.h>
 
-const GUID CLSID_TaskbarList = {0x56fdf344, 0xfd6d, 0x11d0, { 0x95, 0x8a, 0x00, 0x60, 0x97, 0xc9, 0xa0, 0x90 }};
+const GUID CLSID_FFQ_TaskbarList = {0x56fdf344, 0xfd6d, 0x11d0, { 0x95, 0x8a, 0x00, 0x60, 0x97, 0xc9, 0xa0, 0x90 }};
 
 #endif // __WINDOWS__
 
@@ -73,7 +73,7 @@ FFQTaskBar::FFQTaskBar()
 
     m_CoUninit = (CoInitializeEx(NULL, COINIT_APARTMENTTHREADED) == S_OK);
     m_TaskbarList = NULL;
-    CoCreateInstance(CLSID_TaskbarList, NULL, CLSCTX_INPROC_SERVER, IID_ITaskbarList3, (LPVOID*)&m_TaskbarList);
+    CoCreateInstance(CLSID_FFQ_TaskbarList, NULL, CLSCTX_INPROC_SERVER, IID_ITaskbarList3, (LPVOID*)&m_TaskbarList);
 
 #endif // __WINDOWS__
 }

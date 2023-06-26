@@ -69,6 +69,7 @@ const long FFQBatchMake::ID_OUTPUTPATH = wxNewId();
 const long FFQBatchMake::ID_BROWSEBUTTON = wxNewId();
 const long FFQBatchMake::ID_ST5 = wxNewId();
 const long FFQBatchMake::ID_PRESET = wxNewId();
+const long FFQBatchMake::ID_MAKELOGS = wxNewId();
 const long FFQBatchMake::ID_DRYRUNBUTTON = wxNewId();
 const long FFQBatchMake::ID_MAKEBUTTON = wxNewId();
 const long FFQBatchMake::ID_CANCELBUTTON = wxNewId();
@@ -112,7 +113,7 @@ FFQBatchMake::FFQBatchMake(wxWindow* parent,wxWindowID id)
 	FlexGridSizer2->Add(JobInfo, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	MainSizer->Add(FlexGridSizer2, 1, wxALL|wxEXPAND, 5);
 	SBS1 = new wxStaticBoxSizer(wxHORIZONTAL, this, _T("Props"));
-	FlexGridSizer3 = new wxFlexGridSizer(13, 1, 0, 0);
+	FlexGridSizer3 = new wxFlexGridSizer(14, 1, 0, 0);
 	FlexGridSizer3->AddGrowableCol(0);
 	FlexGridSizer4 = new wxFlexGridSizer(2, 4, 0, 0);
 	FlexGridSizer4->AddGrowableCol(1);
@@ -239,6 +240,10 @@ FFQBatchMake::FFQBatchMake(wxWindow* parent,wxWindowID id)
 	Preset = new FFQPresetPanel(this);
 	FlexGridSizer6->Add(Preset, 1, wxALL|wxEXPAND, 0);
 	FlexGridSizer3->Add(FlexGridSizer6, 1, wxALL|wxEXPAND, 3);
+	SaveLogs = new wxCheckBox(this, ID_MAKELOGS, _T("Sl"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_MAKELOGS"));
+	SaveLogs->SetValue(false);
+	SaveLogs->SetLabel(FFQS(SID_COMMON_SAVE_LOG));
+	FlexGridSizer3->Add(SaveLogs, 1, wxALL|wxEXPAND, 3);
 	SBS1->Add(FlexGridSizer3, 1, wxTOP|wxEXPAND, 5);
 	MainSizer->Add(SBS1, 1, wxALL|wxEXPAND, 5);
 	BoxSizer1 = new wxBoxSizer(wxHORIZONTAL);
@@ -329,7 +334,7 @@ bool FFQBatchMake::Execute()
 
     if ((c == 0) || (pc == 0)) return ShowError(NULL, FFQS(SID_NO_FILES_OR_NO_PRESET));
 
-    m_ClearLog = true;
+    m_ClearLog = false;//true;
     m_DoIdleTask = true;
 
     JobInfo->SetLabel(FFQSF(SID_BATCHMAKE_MAKE_JOBS_FOR, c));
@@ -353,6 +358,7 @@ bool FFQBatchMake::Execute()
     AudInverse->SetValue(GetToken(cfg, ',') == STR_YES);
     PrefSubs->SetValue(GetToken(cfg, ','));
     SubsInverse->SetValue(GetToken(cfg, ',') == STR_YES);
+    SaveLogs->SetValue(GetToken(cfg, ',') == STR_YES);
 
     //Global preferences we can use here
     OutputFormat->SetValue(FFQCFG()->preferred_format);
@@ -748,6 +754,7 @@ void FFQBatchMake::MakeJobs(bool dry_run)
         {
 
             job = new FFQ_JOB();
+            job->save_log = SaveLogs->GetValue();
             in1.Reset();
             in2.Reset();
 
@@ -916,7 +923,7 @@ void FFQBatchMake::SaveConfig()
     pa.Replace(COMMA, SPACE);
     ps.Replace(COMMA, SPACE);
     s.Printf(
-        "%s,%s,%s,%s,%s,%s,%s,%s",
+        "%s,%s,%s,%s,%s,%s,%s,%s,%s",
         BOOLSTR(IncludeVideo->GetValue()),
         BOOLSTR(IncludeAudio->GetValue()),
         BOOLSTR(IncludeSubs->GetValue()),
@@ -924,7 +931,8 @@ void FFQBatchMake::SaveConfig()
         pst->preset_id.ToString(),
         BOOLSTR(AudInverse->GetValue()),
         ps,
-        BOOLSTR(SubsInverse->GetValue())
+        BOOLSTR(SubsInverse->GetValue()),
+        BOOLSTR(SaveLogs->GetValue())
     );
     bool save = FFQCFG()->batch_config != s;
     FFQCFG()->batch_config = s;

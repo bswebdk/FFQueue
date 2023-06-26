@@ -111,6 +111,7 @@ typedef struct FFQ_PRESET
     FFQ_PRESET(wxString &preset);
 
     wxString GetFilters(wxUniChar separator = '\n');
+    wxString GetFormatExtension(wxString current);
     void Reset(bool newPreset);
     wxString SubsString();
     wxString ToString();

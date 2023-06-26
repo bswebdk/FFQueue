@@ -20,26 +20,27 @@
 					<Add option="-D__GNUWIN32__" />
 					<Add option="-D__WXMSW__" />
 					<Add option="-DwxUSE_UNICODE" />
-					<Add directory="$(#wx)/lib/gcc_lib/mswu" />
 					<Add directory="$(#wx)/include" />
+					<Add directory="$(#wx)/lib/gcc_lib/mswu" />
 					<Add directory="$(#wx)/src/zlib" />
 				</Compiler>
 				<ResourceCompiler>
-					<Add directory="$(#wx)/lib/gcc_lib/mswu" />
+					<Add option="-DwxUSE_NO_MANIFEST" />
 					<Add directory="$(#wx)/include" />
+					<Add directory="$(#wx)/lib/gcc_lib/mswu" />
 				</ResourceCompiler>
 				<Linker>
 					<Add option="-mthreads" />
-					<Add library="libwxmsw30u_richtext.a" />
-					<Add library="libwxmsw30u_xrc.a" />
-					<Add library="libwxmsw30u_media.a" />
-					<Add library="libwxmsw30u_html.a" />
-					<Add library="libwxbase30u_net.a" />
-					<Add library="libwxmsw30u_gl.a" />
-					<Add library="libwxbase30u_xml.a" />
-					<Add library="libwxmsw30u_adv.a" />
-					<Add library="libwxmsw30u_core.a" />
-					<Add library="libwxbase30u.a" />
+					<Add library="libwxmsw32u_richtext.a" />
+					<Add library="libwxmsw32u_xrc.a" />
+					<Add library="libwxmsw32u_media.a" />
+					<Add library="libwxmsw32u_html.a" />
+					<Add library="libwxbase32u_net.a" />
+					<Add library="libwxmsw32u_gl.a" />
+					<Add library="libwxbase32u_xml.a" />
+					<Add library="libwxmsw32u_adv.a" />
+					<Add library="libwxmsw32u_core.a" />
+					<Add library="libwxbase32u.a" />
 					<Add library="libwxpng.a" />
 					<Add library="libwxjpeg.a" />
 					<Add library="libwxtiff.a" />
@@ -59,6 +60,10 @@
 					<Add library="libcomctl32.a" />
 					<Add library="libwsock32.a" />
 					<Add library="libodbc32.a" />
+					<Add library="libshlwapi.a" />
+					<Add library="libversion.a" />
+					<Add library="libuxtheme.a" />
+					<Add library="liboleacc.a" />
 					<Add directory="$(#wx)/lib/gcc_lib" />
 				</Linker>
 			</Target>
@@ -77,29 +82,30 @@
 					<Add option="-D__GNUWIN32__" />
 					<Add option="-D__WXMSW__" />
 					<Add option="-DwxUSE_UNICODE" />
-					<Add directory="$(#wx)/lib/gcc_lib/mswu" />
 					<Add directory="$(#wx)/include" />
+					<Add directory="$(#wx)/lib/gcc_lib/mswu" />
 					<Add directory="$(#wx)/src/zlib" />
 				</Compiler>
 				<ResourceCompiler>
-					<Add directory="$(#wx)/lib/gcc_lib/mswu" />
+					<Add option="-DwxUSE_NO_MANIFEST" />
 					<Add directory="$(#wx)/include" />
+					<Add directory="$(#wx)/lib/gcc_lib/mswu" />
 				</ResourceCompiler>
 				<Linker>
 					<Add option="-s" />
 					<Add option="-static" />
 					<Add option="-static-libgcc" />
 					<Add option="-mthreads" />
-					<Add library="libwxmsw30u_richtext.a" />
-					<Add library="libwxmsw30u_xrc.a" />
-					<Add library="libwxmsw30u_media.a" />
-					<Add library="libwxbase30u_net.a" />
-					<Add library="libwxmsw30u_gl.a" />
-					<Add library="libwxbase30u_xml.a" />
-					<Add library="libwxmsw30u_adv.a" />
-					<Add library="libwxmsw30u_html.a" />
-					<Add library="libwxmsw30u_core.a" />
-					<Add library="libwxbase30u.a" />
+					<Add library="libwxmsw32u_richtext.a" />
+					<Add library="libwxmsw32u_xrc.a" />
+					<Add library="libwxmsw32u_media.a" />
+					<Add library="libwxbase32u_net.a" />
+					<Add library="libwxmsw32u_gl.a" />
+					<Add library="libwxbase32u_xml.a" />
+					<Add library="libwxmsw32u_adv.a" />
+					<Add library="libwxmsw32u_html.a" />
+					<Add library="libwxmsw32u_core.a" />
+					<Add library="libwxbase32u.a" />
 					<Add library="libwxpng.a" />
 					<Add library="libwxjpeg.a" />
 					<Add library="libwxtiff.a" />
@@ -119,6 +125,10 @@
 					<Add library="libcomctl32.a" />
 					<Add library="libwsock32.a" />
 					<Add library="libodbc32.a" />
+					<Add library="libshlwapi.a" />
+					<Add library="libversion.a" />
+					<Add library="libuxtheme.a" />
+					<Add library="liboleacc.a" />
 					<Add directory="$(#wx)/lib/gcc_lib" />
 				</Linker>
 			</Target>

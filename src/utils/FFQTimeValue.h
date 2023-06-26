@@ -25,6 +25,7 @@
 #define FFQTIMEVALUE_H
 
 #include <wx/string.h>
+#include "FFQConst.h"
 
 //Used to declare an invalid time component
 const unsigned short BAD_TIME_COMP = 0xFFFF;

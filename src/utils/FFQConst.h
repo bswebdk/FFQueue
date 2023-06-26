@@ -25,6 +25,7 @@
 #define FFQCONST_H
 
 #include <wx/string.h>
+#include <stdint.h>
 
 const wxUniChar CR = '\r';
 const wxUniChar LF = '\n';

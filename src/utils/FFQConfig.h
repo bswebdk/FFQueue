@@ -108,6 +108,8 @@ class FFQConfig
 	    wxString user_locale;
 	    wxString share_data_dir;
 
+	    int num_encode_slots;
+
 	    bool dark_theme;
 	    uint32_t colors[COLOR_COUNT];
 

@@ -22,6 +22,7 @@
 *************************************************************************/
 
 #include "FFQBitRatePanel.h"
+#include "utils/FFQConst.h"
 #include "utils/FFQMisc.h"
 #include "utils/FFQLang.h"
 

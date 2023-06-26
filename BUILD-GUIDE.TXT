@@ -1,7 +1,8 @@
 [Version]
-The build guide is Copyright © 2017 Torben Bruchhaus. Version history:
+The build guide is Copyright © 2023 by Torben Bruchhaus. Version history:
 - 1.0: 7th of January 2017
-- 1.1: 23rd of Frebruary 2019
+- 1.1: 23rd of February 2019
+- 1.2: 15th of June 2023
 
 [General]
 All make commands uses the argument "-j?" which is invalid. You must replace the "?"
@@ -18,24 +19,26 @@ In order to build FFQueue you need the G++ compiler, wxWidgets version 3.0.* (or
 development files and FFQueue source code.
 
   {G++ - Windows}
-  Download and install MinGW or MinGW-W64. FFQueue has been build using MinGW 32bit, other
+  Download and install MinGW or MinGW-w64. FFQueue has been build using MinGW 32bit, other
   compilers may cause issues or require other steps than the ones covered in this guide.
+  Make sure that the "\bin" folder of the compiler is part of the "PATH" environment
+  variable.
 
   {wxWidgets - Windows}
   Download wxWidgets as an archive from https://www.wxwidgets.org/downloads/ and
-  extract it to $BASE/wxWidgets. Change working directory to $BASE\wxWidgets\build\msw\
-  and execute the command "C:\path\to\mingw\bin\mingw32-make SHELL=CMD.exe -j? -f
-  makefile.gcc BUILD=release SHARED=0 MONOLITHIC=0 UNICODE=1
-  CXXFLAGS=-fno-keep-inline-dllexport".
+  extract it to $BASE\wxWidgets. Change working directory to $BASE\wxWidgets\build\msw\
+  and execute the command: "mingw32-make -f makefile.gcc BUILD=release SHARED=0 setup_h"
+  to setup wxWidgets for build and then run the command: "mingw32-make -j? -f makefile.win
+  BUILD=release SHARED=0" in order to actually bild wxWidgets.
 
   {G++ - Linux}
   Install package "g++" or "gcc".
 
   {wxWidgets - Linux}
-  Install package "libwxgtk3.0-dev" - this will only allow dynamically linked executables
-  to be generated. If you want a statically linked (stand-alone) executable you will need
-  to download wxWidgets source code, extract it to "$BASE/wxWidgets" and build wxWidgets
-  with the commands:
+  Install package "libwxgtk*-dev" (* may vary, on my current system it is "3.0-gtk3") -
+  this will only allow dynamically linked executables to be generated. If you want a
+  statically linked (stand-alone) executable you will need to download wxWidgets source
+  code, extract it to "$BASE/wxWidgets" and build wxWidgets with the commands:
 
   > cd $BASE/wxWidgets
   > mkdir gtk-build
@@ -91,7 +94,7 @@ Windows  > mingw32-make -f Makefile.win -j?
 
 The windows build requires the path to the MinGW binaries to be added to the global
 search path. If it is not, then you must modify the line with "CXX:=" in Makefile.win
-to the full path to mingw32-g++.exe and you must specify the full path to mingw32-make
+to the full path to (mingw32-)g++.exe and you must specify the full path to mingw32-make
 in the command above.
 
 Makefiles uses $BASE/FFQueue/build/ as output folder for binaries.

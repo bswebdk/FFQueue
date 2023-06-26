@@ -25,6 +25,7 @@
 #define FFQHASH_H
 
 #include <wx/string.h>
+#include "FFQConst.h"
 
 //SHA1 context
 typedef struct SHA1_Context {

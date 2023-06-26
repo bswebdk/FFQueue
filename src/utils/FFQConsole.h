@@ -58,13 +58,14 @@ class FFQConsole
 {
     public:
 
-        FFQConsole(wxTextCtrl* Ctrl);
+        FFQConsole();
         ~FFQConsole();
 
         void AppendBlankLine(int count = 1);
         FF_MSG_TYPE AppendFFOutput(wxString &Output, bool IsStdOut, bool ClearCtrl = false);
         void AppendLine(const wxString &Line, uint32_t Color, bool ClearCtrl = false);
         void AppendStatistics(const wxString &Prog);
+        void AppendWithTime(const wxString &Line, uint32_t Color, bool ClearCtrl = false);
         void Clear(bool Ctrl = true);
         void FlushMessages(bool Finalize = true);
         unsigned int GetEncodedFrames();
@@ -72,6 +73,7 @@ class FFQConsole
         uint64_t GetStatisticsTotal();
         void ReplaceLine(int LineNo, const wxString &NewLine);
         bool SaveAsHtml(const wxString &FileName);
+        void SetTextCtrl(wxTextCtrl* ctrl);
 
         //Access to the singleton reference
         static FFQConsole* Get() { return FFQConsole::m_Instance; }
@@ -98,6 +100,7 @@ class FFQConsole
         unsigned int m_LowContrastLast; //Last frame of above
         FF_MSG_TYPE m_LastMsgType; //The last message type added
 
+        void BringToFront();
         bool ClearStatsAnim();
         void ConsoleUpdated();
 

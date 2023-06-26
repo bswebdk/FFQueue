@@ -121,6 +121,7 @@ typedef struct FFQ_CONCAT_JOB : FFQ_QUEUE_ITEM
          scale_pad, //Should slide show be scaled and padded?
          force, //True if following should be forced: PTS for slide show, SAR for concat
          loop_frames, //Should frames be looped until audio track finishes?
+         file_is_list, //True is the input file is pre-generated list of images
          simple_concat, //True if a simple concat should be performed
          concat_vid, //Concat video?
          concat_aud, //Concat audio?

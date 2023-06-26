@@ -29,16 +29,15 @@
 //(*Headers(FFQMain)
 #include <wx/filedlg.h>
 #include <wx/frame.h>
-#include <wx/gauge.h>
 #include <wx/listctrl.h>
 #include <wx/menu.h>
+#include <wx/notebook.h>
 #include <wx/panel.h>
 #include <wx/sizer.h>
 #include <wx/splitter.h>
 #include <wx/statusbr.h>
 #include <wx/textctrl.h>
 #include <wx/timer.h>
-#include <wx/toolbar.h>
 //*)
 
 #include "FFQAbout.h"
@@ -63,6 +62,23 @@ typedef enum DEFINE_SELECT {dsNOSELECT, dsUNIQUE, dsAPPEND} DEFINE_SELECT;
 
 void PtrToBitmap(void* ptr, unsigned int len, wxBitmap &bmp, wxBitmapType type = wxBITMAP_TYPE_PNG, wxSize fit = wxSize(-1,-1));
 
+typedef struct ENCODING_SLOT
+{
+    int index;                 //The index of the slot in the array
+    FFQProcess process;        //Encoding process
+    FFQConsole console;        //Console for logging
+    wxGauge* gauge;            //Gauge for status
+    LPFFQ_QUEUE_ITEM item;     //Item being encoded
+    wxString command;          //The currently running command
+    TIME_VALUE duration;       //The expected duration of the encoding
+    uint64_t started;          //The tick count when the encoding was started
+    long frames;               //The expected number of frames to be encoded
+    double pct_done;           //The last percent done being reported
+
+    ENCODING_SLOT() : process(), console(), gauge(0), item(0) {}// { process = FFQProcess(); console = FFQConsole(); gauge = 0; item = 0; }
+
+} ENCODING_SLOT, *LPENCODING_SLOT;
+
 class FFQMain: public wxFrame
 {
     public:
@@ -80,6 +96,7 @@ class FFQMain: public wxFrame
         bool IsPresetActive(LPFFQ_PRESET pst, bool *can_modify = NULL);
         void PresetChanged(LPFFQ_PRESET pst);
         bool PreviewCommand(wxString cmd, bool add_to_console);
+        void SelectConsole(FFQConsole* by_pointer, int by_index = -1);
 
     private:
 
@@ -94,7 +111,8 @@ class FFQMain: public wxFrame
 
         static FFQMain* m_Instance;
 
-        wxImageList *m_ImageList;
+        wxImageList *m_ListIcons, *m_ConsoleIcons;
+        wxBitmap *m_ToolBitmaps;
         wxArrayPtrVoid *m_PtrList;
         FFQAbout* AboutBox; //About box - created when required
         FFQBatchMake* BatchMaker; //Used to batch-make jobs
@@ -113,21 +131,33 @@ class FFQMain: public wxFrame
         bool m_FirstShow; //True when frame receives focus for the first time
         bool m_Closed; //Has the frame been closed?
 
-        FFQProcess* m_EncodingProcess; //The process used for encoding
-        LPFFQ_QUEUE_ITEM m_CurrentItem; //The item currently being processed
-        wxString m_CurrentCommand; //The command currently executed
-        TIME_VALUE m_ItemDurationTime; //The duration to be encoded
-        uint64_t m_ItemStartTick; //The tick count when the item started
-        long m_ItemDurationFrames; //The number of frames to be encoded
-        double m_LastPercentDone;
+        ENCODING_SLOT* m_EncodingSlots;
+        int m_NumEncodingSlots;
+        bool m_EncodingActive;
+        int m_EncodingAborted;
+        int m_EncodingFailed;
+        int m_EncodingSuccess;
+        uint64_t m_QueueStarted;
 
-        void AfterItemProcessing(); //Called when an item has been processed
-        bool BeforeItemProcessing(); //Called when an item is about to be processed
-        LPFFQ_QUEUE_ITEM FindNextItemToProcess(); //Return the next queued item in the list
-        void LogCurrentItemStatus(bool first_command); //Log the status of the item
+        //FFQProcess* m_EncodingProcess; //The process used for encoding
+        //LPFFQ_QUEUE_ITEM m_CurrentItem; //The item currently being processed
+        //wxString m_CurrentCommand; //The command currently executed
+        //TIME_VALUE m_ItemDurationTime; //The duration to be encoded
+        //uint64_t m_ItemStartTick; //The tick count when the item started
+        //long m_ItemDurationFrames; //The number of frames to be encoded
+        //double m_LastPercentDone;
+
+        void InitEncodingSlots();
+
+
+        void AfterItemProcessing(LPENCODING_SLOT slot); //Called when an item has been processed
+        bool BeforeItemProcessing(LPENCODING_SLOT slot); //Called when an item is about to be processed
+        LPFFQ_QUEUE_ITEM FindNextItemToProcess(LPFFQ_QUEUE_ITEM from_item); //Return the next queued item in the list
+        void LogItemStatus(LPENCODING_SLOT slot, bool first_command); //Log the status of the item
         bool MustBeQueued(LPFFQ_QUEUE_ITEM item, long item_index, bool selected_only); //Checks if the items status allows queuing
         bool OverwritePrompt(bool selected_only); //Asks if the user wants to overwrite existing files before starting the queue
-        bool ProcessNext(); //Process the next item/command
+        bool ProcessNext(LPENCODING_SLOT slot); //Process the next item/command
+        int  FindEncodingSlot(LPFFQ_QUEUE_ITEM item);
         void FinishQueue(); //Called when the queue finishes or is aborted
         void StartQueue(bool selected_only); //Starts processing of the requested items
         void StopQueue(bool selected_only); //Stops processing of the requested items
@@ -152,7 +182,7 @@ class FFQMain: public wxFrame
         void ShowFFMpegVersion(bool langInfo); //Displays FFMpeg version in the TextCtrl used as console
         void ShowFFProbeInfo(LPFFQ_QUEUE_ITEM item = NULL); //Display ffprobe info for an item
         void UpdateControls(); //Used to enable/disable buttons according to the current state of query and listview
-        void UpdateProgress(unsigned int pos); //Used to update progress in gauge and task bar
+        void UpdateProgress(LPENCODING_SLOT slot, unsigned int pos); //Used to update progress in gauge and task bar
         void UpdateStatus(); //Used to update statusbar and current job progress
 
         wxString GetWindowPos();
@@ -176,27 +206,16 @@ class FFQMain: public wxFrame
         void OnClose(wxCloseEvent& event);
         void OnListViewItemRightClick(wxListEvent& event);
         void OnListViewColumnEndDrag(wxListEvent& event);
+        void OnConsolesPageChanged(wxNotebookEvent& event);
         //*)
 
         //(*Identifiers(FFQMain)
         static const long ID_LISTVIEW;
         static const long ID_TEXTCTRL;
-        static const long ID_GAUGE;
-        static const long ID_BOTTOMPAN;
+        static const long ID_PANEL1;
+        static const long ID_CONSOLES;
         static const long ID_SPLITTERWINDOW;
         static const long ID_STATUSBAR;
-        static const long ID_TOOLBARADD;
-        static const long ID_TOOLBARBATCH;
-        static const long ID_TOOLBARREMOVE;
-        static const long ID_TOOLBAREDIT;
-        static const long ID_TOOLBARPREVIEW;
-        static const long ID_TOOLBARSTART;
-        static const long ID_TOOLBARSTOP;
-        static const long ID_TOOLBARTOOLS;
-        static const long ID_TOOLBARPRESETS;
-        static const long ID_TOOLBAROPTIONS;
-        static const long ID_TOOLBARABOUT;
-        static const long ID_TOOLBAR;
         static const long ID_TIMER;
         static const long ID_MENU_MOVEUP;
         static const long ID_MENU_MOVEDOWN;
@@ -217,7 +236,6 @@ class FFQMain: public wxFrame
 
         //(*Declarations(FFQMain)
         wxFileDialog* OpenFilesDlg;
-        wxGauge* Gauge;
         wxListView* ListView;
         wxMenu ListMenu;
         wxMenu ToolsMenu;
@@ -236,11 +254,27 @@ class FFQMain: public wxFrame
         wxMenuItem* ThumbsItem;
         wxMenuItem* Vid2GifItem;
         wxMenuItem* VidStabItem;
-        wxPanel* BottomPan;
+        wxNotebook* Consoles;
         wxSplitterWindow* SplitterWindow;
         wxStatusBar* StatusBar;
         wxTextCtrl* TextCtrl;
         wxTimer Timer;
+        //*)
+
+        static const long ID_TOOLBAR;
+        static const long ID_TOOLBARADD;
+        static const long ID_TOOLBARBATCH;
+        static const long ID_TOOLBARREMOVE;
+        static const long ID_TOOLBAREDIT;
+        static const long ID_TOOLBARPREVIEW;
+        static const long ID_TOOLBARSTART;
+        static const long ID_TOOLBARSTOP;
+        static const long ID_TOOLBARTOOLS;
+        static const long ID_TOOLBARPRESETS;
+        static const long ID_TOOLBAROPTIONS;
+        static const long ID_TOOLBARABOUT;
+        static const long ID_MENU_STOPSEL;
+
         wxToolBar* ToolBar;
         wxToolBarToolBase* ToolBarAbout;
         wxToolBarToolBase* ToolBarAdd;
@@ -253,9 +287,7 @@ class FFQMain: public wxFrame
         wxToolBarToolBase* ToolBarStart;
         wxToolBarToolBase* ToolBarStop;
         wxToolBarToolBase* ToolBarTools;
-        //*)
 
-        static const long ID_MENU_STOPSEL;
         wxMenuItem* MenuStopSel;
         wxMenuItem* MenuStopAll;
 

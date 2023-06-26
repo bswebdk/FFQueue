@@ -19,7 +19,7 @@
 							<handler function="OnPresetsSelect" entry="EVT_LISTBOX" />
 							<handler function="OnButtonClick" entry="EVT_LISTBOX_DCLICK" />
 						</object>
-						<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<flag>wxALL|wxEXPAND</flag>
 						<border>5</border>
 						<option>1</option>
 					</object>
@@ -32,7 +32,7 @@
 									<extra_code>NewButton-&gt;SetLabel(FFQS(SID__COMMON__NEW));</extra_code>
 									<handler function="OnButtonClick" entry="EVT_BUTTON" />
 								</object>
-								<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<flag>wxALL|wxEXPAND</flag>
 								<border>2</border>
 								<option>1</option>
 							</object>
@@ -42,7 +42,7 @@
 									<extra_code>EditButton-&gt;SetLabel(FFQS(SID__COMMON__EDIT));</extra_code>
 									<handler function="OnButtonClick" entry="EVT_BUTTON" />
 								</object>
-								<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<flag>wxALL|wxEXPAND</flag>
 								<border>2</border>
 								<option>1</option>
 							</object>
@@ -52,12 +52,12 @@
 									<extra_code>DeleteButton-&gt;SetLabel(FFQS(SID__COMMON__DELETE));</extra_code>
 									<handler function="OnButtonClick" entry="EVT_BUTTON" />
 								</object>
-								<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<flag>wxALL|wxEXPAND</flag>
 								<border>2</border>
 								<option>1</option>
 							</object>
 							<object class="spacer">
-								<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<flag>wxALL|wxEXPAND</flag>
 								<border>2</border>
 								<option>1</option>
 							</object>
@@ -67,7 +67,7 @@
 									<extra_code>UpButton-&gt;SetLabel(FFQS(SID__COMMON__MOVE__UP));</extra_code>
 									<handler function="OnButtonClick" entry="EVT_BUTTON" />
 								</object>
-								<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<flag>wxALL|wxEXPAND</flag>
 								<border>2</border>
 								<option>1</option>
 							</object>
@@ -77,7 +77,7 @@
 									<extra_code>DownButton-&gt;SetLabel(FFQS(SID__COMMON__MOVE__DOWN));</extra_code>
 									<handler function="OnButtonClick" entry="EVT_BUTTON" />
 								</object>
-								<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<flag>wxALL|wxEXPAND</flag>
 								<border>2</border>
 								<option>1</option>
 							</object>
@@ -87,12 +87,12 @@
 									<extra_code>SortButton-&gt;SetLabel(FFQS(SID__COMMON__SORT));</extra_code>
 									<handler function="OnButtonClick" entry="EVT_BUTTON" />
 								</object>
-								<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<flag>wxALL|wxEXPAND</flag>
 								<border>2</border>
 								<option>1</option>
 							</object>
 							<object class="spacer">
-								<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<flag>wxALL|wxEXPAND</flag>
 								<border>2</border>
 								<option>1</option>
 							</object>
@@ -102,7 +102,7 @@
 									<extra_code>CopyButton-&gt;SetLabel(FFQS(SID__COMMON__COPY));</extra_code>
 									<handler function="OnButtonClick" entry="EVT_BUTTON" />
 								</object>
-								<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<flag>wxALL|wxEXPAND</flag>
 								<border>2</border>
 								<option>1</option>
 							</object>
@@ -112,7 +112,7 @@
 									<extra_code>PasteButton-&gt;SetLabel(FFQS(SID__COMMON__PASTE));</extra_code>
 									<handler function="OnButtonClick" entry="EVT_BUTTON" />
 								</object>
-								<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+								<flag>wxALL|wxEXPAND</flag>
 								<border>2</border>
 								<option>1</option>
 							</object>
@@ -122,14 +122,14 @@
 						<option>1</option>
 					</object>
 				</object>
-				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<flag>wxALL|wxEXPAND</flag>
 				<border>5</border>
 				<option>1</option>
 			</object>
 			<object class="sizeritem">
 				<object class="wxBoxSizer" variable="BoxSizer2" member="no">
 					<object class="spacer">
-						<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<flag>wxALL|wxEXPAND</flag>
 						<border>5</border>
 						<option>1</option>
 					</object>
@@ -137,21 +137,20 @@
 						<object class="wxButton" name="ID_CLOSEBUTTON" variable="CloseButton" member="yes">
 							<label>X</label>
 							<default>1</default>
-							<minsize>200,-1</minsize>
 							<extra_code>CloseButton-&gt;SetLabel(FFQS(SID__COMMON__CLOSE));</extra_code>
 							<handler function="OnButtonClick" entry="EVT_BUTTON" />
 						</object>
-						<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<flag>wxALL</flag>
 						<border>5</border>
 						<option>1</option>
 					</object>
 					<object class="spacer">
-						<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<flag>wxALL|wxEXPAND</flag>
 						<border>5</border>
 						<option>1</option>
 					</object>
 				</object>
-				<flag>wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+				<flag>wxALL|wxEXPAND</flag>
 				<border>5</border>
 				<option>1</option>
 			</object>

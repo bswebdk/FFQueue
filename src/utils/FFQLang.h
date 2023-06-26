@@ -31,6 +31,7 @@
 #include <wx/vector.h>
 #include <wx/datetime.h>
 #include <wx/window.h>
+#include "FFQConst.h"
 
 //Type used for string id's
 typedef uint16_t FFQ_SID;
@@ -169,6 +170,13 @@ const FFQ_SID SID_LOG_LOW_CONTRAST_WARNING          = SID_LOG_BASE + 24;
 const FFQ_SID SID_LOG_TOTAL_JOB_TIME                = SID_LOG_BASE + 25;
 const FFQ_SID SID_LOG_PRESET_WAS_CHANGED            = SID_LOG_BASE + 26;
 
+const FFQ_SID SID_LOG_QUEUE_STARTED                 = SID_LOG_BASE + 27;
+const FFQ_SID SID_LOG_QUEUE_ENDED                   = SID_LOG_BASE + 28;
+const FFQ_SID SID_LOG_JOB_TAB_STARTED               = SID_LOG_BASE + 29;
+const FFQ_SID SID_LOG_JOB_TAB_ENDED                 = SID_LOG_BASE + 30;
+const FFQ_SID SID_LOG_JOB_TAB_FAILED                = SID_LOG_BASE + 31;
+const FFQ_SID SID_LOG_JOB_TAB_ABORTED               = SID_LOG_BASE + 32;
+
 
 //Common UI strings
 const FFQ_SID SID_COMMON_BASE                       = 1500;
@@ -244,6 +252,10 @@ const FFQ_SID SID_MAINFRAME_LVC_STATUS              = SID_MAINFRAME_BASE + 102;
 const FFQ_SID SID_MAINFRAME_TM_THUMBTOOL            = SID_MAINFRAME_BASE + 120;
 const FFQ_SID SID_MAINFRAME_TM_SLIDESHOWTOOL        = SID_MAINFRAME_BASE + 121;
 const FFQ_SID SID_MAINFRAME_TM_CONCATTOOL           = SID_MAINFRAME_BASE + 122;
+
+//Notebook / text consoles
+const FFQ_SID SID_MAINFRAME_NB_DEFAULT              = SID_MAINFRAME_BASE + 200;
+const FFQ_SID SID_MAINFRAME_NB_FOR_JOB              = SID_MAINFRAME_BASE + 201;
 
 
 //Batch maker UI
@@ -358,6 +370,7 @@ const FFQ_SID SID_CONCAT_UNEQUAL_FILES              = SID_CONCAT_BASE + 32;
 const FFQ_SID SID_CONCAT_PADDING                    = SID_CONCAT_BASE + 33;
 const FFQ_SID SID_CONCAT_LOOP_ERROR                 = SID_CONCAT_BASE + 34;
 const FFQ_SID SID_CONCAT_EXPLICIT_MAP               = SID_CONCAT_BASE + 35;
+const FFQ_SID SID_CONCAT_IMAGE_LIST_FOUND           = SID_CONCAT_BASE + 36;
 
 
 //Preset editor UI
@@ -518,6 +531,7 @@ const FFQ_SID SID_OPTIONS_VALIDATE_ON_LOAD      = SID_OPTIONS_BASE + 20;
 const FFQ_SID SID_OPTIONS_OUTPUT_NAME_PATTERN   = SID_OPTIONS_BASE + 21;
 const FFQ_SID SID_OPTIONS_CONFIRM_DELETE_JOBS   = SID_OPTIONS_BASE + 22;
 const FFQ_SID SID_OPTIONS_PREVIEW_MAP_SUBS      = SID_OPTIONS_BASE + 23;
+const FFQ_SID SID_OPTIONS_NUM_ENCODING_SLOTS    = SID_OPTIONS_BASE + 24;
 
 
 //Thumb maker UI

@@ -54,7 +54,7 @@ const wxString CONCAT_MERGE_FILTER = "merge_filter";
 const wxString CONCAT_MERGE_PADDING = "merge_padding";
 const wxString CONCAT_FLTR_KEY1 = "$F1$";
 const wxString CONCAT_FLTR_KEY2 = "$F2$";
-const wxString CONCAT_FIT_AND_PAD = "scale='if(gt(iw,ih),$W,-1)':'if(gt(ih,iw),$H,-1)',pad=$W:$H:(ow-iw)/2:(oh-ih)/2:$C";
+//const wxString CONCAT_FIT_AND_PAD = "scale='if(gt(iw,ih),$W,-1)':'if(gt(ih,iw),$H,-1)',pad=$W:$H:(ow-iw)/2:(oh-ih)/2:$C";
 
 const wxString VID2GIF_SETTINGS = "vid2gif_settings";
 const unsigned int VID2GIF_ACCURACY = 5000; //5 seconds
@@ -567,6 +567,7 @@ FFQ_CONCAT_JOB::FFQ_CONCAT_JOB(const FFQ_CONCAT_JOB &copy_from) : FFQ_QUEUE_ITEM
     scale_pad = copy_from.scale_pad;
     force = copy_from.force;
     loop_frames = copy_from.loop_frames;
+    file_is_list = copy_from.file_is_list;
     simple_concat = copy_from.simple_concat;
     concat_vid = copy_from.concat_vid;
     concat_aud = copy_from.concat_aud;
@@ -643,14 +644,16 @@ wxString FFQ_CONCAT_JOB::ToString()
 
     wxString s;
 
-    s.Printf("%s,%s,%s,%s,%s,%s,%s,%s,%g,%u,%u,%u,%u",
+    s.Printf("%s,%s,%s,%s,%s,%s,%s,%s,%g,%u,%u,%u,%u,%s",
 
              BOOLSTR(slideshow), BOOLSTR(scale_pad), BOOLSTR(force), BOOLSTR(loop_frames),
              BOOLSTR(simple_concat), BOOLSTR(concat_vid), BOOLSTR(concat_aud), BOOLSTR(concat_subs),
 
              frame_time,
 
-             pad_color, img_first, img_count, map_streams
+             pad_color, img_first, img_count, map_streams,
+
+             BOOLSTR(file_is_list)
 
             );
 
@@ -923,7 +926,7 @@ wxString FFQ_CONCAT_JOB::MakeSlideshowCmd()
     wxString res, tmp, imgptn = img_pattern;
     LPFFQ_PRESET pst = (LPFFQ_PRESET)m_PresetPtr;
 
-    if (scale_pad)
+    /*if ((!file_is_list) && scale_pad)
     {
 
         //Create the first command used for creating uniform dimensions
@@ -948,7 +951,7 @@ wxString FFQ_CONCAT_JOB::MakeSlideshowCmd()
         img1st = 1;
 
     }
-    else res = "";
+    else res = "";*/
 
     wxString aud = GetInput(1).path;
     TIME_VALUE aud_len = (aud.Len() > 0) ? GetInput(1).duration : TIME_VALUE(0);
@@ -968,30 +971,45 @@ wxString FFQ_CONCAT_JOB::MakeSlideshowCmd()
     long dummy = 0;
     tmp = BuildCommandLine(&job, dummy);
 
-    wxString loop = /*((aud.Len() > 0) && loop_frames)*/ loop_frames ? "-loop 1 " : "";
-    wxString in = "-framerate 1/" + ToStr(frame_time);
-    if (img_count > 1) in += " -start_number " + ToStr(img1st);
-    in += " " + loop + "-i \"" + FormatFileName(imgptn) + "\"";
+    wxString in, fltr;
+
+    if (scale_pad)
+    {
+        FFQ_INPUT_FILE &inf = GetInput(0);
+        fltr = wxString::Format("scale=%d:%d:force_original_aspect_ratio=decrease,pad=%d:%d:-1:-1:color=", inf.width, inf.height, inf.width, inf.height) + wxColour((unsigned long)pad_color).GetAsString(wxC2S_HTML_SYNTAX);
+    }
+
+    if (file_is_list)
+    {
+        in = "-f concat -safe 0";
+        if (loop_frames) in += " -stream_loop -1";
+    }
+    else
+    {
+        in = "-framerate 1/" + ToStr(frame_time);
+        if (img_count > 1) in += " -start_number " + ToStr(img1st);
+        if (loop_frames) in +=  " -loop 1";
+        if (force)
+        {
+            if (fltr.Len() > 0) fltr = "," + fltr;
+            fltr = "setpts=PTS+(" + ToStr(frame_time) + "/TB)" + fltr;
+        }
+    }
+    in += " -i \"" + FormatFileName(imgptn) + "\"";
     if (aud.Len() > 0) in += " -i \"" + FormatFileName(aud) + "\"";
 
     tmp.Replace(CMD_INPUTS, in);
 
     wxString dst = "-shortest -y \"" + out + "\"";
-    //if (aud.Len() > 0) dst = "-shortest " + dst;
-
-    if (pst->frame_rate.Len() == 0) dst = "-r 25 " + dst; //Framerate of output video MUST be specified to make it work
+    if ((!file_is_list) && (pst->frame_rate.Len() == 0)) dst = "-r 25 " + dst; //Framerate of output video MUST be specified to make it work
     if (pst->pixel_format.Len() == 0) dst = "-pix_fmt yuv420p " + dst;
     if (!limit_len.IsUndefined()) dst = "-t " + limit_len.ToString() + " " + dst;
 
-    //Make setpts filter and insert it
-    wxString fltr = force ? "setpts=PTS+(" + ToStr(frame_time) + "/TB)" : "";
     if ((tmp.Find(CONCAT_FLTR_KEY1) < 0) && (fltr.Len() > 0)) dst = "-vf \"" + fltr + "\" " + dst;
     else
     {
-
         if (fltr.Len() > 0) fltr += ",";
         tmp.Replace(CONCAT_FLTR_KEY1, fltr);
-
     }
 
     tmp.Replace(CMD_OUTPUT, dst);
@@ -1016,6 +1034,7 @@ void FFQ_CONCAT_JOB::Reset(bool load)
     scale_pad = true;
     force = false;
     loop_frames = true;
+    file_is_list = false;
     simple_concat = false;
     concat_vid = true;
     concat_aud = true;
@@ -1055,8 +1074,10 @@ void FFQ_CONCAT_JOB::Reset(bool load)
         frame_time = Str2Float(GetToken(s, ",", true), frame_time);
 
         pad_color = Str2Long(GetToken(s, ",", true), pad_color);
-        img_first = Str2Long(GetToken(s, ",", true), img_count);
+        img_first = Str2Long(GetToken(s, ",", true), img_first);
         img_count = Str2Long(GetToken(s, ",", true), img_count);
+        map_streams = Str2Long(GetToken(s, ",", true), map_streams);
+        file_is_list = STRBOOLDEF(GetToken(s, ",", true), file_is_list);
 
         out = GetValue(VIDSTAB_OUTPUT, out);
         img_pattern = GetValue(CONCAT_IMG_PATTERN, img_pattern);

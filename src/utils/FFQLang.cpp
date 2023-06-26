@@ -24,7 +24,6 @@
 #include "FFQLang.h"
 #include "FFQMisc.h"
 #include "FFQFilter.h"
-#include "FFQConst.h"
 #include "FFQConfig.h"
 #include "FFQJob.h"
 #include "FFQHash.h"
@@ -390,6 +389,12 @@ FFQLang::FFQLang(bool loadFile)
     SetString(SID_LOG_LOW_CONTRAST_WARNING,     "Video stabilization reported no translations due to too low contrast in frames %u => %u");
     SetString(SID_LOG_TOTAL_JOB_TIME,           "Total processing time was %s");
     SetString(SID_LOG_PRESET_WAS_CHANGED,       "WARNING! The preset used by this job was modified during processing!");
+    SetString(SID_LOG_QUEUE_STARTED,            "Queue started");
+    SetString(SID_LOG_QUEUE_ENDED,              "Queue ended after %s: Processed %d, succeeded %d, failed %d, aborted %d");
+    SetString(SID_LOG_JOB_TAB_STARTED,          "%s started for \"%s\"");
+    SetString(SID_LOG_JOB_TAB_ENDED,            "%s ended");
+    SetString(SID_LOG_JOB_TAB_FAILED,           "%s failed");
+    SetString(SID_LOG_JOB_TAB_ABORTED,          "%s aborted");
 
 
     //Common UI strings
@@ -460,6 +465,9 @@ FFQLang::FFQLang(bool loadFile)
     SetString(SID_MAINFRAME_TM_THUMBTOOL,     "Thumbnails and mosaics...");
     SetString(SID_MAINFRAME_TM_SLIDESHOWTOOL, "Make video from images...");
     SetString(SID_MAINFRAME_TM_CONCATTOOL,    "Merge multiple sources into one...");
+
+    SetString(SID_MAINFRAME_NB_DEFAULT,       "Messages");
+    SetString(SID_MAINFRAME_NB_FOR_JOB,       "Job #%i");
 
     //Batch make UI strings
     SetString(SID_BATCHMAKE_TITLE,             "Batch make");
@@ -566,6 +574,7 @@ FFQLang::FFQLang(bool loadFile)
     SetString(SID_CONCAT_PADDING,               "Use padding rather than stretching");
     SetString(SID_CONCAT_LOOP_ERROR,            "This job will encode forever; you must disable loop frames, specify an audio track or limit the length of the output to prevent this.");
     SetString(SID_CONCAT_EXPLICIT_MAP,          "Explicitly map all streams");
+    SetString(SID_CONCAT_IMAGE_LIST_FOUND,      "Pre-generated list of images found");
 
 
     //Preset editor UI strings
@@ -708,7 +717,7 @@ FFQLang::FFQLang(bool loadFile)
     SetString(SID_OPTIONS_TEMP_CUSTOM,              "Use custom path below:");
     SetString(SID_OPTIONS_FIND_2ND_INPUT_EXTS,      "Automatically find secondary file from these extensions");
     SetString(SID_OPTIONS_SAVE_JOBS_ON_EXIT,        "Save unprocessed jobs in the query list on exit (and reload on startup)");
-    SetString(SID_OPTIONS_REMOVE_FINISHED_JOBS,     "Automatically remove processed jobs from query list");
+    SetString(SID_OPTIONS_REMOVE_FINISHED_JOBS,     "Automatically remove processed jobs from the queue");
     SetString(SID_OPTIONS_LIMIT_STATISTICS,         "Limit statistics from FFMpeg");
     SetString(SID_OPTIONS_SHOW_BANNER_INFO,         "Show banner-information from FFMpeg when processing jobs");
     SetString(SID_OPTIONS_EDIT_LANGUAGE,            "Language...");
@@ -724,6 +733,7 @@ FFQLang::FFQLang(bool loadFile)
     SetString(SID_OPTIONS_OUTPUT_NAME_PATTERN,      "Pattern used to generate output names");
     SetString(SID_OPTIONS_CONFIRM_DELETE_JOBS,      "Confirm removal of jobs");
     SetString(SID_OPTIONS_PREVIEW_MAP_SUBS,         "Always map subtitles when previewing");
+    SetString(SID_OPTIONS_NUM_ENCODING_SLOTS,       "Number of simultaneous jobs to process");
 
 
     //Thumb maker UI strings

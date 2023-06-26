@@ -55,9 +55,7 @@
 #endif // __WINDOWS__
 
 //(*InternalHeaders(FFQMain)
-#include <wx/bitmap.h>
 #include <wx/font.h>
-#include <wx/image.h>
 #include <wx/intl.h>
 #include <wx/string.h>
 //*)
@@ -91,22 +89,10 @@ wxString wxbuildinfo(wxbuildinfoformat format)
 //(*IdInit(FFQMain)
 const long FFQMain::ID_LISTVIEW = wxNewId();
 const long FFQMain::ID_TEXTCTRL = wxNewId();
-const long FFQMain::ID_GAUGE = wxNewId();
-const long FFQMain::ID_BOTTOMPAN = wxNewId();
+const long FFQMain::ID_PANEL1 = wxNewId();
+const long FFQMain::ID_CONSOLES = wxNewId();
 const long FFQMain::ID_SPLITTERWINDOW = wxNewId();
 const long FFQMain::ID_STATUSBAR = wxNewId();
-const long FFQMain::ID_TOOLBARADD = wxNewId();
-const long FFQMain::ID_TOOLBARBATCH = wxNewId();
-const long FFQMain::ID_TOOLBARREMOVE = wxNewId();
-const long FFQMain::ID_TOOLBAREDIT = wxNewId();
-const long FFQMain::ID_TOOLBARPREVIEW = wxNewId();
-const long FFQMain::ID_TOOLBARSTART = wxNewId();
-const long FFQMain::ID_TOOLBARSTOP = wxNewId();
-const long FFQMain::ID_TOOLBARTOOLS = wxNewId();
-const long FFQMain::ID_TOOLBARPRESETS = wxNewId();
-const long FFQMain::ID_TOOLBAROPTIONS = wxNewId();
-const long FFQMain::ID_TOOLBARABOUT = wxNewId();
-const long FFQMain::ID_TOOLBAR = wxNewId();
 const long FFQMain::ID_TIMER = wxNewId();
 const long FFQMain::ID_MENU_MOVEUP = wxNewId();
 const long FFQMain::ID_MENU_MOVEDOWN = wxNewId();
@@ -133,9 +119,21 @@ const long FFQMain::ID_DEBUG_ABOUT = wxNewId();
 const long FFQMain::ID_DEBUG_FILTERS = wxNewId();
 #endif
 
+const long FFQMain::ID_TOOLBAR = wxNewId();
+const long FFQMain::ID_TOOLBARADD = wxNewId();
+const long FFQMain::ID_TOOLBARBATCH = wxNewId();
+const long FFQMain::ID_TOOLBARREMOVE = wxNewId();
+const long FFQMain::ID_TOOLBAREDIT = wxNewId();
+const long FFQMain::ID_TOOLBARPREVIEW = wxNewId();
+const long FFQMain::ID_TOOLBARSTART = wxNewId();
+const long FFQMain::ID_TOOLBARSTOP = wxNewId();
+const long FFQMain::ID_TOOLBARTOOLS = wxNewId();
+const long FFQMain::ID_TOOLBARPRESETS = wxNewId();
+const long FFQMain::ID_TOOLBAROPTIONS = wxNewId();
+const long FFQMain::ID_TOOLBARABOUT = wxNewId();
 const long FFQMain::ID_MENU_STOPSEL = wxNewId();
-FFQMain* FFQMain::m_Instance = NULL;
 
+FFQMain* FFQMain::m_Instance = NULL;
 
 BEGIN_EVENT_TABLE(FFQMain,wxFrame)
     //(*EventTable(FFQMain)
@@ -162,7 +160,12 @@ void PtrToBitmap(void* ptr, unsigned int len, wxBitmap &bmp, wxBitmapType type, 
 #define GETQUEUEFLAG(flags, flag) (flags & flag) != 0
 #define SETQUEUEFLAG(flags, flag, on) if (on) { flags |= flag; } else { flags &= ~flag; }
 
+#define CONSOLE_IMAGE_MSG 0
+#define CONSOLE_IMAGE_OFF 1
+#define CONSOLE_IMAGE_ON 2
+
 //---------------------------------------------------------------------------------------
+
 
 FFQMain::FFQMain(wxWindow* parent, wxWindowID id)
 {
@@ -170,40 +173,9 @@ FFQMain::FFQMain(wxWindow* parent, wxWindowID id)
     //Init cfg and str
     if (FFQCFG()->use_libav) FFQL()->LibAVify();
 
-    wxBitmap* TOOL_BMP = new wxBitmap[11];
-
-    PtrToBitmap((void*)&TOOL_ADD, TOOL_ADD_SIZE, TOOL_BMP[0]);
-    PtrToBitmap((void*)&TOOL_DELETE, TOOL_DELETE_SIZE, TOOL_BMP[1]);
-    PtrToBitmap((void*)&TOOL_EDIT, TOOL_EDIT_SIZE, TOOL_BMP[2]);
-    PtrToBitmap((void*)&TOOL_START, TOOL_START_SIZE, TOOL_BMP[3]);
-    PtrToBitmap((void*)&TOOL_STOP, TOOL_STOP_SIZE, TOOL_BMP[4]);
-    PtrToBitmap((void*)&TOOL_CONFIG, TOOL_CONFIG_SIZE, TOOL_BMP[5]);
-    PtrToBitmap((void*)&TOOL_ABOUT, TOOL_ABOUT_SIZE, TOOL_BMP[6]);
-    PtrToBitmap((void*)&TOOL_BATCH, TOOL_BATCH_SIZE, TOOL_BMP[7]);
-    PtrToBitmap((void*)&TOOL_TOOLS, TOOL_TOOLS_SIZE, TOOL_BMP[8]);
-    PtrToBitmap((void*)&TOOL_PREVIEW, TOOL_PREVIEW_SIZE, TOOL_BMP[9]);
-    PtrToBitmap((void*)&TOOL_PRESETS, TOOL_PRESETS_SIZE, TOOL_BMP[10]);
-
-    /*
-
-          !!! IMPORTANT INFO !!!
-          ======================
-          Whenever you modify something with wxSmith in the FFQMain.wxs
-          resource the labels for the ToolBar buttons gets screwed up.
-          Never found a pretty solution to this so you will have to change
-          _("FFQS(SID_...)") to FFQS(SID_...) to get the labels back!
-
-          ----------------------
-
-          This issue seems to have been resolved in recent versions of
-          wxWidgets, older versions of wx may cause problems with FFQ
-
-
-    */
-
-
     //(*Initialize(FFQMain)
-    wxFlexGridSizer* FlexGridSizer1;
+    wxFlexGridSizer* FlexGridSizer2;
+    wxPanel* Panel1;
 
     Create(parent, id, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxDEFAULT_FRAME_STYLE, _T("id"));
     SetClientSize(wxSize(800,500));
@@ -211,47 +183,29 @@ FFQMain::FFQMain(wxWindow* parent, wxWindowID id)
     SplitterWindow->SetMinSize(wxSize(100,100));
     SplitterWindow->SetSashGravity(0.5);
     ListView = new wxListView(SplitterWindow, ID_LISTVIEW, wxDefaultPosition, wxDefaultSize, wxLC_REPORT|wxLC_NO_SORT_HEADER|wxBORDER_NONE, wxDefaultValidator, _T("ID_LISTVIEW"));
-    ListView->SetMinSize(wxSize(800,200));
-    BottomPan = new wxPanel(SplitterWindow, ID_BOTTOMPAN, wxDefaultPosition, wxDefaultSize, wxBORDER_NONE|wxTAB_TRAVERSAL, _T("ID_BOTTOMPAN"));
-    FlexGridSizer1 = new wxFlexGridSizer(2, 1, 0, 0);
-    FlexGridSizer1->AddGrowableCol(0);
-    FlexGridSizer1->AddGrowableRow(0);
-    TextCtrl = new wxTextCtrl(BottomPan, ID_TEXTCTRL, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_READONLY|wxTE_RICH|wxTE_DONTWRAP|wxBORDER_NONE, wxDefaultValidator, _T("ID_TEXTCTRL"));
+    ListView->SetMinSize(wxDLG_UNIT(SplitterWindow,wxSize(800,150)));
+    Consoles = new wxNotebook(SplitterWindow, ID_CONSOLES, wxDefaultPosition, wxDefaultSize, 0, _T("ID_CONSOLES"));
+    Consoles->SetMinSize(wxSize(-1,150));
+    Panel1 = new wxPanel(Consoles, ID_PANEL1, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, _T("ID_PANEL1"));
+    FlexGridSizer2 = new wxFlexGridSizer(1, 1, 0, 0);
+    FlexGridSizer2->AddGrowableCol(0);
+    FlexGridSizer2->AddGrowableRow(0);
+    TextCtrl = new wxTextCtrl(Panel1, ID_TEXTCTRL, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_READONLY|wxTE_RICH|wxTE_DONTWRAP|wxBORDER_NONE, wxDefaultValidator, _T("ID_TEXTCTRL"));
     TextCtrl->SetMinSize(wxSize(800,100));
     wxFont TextCtrlFont(10,wxFONTFAMILY_TELETYPE,wxFONTSTYLE_NORMAL,wxFONTWEIGHT_NORMAL,false,_T("Monospace"),wxFONTENCODING_DEFAULT);
     TextCtrl->SetFont(TextCtrlFont);
-    FlexGridSizer1->Add(TextCtrl, 0, wxEXPAND, 5);
-    Gauge = new wxGauge(BottomPan, ID_GAUGE, 100, wxDefaultPosition, wxSize(673,15), 0, wxDefaultValidator, _T("ID_GAUGE"));
-    FlexGridSizer1->Add(Gauge, 1, wxALL|wxEXPAND, 0);
-    BottomPan->SetSizer(FlexGridSizer1);
-    FlexGridSizer1->Fit(BottomPan);
-    FlexGridSizer1->SetSizeHints(BottomPan);
-    SplitterWindow->SplitHorizontally(ListView, BottomPan);
+    FlexGridSizer2->Add(TextCtrl, 0, wxEXPAND, 5);
+    Panel1->SetSizer(FlexGridSizer2);
+    FlexGridSizer2->Fit(Panel1);
+    FlexGridSizer2->SetSizeHints(Panel1);
+    Consoles->AddPage(Panel1, _("Sys"), false);
+    SplitterWindow->SplitHorizontally(ListView, Consoles);
     StatusBar = new wxStatusBar(this, ID_STATUSBAR, wxST_SIZEGRIP|wxBORDER_NONE, _T("ID_STATUSBAR"));
     int __wxStatusBarWidths_1[3] = { 1, 250, -300 };
     int __wxStatusBarStyles_1[3] = { wxSB_FLAT, wxSB_NORMAL, wxSB_NORMAL };
     StatusBar->SetFieldsCount(3,__wxStatusBarWidths_1);
     StatusBar->SetStatusStyles(3,__wxStatusBarStyles_1);
     SetStatusBar(StatusBar);
-    ToolBar = new wxToolBar(this, ID_TOOLBAR, wxDefaultPosition, wxDefaultSize, wxTB_FLAT|wxTB_HORIZONTAL|wxTB_TEXT|wxTB_NODIVIDER|wxTB_TOP, _T("ID_TOOLBAR"));
-    ToolBarAdd = ToolBar->AddTool(ID_TOOLBARADD, FFQS(SID_COMMON_ADD), TOOL_BMP[0], wxNullBitmap, wxITEM_NORMAL, wxEmptyString, wxEmptyString);
-    ToolBarBatch = ToolBar->AddTool(ID_TOOLBARBATCH, FFQS(SID_MAINFRAME_TB_BATCH), TOOL_BMP[7], wxNullBitmap, wxITEM_NORMAL, wxEmptyString, wxEmptyString);
-    ToolBarRemove = ToolBar->AddTool(ID_TOOLBARREMOVE, FFQS(SID_COMMON_REMOVE), TOOL_BMP[1], wxNullBitmap, wxITEM_NORMAL, wxEmptyString, wxEmptyString);
-    ToolBarEdit = ToolBar->AddTool(ID_TOOLBAREDIT, FFQS(SID_COMMON_EDIT), TOOL_BMP[2], wxNullBitmap, wxITEM_NORMAL, wxEmptyString, wxEmptyString);
-    ToolBar->AddSeparator();
-    ToolBarPreview = ToolBar->AddTool(ID_TOOLBARPREVIEW, FFQS(SID_COMMON_PREVIEW), TOOL_BMP[9], wxNullBitmap, wxITEM_NORMAL, wxEmptyString, wxEmptyString);
-    ToolBar->AddSeparator();
-    ToolBarStart = ToolBar->AddTool(ID_TOOLBARSTART, FFQS(SID_MAINFRAME_TB_START), TOOL_BMP[3], wxNullBitmap, wxITEM_NORMAL, wxEmptyString, wxEmptyString);
-    ToolBarStop = ToolBar->AddTool(ID_TOOLBARSTOP, FFQS(SID_MAINFRAME_TB_STOP), TOOL_BMP[4], wxNullBitmap, wxITEM_NORMAL, wxEmptyString, wxEmptyString);
-    ToolBar->AddSeparator();
-    ToolBarTools = ToolBar->AddTool(ID_TOOLBARTOOLS, FFQS(SID_MAINFRAME_TB_TOOLS), TOOL_BMP[8], wxNullBitmap, wxITEM_NORMAL, wxEmptyString, wxEmptyString);
-    ToolBar->AddSeparator();
-    ToolBarPresets = ToolBar->AddTool(ID_TOOLBARPRESETS, FFQS(SID_MAINFRAME_TB_PRESETS), TOOL_BMP[10], wxNullBitmap, wxITEM_NORMAL, wxEmptyString, wxEmptyString);
-    ToolBarOptions = ToolBar->AddTool(ID_TOOLBAROPTIONS, FFQS(SID_MAINFRAME_TB_OPTIONS), TOOL_BMP[5], wxNullBitmap, wxITEM_NORMAL, wxEmptyString, wxEmptyString);
-    ToolBar->AddSeparator();
-    ToolBarAbout = ToolBar->AddTool(ID_TOOLBARABOUT, FFQS(SID_MAINFRAME_TB_ABOUT), TOOL_BMP[6], wxNullBitmap, wxITEM_NORMAL, wxEmptyString, wxEmptyString);
-    ToolBar->Realize();
-    SetToolBar(ToolBar);
     Timer.SetOwner(this, ID_TIMER);
     Timer.Start(10, false);
     MenuMoveUp = new wxMenuItem((&ListMenu), ID_MENU_MOVEUP, _("1"), wxEmptyString, wxITEM_NORMAL);
@@ -296,17 +250,7 @@ FFQMain::FFQMain(wxWindow* parent, wxWindowID id)
     Connect(ID_LISTVIEW,wxEVT_COMMAND_LIST_ITEM_RIGHT_CLICK,(wxObjectEventFunction)&FFQMain::OnListViewItemRightClick);
     Connect(ID_LISTVIEW,wxEVT_COMMAND_LIST_COL_BEGIN_DRAG,(wxObjectEventFunction)&FFQMain::OnListViewColumnBeginDrag);
     Connect(ID_LISTVIEW,wxEVT_COMMAND_LIST_COL_END_DRAG,(wxObjectEventFunction)&FFQMain::OnListViewColumnEndDrag);
-    Connect(ID_TOOLBARADD,wxEVT_COMMAND_TOOL_CLICKED,(wxObjectEventFunction)&FFQMain::OnToolBarButtonClick);
-    Connect(ID_TOOLBARBATCH,wxEVT_COMMAND_TOOL_CLICKED,(wxObjectEventFunction)&FFQMain::OnToolBarButtonClick);
-    Connect(ID_TOOLBARREMOVE,wxEVT_COMMAND_TOOL_CLICKED,(wxObjectEventFunction)&FFQMain::OnToolBarButtonClick);
-    Connect(ID_TOOLBAREDIT,wxEVT_COMMAND_TOOL_CLICKED,(wxObjectEventFunction)&FFQMain::OnToolBarButtonClick);
-    Connect(ID_TOOLBARPREVIEW,wxEVT_COMMAND_TOOL_CLICKED,(wxObjectEventFunction)&FFQMain::OnToolBarButtonClick);
-    Connect(ID_TOOLBARSTART,wxEVT_COMMAND_TOOL_CLICKED,(wxObjectEventFunction)&FFQMain::OnToolBarButtonClick);
-    Connect(ID_TOOLBARSTOP,wxEVT_COMMAND_TOOL_CLICKED,(wxObjectEventFunction)&FFQMain::OnToolBarButtonClick);
-    Connect(ID_TOOLBARTOOLS,wxEVT_COMMAND_TOOL_CLICKED,(wxObjectEventFunction)&FFQMain::OnToolBarButtonClick);
-    Connect(ID_TOOLBARPRESETS,wxEVT_COMMAND_TOOL_CLICKED,(wxObjectEventFunction)&FFQMain::OnToolBarButtonClick);
-    Connect(ID_TOOLBAROPTIONS,wxEVT_COMMAND_TOOL_CLICKED,(wxObjectEventFunction)&FFQMain::OnToolBarButtonClick);
-    Connect(ID_TOOLBARABOUT,wxEVT_COMMAND_TOOL_CLICKED,(wxObjectEventFunction)&FFQMain::OnToolBarButtonClick);
+    Connect(ID_CONSOLES,wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGED,(wxObjectEventFunction)&FFQMain::OnConsolesPageChanged);
     Connect(ID_TIMER,wxEVT_TIMER,(wxObjectEventFunction)&FFQMain::OnTimerTrigger);
     Connect(ID_MENU_MOVEUP,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&FFQMain::OnToolBarButtonClick);
     Connect(ID_MENU_MOVEDOWN,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&FFQMain::OnToolBarButtonClick);
@@ -327,18 +271,41 @@ FFQMain::FFQMain(wxWindow* parent, wxWindowID id)
     Connect(wxEVT_SIZE,(wxObjectEventFunction)&FFQMain::OnFrameResize);
     //*)
 
-    /*ToolBarAdd->SetLabel(FFQS(SID_COMMON_ADD));
-    ToolBarBatch->SetLabel(FFQS(SID_MAINFRAME_TB_BATCH));
-    ToolBarRemove->SetLabel(FFQS(SID_COMMON_REMOVE));
-    ToolBarEdit->SetLabel(FFQS(SID_COMMON_EDIT));
-    ToolBarPreview->SetLabel(FFQS(SID_COMMON_PREVIEW));
-    ToolBarStart->SetLabel(FFQS(SID_MAINFRAME_TB_START));
-    ToolBarStop->SetLabel(FFQS(SID_MAINFRAME_TB_STOP));
-    ToolBarTools->SetLabel(FFQS(SID_MAINFRAME_TB_TOOLS));
-    ToolBarPresets->SetLabel(FFQS(SID_MAINFRAME_TB_PRESETS));
-    ToolBarOptions->SetLabel(FFQS(SID_MAINFRAME_TB_OPTIONS));
-    ToolBarAbout->SetLabel(FFQS(SID_MAINFRAME_TB_ABOUT));
-    ToolBar->Realize();*/
+    //SetClientSize(wxDLG_UNIT(this, wxSize(800, 600)));
+
+    m_ToolBitmaps = new wxBitmap[11];
+    PtrToBitmap((void*)&TOOL_ADD, TOOL_ADD_SIZE, m_ToolBitmaps[0]);
+    PtrToBitmap((void*)&TOOL_DELETE, TOOL_DELETE_SIZE, m_ToolBitmaps[1]);
+    PtrToBitmap((void*)&TOOL_EDIT, TOOL_EDIT_SIZE, m_ToolBitmaps[2]);
+    PtrToBitmap((void*)&TOOL_START, TOOL_START_SIZE, m_ToolBitmaps[3]);
+    PtrToBitmap((void*)&TOOL_STOP, TOOL_STOP_SIZE, m_ToolBitmaps[4]);
+    PtrToBitmap((void*)&TOOL_CONFIG, TOOL_CONFIG_SIZE, m_ToolBitmaps[5]);
+    PtrToBitmap((void*)&TOOL_ABOUT, TOOL_ABOUT_SIZE, m_ToolBitmaps[6]);
+    PtrToBitmap((void*)&TOOL_BATCH, TOOL_BATCH_SIZE, m_ToolBitmaps[7]);
+    PtrToBitmap((void*)&TOOL_TOOLS, TOOL_TOOLS_SIZE, m_ToolBitmaps[8]);
+    PtrToBitmap((void*)&TOOL_PREVIEW, TOOL_PREVIEW_SIZE, m_ToolBitmaps[9]);
+    PtrToBitmap((void*)&TOOL_PRESETS, TOOL_PRESETS_SIZE, m_ToolBitmaps[10]);
+
+    ToolBar = new wxToolBar(this, ID_TOOLBAR, wxDefaultPosition, wxDefaultSize, wxTB_FLAT|wxTB_HORIZONTAL|wxTB_TEXT|wxTB_NODIVIDER|wxTB_TOP, wxEmptyString);
+    ToolBarAdd = ToolBar->AddTool(ID_TOOLBARADD, FFQS(SID_COMMON_ADD), m_ToolBitmaps[0], wxNullBitmap, wxITEM_NORMAL, wxEmptyString, wxEmptyString);
+    ToolBarBatch = ToolBar->AddTool(ID_TOOLBARBATCH, FFQS(SID_MAINFRAME_TB_BATCH), m_ToolBitmaps[7], wxNullBitmap, wxITEM_NORMAL, wxEmptyString, wxEmptyString);
+    ToolBarRemove = ToolBar->AddTool(ID_TOOLBARREMOVE, FFQS(SID_COMMON_REMOVE), m_ToolBitmaps[1], wxNullBitmap, wxITEM_NORMAL, wxEmptyString, wxEmptyString);
+    ToolBarEdit = ToolBar->AddTool(ID_TOOLBAREDIT, FFQS(SID_COMMON_EDIT), m_ToolBitmaps[2], wxNullBitmap, wxITEM_NORMAL, wxEmptyString, wxEmptyString);
+    ToolBar->AddSeparator();
+    ToolBarPreview = ToolBar->AddTool(ID_TOOLBARPREVIEW, FFQS(SID_COMMON_PREVIEW), m_ToolBitmaps[9], wxNullBitmap, wxITEM_NORMAL, wxEmptyString, wxEmptyString);
+    ToolBar->AddSeparator();
+    ToolBarStart = ToolBar->AddTool(ID_TOOLBARSTART, FFQS(SID_MAINFRAME_TB_START), m_ToolBitmaps[3], wxNullBitmap, wxITEM_NORMAL, wxEmptyString, wxEmptyString);
+    ToolBarStop = ToolBar->AddTool(ID_TOOLBARSTOP, FFQS(SID_MAINFRAME_TB_STOP), m_ToolBitmaps[4], wxNullBitmap, wxITEM_NORMAL, wxEmptyString, wxEmptyString);
+    ToolBar->AddSeparator();
+    ToolBarTools = ToolBar->AddTool(ID_TOOLBARTOOLS, FFQS(SID_MAINFRAME_TB_TOOLS), m_ToolBitmaps[8], wxNullBitmap, wxITEM_NORMAL, wxEmptyString, wxEmptyString);
+    ToolBar->AddSeparator();
+    ToolBarPresets = ToolBar->AddTool(ID_TOOLBARPRESETS, FFQS(SID_MAINFRAME_TB_PRESETS), m_ToolBitmaps[10], wxNullBitmap, wxITEM_NORMAL, wxEmptyString, wxEmptyString);
+    ToolBarOptions = ToolBar->AddTool(ID_TOOLBAROPTIONS, FFQS(SID_MAINFRAME_TB_OPTIONS), m_ToolBitmaps[5], wxNullBitmap, wxITEM_NORMAL, wxEmptyString, wxEmptyString);
+    ToolBar->AddSeparator();
+    ToolBarAbout = ToolBar->AddTool(ID_TOOLBARABOUT, FFQS(SID_MAINFRAME_TB_ABOUT), m_ToolBitmaps[6], wxNullBitmap, wxITEM_NORMAL, wxEmptyString, wxEmptyString);
+    ToolBar->Realize();
+    SetToolBar(ToolBar);
+    Bind(wxEVT_COMMAND_TOOL_CLICKED, &FFQMain::OnToolBarButtonClick, this);
 
     #ifdef DEBUG
     m_DebugPopupMenu = new wxMenu();
@@ -347,11 +314,7 @@ FFQMain::FFQMain(wxWindow* parent, wxWindowID id)
     m_DebugPopupMenu->Append(new wxMenuItem(m_DebugPopupMenu, ID_DEBUG_ABOUT, "About"));
     m_DebugPopupMenu->Append(new wxMenuItem(m_DebugPopupMenu, ID_DEBUG_MAKEFILES, "Create makefiles"));
     m_DebugPopupMenu->Append(new wxMenuItem(m_DebugPopupMenu, ID_DEBUG_BINRES, "Create binary resources"));
-    Connect(ID_DEBUG_MAKEFILES, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&FFQMain::OnToolBarButtonClick);
-    Connect(ID_DEBUG_BINRES, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&FFQMain::OnToolBarButtonClick);
-    Connect(ID_DEBUG_TESTING, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&FFQMain::OnToolBarButtonClick);
-    Connect(ID_DEBUG_FILTERS, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&FFQMain::OnToolBarButtonClick);
-    Connect(ID_DEBUG_ABOUT, wxEVT_COMMAND_MENU_SELECTED, (wxObjectEventFunction)&FFQMain::OnToolBarButtonClick);
+    Bind(wxEVT_COMMAND_MENU_SELECTED, &FFQMain::OnToolBarButtonClick, this);
     #endif // DEBUG
 
     OpenFilesDlg->SetMessage(FFQS(SID_COMMON_SELECT_FILES));
@@ -379,14 +342,26 @@ FFQMain::FFQMain(wxWindow* parent, wxWindowID id)
     ListView->AppendColumn(FFQS(SID_MAINFRAME_LVC_COMMAND), wxLIST_FORMAT_LEFT);
     ListView->AppendColumn(FFQS(SID_MAINFRAME_LVC_STATUS), wxLIST_FORMAT_CENTER);
 
-    m_ImageList = new wxImageList(16, 16);
+    wxSize sz = wxSize(22, 22); //wxDLG_UNIT(this, wxSize(10, 8));
+    m_ListIcons = new wxImageList(sz.GetWidth(), sz.GetHeight());
     wxBitmap bmp;
-    PtrToBitmap((void*)&ICON_JOB, ICON_JOB_SIZE, bmp);
-    m_ImageList->Add(bmp);
-    PtrToBitmap((void*)&ICON_TOOL, ICON_TOOL_SIZE, bmp);
-    m_ImageList->Add(bmp);
-    ListView->SetImageList(m_ImageList, wxIMAGE_LIST_SMALL);
+    PtrToBitmap((void*)&ICON_JOB, ICON_JOB_SIZE, bmp, wxBITMAP_TYPE_PNG, sz);
+    m_ListIcons->Add(bmp);
+    //PtrToBitmap((void*)&TOOL_TOOLS, TOOL_TOOLS_SIZE, bmp, wxBITMAP_TYPE_PNG, sz);
+    PtrToBitmap((void*)&ICON_TOOL, ICON_TOOL_SIZE, bmp, wxBITMAP_TYPE_PNG, sz);
+    m_ListIcons->Add(bmp);
+    ListView->SetImageList(m_ListIcons, wxIMAGE_LIST_SMALL);
 
+    sz = wxSize(16, 16);
+    m_ConsoleIcons = new wxImageList(sz.GetWidth(), sz.GetHeight());
+    PtrToBitmap((void*)&ICON_TAB_MSG, ICON_TAB_MSG_SIZE, bmp);//, wxBITMAP_TYPE_PNG, sz);
+    m_ConsoleIcons->Add(bmp);
+    PtrToBitmap((void*)&ICON_TAB_OFF, ICON_TAB_OFF_SIZE, bmp);//, wxBITMAP_TYPE_PNG, sz);
+    m_ConsoleIcons->Add(bmp);
+    PtrToBitmap((void*)&ICON_TAB_ON, ICON_TAB_ON_SIZE, bmp);//, wxBITMAP_TYPE_PNG, sz);
+    m_ConsoleIcons->Add(bmp);
+    Consoles->SetImageList(m_ConsoleIcons);
+    Consoles->SetPageImage(0, CONSOLE_IMAGE_MSG);
 
     ThumbsItem->SetItemLabel(FFQS(SID_MAINFRAME_TM_THUMBTOOL));
     SlideshowItem->SetItemLabel(FFQS(SID_MAINFRAME_TM_SLIDESHOWTOOL));
@@ -403,8 +378,6 @@ FFQMain::FFQMain(wxWindow* parent, wxWindowID id)
     ListView->DragAcceptFiles(true);
     ListView->Connect(wxEVT_DROP_FILES, wxDropFilesEventHandler(FFQMain::OnDropFiles), NULL, this);
 
-    Gauge->SetRange(GAUGE_MAX);
-
     if (Timer.IsRunning()) Timer.Stop();
 
     AboutBox = NULL;
@@ -415,7 +388,12 @@ FFQMain::FFQMain(wxWindow* parent, wxWindowID id)
     ConcatDlg = NULL;
     VidStabDlg = NULL;
     Video2Gif = NULL;
-    Console = new FFQConsole(TextCtrl);
+    Console = new FFQConsole();
+    Console->SetTextCtrl(TextCtrl);
+
+    m_NumEncodingSlots = 0;
+    m_EncodingActive = false;
+    m_EncodingSlots = NULL;
 
     m_PtrList = new wxArrayPtrVoid();
     m_AllowEvents = false;
@@ -424,12 +402,14 @@ FFQMain::FFQMain(wxWindow* parent, wxWindowID id)
     m_RestoredRect.SetPosition(GetPosition());
     m_RestoredRect.SetSize(GetSize());
     m_LastColumnPct = 0;
-    m_LastPercentDone = 0;
+    //m_LastPercentDone = 0;
 
-    m_EncodingProcess = NULL;
-    m_CurrentItem = NULL;
-    m_ItemDurationTime = 0;
-    m_ItemDurationFrames = -1;
+    //m_EncodingProcess = NULL;
+    //m_CurrentItem = NULL;
+    //m_ItemDurationTime = 0;
+    //m_ItemDurationFrames = -1;
+
+    Consoles->SetPageText(0, FFQS(SID_MAINFRAME_NB_DEFAULT));
 
     m_JobsFileName = FFQCFG()->app_name.Lower() + ".job";
     SetTitle(FFQCFG()->app_name);
@@ -494,11 +474,23 @@ FFQMain::~FFQMain()
         VidStabDlg = NULL;
     }
 
+    if (m_EncodingSlots)
+    {
+        delete[] m_EncodingSlots;
+        m_EncodingSlots = NULL;
+    }
+
     delete Console;
     Console = NULL;
 
-    delete m_ImageList;
-    m_ImageList = NULL;
+    delete m_ListIcons;
+    m_ListIcons = NULL;
+
+    delete m_ConsoleIcons;
+    m_ConsoleIcons = NULL;
+
+    delete[] m_ToolBitmaps;
+    m_ToolBitmaps = NULL;
 
     delete m_PtrList;
     m_PtrList = NULL;
@@ -684,62 +676,118 @@ bool FFQMain::PreviewCommand(wxString cmd, bool add_to_console)
 
 //---------------------------------------------------------------------------------------
 
-void FFQMain::AfterItemProcessing()
+void FFQMain::SelectConsole(FFQConsole* by_pointer, int by_index)
+{
+    if (m_EncodingActive && (by_index > 0)) Consoles->ChangeSelection(by_index);
+    else if ((!m_EncodingActive) && (by_pointer == this->Console) && (Consoles->GetSelection() != 0)) Consoles->ChangeSelection(0);
+}
+
+//---------------------------------------------------------------------------------------
+
+void FFQMain::InitEncodingSlots()
 {
 
-    //The method is called when the processing of a queued item has finished
+    //Initialize encoding slots
+    m_NumEncodingSlots = FFQCFG()->num_encode_slots;
+    if (m_NumEncodingSlots < 1) m_NumEncodingSlots = 1;
+    m_EncodingActive = false;
+    m_EncodingSlots = new ENCODING_SLOT[m_NumEncodingSlots];
 
-    if (m_CurrentItem->status != qsFAILED)
+    wxFont fnt(10, wxFONTFAMILY_TELETYPE, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, _T("Monospace"), wxFONTENCODING_DEFAULT);
+    for (int i = 0; i < m_NumEncodingSlots; i++)
     {
 
-        //Update status
-        if (m_EncodingProcess->WasAborted()) m_CurrentItem->status = qsABORTED;
-        else if (Console->GetStatisticsTotal() == 0) m_CurrentItem->status = qsFAILED;
+        LPENCODING_SLOT slot = &m_EncodingSlots[i];
+        slot->index = i;
+        wxPanel *pan = new wxPanel(Consoles, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
+        wxFlexGridSizer *fgs = new wxFlexGridSizer(2, 1, 0, 0);
+        fgs->AddGrowableCol(0);
+        fgs->AddGrowableRow(0);
+        wxTextCtrl *tc = new wxTextCtrl(pan, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_READONLY|wxTE_RICH|wxTE_DONTWRAP|wxBORDER_NONE, wxDefaultValidator);
+        tc->SetFont(fnt);
+        fgs->Add(tc, 0, wxEXPAND, 5);
+        slot->gauge = new wxGauge(pan, wxID_ANY, GAUGE_MAX);
+        //slot->gauge->SetValue(GAUGE_MAX / 2);
+        fgs->Add(slot->gauge, 1, wxALL|wxEXPAND, 0);
+        pan->SetSizer(fgs);
+        fgs->Fit(pan);
+        fgs->SetSizeHints(pan);
+        Consoles->AddPage(pan, FFQSF(SID_MAINFRAME_NB_FOR_JOB, (i+1)), false);
+        Consoles->SetPageImage(i + 1, CONSOLE_IMAGE_OFF);//i == 0 ? CONSOLE_IMAGE_OFF : CONSOLE_IMAGE_ON);
+        slot->console.SetTextCtrl(tc);
 
     }
-
-    //Update list
-    DefineItem(IndexOfItem(m_CurrentItem), m_CurrentItem, dsNOSELECT, false);
-
-    //Log status
-    LogCurrentItemStatus(false);
-
-    //Save log as required
-    wxString ln;
-    if (m_CurrentItem->GetLogFileName(ln)) Console->SaveAsHtml(ln);
-
-    //Cleanup
-    m_CurrentItem->Cleanup();
-
-    //Clear current item & command
-    m_CurrentItem = NULL;
-    m_CurrentCommand.Clear();
 
 }
 
 //---------------------------------------------------------------------------------------
 
-bool FFQMain::BeforeItemProcessing()
+void FFQMain::AfterItemProcessing(LPENCODING_SLOT slot)
+{
+
+    //The method is called when the processing of a queued item has finished
+
+    if (slot->item->status != qsFAILED)
+    {
+
+        //Update status
+        if (slot->process.WasAborted())
+        {
+            slot->item->status = qsABORTED;
+            m_EncodingAborted++;
+        }
+        else if (slot->console.GetStatisticsTotal() == 0)
+        {
+            slot->item->status = qsFAILED;
+            m_EncodingFailed++;
+        }
+        else m_EncodingSuccess++;
+
+    }
+
+    //Update list
+    DefineItem(IndexOfItem(slot->item), slot->item, dsNOSELECT, false);
+
+    //Log status
+    LogItemStatus(slot, false);
+
+    //Save log as required
+    wxString ln;
+    if (slot->item->GetLogFileName(ln)) slot->console.SaveAsHtml(ln);
+
+    //Cleanup
+    slot->item->Cleanup();
+
+    //Clear current item & command
+    slot->item = NULL;
+    slot->command.Clear();
+
+    //Update console icon
+    Consoles->SetPageImage(slot->index+1, CONSOLE_IMAGE_OFF);
+
+
+}
+
+//---------------------------------------------------------------------------------------
+
+bool FFQMain::BeforeItemProcessing(LPENCODING_SLOT slot)
 {
 
     //The method is called when a queued item is about to be processed
 
-    //Prepare the item (Must be called when queued)
-    //m_CurrentItem->PrepareProcessing();
-
     //Store starting tick count
-    m_ItemStartTick = GetTimeTickCount();
+    slot->started = GetTimeTickCount();
 
     //Clear console
-    Console->Clear(true);
+    slot->console.Clear(true);
 
     //Check if output file can be overwritten
-    wxString out = (m_CurrentItem->GetItemType() == qtJOB) ? ((LPFFQ_JOB)m_CurrentItem)->out : "";
+    wxString out = (slot->item->GetItemType() == qtJOB) ? ((LPFFQ_JOB)slot->item)->out : "";
 
     //Check if it exists
     bool exists = (out.Len() > 0) && wxFileExists(out), start = true;
 
-    if ( exists && ((m_CurrentItem->queue_flags & QUEUE_FLAG_OVERWRITE) != 0) )//m_OverwriteAllowed)
+    if ( exists && ((slot->item->queue_flags & QUEUE_FLAG_OVERWRITE) != 0) )
     {
 
         //File exists and it is allowed to be overwritten - try to delete it
@@ -747,8 +795,9 @@ bool FFQMain::BeforeItemProcessing()
         {
 
             //Failed to delete = job failed
-            m_CurrentItem->status = qsFAILED;
-            Console->AppendLine(FFQS(SID_LOG_WRITE_DEST_ERROR), COLOR_RED);
+            slot->item->status = qsFAILED;
+            m_EncodingFailed++;
+            slot->console.AppendLine(FFQS(SID_LOG_WRITE_DEST_ERROR), COLOR_RED);
             start = false;
 
         }
@@ -759,7 +808,7 @@ bool FFQMain::BeforeItemProcessing()
     {
 
         //Overwrite not accepted = job skipped
-        m_CurrentItem->status = qsSKIPPED;
+        slot->item->status = qsSKIPPED;
         start = false;
 
     }
@@ -769,14 +818,17 @@ bool FFQMain::BeforeItemProcessing()
     {
 
         //Clear all flags other than the overwrite one
-        m_CurrentItem->queue_flags &= QUEUE_FLAG_OVERWRITE;
+        slot->item->queue_flags &= QUEUE_FLAG_OVERWRITE;
 
         //Prepare processing
-        m_CurrentItem->PrepareProcessing();
+        slot->item->PrepareProcessing();
+
+        //Update console icon
+        Consoles->SetPageImage(slot->index+1, CONSOLE_IMAGE_ON);
 
     }
     //Not started: Update list
-    else DefineItem(IndexOfItem(m_CurrentItem), m_CurrentItem, dsNOSELECT, false);
+    else DefineItem(IndexOfItem(slot->item), slot->item, dsNOSELECT, false);
 
     //Return success|not
     return start;
@@ -785,7 +837,7 @@ bool FFQMain::BeforeItemProcessing()
 
 //---------------------------------------------------------------------------------------
 
-LPFFQ_QUEUE_ITEM FFQMain::FindNextItemToProcess()
+LPFFQ_QUEUE_ITEM FFQMain::FindNextItemToProcess(LPFFQ_QUEUE_ITEM from_item)
 {
 
     //Find next queued item
@@ -794,8 +846,7 @@ LPFFQ_QUEUE_ITEM FFQMain::FindNextItemToProcess()
     long num_items = ListView->GetItemCount();
 
     //Get the wrapping point and set first index to check
-    long start = (m_CurrentItem == NULL) ? 0 : IndexOfItem(m_CurrentItem) + 1,
-         index = start;
+    long start = (from_item == NULL) ? 0 : IndexOfItem(from_item) + 1, index = start;
 
     //Search the list
     while (true)
@@ -827,7 +878,7 @@ LPFFQ_QUEUE_ITEM FFQMain::FindNextItemToProcess()
 
 //---------------------------------------------------------------------------------------
 
-void FFQMain::LogCurrentItemStatus(bool first_command)
+void FFQMain::LogItemStatus(LPENCODING_SLOT slot, bool first_command)
 {
 
     //Used to log the status of the current item during processing
@@ -839,57 +890,77 @@ void FFQMain::LogCurrentItemStatus(bool first_command)
         //A command has finished
 
         //Force gauge to finished - just in case
-        Gauge->SetValue(Gauge->GetRange());
+        slot->gauge->SetValue(slot->gauge->GetRange());
 
         //Append empty line
-        Console->AppendBlankLine();
+        slot->console.AppendBlankLine();
 
         //Flush messages
-        Console->FlushMessages();
+        slot->console.FlushMessages();
 
         //Log ffmpeg running time
-        TIME_VALUE t = TIME_VALUE(m_EncodingProcess->GetRunningTimeMillis());
-        Console->AppendLine(FFQSF(SID_LOG_FFMPEG_RUNTIME, FFQDT(), t.ToString()), COLOR_GRAY);
+        TIME_VALUE t = TIME_VALUE(slot->process.GetRunningTimeMillis());
+        slot->console.AppendLine(FFQSF(SID_LOG_FFMPEG_RUNTIME, FFQDT(), t.ToString()), COLOR_GRAY);
 
         //Log statistics
-        if (Console->GetStatisticsTotal() == 0) Console->AppendLine(FFQS(SID_LOG_COMPLETED_IRREG), COLOR_RED);
-        else Console->AppendLine(FFQSF(SID_LOG_COMPLETED_OK, Console->GetStatisticsTotal()), COLOR_BLACK);
+        if (slot->console.GetStatisticsTotal() == 0) slot->console.AppendLine(FFQS(SID_LOG_COMPLETED_IRREG), COLOR_RED);
+        else slot->console.AppendLine(FFQSF(SID_LOG_COMPLETED_OK, slot->console.GetStatisticsTotal()), COLOR_BLACK);
 
     }
 
+    const auto logstart = [this, slot]() {
+        Console->AppendWithTime(FFQSF(SID_LOG_JOB_TAB_STARTED, Consoles->GetPageText(FindEncodingSlot(slot->item) + 1),  FFQ_INPUT_FILE(slot->item->inputs[0]).path /*slot->command*/), COLOR_BLUE);
+    };
+
+    const auto logend = [this, slot](FFQ_SID sid, uint32_t color) {
+        Console->AppendWithTime(FFQSF(sid, Consoles->GetPageText(FindEncodingSlot(slot->item) + 1)), color);
+    };
+
     bool total_time = false;
 
-    switch (m_CurrentItem->status)
+    switch (slot->item->status)
     {
 
         case qsACTIVE:
         case qsTHUMBS:
             //Command start
-            if (!first_command) Console->AppendBlankLine(2);
-            Console->AppendLine(FFQSF(SID_LOG_STARTING_FFMPEG, "", FFQDT(), m_CurrentCommand), COLOR_GRAY);
+            logstart();
+            if (!first_command) slot->console.AppendBlankLine(2);
+            slot->console.AppendLine(FFQSF(SID_LOG_STARTING_FFMPEG, "", FFQDT(), slot->command), COLOR_GRAY);
             break;
 
         case qsPASS1:
             //First pass
-            Console->AppendLine(FFQSF(SID_LOG_STARTING_FFMPEG, SPACE + FFQS(SID_LOG_FOR_FIRST_PASS), FFQDT(), m_CurrentCommand), COLOR_GRAY);
+            logstart();
+            slot->console.AppendLine(FFQSF(SID_LOG_STARTING_FFMPEG, SPACE + FFQS(SID_LOG_FOR_FIRST_PASS), FFQDT(), slot->command), COLOR_GRAY);
             break;
 
         case qsPASS2:
             //Second pass
-            Console->AppendBlankLine(2);
-            Console->AppendLine(FFQSF(SID_LOG_STARTING_FFMPEG, SPACE + FFQS(SID_LOG_FOR_SECOND_PASS), FFQDT(), m_CurrentCommand), COLOR_GRAY);
+            logstart();
+            slot->console.AppendBlankLine(2);
+            slot->console.AppendLine(FFQSF(SID_LOG_STARTING_FFMPEG, SPACE + FFQS(SID_LOG_FOR_SECOND_PASS), FFQDT(), slot->command), COLOR_GRAY);
             break;
 
         case qsDONE:
+            logend(SID_LOG_JOB_TAB_ENDED, COLOR_BLUE);
+            //Console->AppendLine(FFQSF(SID_LOG_JOB_TAB_ENDED, GETLOGTIME(), Consoles->GetPageText(FindEncodingSlot(slot->item))), COLOR_BLUE);
+            total_time = true;
+            break;
+
         case qsFAILED:
             //Finished or failed (handled above)
+            logend(SID_LOG_JOB_TAB_FAILED, COLOR_RED);
+            //Console->AppendLine(FFQSF(SID_LOG_JOB_TAB_FAILED, GETLOGTIME(), Consoles->GetPageText(FindEncodingSlot(slot->item))), COLOR_RED);
             total_time = true;
             break;
 
         case qsABORTED:
             //Aborted
+            logend(SID_LOG_JOB_TAB_ABORTED, COLOR_RED);
+            //Console->AppendLine(FFQSF(SID_LOG_JOB_TAB_ABORTED, Consoles->GetPageText(FindEncodingSlot(slot->item)), GETLOGTIME()), COLOR_RED);
+            slot->console.AppendLine(FFQS((slot->item->GetItemType() != qtJOB) ? SID_LOG_COMMAND_ABORTED : SID_LOG_JOB_ABORTED), COLOR_RED);
             total_time = true;
-            Console->AppendLine(FFQS((m_CurrentItem->GetItemType() != qtJOB) ? SID_LOG_COMMAND_ABORTED : SID_LOG_JOB_ABORTED), COLOR_RED);
             break;
 
         default: break;
@@ -900,16 +971,16 @@ void FFQMain::LogCurrentItemStatus(bool first_command)
     {
 
         //Log if preset was changed during encoding
-        if ((m_CurrentItem->queue_flags & QUEUE_FLAG_PRESET_CHANGED) != 0)
+        if ((slot->item->queue_flags & QUEUE_FLAG_PRESET_CHANGED) != 0)
         {
-            Console->AppendBlankLine();
-            Console->AppendLine(FFQS(SID_LOG_PRESET_WAS_CHANGED), COLOR_ORANGE);
+            slot->console.AppendBlankLine();
+            slot->console.AppendLine(FFQS(SID_LOG_PRESET_WAS_CHANGED), COLOR_ORANGE);
         }
 
         //Log the total item time
-        TIME_VALUE tv = TIME_VALUE(GetTimeTickCount() - m_ItemStartTick);
-        Console->AppendBlankLine(2);
-        Console->AppendLine(FFQSF(SID_LOG_TOTAL_JOB_TIME, tv.ToString()), COLOR_BLACK);
+        TIME_VALUE tv = TIME_VALUE(GetTimeTickCount() - slot->started);
+        slot->console.AppendBlankLine(2);
+        slot->console.AppendLine(FFQSF(SID_LOG_TOTAL_JOB_TIME, tv.ToString()), COLOR_BLACK);
 
     }
 
@@ -1030,31 +1101,29 @@ bool FFQMain::OverwritePrompt(bool selected_only)
 
 //---------------------------------------------------------------------------------------
 
-bool FFQMain::ProcessNext()
+bool FFQMain::ProcessNext(LPENCODING_SLOT slot)
 {
 
     //Process next command from the current item (if available)
 
-    //Console->AppendLine("ProcessNext=" + wxString(m_CurrentItem ? "ITEM" : "NULL"), COLOR_GRAY);
+    bool first_cmd = (slot->command.Len() == 0);
 
-    bool first_cmd = (m_CurrentCommand.Len() == 0);
-
-    if ((m_CurrentItem != NULL) && m_CurrentItem->GetNextCommand(m_CurrentCommand))
+    if ((slot->item != NULL) && slot->item->GetNextCommand(slot->command))
     {
 
         //Console->AppendLine("Command=" + m_CurrentCommand, COLOR_GRAY);
 
         //A command was received, extract the duration
-        wxString len = GetToken(m_CurrentCommand, ",", true);
-        m_ItemDurationFrames = Str2Long(len, -1); //Convert to frames
-        m_ItemDurationTime = TIME_VALUE(len); //Convert to time value
+        wxString len = GetToken(slot->command, ",", true);
+        slot->frames = Str2Long(len, -1); //Convert to frames
+        slot->duration = TIME_VALUE(len); //Convert to time value
 
         //Update item in the list
-        long item_index = IndexOfItem(m_CurrentItem);
-        DefineItem(item_index, m_CurrentItem, dsNOSELECT, false);
+        long item_index = IndexOfItem(slot->item);
+        DefineItem(item_index, slot->item, dsNOSELECT, false);
 
         //Log what is about to be done
-        LogCurrentItemStatus(first_cmd);
+        LogItemStatus(slot, first_cmd);
 
         //Update controls: status of selection might have changed
         UpdateControls();
@@ -1063,16 +1132,14 @@ bool FFQMain::ProcessNext()
         {
 
             //Reset console counters for next command
-            Console->Clear(false);
+            slot->console.Clear(false);
 
             //Blank line as separation
-            Console->AppendBlankLine();
+            slot->console.AppendBlankLine();
 
             //Run the command
-            m_EncodingProcess->SetCommand(false, m_CurrentCommand);
-            m_EncodingProcess->Execute(false, true);
-
-            //Console->AppendLine("Executing", COLOR_GRAY);
+            slot->process.SetCommand(false, slot->command);
+            slot->process.Execute(false, true);
 
             //Return success
             return true;
@@ -1081,8 +1148,9 @@ bool FFQMain::ProcessNext()
         catch (std::exception &err)
         {
 
-            m_CurrentItem->status = qsFAILED;
-            Console->AppendLine(FFQSF(SID_LOG_EXECUTE_ERROR, err.what()), COLOR_RED);
+            slot->item->status = qsFAILED;
+            m_EncodingFailed++;
+            slot->console.AppendLine(FFQSF(SID_LOG_EXECUTE_ERROR, err.what()), COLOR_RED);
 
         }
 
@@ -1094,21 +1162,33 @@ bool FFQMain::ProcessNext()
     //3) a command has errored
 
     //If an item has finished, do after processing stuff
-    if (m_CurrentItem != NULL) AfterItemProcessing();
+    if (slot->item != NULL) AfterItemProcessing(slot);
 
     //Find the next item that can be processed
     do {
 
-        m_CurrentItem = FindNextItemToProcess();
+        slot->item = FindNextItemToProcess(slot->item);
         //Console->AppendLine("FindNext=" + wxString(m_CurrentItem ? "ITEM" : "NULL"), COLOR_GRAY);
-        if (m_CurrentItem == NULL) return false; //No more items to process = done!
+        if (slot->item == NULL) return false; //No more items to process = done!
 
-    } while (!BeforeItemProcessing());
+    } while (!BeforeItemProcessing(slot));
 
     //Console->AppendLine("RecurseProcessNext", COLOR_GRAY);
 
     //Recurse call to run first command
-    return ProcessNext(); //Should always return true here
+    return ProcessNext(slot); //Should always return true here
+
+}
+
+//---------------------------------------------------------------------------------------
+
+int FFQMain::FindEncodingSlot(LPFFQ_QUEUE_ITEM item)
+{
+
+    //Find the index of the processing slot belonging to "item".
+    //If item is NULL, the index of the first unused slot is returned
+    for (int i = 0; i < m_NumEncodingSlots; i++) if (m_EncodingSlots[i].item == item) return i;
+    return -1;
 
 }
 
@@ -1117,13 +1197,11 @@ bool FFQMain::ProcessNext()
 void FFQMain::FinishQueue()
 {
 
-    //Check encoding process availability
-    if (!m_EncodingProcess) return;
+    //Finish the queue after processing items
+    m_EncodingActive = false;
 
-    //Free and null the encoding process
-    bool aborted = m_EncodingProcess->WasAborted();
-    delete m_EncodingProcess;
-    m_EncodingProcess = NULL;
+    //If nothing was processed, we bail out here
+    //if (m_EncodingAborted + m_EncodingFailed + m_EncodingSuccess == 0) return;
 
     //Delete processed jobs
     DeleteProcessedItems();
@@ -1134,9 +1212,20 @@ void FFQMain::FinishQueue()
     //Prompt the user if not silent finish
     if (!FFQCFG()->silent_qfinish)
     {
-        if (aborted) ShowInfo(ListView, FFQS(SID_TASK_ABORTED));
+
+        if (m_EncodingAborted > 0) ShowInfo(ListView, FFQS(SID_TASK_ABORTED));
         else ShowInfo(ListView, FFQS(SID_QUEUE_COMPLETED));
+
     }
+
+    TIME_VALUE elapsed(GetTimeTickCount() - m_QueueStarted);
+    Console->AppendWithTime(FFQSF(SID_LOG_QUEUE_ENDED,
+        elapsed.ToReadableString(),
+        m_EncodingAborted + m_EncodingFailed + m_EncodingSuccess,
+        m_EncodingSuccess,
+        m_EncodingFailed,
+        m_EncodingAborted),
+        COLOR_BLUE);
 
 }
 
@@ -1146,7 +1235,7 @@ void FFQMain::StartQueue(bool selected_only)
 {
 
     //Check fonts conf when starting queue
-    if (m_EncodingProcess == NULL) FFQCFG()->CheckFontsConf();
+    if (!m_EncodingActive) FFQCFG()->CheckFontsConf();
 
     //Prompt if files are about to be overwritten
     if (!OverwritePrompt(selected_only)) return;
@@ -1174,10 +1263,15 @@ void FFQMain::StartQueue(bool selected_only)
     }
     ListView->Thaw();
 
-    //Create the encoding process and start timer as needed
-    if (m_EncodingProcess == NULL)
+    //Set encoding active and start the timer
+    if (!m_EncodingActive)
     {
-        m_EncodingProcess = new FFQProcess();
+        Console->AppendWithTime(FFQS(SID_LOG_QUEUE_STARTED), COLOR_BLUE);
+        m_QueueStarted = GetTimeTickCount();
+        m_EncodingAborted = 0;
+        m_EncodingFailed = 0;
+        m_EncodingSuccess = 0;
+        m_EncodingActive = true;
         Timer.Start(0, true);
     }
 
@@ -1192,7 +1286,8 @@ void FFQMain::StopQueue(bool selected_only)
 {
 
     //Un-queue items and abort as needed
-    bool abort = false;
+    bool update = true;
+
     ListView->Freeze();
     for (int i = 0; i < ListView->GetItemCount(); i++) if ((!selected_only) || ListView->IsSelected(i))
     {
@@ -1202,11 +1297,15 @@ void FFQMain::StopQueue(bool selected_only)
             item->status = qsDORMANT;
             DefineItem(i, item, dsNOSELECT, false);
         }
-        else if (item->IsActive()) abort = true;
+        else if (item->IsActive())
+        {
+            update = false;
+            m_EncodingSlots[FindEncodingSlot(item)].process.Abort(true);
+        }
     }
     ListView->Thaw();
-    if (abort) m_EncodingProcess->Abort(true);
-    else UpdateControls();
+
+    if (update) UpdateControls();
 
 }
 
@@ -1298,7 +1397,7 @@ void FFQMain::DefineItem(long index, LPFFQ_QUEUE_ITEM item, DEFINE_SELECT select
 
         }
 
-        else if (item->GetItemType() == qtSTATIC_JOB) s = m_CurrentCommand;
+        else if (item->GetItemType() == qtSTATIC_JOB) s = m_EncodingSlots[FindEncodingSlot(item)].command;// s = m_CurrentCommand;
 
         while (s.Right(1) == ".") s.RemoveLast(); //Remove "..." if present
         ListView->SetItem(index, 1, s);
@@ -1572,23 +1671,30 @@ void FFQMain::ProcessReadOutput()
     wxString s;
     bool ok, update = false;
 
-    //Read stdout
-    do {
+    for (int i = 0; i < m_NumEncodingSlots; i++)
+    {
 
-        s = m_EncodingProcess->GetProcessOutputLine(false);
-        ok = s.Len() > 0;
-        if (ok) Console->AppendFFOutput(s, true);
+        LPENCODING_SLOT slot = &m_EncodingSlots[i];
 
-    } while (ok);
+        //Read stdout
+        do {
 
-    //Read errout
-    do {
+            s = slot->process.GetProcessOutputLine(false);
+            ok = s.Len() > 0;
+            if (ok) slot->console.AppendFFOutput(s, true);
 
-        s = m_EncodingProcess->GetProcessOutputLine(true);
-        ok = s.Len() > 0;
-        if (ok && (Console->AppendFFOutput(s, false) == mtSTATS)) update = true;
+        } while (ok);
 
-    } while (ok);
+        //Read errout
+        do {
+
+            s = slot->process.GetProcessOutputLine(true);
+            ok = s.Len() > 0;
+            if (ok && (slot->console.AppendFFOutput(s, false) == mtSTATS)) update = true;
+
+        } while (ok);
+
+    }
 
     //Update status if needed
     if (update) UpdateStatus();
@@ -1617,14 +1723,14 @@ void FFQMain::ResizeColumns(bool dragging)
     else col1pct = m_LastColumnPct;
     m_LastColumnPct = col1pct;
     dummy = (cliw * col1pct) / 100.0f;
-    ListView->SetColumnWidth(0, (int)dummy);
-    ListView->SetColumnWidth(1, (int)cliw - (int)dummy);
-    ListView->SetColumnWidth(2, m_StatusColumnWidth);
-    /*int csize = ListView->GetClientSize().GetX() - 350;
-    if (csize < 200) csize = 200;
-    ListView->SetColumnWidth(0, 250);
-    ListView->SetColumnWidth(1, csize);
-    ListView->SetColumnWidth(2, 100);*/
+    if (ListView->GetColumnWidth(0) != (int)dummy)
+    {
+        ListView->Freeze();
+        ListView->SetColumnWidth(0, (int)dummy);
+        ListView->SetColumnWidth(1, (int)cliw - (int)dummy);
+        ListView->SetColumnWidth(2, m_StatusColumnWidth);
+        ListView->Thaw();
+    }
     m_AllowEvents = false;
 }
 
@@ -1635,7 +1741,7 @@ void FFQMain::ShowFFMpegVersion(bool langInfo)
     if (FFQCFG()->ffmpeg_ok)
     {
 
-        Console->AppendLine(FFQSF(SID_LOG_FFMPEG_FOUND, FFQCFG()->GetFFMpegVersion(true)), COLOR_BLUE, true);
+        Console->AppendLine(FFQSF(SID_LOG_FFMPEG_FOUND, FFQCFG()->GetFFMpegVersion(true)), COLOR_BLUE);//, true);
 
         //Enable supported tools
         ThumbsItem->Enable(FFQCFG()->AreFiltersAvailable("select,fps,scale,tile"));
@@ -1645,7 +1751,7 @@ void FFQMain::ShowFFMpegVersion(bool langInfo)
 
     }
 
-    else Console->AppendLine(FFQS(SID_LOG_FFMPEG_NOT_FOUND), COLOR_RED, true);
+    else Console->AppendLine(FFQS(SID_LOG_FFMPEG_NOT_FOUND), COLOR_RED);//, true);
 
     //Console->AppendLine("DUMMY", COLOR_BLUE);
     //ShowInfo(BOOLSTR(langInfo));
@@ -1679,7 +1785,7 @@ void FFQMain::ShowFFMpegVersion(bool langInfo)
         Console->AppendLine(CRLF + "Unsupported filters:" + CRLF + res, COLOR_BLUE);
         res = FFQCFG()->GetFFMpegFormats();
         res.Replace("\n", CRLF);
-        Console->AppendLine(CRLF + "Muxers" + CRLF + res, COLOR_RED);
+        Console->AppendLine(CRLF + "Muxers" + CRLF + res + CRLF, COLOR_RED);
         TextCtrl->SetSelection(0, 0);
         TextCtrl->ShowPosition(0);
 
@@ -1703,7 +1809,7 @@ void FFQMain::ShowFFProbeInfo(LPFFQ_QUEUE_ITEM item)
     }
 
     TextCtrl->Freeze();
-    Console->Clear();
+    //Console->Clear();
 
     wxString fn;
     FFQProcess *p = new FFQProcess();
@@ -1718,7 +1824,7 @@ void FFQMain::ShowFFProbeInfo(LPFFQ_QUEUE_ITEM item)
             if (wxFileExists(fn))
             {
 
-                Console->AppendLine(FFQSF(SID_LOG_FFPROBE_INFO_FOR, fn) + CRLF, COLOR_BLACK);
+                Console->AppendLine(FFQSF(SID_LOG_FFPROBE_INFO_FOR, fn)/* + CRLF*/, COLOR_BLACK);
                 p->FFProbe(fn);
                 Console->AppendLine(p->GetProcessOutput(false) + CRLF, COLOR_BLUE);
 
@@ -1780,7 +1886,7 @@ void FFQMain::UpdateControls()
     ToolBar->EnableTool(ID_TOOLBARPREVIEW, (sel_count == 1) && sel_can_preview);
 
     ToolBar->EnableTool(ID_TOOLBARSTART, can_start);
-    ToolBar->EnableTool(ID_TOOLBARSTOP, m_EncodingProcess != NULL);
+    ToolBar->EnableTool(ID_TOOLBARSTOP, m_EncodingActive);// m_EncodingProcess != NULL);
 
     MenuMoveUp->Enable((sel_count > 0) && (!ListView->IsSelected(0)));
     MenuMoveDown->Enable((sel_count > 0) && (!ListView->IsSelected(all_count - 1)));
@@ -1790,7 +1896,7 @@ void FFQMain::UpdateControls()
     MenuPreset->Enable((sel_count == 1) && (!sel_active));
     MenuRemove->Enable(ToolBarRemove->IsEnabled());
 
-    MenuFFProbe->Enable((sel_count == 1) && (m_EncodingProcess == NULL));
+    MenuFFProbe->Enable((sel_count == 1) && (!m_EncodingActive));//(m_EncodingProcess == NULL));
     MenuFFCmd->Enable(MenuFFProbe->IsEnabled());
 
     MenuStartAll->Enable(ToolBarStart->IsEnabled());
@@ -1806,11 +1912,14 @@ void FFQMain::UpdateControls()
 
 //---------------------------------------------------------------------------------------
 
-void FFQMain::UpdateProgress(unsigned int pos)
+void FFQMain::UpdateProgress(LPENCODING_SLOT slot, unsigned int pos)
 {
-    Gauge->SetValue(pos);
-    if (pos == 0) Gauge->UnsetToolTip();
-    else Gauge->SetToolTip(ToStr((unsigned int)round(pos / GAUGE_MAX * 100.0)) + "%");
+    if (slot)
+    {
+        slot->gauge->SetValue(pos);
+        if (pos == 0) slot->gauge->UnsetToolTip();
+        else slot->gauge->SetToolTip(ToStr((unsigned int)round(pos / GAUGE_MAX * 100.0)) + "%");
+    }
     FFQCFG()->GetTaskBar()->SetTaskBarProgress(pos, (unsigned int)GAUGE_MAX);
 }
 
@@ -1819,47 +1928,51 @@ void FFQMain::UpdateProgress(unsigned int pos)
 void FFQMain::UpdateStatus()
 {
 
-    TIME_VALUE time = m_ItemDurationTime;
-    double frames = m_ItemDurationFrames;
-    wxString s, total_time = "???";
-    bool tooltip = true;
+    //Get selected page and slot
+    int sel_page = Consoles->GetSelection();
+    LPENCODING_SLOT slot = sel_page <= 0 ? NULL : &m_EncodingSlots[sel_page - 1];
 
-    if (m_EncodingProcess == NULL)
+    TIME_VALUE time = slot ? slot->duration : 0;//m_ItemDurationTime;
+    double frames = slot ? slot->frames : 0;//m_ItemDurationFrames;
+    wxString s, total_time = "???";
+    bool tooltip = (slot != NULL);
+
+    if (!m_EncodingActive)
     {
 
         //Not encoding
         StatusBar->SetStatusText(FFQS(SID_FFMPEG_INACTIVE), 1);
         tooltip = false;
-        UpdateProgress(0);
+        UpdateProgress(NULL, 0);
 
     }
-    else if (time.IsUndefined() && (frames <= 0))
+    else if ((slot == NULL) || (time.IsUndefined() && (frames <= 0)))
     {
 
         //Unknown job duration
         StatusBar->SetStatusText(FFQS(SID_UNKNOWN_TIME_REMAINS), 1);
-        UpdateProgress(0);
+        UpdateProgress(NULL, 0);
 
     }
     else
     {
 
-        double elapsed = m_EncodingProcess->GetRunningTimeMillis(), pct_done, total;
+        double elapsed = slot->process.GetRunningTimeMillis(), pct_done, total;
 
-        pct_done = (frames <= 0) ? (Console->GetEncodedTime().ToDouble() / time.ToDouble()) : ((double)Console->GetEncodedFrames() / frames);
+        pct_done = (frames <= 0) ? (slot->console.GetEncodedTime().ToDouble() / time.ToDouble()) : ((double)slot->console.GetEncodedFrames() / frames);
         if (pct_done == 0) pct_done = 0.01;
         pct_done *= GAUGE_MAX;
         if (pct_done > GAUGE_MAX) pct_done = GAUGE_MAX;
 
         total = elapsed / pct_done * GAUGE_MAX;
 
-        UpdateProgress(round(pct_done));
+        UpdateProgress(slot, round(pct_done));
 
-        if (pct_done != m_LastPercentDone)
+        if (pct_done != slot->pct_done)
         {
             time = TIME_VALUE(round(total - elapsed)); //Remains
             StatusBar->SetStatusText(FFQSF(SID_TIME_REMAINS, time.ToReadableString()), 1);
-            m_LastPercentDone = pct_done;
+            slot->pct_done = pct_done;
         }
 
         time = TIME_VALUE(round(total));
@@ -1871,7 +1984,7 @@ void FFQMain::UpdateStatus()
     if (tooltip)
     {
 
-        time = TIME_VALUE(m_EncodingProcess->GetRunningTimeMillis());
+        time = TIME_VALUE(slot->process.GetRunningTimeMillis());
         StatusBar->SetToolTip(FFQSF(SID_TIME_ELAPSED_TOTAL, time.ToReadableString(), total_time));
 
     }
@@ -2046,7 +2159,7 @@ void FFQMain::OnFrameResize(wxSizeEvent& event)
     //Yield_App();
 
     //If the window is in a restored state, snatch the rect of it
-    if ((!IsMaximized()) && (!IsIconized())) m_RestoredRect = GetScreenRect();//Get restored size
+    if ((!IsMaximized()) && (!IsIconized())) m_RestoredRect = GetScreenRect(); //Get restored size
 
     //Resize columns
     ResizeColumns();
@@ -2118,7 +2231,7 @@ void FFQMain::OnToolBarButtonClick(wxCommandEvent& event)
             long idx = 0;
             while (idx < ListView->GetItemCount())
             {
-                if (ListView->IsSelected(idx) && (idx != IndexOfItem(m_CurrentItem))) DeleteItem(idx);
+                if (ListView->IsSelected(idx) && (FindEncodingSlot(GetItemAtIndex(idx)) < 0)) DeleteItem(idx);// idx != IndexOfItem(m_CurrentItem))) DeleteItem(idx);
                 else idx++;
             }
 
@@ -2197,14 +2310,8 @@ void FFQMain::OnToolBarButtonClick(wxCommandEvent& event)
         if (cmd.Len() > 0)
         {
             if (IsPreviewSafe || (wxMessageBox(FFQS(SID_INLINE_SHELL_CODE_WARNING), FFQS(SID_WARNING), wxICON_WARNING|wxYES_NO) == wxYES))
-                PreviewCommand(cmd, m_EncodingProcess == NULL);
+                PreviewCommand(cmd, true);
         }
-
-        /*LPFFQ_JOB job = (LPFFQ_JOB)GetSelectedItem();
-        if (job == NULL) return;
-        long ep = 0;
-        wxString cmd = BuildCommandLine(job, ep, true);
-        if (cmd.Len() > 0) PreviewCommand(cmd, m_EncodingProcess == NULL);*/
 
     }
 
@@ -2282,8 +2389,8 @@ void FFQMain::OnToolBarButtonClick(wxCommandEvent& event)
     else if (evtId == ID_DEBUG_BINRES) //DEBUG ONLY!!
     {
 
-        if (MakeBinaryResources()) ShowInfo("Binary resources created");
-        else ShowError("Binary resources not created properly");
+        if (MakeBinaryResources()) Console->AppendLine("Binary resources created", COLOR_GREEN);
+        else Console->AppendLine("Binary resources not created properly", COLOR_RED);
 
     }
 
@@ -2292,13 +2399,23 @@ void FFQMain::OnToolBarButtonClick(wxCommandEvent& event)
 
         //Handler used to test all sorts of madness
 
-        wxArrayString as;
+        wxRect rct = m_RestoredRect;// GetScreenRect();
+        wxSize siz = GetSize();
+        Console->AppendLine(wxString::Format("%i %i %i %i | %i %i", rct.GetLeft(), rct.GetTop(), rct.GetWidth(), rct.GetHeight(), siz.GetWidth(), siz.GetHeight()), 0);
+        wxString wp = GetWindowPos();
+        Console->AppendLine(wp, 0);
+
+        wxSize sz = wxDLG_UNIT(this, wxSize(10, 10));
+        Console->AppendLine(wxString::Format("DLG_UNIT = %d, %d", sz.GetWidth(), sz.GetHeight()), 0);
+
+
+        /*wxArrayString as;
         as.Add("kjh");
         as.Add("kjh");
         FFQBatchMake *bm = new FFQBatchMake(this);
         bm->SetFiles(&as);
         bm->Execute();
-        delete bm;
+        delete bm;*/
 
         /*FFQ_VID2GIF_JOB v2gj;
         FFQVideoToGIF *v2g = new FFQVideoToGIF(this);
@@ -2553,6 +2670,7 @@ void FFQMain::OnShow(wxShowEvent &event)
             //ResizeColumns();
             FFQCFG()->InitPresetManager(this);
             FFQCFG()->LoadConfig();
+            InitEncodingSlots();
             ShowFFMpegVersion(true);
             LoadItems();
             if (FFQCFG()->validate_on_load) ValidateItems();
@@ -2602,10 +2720,6 @@ void FFQMain::OnShow(wxShowEvent &event)
         //Make sure this is only done once
         m_FirstShow = false;
 
-        #ifdef DEBUG
-
-        #endif // DEBUG
-
     }
 
 }
@@ -2620,20 +2734,25 @@ void FFQMain::OnTimerTrigger(wxTimerEvent& event)
     //Always read process output & update status
     ProcessReadOutput();
 
-    //Restart timer?
-    bool restart = m_EncodingProcess->IsProcessRunning();
+    int restart = 0;
 
-    if (!restart)
+    for (int i = 0; i < m_NumEncodingSlots; i++)
     {
-
-        //Something has finished
-        if (m_EncodingProcess->WasAborted()) AfterItemProcessing(); //Aborted, finish item
-        /*else*/ restart = ProcessNext(); //Something new to start?
-
-
+        LPENCODING_SLOT slot = &m_EncodingSlots[i];
+        if (slot->item == NULL)
+        {
+            if (ProcessNext(slot)) restart++;
+        }
+        else if (!slot->process.IsProcessRunning())
+        {
+            if (slot->process.WasAborted()) AfterItemProcessing(slot);
+            else if (ProcessNext(slot)) restart++;
+        }
+        else restart++;
     }
 
-    if (restart) Timer.Start(TIMER_INTERVAL, true); //Restart timer
+    //Restart timer or finish queue?
+    if (restart > 0) Timer.Start(TIMER_INTERVAL, true); //Restart timer
     else FinishQueue(); //Finish queue
 
 }
@@ -2643,7 +2762,11 @@ void FFQMain::OnTimerTrigger(wxTimerEvent& event)
 void FFQMain::OnListViewItemSelection(wxListEvent& event)
 {
 
-    if (!ListView->IsFrozen()) UpdateControls();
+    if (!ListView->IsFrozen())
+    {
+        if (ListView->GetSelectedItemCount() == 1) SelectConsole(NULL, 1 + FindEncodingSlot((LPFFQ_QUEUE_ITEM)event.GetData()));
+        UpdateControls();
+    }
 
 }
 
@@ -2669,7 +2792,7 @@ void FFQMain::OnListViewItemActivated(wxListEvent& event)
 void FFQMain::OnClose(wxCloseEvent& event)
 {
 
-    if (m_EncodingProcess != NULL)
+    if (m_EncodingActive)
     {
 
         ShowError(ListView, FFQS(SID_PLEASE_STOP_TASK));
@@ -2722,3 +2845,19 @@ void FFQMain::OnListViewItemRightClick(wxListEvent& event)
 
 }
 
+
+void FFQMain::OnConsolesPageChanged(wxNotebookEvent& event)
+{
+    if (m_EncodingActive && (ListView->GetSelectedItemCount() < 2))
+    {
+        ListView->Freeze(); //To prevent the list change event
+        LPFFQ_QUEUE_ITEM item = m_EncodingSlots[event.GetSelection() - 1].item;
+        for (int i = 0; i < ListView->GetItemCount() - 1; i++)
+        {
+            bool sel = (LPFFQ_QUEUE_ITEM)ListView->GetItemData(i) == item;
+            ListView->Select(i, sel);
+            if (sel) ListView->EnsureVisible(sel);
+        }
+        ListView->Thaw();
+    }
+}

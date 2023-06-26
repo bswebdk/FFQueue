@@ -89,6 +89,7 @@ const wxString CFG_PREVIEW_MAP_SUBS = "preview_map_subs";
 const wxString CFG_SUBS_CHARENC = "subs_charenc";
 const wxString CFG_LOCALE = "locale";
 const wxString CFG_COLORS = "colors";
+const wxString CFG_NUM_ENC_SLOTS = "num_encode_slots";
 
 //---------------------------------------------------------------------------------------
 
@@ -466,6 +467,8 @@ void FFQConfig::DefaultOptions()
     subs_charenc = "";
     user_locale = "";
 
+    num_encode_slots = 1;
+
     dark_theme = LUMINANCE(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOWTEXT)) - LUMINANCE(wxSystemSettings::GetColour(wxSYS_COLOUR_WINDOW)) > 0.2;
     memcpy(colors, dark_theme ? DEFAULT_COLORS_DARK : DEFAULT_COLORS, sizeof(uint32_t) * COLOR_COUNT);
 
@@ -814,10 +817,10 @@ wxString FFQConfig::GetPreferredOutputName(wxString for_input_file, LPFFQ_PRESET
     wxUniChar psep = wxFileName::GetPathSeparator();
     wxString p = use_preferred_path ? preferred_path : for_input_file.BeforeLast(psep), //Path
              n = for_input_file.AfterLast(psep), //File name
-             e = n.AfterLast('.'); //File format
+             e = n.AfterLast(DOT); //File format
 
     //Remove format from name
-    n = n.BeforeLast('.');
+    n = n.BeforeLast(DOT);
 
     //Generate the output name
     wxString ptn = output_name_pattern;
@@ -1097,6 +1100,7 @@ void FFQConfig::LoadConfig()
                     else if (name == CFG_PREVIEW_MAP_SUBS) preview_map_subs = STRBOOL(line);
                     else if (name == CFG_SUBS_CHARENC) subs_charenc = line;
                     else if (name == CFG_LOCALE) user_locale = line;
+                    else if (name == CFG_NUM_ENC_SLOTS) num_encode_slots = (int)Str2Long(line, (long)num_encode_slots);
 
 
                 }
@@ -1249,6 +1253,7 @@ void FFQConfig::SaveConfig()
         cfg.AddLine(CFG_PREVIEW_MAP_SUBS + "=" + BOOLSTR(preview_map_subs));
         cfg.AddLine(CFG_SUBS_CHARENC + "=" + subs_charenc);
         cfg.AddLine(CFG_LOCALE + "=" + user_locale);
+        cfg.AddLine(CFG_NUM_ENC_SLOTS + "=" + ToStr(num_encode_slots));
 
         //Empty line to separate codec_info's
         cfg.AddLine("");

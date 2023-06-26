@@ -36,10 +36,12 @@
 	#include <wx/panel.h>
 	#include <wx/radiobut.h>
 	#include <wx/sizer.h>
+	#include <wx/stattext.h>
 	#include <wx/textctrl.h>
 	//*)
 #endif
 //(*Headers(FFQConfigEdit)
+#include <wx/spinctrl.h>
 //*)
 
 class FFQConfigEdit: public wxDialog
@@ -64,6 +66,8 @@ class FFQConfigEdit: public wxDialog
 		wxRadioButton* TP_Custom;
 		wxRadioButton* TP_Dest;
 		wxRadioButton* TP_System;
+		wxSpinCtrl* NumEncodeSlots;
+		wxStaticText* ST1;
 		wxTextCtrl* ConsoleCmd;
 		wxTextCtrl* CustPlayer;
 		wxTextCtrl* CustomTemp;
@@ -77,6 +81,7 @@ class FFQConfigEdit: public wxDialog
 		//(*Identifiers(FFQConfigEdit)
 		static const long ID_FFMPEGPATH;
 		static const long ID_BROWSEFFMPEG;
+		static const long ID_NUMENCODESLOTS;
 		static const long ID_CUSTPLAYER;
 		static const long ID_BROWSECUSTPLAYER;
 		static const long ID_TP_SYSTEM;

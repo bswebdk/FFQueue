@@ -220,6 +220,18 @@ wxString FFQ_PRESET::GetFilters(wxUniChar separator)
 
 //---------------------------------------------------------------------------------------
 
+wxString FFQ_PRESET::GetFormatExtension(wxString current)
+{
+
+    wxString res = output_format;
+    if (res.Length() == 0) return current;
+    if (res == "matroska") return "mkv";
+    return res;
+
+}
+
+//---------------------------------------------------------------------------------------
+
 void FFQ_PRESET::Reset(bool new_preset)
 {
 

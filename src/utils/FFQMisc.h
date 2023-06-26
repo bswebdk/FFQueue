@@ -29,6 +29,7 @@
 #include <wx/longlong.h>
 #include <wx/sizer.h>
 #include <wx/listbox.h>
+#include "FFQConst.h"
 
 //Structure to define an FFQueue exception
 struct FFQError : std::exception

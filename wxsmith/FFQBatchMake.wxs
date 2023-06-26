@@ -34,7 +34,7 @@
 					<object class="sizeritem">
 						<object class="wxFlexGridSizer" variable="FlexGridSizer3" member="no">
 							<cols>1</cols>
-							<rows>13</rows>
+							<rows>14</rows>
 							<growablecols>0</growablecols>
 							<object class="sizeritem">
 								<object class="wxFlexGridSizer" variable="FlexGridSizer4" member="no">
@@ -360,6 +360,15 @@
 										<flag>wxALL|wxEXPAND</flag>
 										<option>1</option>
 									</object>
+								</object>
+								<flag>wxALL|wxEXPAND</flag>
+								<border>3</border>
+								<option>1</option>
+							</object>
+							<object class="sizeritem">
+								<object class="wxCheckBox" name="ID_MAKELOGS" variable="SaveLogs" member="yes">
+									<label>Sl</label>
+									<extra_code>SaveLogs-&gt;SetLabel(FFQS(SID__COMMON__SAVE__LOG));</extra_code>
 								</object>
 								<flag>wxALL|wxEXPAND</flag>
 								<border>3</border>

@@ -77,6 +77,7 @@ class FFQBatchMake: public wxDialog
 		wxCheckBox* NoFailAudio;
 		wxCheckBox* NoFailSubs;
 		wxCheckBox* NoFailVideo;
+		wxCheckBox* SaveLogs;
 		wxCheckBox* SubsInverse;
 		wxComboBox* OutputFormat;
 		wxComboBox* PrefAudio;
@@ -127,6 +128,7 @@ class FFQBatchMake: public wxDialog
 		static const long ID_BROWSEBUTTON;
 		static const long ID_ST5;
 		static const long ID_PRESET;
+		static const long ID_MAKELOGS;
 		static const long ID_DRYRUNBUTTON;
 		static const long ID_MAKEBUTTON;
 		static const long ID_CANCELBUTTON;

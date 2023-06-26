@@ -30,6 +30,7 @@
 #include "../utils/FFQConst.h"
 #include "../utils/FFQConsole.h"
 
+#include <wx/wfstream.h>
 #include <wx/filename.h>
 #include <wx/dir.h>
 
@@ -50,11 +51,22 @@
 const wxString FILTER_FIT_AND_PAD = "scale='if(gt(iw,ih),$W,-1)':'if(gt(ih,iw),$H,-1)',pad=$W:$H:(ow-iw)/2:(oh-ih)/2:$C";
 const wxString FILTER_KEY1 = "$F1$";
 const wxString FILTER_KEY2 = "$F2$";
+const wxString DIGITS = "0123456789";
 
 //---------------------------------------------------------------------------------------
 
 //size_t TestFileRange(wxString &path, wxString &name, size_t start_num);
 //size_t FilePathToRange(wxString &path, size_t &start_num);
+
+//---------------------------------------------------------------------------------------
+
+wxString ConcatDataToString(LPCONCAT_DATA cd, bool SimpleConcat)
+{
+    wxString fn = cd->path.AfterLast(wxFileName::GetPathSeparator()),
+             dur = ((cd->custDuration != 0) && SimpleConcat) ? cd->custDuration.ToString() : cd->duration.ToString();
+    if (cd->width > 0) return FFQSF(SID_CONCAT_VIDEO_ITEM, fn, cd->width, cd->height, dur);
+    return FFQSF(SID_CONCAT_AUDIO_ITEM, fn, dur);
+}
 
 //---------------------------------------------------------------------------------------
 
@@ -65,10 +77,6 @@ unsigned int TestFileRange(wxString &path, wxString &name, unsigned int start_nu
     while (wxFileExists(path + wxString::Format(name, start_num))) { start_num++; res++; }
     return res;
 }
-
-//---------------------------------------------------------------------------------------
-
-const wxString NUMS = "0123456789";
 
 //---------------------------------------------------------------------------------------
 
@@ -84,13 +92,13 @@ unsigned int FilePathToRange(wxString &path, unsigned int &start_num)
     {
 
         //Test for a numeric value
-        if (NUMS.Find(s.GetChar(idx)) >= 0)
+        if (DIGITS.Find(s.GetChar(idx)) >= 0)
         {
 
             //Find out how many digits the number is
             nStart = idx;
             nEnd = idx + 1;
-            while ((NUMS.Find(s.GetChar(nEnd)) >= 0) && (nEnd < s.Len())) nEnd++;
+            while ((DIGITS.Find(s.GetChar(nEnd)) >= 0) && (nEnd < s.Len())) nEnd++;
 
             //Convert the number string to decimal value
             start_num = Str2Long(s.SubString(nStart, nEnd - 1), 0);
@@ -133,15 +141,36 @@ unsigned int FilePathToRange(wxString &path, unsigned int &start_num)
 
 //---------------------------------------------------------------------------------------
 
-wxString ConcatDataToString(LPCONCAT_DATA cd, bool SimpleConcat)
+bool IsListFile(wxString path)
 {
-    wxString fn = cd->path.AfterLast(wxFileName::GetPathSeparator()),
-             dur = ((cd->custDuration != 0) && SimpleConcat) ? cd->custDuration.ToString() : cd->duration.ToString();
-    if (cd->width > 0) return FFQSF(SID_CONCAT_VIDEO_ITEM, fn, cd->width, cd->height, dur);
-    return FFQSF(SID_CONCAT_AUDIO_ITEM, fn, dur);
+    const wxFileOffset TEST_MAX = 10240; //Only check first 10kib
+    try
+    {
+        wxFileInputStream fi(path);
+        wxString l;
+        while ((!fi.Eof()) && (fi.TellI() < TEST_MAX))
+        {
+            wxChar c = fi.GetC(); //Get a byte
+            if (c != '\r') //Skip carriage returns
+            {
+                if (c == '\n')
+                {
+                    //New line found, test for "file "
+                    if (l.StartsWith("file ")) return true;
+
+                    //Nope, start new line
+                    else l.Clear();
+                }
+                else l+= c; //Append char
+            }
+        }
+    }
+    catch (std::exception &err) { }
+    return false;
 }
 
 //---------------------------------------------------------------------------------------
+
 
 //(*IdInit(FFQConcat)
 const long FFQConcat::ID_ST1 = wxNewId();
@@ -214,7 +243,6 @@ FFQConcat::FFQConcat(wxWindow* parent)
 	wxFlexGridSizer* FlexGridSizer4;
 	wxFlexGridSizer* FlexGridSizer5;
 	wxFlexGridSizer* FlexGridSizer6;
-	wxFlexGridSizer* FlexGridSizer7;
 	wxFlexGridSizer* FlexGridSizer8;
 	wxFlexGridSizer* FlexGridSizer9;
 	wxStaticBoxSizer* SBS1;
@@ -276,16 +304,16 @@ FFQConcat::FFQConcat(wxWindow* parent)
 	ST4->Disable();
 	ST4->SetLabel(FFQS(SID_CONCAT_SCALE_INFORMATION));
 	FlexGridSizer13->Add(ST4, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
-	FlexGridSizer7 = new wxFlexGridSizer(1, 3, 0, 0);
+	SSSizer2 = new wxFlexGridSizer(1, 3, 0, 0);
 	ST5 = new wxStaticText(SlideshowPage, ID_ST5, _T("Ft"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_ST5"));
 	ST5->SetLabel(FFQS(SID_CONCAT_FRAME_TIME));
-	FlexGridSizer7->Add(ST5, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
+	SSSizer2->Add(ST5, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
 	SSFrameTime = new wxTextCtrl(SlideshowPage, ID_SSFRAMETIME, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_SSFRAMETIME"));
-	FlexGridSizer7->Add(SSFrameTime, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+	SSSizer2->Add(SSFrameTime, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
 	ST6 = new wxStaticText(SlideshowPage, ID_ST6, _T("s"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_ST6"));
 	ST6->SetLabel(FFQS(SID_CONCAT_SECONDS));
-	FlexGridSizer7->Add(ST6, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
-	FlexGridSizer13->Add(FlexGridSizer7, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
+	SSSizer2->Add(ST6, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+	FlexGridSizer13->Add(SSSizer2, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
 	SSSetPTS = new wxCheckBox(SlideshowPage, ID_SSSETPTS, _T("FPTS"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_SSSETPTS"));
 	SSSetPTS->SetValue(false);
 	SSSetPTS->SetLabel(FFQS(SID_CONCAT_FORCE_PTS));
@@ -510,6 +538,7 @@ FFQConcat::FFQConcat(wxWindow* parent)
 	m_ImgPatn = "";
 	m_ImgCount = 0;
 	m_ImgFirst = 0;
+    m_ImgList = false;
 
 	m_LastPst = "";
 	m_LimitLen = TIME_VALUE(0);
@@ -605,6 +634,7 @@ bool FFQConcat::Execute(LPFFQ_CONCAT_JOB job)
     m_ImgFirst = job->img_first;
     m_ImgCount = job->img_count;
     m_ImgPatn = job->img_pattern;
+    m_ImgList = job->file_is_list;
     m_LastPst = job->preset.ToString();
     m_AudInfo.reset();
 
@@ -667,6 +697,7 @@ bool FFQConcat::Execute(LPFFQ_CONCAT_JOB job)
             }
 
             job->loop_frames = SSLoopFrames->GetValue();
+            job->file_is_list = m_ImgList;
             job->limit_len = m_LimitLen;
             job->img_first = m_ImgFirst;
             job->img_count = m_ImgCount;
@@ -969,18 +1000,31 @@ bool FFQConcat::EditTime(TIME_VALUE &tv)
 
 bool FFQConcat::EnumSlideshowFrames()
 {
-
-    //Create pattern and count images
+    //Check if source file has changed
     m_ImgPatn = StrTrim(SSSource->GetValue());
+
+    //Check if the file exists
     if (!wxFileExists(m_ImgPatn)) m_ImgPatn = "";
-    else m_ImgCount = FilePathToRange(m_ImgPatn, m_ImgFirst);
+    else
+    {
+        //Check if the source is a list file
+        m_ImgList = IsListFile(m_ImgPatn);
+        //m_ImgList = false;
+        if (m_ImgList)
+        {
+            //Unused for list files
+            m_ImgFirst = 0;
+            m_ImgCount = 0;
+        }
+        //If not a list file, create a pattern
+        else m_ImgCount = FilePathToRange(m_ImgPatn, m_ImgFirst);
+    }
 
     //Update destination file
     if (m_ImgPatn.Len() > 0) SetDestFile(StrTrim(SSSource->GetValue()));
 
     //Return result
     return (m_ImgPatn.Len() > 0);
-
 }
 
 //---------------------------------------------------------------------------------------
@@ -1026,7 +1070,7 @@ void FFQConcat::SetDestFile(wxString based_on)
 
     //Set default destination file name based on the argument given
     if ((based_on.Len() > 0) && (DestFile->GetValue().Len() == 0))
-       DestFile->ChangeValue( FFQConfig::GetInstance()->GetPreferredOutputName(based_on) );
+       DestFile->ChangeValue( FFQConfig::GetInstance()->GetPreferredOutputName(based_on, Preset->GetSelectedPreset()) );
 
 }
 
@@ -1067,11 +1111,26 @@ void FFQConcat::UpdateControls()
 {
 
     wxString s = (m_ImgCount == 0) ? "No" : ToStr(m_ImgCount);
-    SSFrameStatus->SetLabelText(FFQSF(SID_CONCAT_IMAGES_FOUND, s));
+    if (m_ImgList) SSFrameStatus->SetLabelText(FFQS(SID_CONCAT_IMAGE_LIST_FOUND));
+    else SSFrameStatus->SetLabelText(FFQSF(SID_CONCAT_IMAGES_FOUND, s));
+    SSFrameStatus->Refresh(); //2023
     //Sizer1->RecalcSizes();
     Sizer1->Layout();
 
+    EnableSizer(SSSizer1, SSFit->GetValue());
+    if (m_ImgList)
+    {
+        EnableSizer(SSSizer2, false);
+        SSSetPTS->Enable(false);
+    }
+    else
+    {
+        EnableSizer(SSSizer2, true);
+        SSSetPTS->Enable(true);
+    }
+
     LimitDest->SetLabelText(FFQSF(SID_LIMIT_LENGTH, (m_LimitLen.IsUndefined() ? FFQS(SID_NO_LIMIT) : m_LimitLen.ToString())));
+    LimitDest->Refresh(); //2023
     //Sizer2->RecalcSizes();
     Sizer2->Layout();
 
@@ -1104,8 +1163,6 @@ void FFQConcat::UpdateControls()
     CCRemove->Enable(s_count > 0);
     CCUp->Enable(s_first > 0);
     CCDown->Enable((s_last >= 0) && (s_last < (long)CCSources->GetCount() - 1));
-
-    EnableSizer(SSSizer1, SSFit->GetValue(), NULL);
 
     //Disable preset and limit length for simple concatenation
     EnableSizer(Sizer3, !CCSimple->GetValue());
@@ -1143,8 +1200,8 @@ bool FFQConcat::ValidateDialog()
     {
 
         //Image source
-        if (m_ImgCount == 0) EnumSlideshowFrames();
-        if (m_ImgCount == 0) return ShowError(SSSource, FFQS(SID_CONCAT_NO_IMAGES_FOUND));
+        //if (m_ImgCount == 0) EnumSlideshowFrames(true);
+        if ((!m_ImgList) && (m_ImgCount == 0)) return ShowError(SSSource, FFQS(SID_CONCAT_NO_IMAGES_FOUND));
 
         if (SSFit->GetValue())
         {

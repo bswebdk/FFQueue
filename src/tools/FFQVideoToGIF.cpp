@@ -69,6 +69,7 @@ FFQVideoToGIF::FFQVideoToGIF(wxWindow* parent,wxWindowID id,const wxPoint& pos,c
 	wxFlexGridSizer* FGS1;
 	wxFlexGridSizer* FGS2;
 	wxFlexGridSizer* FGS3;
+	wxFlexGridSizer* FlexGridSizer1;
 	wxStaticBoxSizer* SBS1;
 	wxStaticBoxSizer* SBS2;
 	wxStaticBoxSizer* SBS3;
@@ -76,23 +77,25 @@ FFQVideoToGIF::FFQVideoToGIF(wxWindow* parent,wxWindowID id,const wxPoint& pos,c
 	Create(parent, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE, _T("wxID_ANY"));
 	FGS1 = new wxFlexGridSizer(4, 1, 0, 0);
 	FGS1->AddGrowableCol(0);
-	SBS1 = new wxStaticBoxSizer(wxHORIZONTAL, this, _("SV"));
-	TopSizer = new wxFlexGridSizer(3, 2, 0, 0);
+	SBS1 = new wxStaticBoxSizer(wxVERTICAL, this, _("SV"));
+	TopSizer = new wxFlexGridSizer(3, 1, 0, 0);
 	TopSizer->AddGrowableCol(0);
+	FlexGridSizer1 = new wxFlexGridSizer(1, 2, 0, 0);
+	FlexGridSizer1->AddGrowableCol(0);
+	FlexGridSizer1->AddGrowableRow(0);
 	Source = new wxTextCtrl(this, ID_SOURCE, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_SOURCE"));
 	Source->SetMinSize(wxSize(400,-1));
 	SBS1->GetStaticBox()->SetLabel(FFQS(SID_COMMON_SELECT_INPUT_FILE));
-	TopSizer->Add(Source, 1, wxALL|wxEXPAND, 0);
+	FlexGridSizer1->Add(Source, 1, wxLEFT|wxRIGHT|wxEXPAND, 5);
 	BrowseSrc = new wxButton(this, ID_BROWSESRC, _("..."), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_BROWSESRC"));
-	TopSizer->Add(BrowseSrc, 1, wxLEFT|wxEXPAND, 3);
+	FlexGridSizer1->Add(BrowseSrc, 1, wxLEFT|wxRIGHT|wxEXPAND, 3);
+	TopSizer->Add(FlexGridSizer1, 1, wxALL|wxEXPAND, 0);
 	FileInfo = new wxStaticText(this, ID_FILEINFO, _("Inf"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_FILEINFO"));
-	TopSizer->Add(FileInfo, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 0);
-	TopSizer->Add(20,10,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+	TopSizer->Add(FileInfo, 1, wxTOP|wxLEFT|wxRIGHT|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
 	StartTime = new wxGenericHyperlinkCtrl(this, ID_STARTTIME, _("St"), wxEmptyString, wxDefaultPosition, wxDefaultSize, wxHL_ALIGN_CENTRE|wxBORDER_NONE, _T("ID_STARTTIME"));
-	TopSizer->Add(StartTime, 1, wxTOP|wxBOTTOM, 5);
-	TopSizer->Add(20,10,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
-	SBS1->Add(TopSizer, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
-	FGS1->Add(SBS1, 1, wxALL|wxEXPAND, 3);
+	TopSizer->Add(StartTime, 1, wxALL, 5);
+	SBS1->Add(TopSizer, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+	FGS1->Add(SBS1, 1, wxALL|wxEXPAND, 5);
 	SBS3 = new wxStaticBoxSizer(wxVERTICAL, this, _("Prop"));
 	MidSizer = new wxFlexGridSizer(4, 1, 0, 0);
 	MidSizer->AddGrowableCol(0);
@@ -113,33 +116,33 @@ FFQVideoToGIF::FFQVideoToGIF(wxWindow* parent,wxWindowID id,const wxPoint& pos,c
 	FGS2->Add(ST9, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
 	FrameRate = new wxTextCtrl(this, ID_FRAMERATE, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_FRAMERATE"));
 	FGS2->Add(FrameRate, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
-	MidSizer->Add(FGS2, 1, wxALL|wxEXPAND, 3);
+	MidSizer->Add(FGS2, 1, wxALL|wxEXPAND, 0);
 	TwoPass = new wxCheckBox(this, ID_TWOPASS, _("Tp"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_TWOPASS"));
 	TwoPass->SetValue(false);
 	TwoPass->SetLabel(FFQS(SID_VIDEO2GIF_TWOPASS));
-	MidSizer->Add(TwoPass, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
+	MidSizer->Add(TwoPass, 1, wxTOP|wxLEFT|wxRIGHT|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
 	PreciseCuts = new wxCheckBox(this, ID_PRECISECUTS, _("Pc"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_PRECISECUTS"));
 	PreciseCuts->SetValue(false);
 	PreciseCuts->SetLabel(FFQS(SID_VIDEO2GIF_PRECISE_CUTS));
-	MidSizer->Add(PreciseCuts, 1, wxBOTTOM|wxLEFT|wxRIGHT|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
+	MidSizer->Add(PreciseCuts, 1, wxTOP|wxLEFT|wxRIGHT|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
 	LimitLen = new wxGenericHyperlinkCtrl(this, ID_LIMITLEN, _("Len"), wxEmptyString, wxDefaultPosition, wxDefaultSize, wxHL_CONTEXTMENU|wxHL_ALIGN_CENTRE, _T("ID_LIMITLEN"));
 	MidSizer->Add(LimitLen, 1, wxALL|wxALIGN_LEFT, 3);
-	SBS3->Add(MidSizer, 1, wxALL|wxEXPAND, 0);
-	FGS1->Add(SBS3, 1, wxALL|wxEXPAND, 3);
+	SBS3->Add(MidSizer, 1, wxALL|wxEXPAND, 5);
+	FGS1->Add(SBS3, 1, wxALL|wxEXPAND, 5);
 	SBS2 = new wxStaticBoxSizer(wxVERTICAL, this, _("DF"));
 	FGS3 = new wxFlexGridSizer(1, 2, 0, 0);
 	FGS3->AddGrowableCol(0);
 	Dest = new wxTextCtrl(this, ID_DEST, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_DEST"));
 	SBS2->GetStaticBox()->SetLabel(FFQS(SID_COMMON_SELECT_OUTPUT_FILE));
-	FGS3->Add(Dest, 1, wxRIGHT|wxEXPAND, 5);
+	FGS3->Add(Dest, 1, wxLEFT|wxRIGHT|wxEXPAND, 5);
 	BrowseDst = new wxButton(this, ID_BROWSEDST, _("..."), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_BROWSEDST"));
-	FGS3->Add(BrowseDst, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
-	SBS2->Add(FGS3, 1, wxALL|wxEXPAND, 0);
+	FGS3->Add(BrowseDst, 1, wxLEFT|wxRIGHT|wxEXPAND, 5);
+	SBS2->Add(FGS3, 1, wxTOP|wxLEFT|wxRIGHT|wxEXPAND, 5);
 	SaveLog = new wxCheckBox(this, ID_SAVELOG, _("Log"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_SAVELOG"));
 	SaveLog->SetValue(false);
 	SaveLog->SetLabel(FFQS(SID_COMMON_SAVE_LOG));
-	SBS2->Add(SaveLog, 1, wxALL, 0);
-	FGS1->Add(SBS2, 1, wxALL|wxEXPAND, 3);
+	SBS2->Add(SaveLog, 1, wxLEFT|wxRIGHT, 10);
+	FGS1->Add(SBS2, 1, wxALL|wxEXPAND, 5);
 	BS1 = new wxBoxSizer(wxHORIZONTAL);
 	BS1->Add(-1,-1,1, wxALL|wxEXPAND, 3);
 	BS1->Add(-1,-1,1, wxALL|wxEXPAND, 3);
@@ -150,7 +153,7 @@ FFQVideoToGIF::FFQVideoToGIF(wxWindow* parent,wxWindowID id,const wxPoint& pos,c
 	NoBtn = new wxButton(this, ID_NOBTN, _("N"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_NOBTN"));
 	NoBtn->SetLabel(FFQS(SID_COMMON_CANCEL));
 	BS1->Add(NoBtn, 1, wxALL|wxALIGN_CENTER_VERTICAL, 3);
-	FGS1->Add(BS1, 1, wxALL|wxEXPAND, 3);
+	FGS1->Add(BS1, 1, wxALL|wxEXPAND, 5);
 	SetSizer(FGS1);
 	OpenFile = new wxFileDialog(this, wxEmptyString, wxEmptyString, wxEmptyString, wxFileSelectorDefaultWildcardStr, wxFD_OPEN|wxFD_FILE_MUST_EXIST, wxDefaultPosition, wxDefaultSize, _T("wxFileDialog"));
 	OpenFile->SetMessage(FFQS(SID_COMMON_SELECT_INPUT_FILE));
@@ -313,6 +316,7 @@ void FFQVideoToGIF::UpdateLinks()
     if (s != StartTime->GetLabel())
     {
         StartTime->SetLabel(s);
+        StartTime->Refresh(); //2023
         TopSizer->Layout();
     }
 
@@ -321,6 +325,7 @@ void FFQVideoToGIF::UpdateLinks()
     if (s != LimitLen->GetLabel())
     {
         LimitLen->SetLabel(s);
+        LimitLen->Refresh(); //2023
         MidSizer->Layout();
     }
 

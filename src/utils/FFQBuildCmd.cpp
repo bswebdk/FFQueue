@@ -608,17 +608,17 @@ bool IsCommandSafe(wxString cmd)
 
     //This will test if any malicious code may be present in the command / list of arguments
     size_t pos = 0;
-    wxUniChar quote = '.';
     while (pos < cmd.Len())
     {
-        wxUniChar cc = cmd.at(pos);
-        wxUniChar nc = (pos < cmd.Len() - 1) ? cmd.at(pos + 1) : '\0';
-
         #ifdef __WINDOWS__
 
             //Code required for windows?
 
         #else
+
+            wxUniChar quote = '.';
+            wxUniChar cc = cmd.at(pos);
+            wxUniChar nc = (pos < cmd.Len() - 1) ? cmd.at(pos + 1) : '\0';
 
             if (cc == '\\') pos++; //Skip escaped character
             else if ((cc == '\'') || (cc == '\"'))

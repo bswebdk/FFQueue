@@ -204,9 +204,11 @@ bool MakeBinaryResources()
     s.Replace("FFQApp.h ", "bin_res.h");
     s += "#ifndef BIN_RES_H" + CRLF +
          "#define BIN_RES_H" + CRLF +
-         "#ifndef __WINDOWS__" + CRLF +
-         "#include <cstdint>" + CRLF +
-         "#endif" + CRLF + CRLF;
+         "#include \"utils/FFQConst.h\"" + CRLF +
+         //"#ifndef __WINDOWS__" + CRLF +
+         //"#include <cstdint>" + CRLF +
+         //"#endif" + CRLF +
+         CRLF;
 
     s += MakeArrayName("TOOL_ADD", 0, true) + CRLF;
     s += MakeArrayName("TOOL_BATCH", 0, true) + CRLF;
@@ -223,6 +225,9 @@ bool MakeBinaryResources()
     s += MakeArrayName("ICON_TOOL", 0, true) + CRLF;
     s += MakeArrayName("ICON_PLAY_DARK", 0, true) + CRLF;
     s += MakeArrayName("ICON_PLAY_LIGHT", 0, true) + CRLF;
+    s += MakeArrayName("ICON_TAB_MSG", 0, true) + CRLF;
+    s += MakeArrayName("ICON_TAB_ON", 0, true) + CRLF;
+    s += MakeArrayName("ICON_TAB_OFF", 0, true) + CRLF;
     s += MakeArrayName("FLAG_ANIM", 0, true) + CRLF;
     s += MakeArrayName("MAIN_LOGO", 0, true) + CRLF;
     s += MakeArrayName("FONTS_CONF", 0, true) + CRLF;
@@ -265,6 +270,9 @@ bool MakeBinaryResources()
     s += FileToArray("res/icon_tool.png", "ICON_TOOL") + CRLF + CRLF;
     s += FileToArray("res/play_dark.png", "ICON_PLAY_DARK") + CRLF + CRLF;
     s += FileToArray("res/play_light.png", "ICON_PLAY_LIGHT") + CRLF + CRLF;
+    s += FileToArray("res/tab_msg.png", "ICON_TAB_MSG") + CRLF + CRLF;
+    s += FileToArray("res/tab_on.png", "ICON_TAB_ON") + CRLF + CRLF;
+    s += FileToArray("res/tab_off.png", "ICON_TAB_OFF") + CRLF + CRLF;
     s += FileToArray("res/DK_Flag_Anim_Hjerte.gif", "FLAG_ANIM") + CRLF + CRLF;
     s += FileToArray("res/MainLogo.png", "MAIN_LOGO") + CRLF + CRLF;
     s += FileToArray("res/fonts.conf", "FONTS_CONF") + CRLF + CRLF;
@@ -508,6 +516,7 @@ wxString CreateMakefiles(wxString cbp_path)
 
     //This method converts the FFQueue.cbp to makefiles for Windows and Linux
 
+    wxString wxver = wxString::Format("%d%d", wxMAJOR_VERSION,  wxMINOR_VERSION);
     wxUniChar WSEP = '\\', LSEP = '/', CSEP = wxFileName::GetPathSeparator();
     wxString WBR = "\r\n", LBR = "\n", tmp, tmp2;
 
@@ -550,6 +559,14 @@ wxString CreateMakefiles(wxString cbp_path)
     wxXmlNode *rt = FindXmlNode(cn, "Target", "title", "Release_Win");
     if (rt == NULL) return "Release_Win" + tmp;
     AnalyzeNode(rt->GetChildren(), false, TARGET_MSW);
+
+    //Repace version number in all wx libraries with a shell var
+    wxString wxv;
+    for (size_t i = 0; i < wlink_libs.Count(); i++)
+    {
+        wxv = wlink_libs[i];
+        if (wxv.StartsWith("wx") && (wxv.Replace(wxver, "$(WXVER)") > 0)) wlink_libs[i] = wxv;
+    }
 
     //Parse release build for linux
     rt = FindXmlNode(cn, "Target", "title", "Release_Lin");
@@ -669,7 +686,7 @@ wxString CreateMakefiles(wxString cbp_path)
     tmp = "# The following line must point to the location of the GCC (g++) compiler on your system:";
 
     //Compilers and linkers
-    wmf += tmp + WBR + "CXX:=mingw32-g++.exe" + WBR + WBR;
+    wmf += tmp + WBR + "CXX:=g++.exe" + WBR + WBR;
     lmf += tmp + LBR + "CXX:=g++" + LBR + LBR;
 
     //Message
@@ -685,8 +702,8 @@ wxString CreateMakefiles(wxString cbp_path)
     tmp = "# You may need to change the location to wxWidgets root / build folder in the following line:";
 
     //wxWidgets
-    wmf += tmp + WBR + "WX:=..\\wxWidgets" + WBR + WBR;
-    lmf += tmp + LBR + "WX:=../wxWidgets/gtk-build" + LBR + LBR;
+    wmf += tmp + WBR + "WX:=..\\wxWidgets" + WBR + "WXVER:=" + wxver + WBR + WBR;
+    lmf += tmp + LBR + "WX:=../wxWidgets/gtk-build" + LBR + "WXVER:=" + wxver + LBR + LBR;
 
     //Message
     tmp = "# If you want to change the default build / output folder you can do it in the following line:";
@@ -730,8 +747,8 @@ wxString CreateMakefiles(wxString cbp_path)
     //Message
     tmp = "# Linker libraries";
 
-    wmf += tmp + WBR + "LINKLIBS:=" + ArrayToStr(wlink_libs, "-l") + WBR + WBR;
-    lmf += tmp + LBR + "LINKLIBS:=" + ArrayToStr(llink_libs, "-l") + LBR + LBR;
+    wmf += tmp + WBR + "LINKLIBS:=" + ArrayToStr(wlink_libs, "-l", "\\" + WBR + "\t") + WBR + WBR;
+    lmf += tmp + LBR + "LINKLIBS:=" + ArrayToStr(llink_libs, "-l", "\\" + LBR + "\t") + LBR + LBR;
 
     //The all rule
     //wmf += WBR + "all: paths $(MAKEBINARY)" + WBR + WBR + "$(MAKEBINARY):";
@@ -771,7 +788,7 @@ wxString CreateMakefiles(wxString cbp_path)
             wadd_link = wmrs + CHEXT(wcur, "res");
             wadd_link.Replace("src", "obj");
             wrecipes += wadd_link + ":" + WBR +
-                        "\t$(WINDRES) $(COMPDIRS) -J rc -O coff -i " + wcur + " -o $@" + WBR + WBR;
+                        "\t$(WINDRES) $(COMPDIRS) -J rc -O coff -DwxUSE_NO_MANIFEST -i " + wcur + " -o $@" + WBR + WBR;
                         //"\t$(WINDRES) $(COMPDIRS) -J rc -O coff -i " + wcur + " -o " + wmrs + wadd_link + WBR + WBR;
 
             ladd_link.Clear();

@@ -25,9 +25,7 @@
 
 #ifndef BIN_RES_H
 #define BIN_RES_H
-#ifndef __WINDOWS__
-#include <cstdint>
-#endif
+#include "utils/FFQConst.h"
 
 extern const uint32_t TOOL_ADD_SIZE;
 extern const unsigned char TOOL_ADD[];
@@ -73,6 +71,15 @@ extern const unsigned char ICON_PLAY_DARK[];
 
 extern const uint32_t ICON_PLAY_LIGHT_SIZE;
 extern const unsigned char ICON_PLAY_LIGHT[];
+
+extern const uint32_t ICON_TAB_MSG_SIZE;
+extern const unsigned char ICON_TAB_MSG[];
+
+extern const uint32_t ICON_TAB_ON_SIZE;
+extern const unsigned char ICON_TAB_ON[];
+
+extern const uint32_t ICON_TAB_OFF_SIZE;
+extern const unsigned char ICON_TAB_OFF[];
 
 extern const uint32_t FLAG_ANIM_SIZE;
 extern const unsigned char FLAG_ANIM[];

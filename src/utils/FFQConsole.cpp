@@ -26,6 +26,7 @@
 #include "FFQConst.h"
 #include "FFQMisc.h"
 #include "../utils/FFQLang.h"
+#include "../FFQMain.h"
 #include <wx/file.h>
 
 //---------------------------------------------------------------------------------------
@@ -35,16 +36,12 @@ FFQConsole* FFQConsole::m_Instance = NULL;
 
 //---------------------------------------------------------------------------------------
 
-FFQConsole::FFQConsole(wxTextCtrl *Ctrl)
+FFQConsole::FFQConsole()
 {
 
     //Set singleton to the first instance created; Only one
     //instance should be created anyhow
     if (FFQConsole::m_Instance == NULL) FFQConsole::m_Instance = this;
-
-    //Set control and clear everything
-    m_Ctrl = Ctrl;
-    Clear();
 
 }
 
@@ -166,6 +163,9 @@ FF_MSG_TYPE FFQConsole::AppendFFOutput(wxString &Output, bool IsStdOut, bool Cle
 
 void FFQConsole::AppendLine(const wxString &Line, uint32_t Color, bool ClearCtrl)
 {
+
+    //The bodge of the day..
+    BringToFront();
 
     //Reset whenever non-progress is added
     m_StatsCount = 0;
@@ -296,6 +296,13 @@ void FFQConsole::AppendStatistics(const wxString &Stats)
     //Thaw
     m_Ctrl->Thaw();
 
+}
+
+//---------------------------------------------------------------------------------------
+
+void FFQConsole::AppendWithTime(const wxString &Line, uint32_t Color, bool ClearCtrl)
+{
+    AppendLine(wxDateTime::Now().FormatISOCombined(' ') + " " + Line, Color, ClearCtrl);
 }
 
 //---------------------------------------------------------------------------------------
@@ -431,9 +438,9 @@ bool FFQConsole::SaveAsHtml(const wxString &FileName)
             log->Write(&UTF8_BYTE_ORDER_MARK, sizeof(UTF8_BYTE_ORDER_MARK));
 
             //Create HTML header
-            wxString s = "<html>" + CRLF + "<head>" + CRLF + "<style type=\"text/css\">" + CRLF +
+            wxString s = "<!DOCTYPE html>" + CRLF + "<html>" + CRLF + "<head>" + CRLF + "<meta charset=\"utf-8\"/>" + CRLF + "<style type=\"text/css\">" + CRLF +
                          "body{background-color:white;color:black;font-family:monospace;font-size:8pt;}" + CRLF +
-                         "div{margin:0px;padding:0px;}" + CRLF, t;
+                         "div{margin:0px;padding:0px;white-space:pre;}" + CRLF, t;
 
             //Save styles for each of the colors used
             for (int i = 0; i < COLOR_COUNT; i++)
@@ -452,7 +459,7 @@ bool FFQConsole::SaveAsHtml(const wxString &FileName)
             }
 
             //Finalize header and begin body
-            s+= "</style>\n</head>\n<body>" + CRLF;
+            s+= "</style>" + CRLF + "</head>" + CRLF + "<body>" + CRLF;
 
             //Save what we have so far
             wxScopedCharBuffer scb = s.ToUTF8();
@@ -507,7 +514,7 @@ bool FFQConsole::SaveAsHtml(const wxString &FileName)
 
                 //Get trimmed log line ended with breaks
                 //s = StrTrim(m_Ctrl->GetLineText(i)) + "<br/>" + CRLF;
-                s = m_Ctrl->GetLineText(i) + "<br/>" + CRLF;
+                s = m_Ctrl->GetLineText(i) + /*"<br/>" +*/ CRLF;
 
                 //Save to HTML
                 scb = s.ToUTF8();
@@ -552,6 +559,16 @@ bool FFQConsole::SaveAsHtml(const wxString &FileName)
 
 }
 
+//---------------------------------------------------------------------------------------
+
+void FFQConsole::SetTextCtrl(wxTextCtrl* ctrl)
+{
+
+    //Set control and clear everything
+    m_Ctrl = ctrl;
+    Clear();
+
+}
 //---------------------------------------------------------------------------------------
 
 bool FFQConsole::IsLineClipping(const wxString &Line)
@@ -664,6 +681,12 @@ bool FFQConsole::IsLineVidStabLowContrast(wxString Line, unsigned int &Frame)
 
 //---------------------------------------------------------------------------------------
 
+void FFQConsole::BringToFront()
+{
+    FFQMain::GetInstance()->SelectConsole(this);
+}
+
+//---------------------------------------------------------------------------------------
 bool FFQConsole::ClearStatsAnim()
 {
 

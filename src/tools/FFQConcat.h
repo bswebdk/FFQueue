@@ -106,6 +106,7 @@ class FFQConcat: public wxDialog
 		wxFlexGridSizer* CCBlurSizer;
 		wxFlexGridSizer* CCPadSizer;
 		wxFlexGridSizer* SSSizer1;
+		wxFlexGridSizer* SSSizer2;
 		wxFlexGridSizer* Sizer1;
 		wxFlexGridSizer* Sizer2;
 		wxFlexGridSizer* Sizer3;
@@ -200,7 +201,7 @@ class FFQConcat: public wxDialog
 		FFProbeInfoParser *m_PIP;
 
 		wxString m_ImgPatn, m_LastPst, m_Command, m_TempPath;
-		bool m_DoIdleTask, m_BlurOK;
+		bool m_DoIdleTask, m_BlurOK, m_ImgList;
 		unsigned int m_ImgCount, m_ImgFirst;
 		TIME_VALUE m_LimitLen;
 		LPFFQ_CONCAT_JOB m_EditJob;

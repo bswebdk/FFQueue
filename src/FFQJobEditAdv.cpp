@@ -130,13 +130,13 @@ FFQJobEditAdv::FFQJobEditAdv(wxWindow* parent)
 	BoxSizer1 = new wxBoxSizer(wxVERTICAL);
 	StreamUp = new wxButton(this, ID_STREAMUP, _T("U"), wxDefaultPosition, wxSize(-1,-1), 0, wxDefaultValidator, _T("ID_STREAMUP"));
 	StreamUp->SetLabel(FFQS(SID_COMMON_MOVE_UP));
-	BoxSizer1->Add(StreamUp, 0, wxBOTTOM|wxLEFT|wxRIGHT|wxALIGN_CENTER_HORIZONTAL, 3);
+	BoxSizer1->Add(StreamUp, 0, wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND, 3);
 	StreamDown = new wxButton(this, ID_STREAMDOWN, _T("D"), wxDefaultPosition, wxSize(-1,-1), 0, wxDefaultValidator, _T("ID_STREAMDOWN"));
 	StreamDown->SetLabel(FFQS(SID_COMMON_MOVE_DOWN));
-	BoxSizer1->Add(StreamDown, 0, wxBOTTOM|wxLEFT|wxRIGHT|wxALIGN_CENTER_HORIZONTAL, 3);
+	BoxSizer1->Add(StreamDown, 0, wxBOTTOM|wxLEFT|wxRIGHT|wxEXPAND, 3);
 	StreamRefresh = new wxButton(this, ID_STREAMREFRESH, _T("R"), wxDefaultPosition, wxSize(-1,-1), 0, wxDefaultValidator, _T("ID_STREAMREFRESH"));
 	StreamRefresh->SetLabel(FFQS(SID_COMMON_REFRESH));
-	BoxSizer1->Add(StreamRefresh, 0, wxLEFT|wxRIGHT|wxALIGN_CENTER_HORIZONTAL, 3);
+	BoxSizer1->Add(StreamRefresh, 0, wxLEFT|wxRIGHT|wxEXPAND, 3);
 	FlexGridSizer6->Add(BoxSizer1, 1, wxALL|wxEXPAND, 0);
 	ST5 = new wxStaticText(this, wxID_ANY, _T("Inf"), wxDefaultPosition, wxDefaultSize, 0, _T("wxID_ANY"));
 	ST5->Disable();
@@ -297,7 +297,8 @@ bool FFQJobEditAdv::Execute(LPFFQ_JOB job)
 	//Command line and preset
 	CmdLine->ChangeValue(job->cmd_line == "" ? CMD_DEFAULT : job->cmd_line);
 	Preset->SetFixedFirstItem(FFQS(SID_JOBEDIT_NO_PRESET));
-	Preset->FillAndSelect(job->preset_id.ToString());
+	Preset->FillAndSelect(job->inputs.Count() == 0 ? "" : job->preset_id.ToString());
+	m_SelectedPresetID = job->preset_id;
 
 	//Save log?
 	SaveLog->SetValue(job->save_log);
@@ -1138,6 +1139,7 @@ void FFQJobEditAdv::UpdateLink(int index)
 
     //Apply and resize
     link->SetLabelText(l);
+    link->Refresh(); //2023 - Søg efter flere wxGenericHyperlinkCtrl
     sizer->Layout();
 
     //wxClientDC dc(link);
@@ -1345,7 +1347,7 @@ void FFQJobEditAdv::OnIdle(wxIdleEvent &event)
 
                 m_AutoPreset = false; //Make sure this is only done once!
                 wxString pstFp = GetPresetFingerPrint();
-                Preset->SelectPreset(FFQPresetMgr::Get()->GetPresetByFingerPrint(pstFp));
+                if (pstFp.Len() > 0) Preset->SelectPreset(FFQPresetMgr::Get()->GetPresetByFingerPrint(pstFp));
 
             }
 
@@ -1365,6 +1367,19 @@ void FFQJobEditAdv::OnIdle(wxIdleEvent &event)
 
     }
 
+    //Update output file format
+    LPFFQ_PRESET pst = Preset->GetSelectedPreset();
+    if (pst && (pst->preset_id != m_SelectedPresetID))
+    {
+        m_SelectedPresetID = pst->preset_id;
+        wxString outfn = Output->GetValue();
+        wxString ext = outfn.AfterLast(DOT);
+        if (ext.Len() > 0)
+        {
+            wxString fext = pst->GetFormatExtension(ext);
+            if (fext != ext) Output->SetValue(outfn.BeforeLast(DOT) + DOT + fext);
+        }
+    }
 
     //Update controls
     UpdateControls();

@@ -155,6 +155,7 @@ class FFQJobEditAdv: public wxDialog
 		FFQJobEditAdvCuts *m_CutEdit;
 		FFQJobEditAdvPopup *m_PopupCtrls;
 		bool m_FindSecondary, m_PopupValidate, m_CanCut, m_AutoPreset, m_AutoOutputName;
+		UNIQUE_ID m_SelectedPresetID;
 		TIME_VALUE m_OutLen;
 		//FFQProcess *m_Process;
 		wxString m_StreamMap;
