@@ -586,7 +586,7 @@ wxString CreateMakefiles(wxString cbp_path)
     autoconf_ac += "AC_INIT([ffqueue], [" + wxString::Format("%li.%li.%li", AutoVersion::MAJOR, AutoVersion::MINOR, AutoVersion::BUILD) + "], [https://ffqueue.bruchhaus.dk/])" + LBR;
     autoconf_ac += "AM_INIT_AUTOMAKE([-Wall -Werror foreign subdir-objects])" + LBR;
     autoconf_ac += "AC_CONFIG_SRCDIR([src/FFQApp.cpp])" + LBR;
-    autoconf_ac += "AM_INIT_AUTOMAKE" + LBR;
+    //autoconf_ac += "AM_INIT_AUTOMAKE" + LBR;
     autoconf_ac += "AC_PROG_CXX" + LBR;
     autoconf_ac += "WXVER=`wx-config --version | sed -e 's/\\.//g'`" + LBR;
     autoconf_ac += "AS_IF([test -z $WXVER], [ AC_MSG_ERROR([\"wx-config\" was not found. To correct this you ";
@@ -607,7 +607,7 @@ wxString CreateMakefiles(wxString cbp_path)
 
     makefile_am += ".ONESHELL:" + LBR;
     makefile_am += "install-data-hook:" + LBR;
-    makefile_am += "\t @FFQ_DST=/usr/local/share" + LBR;
+    makefile_am += "\t @FFQ_DST=/usr/share" + LBR;
     makefile_am += "\t @if test \"$(USER)\" != \"root\"; then FFQ_DST=`realpath ~/`/.local/share; fi" + LBR;
     makefile_am += "\t @if test -z \"$(FFQ_XDGVER)\"; then" + LBR;
     makefile_am += "\t   @FFQ_IR=$$FFQ_DST/icons/hicolor" + LBR;
@@ -629,7 +629,7 @@ wxString CreateMakefiles(wxString cbp_path)
     //makefile_am += "\t   xdg-desktop-icon install --novendor $(FFQ_RES)/$(FFQ_EXENAME).desktop" + LBR;
     makefile_am += "\t   @xdg-desktop-menu install --novendor $(FFQ_RES)/$(FFQ_EXENAME).desktop" + LBR;
     makefile_am += "\t @fi" + LBR;
-    makefile_am += "\t @FFQ_DF=/usr/local/share/applications/$(FFQ_EXENAME).desktop" + LBR;
+    makefile_am += "\t @FFQ_DF=/usr/share/applications/$(FFQ_EXENAME).desktop" + LBR;
     makefile_am += "\t @if test -e $$FFQ_DF; then chmod a+r $$FFQ_DF; fi" + LBR;
     makefile_am += "\t @FFQ_DF=/usr/share/applications/$(FFQ_EXENAME).desktop" + LBR;
     makefile_am += "\t @if test -e $$FFQ_DF; then chmod a+r $$FFQ_DF; fi" + LBR + LBR;
@@ -640,7 +640,7 @@ wxString CreateMakefiles(wxString cbp_path)
 
     makefile_am += ".ONESHELL:" + LBR;
     makefile_am += "uninstall-hook:" + LBR;
-    makefile_am += "\t @FFQ_DST=/usr/local/share" + LBR;
+    makefile_am += "\t @FFQ_DST=/usr/share" + LBR;
     makefile_am += "\t @if test \"$(USER)\" != \"root\"; then FFQ_DST=`realpath ~/`/.local/share; fi" + LBR;
     makefile_am += "\t @if test -z \"$(FFQ_XDGVER)\" ; then" + LBR;
     makefile_am += "\t   @FFQ_IR=$$FFQ_DST/icons/hicolor" + LBR;

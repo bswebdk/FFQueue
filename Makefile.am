@@ -5,7 +5,7 @@ FFQ_RES=../res
 
 .ONESHELL:
 install-data-hook:
-	 @FFQ_DST=/usr/local/share
+	 @FFQ_DST=/usr/share
 	 @if test "$(USER)" != "root"; then FFQ_DST=`realpath ~/`/.local/share; fi
 	 @if test -z "$(FFQ_XDGVER)"; then
 	   @FFQ_IR=$$FFQ_DST/icons/hicolor
@@ -26,14 +26,14 @@ install-data-hook:
 	   @xdg-icon-resource install --novendor --size 64 $(FFQ_RES)/MainLogo64.png $(FFQ_EXENAME)
 	   @xdg-desktop-menu install --novendor $(FFQ_RES)/$(FFQ_EXENAME).desktop
 	 @fi
-	 @FFQ_DF=/usr/local/share/applications/$(FFQ_EXENAME).desktop
+	 @FFQ_DF=/usr/share/applications/$(FFQ_EXENAME).desktop
 	 @if test -e $$FFQ_DF; then chmod a+r $$FFQ_DF; fi
 	 @FFQ_DF=/usr/share/applications/$(FFQ_EXENAME).desktop
 	 @if test -e $$FFQ_DF; then chmod a+r $$FFQ_DF; fi
 
 .ONESHELL:
 uninstall-hook:
-	 @FFQ_DST=/usr/local/share
+	 @FFQ_DST=/usr/share
 	 @if test "$(USER)" != "root"; then FFQ_DST=`realpath ~/`/.local/share; fi
 	 @if test -z "$(FFQ_XDGVER)" ; then
 	   @FFQ_IR=$$FFQ_DST/icons/hicolor
