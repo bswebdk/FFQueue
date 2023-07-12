@@ -106,6 +106,8 @@ FFQThumbMake::FFQThumbMake(wxWindow* parent)
 
 	SetTitle(FFQS(SID_THUMBS_TITLE));
 	m_Reset = true;
+    FileDlg->SetDirectory(FFQCFG()->GetBrowseRoot());
+
 
 }
 

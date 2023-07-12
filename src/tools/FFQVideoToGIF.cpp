@@ -187,6 +187,9 @@ FFQVideoToGIF::FFQVideoToGIF(wxWindow* parent,wxWindowID id,const wxPoint& pos,c
 	sVal.SetRange(0, 100);
 	FrameRate->SetValidator(sVal);
 
+    OpenFile->SetDirectory(FFQCFG()->GetBrowseRoot());
+    SaveFile->SetDirectory(FFQCFG()->GetBrowseRoot());
+
 	FFQCFG()->SetCtrlColors(StartTime);
 	FFQCFG()->SetCtrlColors(LimitLen);
 

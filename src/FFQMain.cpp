@@ -37,21 +37,24 @@
     #include "utils/FFQDebugUtils.h"
     #include "utils/FFQCodecInfo.h"
     #include <wx/cmdline.h>
-    #include <wx/stdpaths.h>
     //#include "utils/FFQNvpList.h"
     //#include "FFQFilterEdit.h"
 #endif // DEBUG
 
+#include <wx/stdpaths.h>
 #include <wx/filename.h>
 #include <wx/mstream.h>
 
 #ifdef __WINDOWS__
     #include <windows.h>
 #else
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wwrite-strings"
     #include "../res/MainIcon32.xpm"
     //It may be nescessary to uncomment the following lines if 16x16 and/or 64x64 icons are required
     //#include "res/MainIcon16.xpm"
     //#include "res/MainIcon64.xpm"
+    #pragma GCC diagnostic pop
 #endif // __WINDOWS__
 
 //(*InternalHeaders(FFQMain)
@@ -185,7 +188,7 @@ FFQMain::FFQMain(wxWindow* parent, wxWindowID id)
     ListView = new wxListView(SplitterWindow, ID_LISTVIEW, wxDefaultPosition, wxDefaultSize, wxLC_REPORT|wxLC_NO_SORT_HEADER|wxBORDER_NONE, wxDefaultValidator, _T("ID_LISTVIEW"));
     ListView->SetMinSize(wxDLG_UNIT(SplitterWindow,wxSize(800,150)));
     Consoles = new wxNotebook(SplitterWindow, ID_CONSOLES, wxDefaultPosition, wxDefaultSize, 0, _T("ID_CONSOLES"));
-    Consoles->SetMinSize(wxSize(-1,150));
+    Consoles->SetMinSize(wxSize(800,150));
     Panel1 = new wxPanel(Consoles, ID_PANEL1, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, _T("ID_PANEL1"));
     FlexGridSizer2 = new wxFlexGridSizer(1, 1, 0, 0);
     FlexGridSizer2->AddGrowableCol(0);
@@ -410,6 +413,8 @@ FFQMain::FFQMain(wxWindow* parent, wxWindowID id)
     //m_ItemDurationFrames = -1;
 
     Consoles->SetPageText(0, FFQS(SID_MAINFRAME_NB_DEFAULT));
+
+    OpenFilesDlg->SetDirectory(FFQCFG()->GetBrowseRoot());
 
     m_JobsFileName = FFQCFG()->app_name.Lower() + ".job";
     SetTitle(FFQCFG()->app_name);
@@ -688,8 +693,10 @@ void FFQMain::InitEncodingSlots()
 {
 
     //Initialize encoding slots
-    m_NumEncodingSlots = FFQCFG()->num_encode_slots;
-    if (m_NumEncodingSlots < 1) m_NumEncodingSlots = 1;
+    int nes = FFQCFG()->num_encode_slots < 1 ? 1 : FFQCFG()->num_encode_slots;
+    if (m_EncodingActive || (m_NumEncodingSlots == nes)) return; //Do nothing
+
+    m_NumEncodingSlots = nes;
     m_EncodingActive = false;
     m_EncodingSlots = new ENCODING_SLOT[m_NumEncodingSlots];
 
@@ -2675,6 +2682,41 @@ void FFQMain::OnShow(wxShowEvent &event)
             LoadItems();
             if (FFQCFG()->validate_on_load) ValidateItems();
             UpdateControls();
+
+            //wxString path;
+            //if (wxGetEnv("PATH", &path)) Console->AppendLine(path, 0);
+
+            /*Console->AppendLine("AppDocumentsDir    = " + wxStandardPaths::Get().GetAppDocumentsDir(), 0);
+            Console->AppendLine("ConfigDir          = " + wxStandardPaths::Get().GetConfigDir(), 0);
+            Console->AppendLine("DataDir            = " + wxStandardPaths::Get().GetDataDir(), 0);
+            Console->AppendLine("DocumentsDir       = " + wxStandardPaths::Get().GetDocumentsDir(), 0);
+            Console->AppendLine("ExecutablePath     = " + wxStandardPaths::Get().GetExecutablePath(), 0);
+            Console->AppendLine("LocalDataDir       = " + wxStandardPaths::Get().GetLocalDataDir(), 0);
+            Console->AppendLine("PluginsDir         = " + wxStandardPaths::Get().GetPluginsDir(), 0);
+            Console->AppendLine("ResourcesDir       = " + wxStandardPaths::Get().GetResourcesDir(), 0);
+            Console->AppendLine("TempDir            = " + wxStandardPaths::Get().GetTempDir(), 0);
+            Console->AppendLine("UserConfigDir      = " + wxStandardPaths::Get().GetUserConfigDir(), 0);
+            Console->AppendLine("UserDataDir        = " + wxStandardPaths::Get().GetUserDataDir(), 0);
+            Console->AppendLine("UserLocalDataDir   = " + wxStandardPaths::Get().GetUserLocalDataDir(), 0);
+            */
+
+            /* SNAP
+                AppDocumentsDir    = /home/tnb/
+                ConfigDir          = /etc
+                DataDir            = /snap/ffqueue/x2/usr/local/share/ffqueue
+                DocumentsDir       = /home/tnb/
+                ExecutablePath     = /snap/ffqueue/x2/usr/local/bin/ffqueue
+                LocalDataDir       = /etc/ffqueue
+                PluginsDir         = /snap/ffqueue/x2/usr/local/lib/ffqueue
+                ResourcesDir       = /snap/ffqueue/x2/usr/local/share/ffqueue
+                TempDir            = /tmp
+                UserConfigDir      = /home/tnb/snap/ffqueue/x2
+                UserDataDir        = /home/tnb/snap/ffqueue/x2/.ffqueue
+                UserLocalDataDir   = /home/tnb/snap/ffqueue/x2/.ffqueue
+            */
+
+
+            //Console->AppendLine("MakeConfigFileName = " + wxStandardPaths::Get().MakeConfigFileName("cfg-file-name"), 0);
 
         #ifdef NO_GETTEXTEXTENT
 

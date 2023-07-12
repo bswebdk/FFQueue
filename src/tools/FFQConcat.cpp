@@ -526,6 +526,10 @@ FFQConcat::FFQConcat(wxWindow* parent)
 	FFQCFG()->SetCtrlColors(LimitDest);
 	FFQCFG()->SetCtrlColors(SSFrameStatus);
 
+    OpenOneDlg->SetDirectory(FFQCFG()->GetBrowseRoot());
+    OpenMoreDlg->SetDirectory(FFQCFG()->GetBrowseRoot());
+    SaveFileDlg->SetDirectory(FFQCFG()->GetBrowseRoot());
+
     m_EditJob = NULL;
     m_DoIdleTask = false;
     m_BlurOK = FFQCFG()->AreFiltersAvailable("split,scale,boxblur,overlay");

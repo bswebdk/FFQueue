@@ -178,7 +178,11 @@ void FilterBasePanel::SetControlParent(wxWindow *parent)
 
 bool FilterBasePanel::BrowseForFile(wxString &file)
 {
-    if (m_FileDlg == NULL) m_FileDlg = new wxFileDialog(this, FFQS(SID_COMMON_SELECT_FILE), wxEmptyString, wxEmptyString, wxFileSelectorDefaultWildcardStr, wxFD_OPEN|wxFD_FILE_MUST_EXIST);
+    if (m_FileDlg == NULL)
+    {
+        m_FileDlg = new wxFileDialog(this, FFQS(SID_COMMON_SELECT_FILE), wxEmptyString, wxEmptyString, wxFileSelectorDefaultWildcardStr, wxFD_OPEN|wxFD_FILE_MUST_EXIST);
+        m_FileDlg->SetDirectory(FFQCFG()->GetBrowseRoot());
+    }
     m_FileDlg->SetPath(file);
     bool res = m_FileDlg->ShowModal() != wxID_CANCEL;
     if (res) file = m_FileDlg->GetPath();

@@ -6,6 +6,8 @@
 		<object class="wxFlexGridSizer" variable="FlexGridSizer1" member="no">
 			<cols>1</cols>
 			<rows>4</rows>
+			<growablecols>0</growablecols>
+			<growablerows>0,1,2,3</growablerows>
 			<object class="sizeritem">
 				<object class="wxStaticBoxSizer" variable="SBS1" member="no">
 					<label>If</label>
@@ -35,7 +37,7 @@
 								<option>1</option>
 							</object>
 						</object>
-						<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<flag>wxALL|wxEXPAND</flag>
 						<option>1</option>
 					</object>
 					<object class="sizeritem">
@@ -256,6 +258,7 @@
 								<cols>1</cols>
 								<rows>3</rows>
 								<growablecols>0</growablecols>
+								<growablerows>0,1,2</growablerows>
 								<object class="sizeritem">
 									<object class="wxFlexGridSizer" variable="FlexGridSizer9" member="no">
 										<cols>2</cols>
@@ -362,6 +365,7 @@
 										<cols>2</cols>
 										<rows>3</rows>
 										<growablecols>1</growablecols>
+										<growablerows>0,1,2</growablerows>
 										<object class="sizeritem">
 											<object class="wxStaticText" name="wxID_ANY" variable="ST10" member="yes">
 												<label>Opt</label>

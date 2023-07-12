@@ -167,6 +167,38 @@
 					<Add directory="$(#wx)/gtk-build/lib" />
 				</Linker>
 			</Target>
+			<Target title="Debug_Lin_wx30_Repos">
+				<Option output="bin/Debug/FFQueue" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Option projectLinkerOptionsRelation="2" />
+				<Compiler>
+					<Add option="-g" />
+					<Add option="`wx-config --static=no --unicode=yes --debug=yes --cflags`" />
+					<Add option="-DDEBUG" />
+				</Compiler>
+				<Linker>
+					<Add option="`wx-config --static=no --debug=yes --libs`" />
+					<Add library="z" />
+				</Linker>
+			</Target>
+			<Target title="Release_Lin_wx30_Repos">
+				<Option output="bin/Release/FFQueue" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="0" />
+				<Option compiler="gcc" />
+				<Option projectLinkerOptionsRelation="2" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add option="`wx-config --static=no --unicode=yes --debug=no --cflags`" />
+					<Add option="-DNDEBUG" />
+				</Compiler>
+				<Linker>
+					<Add option="`wx-config --static=yes --debug=no --libs`" />
+					<Add library="z" />
+				</Linker>
+			</Target>
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />

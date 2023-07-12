@@ -32,6 +32,7 @@
 #include <wx/textfile.h>
 #include <wx/stdpaths.h>
 #include <wx/msgdlg.h>
+#include <wx/utils.h>
 
 //---------------------------------------------------------------------------------------
 
@@ -91,9 +92,40 @@ const wxString CFG_LOCALE = "locale";
 const wxString CFG_COLORS = "colors";
 const wxString CFG_NUM_ENC_SLOTS = "num_encode_slots";
 
+//Private helper functions
+
 //---------------------------------------------------------------------------------------
 
-//Private helper functions
+wxString find_file_using_PATH(wxString file_name)
+{
+    wxString path;
+    if (wxGetEnv("PATH", &path))
+    {
+        #ifdef __WINDOWS__
+        const wxString SEP = ';';
+        #else
+        const wxString SEP = ':';
+        #endif
+        while (path.Len() > 0)
+        {
+            wxFileName fn(GetToken(path, SEP, true), file_name);
+            if (fn.Exists()) return fn.GetPath();
+        }
+    }
+    return wxEmptyString;
+}
+
+//---------------------------------------------------------------------------------------
+
+const wxString FilterDescriptionChars = ".TSC";
+bool IsFilterDescription(wxString &s)
+{
+    if (s.Len() != 3) return false;
+    for (int i = 0; i < 3; i++) if (FilterDescriptionChars.Find(s.at(i)) < 0) return false;
+    return true;
+}
+
+//---------------------------------------------------------------------------------------
 
 CODEC_TYPE ParseCodec(wxString &c, bool encoders)
 {
@@ -230,12 +262,22 @@ wxString ParseHWDecoders(wxString decoders, wxString hwaccels)
 
 //---------------------------------------------------------------------------------------
 
-const wxString FilterDescriptionChars = ".TSC";
-bool IsFilterDescription(wxString &s)
+bool test_file_create(wxString file_name, wxString write_text)
 {
-    if (s.Len() != 3) return false;
-    for (int i = 0; i < 3; i++) if (FilterDescriptionChars.Find(s.at(i)) < 0) return false;
-    return true;
+    wxLogNull no_messages;
+    bool res = false;//wxFile::Access(file_name, wxFile::write);
+    try
+    {
+        wxFile file(file_name, wxFile::write);
+        if (file.IsOpened())
+        {
+            if (write_text.Len() > 0) file.Write(write_text);
+            file.Close();
+            res = true;
+        }
+    }
+    catch (std::exception &err) {}
+    return res;
 }
 
 //---------------------------------------------------------------------------------------
@@ -538,6 +580,16 @@ unsigned int FFQConfig::FindSecondaryInputFiles(wxString &for_filename, wxArrayS
     }
 
     return cnt;
+
+}
+
+//---------------------------------------------------------------------------------------
+
+wxString FFQConfig::GetBrowseRoot()
+{
+
+    //Return the initial directory used for file dialogs
+    return wxStandardPaths::Get().GetDocumentsDir();
 
 }
 
@@ -1570,23 +1622,23 @@ FFQConfig::FFQConfig()
     srand(time(NULL));
 
     //Get path to executable
-    wxString p = wxStandardPaths::Get().GetExecutablePath();
+    wxString app_dir = wxStandardPaths::Get().GetExecutablePath();
 
     //Extract app name
-    app_name = p.AfterLast(wxFileName::GetPathSeparator());
+    app_name = app_dir.AfterLast(wxFileName::GetPathSeparator());
 
     //Remove any extension
     if (app_name.Find('.') > 0) app_name = app_name.BeforeLast('.');
 
     //Extract path only if required
-    p = p.BeforeLast(wxFileName::GetPathSeparator());
+    app_dir = app_dir.BeforeLast(wxFileName::GetPathSeparator());
 
     //Check if we are using AVlib (avconv, avprobe, avplay)
     use_libav = app_name.Lower().Find("avqueue") >= 0;
 
     //Check if config exists in the same location as the program file
     wxString fn_cfg = app_name.Lower() + ".cfg";
-    m_ConfigPath = p;
+    m_ConfigPath = app_dir;
     m_ConfigFile = GetConfigPath(fn_cfg);
     bool cfg_ok = wxFileExists(m_ConfigFile);
 
@@ -1596,12 +1648,12 @@ FFQConfig::FFQConfig()
         //Check if config exists in the typical config location
         #ifdef __LINUX__
             //On Linux we honor the ~/.config/appname way of life if available
-            wxString cfg_dir = wxStandardPaths::Get().GetUserConfigDir() + "/.config";
-            if (wxFileName::DirExists(cfg_dir)) cfg_dir += "/" + app_name.Lower();
+            wxString cfg_dir = wxStandardPaths::Get().GetUserConfigDir() + wxFileName::GetPathSeparator() + ".config";
+            if (wxFileName::DirExists(cfg_dir)) cfg_dir += wxFileName::GetPathSeparator() + app_name.Lower();
             else cfg_dir = wxStandardPaths::Get().GetUserDataDir();
         #else
             //For backwards compatibility we must check if ConfigDir exists and
-            //is not, we use UserDataDir in order to support per-user config
+            //if not, we use UserDataDir in order to support per-user config
             wxString cfg_dir = wxStandardPaths::Get().GetConfigDir();
             if (!wxFileName::DirExists(cfg_dir)) cfg_dir = wxStandardPaths::Get().GetUserDataDir();
         #endif // __LINUX__
@@ -1614,32 +1666,20 @@ FFQConfig::FFQConfig()
         {
 
             //Try to create config in same folder as program file
-            m_ConfigPath = p;
+            m_ConfigPath = app_dir;
             m_ConfigFile = GetConfigPath(fn_cfg);
-
-            wxLogNull preventPeskyPopup;
-
-            wxTextFile *tf = NULL;
-            try
-            {
-                tf = new wxTextFile(m_ConfigFile);
-                if (tf->Create())
-                {
-                    tf->AddLine(CFG_HEADER_10);
-                    cfg_ok = tf->Write();
-                    tf->Close();
-                }
-
-            } catch (...) { }
-
-            if (tf) delete tf;
+            cfg_ok = test_file_create(m_ConfigFile, CFG_HEADER_10 + CRLF);
 
             if (!cfg_ok)
             {
 
                 //Everything failed; revert to default config dir
                 m_ConfigPath = cfg_dir;
-                m_ConfigFile = GetConfigPath(fn_cfg);//FILENAME_CONFIG);
+                m_ConfigFile = GetConfigPath(fn_cfg);
+                if (!wxFileName::DirExists(m_ConfigPath)) wxFileName::Mkdir(m_ConfigPath, wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
+
+
+                //!TODO: Test file write access?
 
             }
 
@@ -1685,8 +1725,37 @@ bool FFQConfig::TryLocateFFMpeg()
     s = s.BeforeLast(wxFileName::GetPathSeparator()) + wxFileName::GetPathSeparator() + binary;
     if (ValidateFFMpegPath(s, true)) return true;
 
-    //Without any path - searches the environment (all systems)
-    if (ValidateFFMpegPath(binary, true)) return true;
+    //Searches the PATH environment variable (all systems)
+    s = find_file_using_PATH(binary);
+    if (s.Len() > 0)
+    {
+        //The executable was found, now we may need to fix some
+        //broken library paths when running within a snap..
+        #ifdef __LINUX__
+        /*wxString e;
+        if (wxGetEnv("SNAP", &e) && (e.Find("ffqueue") >= 0))
+        {
+            const wxString LD_LIBRARY_PATH = "LD_LIBRARY_PATH", add_lib = ":/snap/ffqueue/current/usr/lib/x86_64-linux-gnu/";
+            if (wxGetEnv(LD_LIBRARY_PATH, &e))
+            {
+                bool modify = false;
+                if (e.Find("/blas") < 0)
+                {
+                    e += add_lib + "blas";
+                    modify = true;
+                }
+                if (e.Find("/lapack") < 0)
+                {
+                    e += add_lib + "lapack";
+                    modify = true;
+                }
+                if (modify) wxSetEnv(LD_LIBRARY_PATH, e);
+            }
+        }*/
+        #endif
+        if (ValidateFFMpegPath(s + wxFileName::GetPathSeparator() + binary, true)) return true;
+    }
+    //if (ValidateFFMpegPath(binary, true)) return true;
 
     #ifdef __WINDOWS__
 
@@ -1703,7 +1772,7 @@ bool FFQConfig::TryLocateFFMpeg()
     //Try obvious Linux paths
     if (ValidateFFMpegPath("/usr/bin/" + binary, true)) return true;
     if (ValidateFFMpegPath("/bin/" + binary, true)) return true;
-    if (ValidateFFMpegPath("./" + binary, true)) return true;
+    //if (ValidateFFMpegPath("./" + binary, true)) return true;
     if (ValidateFFMpegPath("/usr/local/bin/" + binary, true)) return true;
 
     #endif // __WINDOWS__

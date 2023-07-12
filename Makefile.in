@@ -150,8 +150,8 @@ am__define_uniq_tagged_files = \
     if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
   done | $(am__uniquify_input)`
 DIST_SUBDIRS = $(SUBDIRS)
-am__DIST_COMMON = $(srcdir)/Makefile.in README.md compile depcomp \
-	install-sh missing
+am__DIST_COMMON = $(srcdir)/Makefile.in README.md compile install-sh \
+	missing
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 distdir = $(PACKAGE)-$(VERSION)
 top_distdir = $(distdir)
@@ -289,9 +289,12 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 SUBDIRS = src
+FFQ_BINARY = ffqueue
 FFQ_XDGVER = `xdg-icon-resource --version`
-FFQ_EXENAME = ffqueue
-FFQ_RES = ../res
+@FFQ_BASE_DIR_FALSE@FFQ_RES = ../res
+@FFQ_BASE_DIR_TRUE@FFQ_RES = res
+FFQ_DEST = $(DESTDIR)/usr/share
+FFQ_ICONDEST = $(FFQ_DEST)/icons/hicolor
 all: all-recursive
 
 .SUFFIXES:
@@ -761,50 +764,39 @@ uninstall-am:
 
 .ONESHELL:
 install-data-hook:
-	 @FFQ_DST=/usr/share
-	 @if test "$(USER)" != "root"; then FFQ_DST=`realpath ~/`/.local/share; fi
-	 @if test -z "$(FFQ_XDGVER)"; then
-	   @FFQ_IR=$$FFQ_DST/icons/hicolor
-	   @FFQ_ID=$$FFQ_IR/16x16/apps
+	 @if [ -z "$(FFQ_XDGVER)" ]; then
+	   @FFQ_ID=$(FFQ_ICONDEST)/16x16/apps
 	   @mkdir -p $$FFQ_ID
-	   @cp $(FFQ_RES)/MainLogo16.png $$FFQ_ID/$(FFQ_EXENAME).png
-	   @FFQ_ID=$$FFQ_IR/32x32/apps
+	   @cp $(FFQ_RES)/MainLogo16.png $$FFQ_ID/$(FFQ_BINARY).png
+	   @FFQ_ID=$(FFQ_ICONDEST)/32x32/apps
 	   @mkdir -p $$FFQ_ID
-	   @cp $(FFQ_RES)/MainLogo32.png $$FFQ_ID/$(FFQ_EXENAME).png
-	   @FFQ_ID=$$FFQ_IR/64x64/apps
+	   @cp $(FFQ_RES)/MainLogo32.png $$FFQ_ID/$(FFQ_BINARY).png
+	   @FFQ_ID=$(FFQ_ICONDEST)/64x64/apps
 	   @mkdir -p $$FFQ_ID
-	   @cp $(FFQ_RES)/MainLogo64.png $$FFQ_ID/$(FFQ_EXENAME).png
-	   @mkdir -p $$FFQ_DST/applications
-	   @cp $(FFQ_RES)/$(FFQ_EXENAME).desktop $$FFQ_DST/applications/
+	   @cp $(FFQ_RES)/MainLogo64.png $$FFQ_ID/$(FFQ_BINARY).png
+	   @mkdir -p $(FFQ_DEST)/applications
+	   @cp $(FFQ_RES)/$(FFQ_BINARY).desktop $(FFQ_DEST)/applications/
 	 @else
-	   @xdg-icon-resource install --novendor --size 16 $(FFQ_RES)/MainLogo16.png $(FFQ_EXENAME)
-	   @xdg-icon-resource install --novendor --size 32 $(FFQ_RES)/MainLogo32.png $(FFQ_EXENAME)
-	   @xdg-icon-resource install --novendor --size 64 $(FFQ_RES)/MainLogo64.png $(FFQ_EXENAME)
-	   @xdg-desktop-menu install --novendor $(FFQ_RES)/$(FFQ_EXENAME).desktop
+	   @xdg-icon-resource install --novendor --size 16 $(FFQ_RES)/MainLogo16.png $(FFQ_BINARY)
+	   @xdg-icon-resource install --novendor --size 32 $(FFQ_RES)/MainLogo32.png $(FFQ_BINARY)
+	   @xdg-icon-resource install --novendor --size 64 $(FFQ_RES)/MainLogo64.png $(FFQ_BINARY)
+	   @xdg-desktop-menu install --novendor $(FFQ_RES)/$(FFQ_BINARY).desktop
 	 @fi
-	 @FFQ_DF=/usr/share/applications/$(FFQ_EXENAME).desktop
-	 @if test -e $$FFQ_DF; then chmod a+r $$FFQ_DF; fi
-	 @FFQ_DF=/usr/share/applications/$(FFQ_EXENAME).desktop
-	 @if test -e $$FFQ_DF; then chmod a+r $$FFQ_DF; fi
+	 @FFQ_DF=$(FFQ_DEST)/applications/$(FFQ_BINARY).desktop
+	 @if [ -f "$$FFQ_DF" ]; then chmod a+r "$$FFQ_DF"; fi
 
 .ONESHELL:
 uninstall-hook:
-	 @FFQ_DST=/usr/share
-	 @if test "$(USER)" != "root"; then FFQ_DST=`realpath ~/`/.local/share; fi
-	 @if test -z "$(FFQ_XDGVER)" ; then
-	   @FFQ_IR=$$FFQ_DST/icons/hicolor
-	   @FFQ_ID=$$FFQ_IR/16x16/apps
-	   @rm -f $$FFQ_ID/$(FFQ_EXENAME).png
-	   @FFQ_ID=$$FFQ_IR/32x32/apps
-	   @rm -f $$FFQ_ID/$(FFQ_EXENAME).png
-	   @FFQ_ID=$$FFQ_IR/64x64/apps
-	   @rm -f $$FFQ_ID/$(FFQ_EXENAME).png
-	   @rm -f $$FFQ_DST/applications/$(FFQ_EXENAME).desktop
+	 @if [ -z "$(FFQ_XDGVER)" ]; then
+	   @rm -f $(FFQ_ICONDEST)/16x16/apps/$(FFQ_BINARY).png
+	   @rm -f $(FFQ_ICONDEST)/32x32/apps/$(FFQ_BINARY).png
+	   @rm -f $(FFQ_ICONDEST)/64x64/apps/$(FFQ_BINARY).png
+	   @rm -f $(FFQ_DEST)/applications/$(FFQ_BINARY).desktop
 	 @else
-	   @xdg-icon-resource uninstall --novendor --size 16 $(FFQ_EXENAME)
-	   @xdg-icon-resource uninstall --novendor --size 32 $(FFQ_EXENAME)
-	   @xdg-icon-resource uninstall --novendor --size 64 $(FFQ_EXENAME)
-	   @xdg-desktop-menu uninstall --novendor $(FFQ_EXENAME).desktop
+	   @xdg-icon-resource uninstall --novendor --size 16 $(FFQ_BINARY)
+	   @xdg-icon-resource uninstall --novendor --size 32 $(FFQ_BINARY)
+	   @xdg-icon-resource uninstall --novendor --size 64 $(FFQ_BINARY)
+	   @xdg-desktop-menu uninstall --novendor $(FFQ_BINARY).desktop
 	 @fi
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

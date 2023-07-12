@@ -1064,6 +1064,8 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
     //Bind menu handler for both filters and dispositions
     Bind(wxEVT_COMMAND_MENU_SELECTED, &FFQPresetEdit::OnMenuSelected, this);
 
+	OpenFileDlg->SetDirectory(FFQCFG()->GetBrowseRoot());
+
     FilterEditor = NULL;
 
 	m_UIntVal.SetRange(0, 99999);

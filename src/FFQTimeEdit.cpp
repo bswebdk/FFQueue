@@ -134,11 +134,11 @@ FFQTimeEdit::FFQTimeEdit(wxWindow* parent)
 	//Adjust minimum control sizes
 	wxClientDC cdc(this);
 	cdc.SetFont(GetFont());
-	int cw = cdc.GetTextExtent("0").GetWidth(), ch = Hours->GetClientSize().GetHeight();
-	Hours->SetMinClientSize(wxSize(cw*4, ch));
-	Minutes->SetMinClientSize(wxSize(cw*4, ch));
-	Seconds->SetMinClientSize(wxSize(cw*4, ch));
-	Millis->SetMinClientSize(wxSize(cw*6, ch));
+	int cw = cdc.GetTextExtent("0").GetWidth(), ch = OKButton->GetSize().GetHeight();//Hours->GetClientSize().GetHeight();
+	Hours->SetMinClientSize(wxSize(cw*6, ch));
+	Minutes->SetMinClientSize(wxSize(cw*6, ch));
+	Seconds->SetMinClientSize(wxSize(cw*6, ch));
+	Millis->SetMinClientSize(wxSize(cw*8, ch));
 
 }
 

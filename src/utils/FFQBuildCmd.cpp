@@ -1299,6 +1299,7 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
         if (for_preview && (pst->custom_args_1.Len() > 0)) s = pst->custom_args_1;
         else if ((encoding_pass < 2) && (pst->custom_args_1.Len() > 0)) s = pst->custom_args_1;
         else if ((encoding_pass > 1) && (pst->custom_args_2.Len() > 0)) s = pst->custom_args_2;
+        else s = wxEmptyString;
 
         //Split into input_args and args added to preset
         int p = s.Find("||");

@@ -118,7 +118,7 @@ void FFQPresetPanel::SetFixedFirstItem(wxString item)
 
 LPFFQ_PRESET FFQPresetPanel::GetSelectedPreset()
 {
-    if (Presets->GetSelection() < 0) return NULL;
+    if (Presets->GetSelection() < (m_FixedFirst.Len() > 0 ? 1 : 0)) return NULL;
     return (LPFFQ_PRESET)Presets->GetClientData(Presets->GetSelection());
 }
 

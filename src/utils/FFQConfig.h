@@ -119,6 +119,7 @@ class FFQConfig
         void            DefaultOptions();
         wxString        FindSecondaryInputFile(wxString &for_filename);
         unsigned int    FindSecondaryInputFiles(wxString &for_filename, wxArrayString &dest, unsigned int limit = 0);
+        wxString        GetBrowseRoot();
         LPCODEC_INFO    GetCodecInfo();
         uint32_t        GetColor(uint32_t color, bool find_index = false);
 		wxString        GetConfigPath(wxString append_filename = "");
@@ -178,5 +179,7 @@ class FFQConfig
 
 //Macro for easy access to config
 #define FFQCFG() FFQConfig::GetInstance()
+
+bool test_file_create(wxString file_name, wxString write_text = "");
 
 #endif // FFQCONFIG_H

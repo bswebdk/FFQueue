@@ -213,8 +213,16 @@ FFQConfigEdit::FFQConfigEdit(wxWindow* parent,wxWindowID id)
 	Connect(ID_CANCELBUTTON,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&FFQConfigEdit::OnButtonClick);
 	//*)
 
+
 	SetTitle(FFQS(SID_OPTIONS_TITLE));
 
+	OpenDialog->SetDirectory(FFQCFG()->GetBrowseRoot());
+
+	wxSize sz = BrowseTemp->GetSize();
+	sz.SetWidth(-1);
+    SecondFileExts->SetMinSize(sz);
+    OutputNamePattern->SetMinSize(sz);
+    ConsoleCmd->SetMinSize(sz);
 }
 
 //---------------------------------------------------------------------------------------

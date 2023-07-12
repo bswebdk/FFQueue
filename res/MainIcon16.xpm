@@ -1,5 +1,4 @@
 /* XPM */
-#pragma GCC diagnostic ignored "-Wwrite-strings"
 static char *MainIcon16_XPM[] = {
 /* columns rows colors chars-per-pixel */
 "16 16 220 2",

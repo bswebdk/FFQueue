@@ -140,12 +140,11 @@
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
 					<Add option="-g" />
-					<Add option="`$(#wx)/gtk-build/wx-config --static=yes --unicode=yes --debug=yes --cflags`" />
+					<Add option="`wx-config --static=no --unicode=yes --debug=yes --cflags`" />
 					<Add option="-DDEBUG" />
 				</Compiler>
 				<Linker>
-					<Add option="`$(#wx)/gtk-build/wx-config --static=yes --debug=yes --libs`" />
-					<Add directory="$(#wx)/gtk-build/lib" />
+					<Add option="`wx-config --static=no --debug=yes --libs`" />
 				</Linker>
 			</Target>
 			<Target title="Release_Lin">
@@ -176,6 +175,9 @@
 			<Add option="-include wx_pch.h" />
 			<Add option="-DWX_PRECOMP" />
 		</Compiler>
+		<Linker>
+			<Add library="z" />
+		</Linker>
 		<Unit filename="src/FFQAbout.cpp" />
 		<Unit filename="src/FFQAbout.h" />
 		<Unit filename="src/FFQApp.cpp" />

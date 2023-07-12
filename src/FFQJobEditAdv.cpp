@@ -236,6 +236,9 @@ FFQJobEditAdv::FFQJobEditAdv(wxWindow* parent)
     FFQCFG()->SetCtrlColors(OutputLength);
     //m_Process = new FFQProcess();
 
+	OpenFile->SetDirectory(FFQCFG()->GetBrowseRoot());
+	SaveFile->SetDirectory(FFQCFG()->GetBrowseRoot());
+
 	//Connect(wxID_ANY, wxEVT_IDLE, (wxObjectEventFunction)&FFQJobEditAdv::OnIdle);
 	Bind(wxEVT_IDLE, &FFQJobEditAdv::OnIdle, this);
     Bind(wxEVT_COMMAND_MENU_SELECTED, &FFQJobEditAdv::OnMenuSelected, this);

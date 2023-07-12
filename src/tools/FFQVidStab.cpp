@@ -129,6 +129,11 @@ FFQVidStab::FFQVidStab(wxWindow* parent)
 
 	Create(parent, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE, _T("wxID_ANY"));
 	FlexGridSizer1 = new wxFlexGridSizer(4, 1, 0, 0);
+	FlexGridSizer1->AddGrowableCol(0);
+	FlexGridSizer1->AddGrowableRow(0);
+	FlexGridSizer1->AddGrowableRow(1);
+	FlexGridSizer1->AddGrowableRow(2);
+	FlexGridSizer1->AddGrowableRow(3);
 	SBS1 = new wxStaticBoxSizer(wxVERTICAL, this, _T("If"));
 	FlexGridSizer2 = new wxFlexGridSizer(1, 2, 0, 0);
 	FlexGridSizer2->AddGrowableCol(0);
@@ -138,7 +143,7 @@ FFQVidStab::FFQVidStab(wxWindow* parent)
 	FlexGridSizer2->Add(SrcFile, 1, wxALL|wxEXPAND, 3);
 	BrowseSrc = new wxButton(this, ID_BROWSESRC, _T("..."), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_BROWSESRC"));
 	FlexGridSizer2->Add(BrowseSrc, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
-	SBS1->Add(FlexGridSizer2, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
+	SBS1->Add(FlexGridSizer2, 1, wxALL|wxEXPAND, 0);
 	FileInfo = new wxStaticText(this, ID_FILEINFO, _T("Inf"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_FILEINFO"));
 	SBS1->Add(FileInfo, 1, wxALL|wxEXPAND, 3);
 	FlexGridSizer1->Add(SBS1, 1, wxALL|wxEXPAND, 3);
@@ -205,6 +210,9 @@ FFQVidStab::FFQVidStab(wxWindow* parent)
 	Page1 = new wxPanel(Pages, ID_PAGE1, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, _T("ID_PAGE1"));
 	FlexGridSizer8 = new wxFlexGridSizer(3, 1, 0, 0);
 	FlexGridSizer8->AddGrowableCol(0);
+	FlexGridSizer8->AddGrowableRow(0);
+	FlexGridSizer8->AddGrowableRow(1);
+	FlexGridSizer8->AddGrowableRow(2);
 	FlexGridSizer9 = new wxFlexGridSizer(5, 2, 0, 0);
 	FlexGridSizer9->AddGrowableCol(1);
 	ST7 = new wxStaticText(Page1, wxID_ANY, _T("Sm"), wxDefaultPosition, wxDefaultSize, 0, _T("wxID_ANY"));
@@ -240,6 +248,9 @@ FFQVidStab::FFQVidStab(wxWindow* parent)
 	FlexGridSizer8->Add(FlexGridSizer9, 1, wxALL|wxEXPAND, 3);
 	FlexGridSizer10 = new wxFlexGridSizer(3, 2, 0, 0);
 	FlexGridSizer10->AddGrowableCol(1);
+	FlexGridSizer10->AddGrowableRow(0);
+	FlexGridSizer10->AddGrowableRow(1);
+	FlexGridSizer10->AddGrowableRow(2);
 	ST10 = new wxStaticText(Page1, wxID_ANY, _T("Opt"), wxDefaultPosition, wxDefaultSize, 0, _T("wxID_ANY"));
 	ST10->SetLabel(FFQS(SID_VIDSTAB_OPT_ALGO));
 	FlexGridSizer10->Add(ST10, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
@@ -386,8 +397,19 @@ FFQVidStab::FFQVidStab(wxWindow* parent)
     Pages->SetPageText(1, FFQS(SID_VIDSTAB_2ND_PASS));
     Pages->SetPageText(2, FFQS(SID_VIDSTAB_OTHER_OPTIONS));
 
+    OpenFileDlg->SetDirectory(FFQCFG()->GetBrowseRoot());
+    SaveFileDlg->SetDirectory(FFQCFG()->GetBrowseRoot());
+
+
     //m_FirstExecute = true;
     m_LastPreset = "";
+
+    //This is a bodge to prevent the three wxChoice from being vertically squashed
+    wxSize sz = BrowseSrc->GetSize();
+    sz.SetWidth(-1);
+    OptAlgo->SetMinSize(sz);
+    Interpolation->SetMinSize(sz);
+    OptZoom->SetMinSize(sz);
 
     Connect(wxID_ANY, wxEVT_IDLE, (wxObjectEventFunction)&FFQVidStab::OnIdle);
 

@@ -3,12 +3,13 @@ The build guide is Copyright © 2023 by Torben Bruchhaus. Version history:
 - 1.0: 7th of January 2017
 - 1.1: 23rd of February 2019
 - 1.2: 15th of June 2023
+- 1.3: 12th of July 2023
 
 [General]
 All make commands uses the argument "-j?" which is invalid. You must replace the "?"
 with the number of threads supported by your CPU, eg. for 4 threads use "-j4" in order
 to optimize the build process. Using multi-threaded make may cause problems and if it
-does use "-j1".
+does use "-j1" or omit the switch completely.
 
 $BASE is used as a synonym for the base folder in where all work is done. You can make
 this folder wherever you like.
@@ -19,9 +20,9 @@ In order to build FFQueue you need the G++ compiler, wxWidgets version 3.0.* (or
 development files and FFQueue source code.
 
   {G++ - Windows}
-  Download and install MinGW or MinGW-w64. FFQueue has been build using MinGW 32bit, other
-  compilers may cause issues or require other steps than the ones covered in this guide.
-  Make sure that the "\bin" folder of the compiler is part of the "PATH" environment
+  Download and install MinGW or MinGW-w64. FFQueue has been build using MinGW-w64 32bit,
+  other compilers may cause issues or require other steps than the ones covered in this
+  guide. Make sure that the "\bin" folder of the compiler is part of the "PATH" environment
   variable.
 
   {wxWidgets - Windows}
@@ -32,7 +33,7 @@ development files and FFQueue source code.
   BUILD=release SHARED=0" in order to actually bild wxWidgets.
 
   {G++ - Linux}
-  Install package "g++" or "gcc".
+  Install package "g++" and/or "gcc".
 
   {wxWidgets - Linux}
   Install package "libwxgtk*-dev" (* may vary, on my current system it is "3.0-gtk3") -
@@ -57,22 +58,24 @@ development files and FFQueue source code.
   http://ffqueue.bruchhaus.dk/ - you must extract the archive to "$BASE/FFQueue/*".
 
 
-[AutoTools]
+[AutoMake]
 This section is only useful for Linux users. You need to make sure that "wx-config" can
 be found by the shell. You can test it by executing the command "wx-config --version",
 this should give you a version number like "3.0.4". After this is done, execute the
 following commands in a terminal:
 
 > cd $BASE/FFQueue
-> autoreconf --install
+> re-automake.sh
 > mkdir build
 > cd build
 > ../configure
 > make -j?
 > sudo make install
 
-NOTE: Step 2 is only required if the version of AutoTools on the build system differs
-from the one on the development system.
+NOTE: Step 2 is only required if the make files bundled with FFQueue are not compatible
+with the target system. The shell script will delete any pre-generated make files
+before re-generating them for the target system. This step requires the package "automake"
+to be installed, if not present the script will not do anything.
 
 
 [Makefile]
@@ -92,7 +95,7 @@ which the makefiles are located. When this is done you must execute:
 Linux    > make -f Makefile.lin -j?
 Windows  > mingw32-make -f Makefile.win -j?
 
-The windows build requires the path to the MinGW binaries to be added to the global
+The windows build requires the path to the MinGW(-w64) binaries to be added to the global
 search path. If it is not, then you must modify the line with "CXX:=" in Makefile.win
 to the full path to (mingw32-)g++.exe and you must specify the full path to mingw32-make
 in the command above.
