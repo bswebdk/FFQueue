@@ -23,7 +23,7 @@ MAKEBINARY:=$(MAKEROOT)\FFQueue.exe
 COMPVARS:=-mwindows -O2 -Wfatal-errors -DNDEBUG -pipe -mthreads -D__GNUWIN32__ -D__WXMSW__ -DwxUSE_UNICODE -Wall -fPIC -std=gnu++11 -Winvalid-pch -include wx_pch.h
 
 # Compiler search directories
-COMPDIRS:=-I. -I"$(WX)\include" -I"$(WX)\lib\gcc_lib\mswu" -I"$(WX)\src\zlib"
+COMPDIRS:=-I. -I"$(WX)\include" -I"$(WX)\lib\gcc_lib\mswu" -I"$(WX)\src\zlib" -I"src\utils"
 
 # Linker settings
 LINKVARS:=-mwindows -s -static -static-libgcc -mthreads
@@ -74,6 +74,7 @@ OBJECTS:=\
 	$(MAKEROOT)\obj\FFQBitRatePanel.o\
 	$(MAKEROOT)\obj\FFQConfigEdit.o\
 	$(MAKEROOT)\obj\FFQFilterEdit.o\
+	$(MAKEROOT)\obj\FFQFullSpec.o\
 	$(MAKEROOT)\obj\FFQJobEditAdv.o\
 	$(MAKEROOT)\obj\FFQJobEditAdvCuts.o\
 	$(MAKEROOT)\obj\FFQJobEditAdvPopup.o\
@@ -145,6 +146,7 @@ OBJECTS:=\
 	$(MAKEROOT)\obj\utils\FFQLang.o\
 	$(MAKEROOT)\obj\utils\FFQMisc.o\
 	$(MAKEROOT)\obj\utils\FFQNvpList.o\
+	$(MAKEROOT)\obj\utils\FFQParsing.o\
 	$(MAKEROOT)\obj\utils\FFQPixFmt.o\
 	$(MAKEROOT)\obj\utils\FFQPreset.o\
 	$(MAKEROOT)\obj\utils\FFQProbing.o\
@@ -204,6 +206,9 @@ $(MAKEROOT)\obj\FFQConfigEdit.o:
 
 $(MAKEROOT)\obj\FFQFilterEdit.o:
 	$(CXX) $(COMPVARS) $(COMPDIRS) -c "src\FFQFilterEdit.cpp" -o $@
+
+$(MAKEROOT)\obj\FFQFullSpec.o:
+	$(CXX) $(COMPVARS) $(COMPDIRS) -c "src\FFQFullSpec.cpp" -o $@
 
 $(MAKEROOT)\obj\FFQJobEditAdv.o:
 	$(CXX) $(COMPVARS) $(COMPDIRS) -c "src\FFQJobEditAdv.cpp" -o $@
@@ -417,6 +422,9 @@ $(MAKEROOT)\obj\utils\FFQMisc.o:
 
 $(MAKEROOT)\obj\utils\FFQNvpList.o:
 	$(CXX) $(COMPVARS) $(COMPDIRS) -c "src\utils\FFQNvpList.cpp" -o $@
+
+$(MAKEROOT)\obj\utils\FFQParsing.o:
+	$(CXX) $(COMPVARS) $(COMPDIRS) -c "src\utils\FFQParsing.cpp" -o $@
 
 $(MAKEROOT)\obj\utils\FFQPixFmt.o:
 	$(CXX) $(COMPVARS) $(COMPDIRS) -c "src\utils\FFQPixFmt.cpp" -o $@

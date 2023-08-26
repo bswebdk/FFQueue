@@ -89,6 +89,7 @@ class FFQConfig
 	    bool validate_on_load;
 	    bool confirm_delete_jobs;
 	    bool preview_map_subs;
+	    bool dont_save_ffmpeg;
 
 	    wxString app_name;
 	    wxString batch_config;
@@ -171,8 +172,11 @@ class FFQConfig
 	    wxString m_VideoCodecs; //List of supported video codecs
 	    wxString m_HWAccels; //List of supported hardware accelerators
 	    wxString m_HWDecoders; //List of hardware decoders
+	    wxString m_CapsFile; //File name used for ffmpeg capabilities
 
         FFQConfig(); //Private constructor to prevent instantiation.
+        bool LoadFFmpegCapabilities();
+        void SaveFFmpegCapabilities();
         bool TryLocateFFMpeg();
 
 };

@@ -24,37 +24,53 @@
 #include "FFQPixFmt.h"
 #include "FFQMisc.h"
 
-PIXEL_FORMAT::PIXEL_FORMAT(wxString pix_fmt)
+PIXEL_FORMAT::PIXEL_FORMAT(wxString &pix_fmt)
 {
-
-    //Parse values from a line of pixels formats like:
-    //IOHPB name comp bits
-    //WARNING: NO VALIDATION!!!
 
     //Get pixel format line
     wxString fmt = GetLine(pix_fmt, true);//, fmts = fmt;
 
-    //Get flag token and parse values
-    wxString s = GetToken(fmt, " ", true).Upper();
-    in = s.Find('I') == 0;
-    out = s.Find('O') == 1;
-    hwaccl = s.Find('H') == 2;
+    if (fmt.Find(COMMA) > 0)
+    {
 
-    //Get name of pixel format
-    fmt.Trim(false);
-    name = GetToken(fmt, " ", true);
+        //Parse from a value packed with ::ToString()
+        comp = Str2Long(GetToken(fmt, COMMA), 0);
+        bits = Str2Long(GetToken(fmt, COMMA), 0);
+        in = GetToken(fmt, COMMA) == STR_YES;
+        out = GetToken(fmt, COMMA) == STR_YES;
+        hwaccl = GetToken(fmt, COMMA) == STR_YES;
+        name = fmt;
 
-    //Number of components
-    fmt.Trim(false);
-    comp = Str2Long(GetToken(fmt, " ", true), -1);
+    }
+    else
+    {
 
-    //Number of bits per pixel
-    fmt.Trim(false);
-    bits = Str2Long(GetToken(fmt, " ", true), -1);
+        //Parse values from a line of pixels formats like:
+        //IOHPB name comp bits
+        //WARNING: NO VALIDATION!!!
 
-    //Possible validation
-    //if ( ((!in) && (!out)) || (comp <= 0) || (bits <= 0) || (name.Len() == 0) ) ThrowError("Invalid pixel format: " + fmts);
+        //Get flag token and parse values
+        wxString s = GetToken(fmt, " ", true).Upper();
+        in = s.Find('I') == 0;
+        out = s.Find('O') == 1;
+        hwaccl = s.Find('H') == 2;
 
+        //Get name of pixel format
+        fmt.Trim(false);
+        name = GetToken(fmt, " ", true);
+
+        //Number of components
+        fmt.Trim(false);
+        comp = Str2Long(GetToken(fmt, " ", true), -1);
+
+        //Number of bits per pixel
+        fmt.Trim(false);
+        bits = Str2Long(GetToken(fmt, " ", true), -1);
+
+        //Possible validation
+        //if ( ((!in) && (!out)) || (comp <= 0) || (bits <= 0) || (name.Len() == 0) ) ThrowError("Invalid pixel format: " + fmts);
+
+    }
     //Parse next, if available
     pix_fmt.Trim(false);
     lpNext = (pix_fmt.Len() > 0) ? new PIXEL_FORMAT(pix_fmt) : NULL;
@@ -114,6 +130,14 @@ bool PIXEL_FORMAT::Is10BitQuantizer()
 
     return (name.Find("p10") > 0) || (name.Find("p12") > 0) || (name.Find("p14") > 0) || (name.Find("p16") > 0);
 
+}
+
+//---------------------------------------------------------------------------------------
+
+wxString PIXEL_FORMAT::ToString()
+{
+    wxString res = wxString::Format("%i,%i,%s,%s,%s,%s", comp, bits, BOOLSTR(in), BOOLSTR(out), BOOLSTR(hwaccl), name);
+    return (lpNext == NULL) ? res : res + CRLF + lpNext->ToString();
 }
 
 //---------------------------------------------------------------------------------------

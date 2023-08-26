@@ -88,14 +88,20 @@ class FFQMain: public wxFrame
         FFQMain(wxWindow* parent, wxWindowID id = -1);
         virtual ~FFQMain();
 
+        //Public item handling
         long FindItemForFile(wxString file_name, long start_index = 0, bool output_file = false);
-
         LPFFQ_QUEUE_ITEM GetItemAtIndex(long index);
         LPFFQ_QUEUE_ITEM GetSelectedItem(long *index = NULL);
         long IndexOfItem(LPFFQ_QUEUE_ITEM item);
+
+        //Public preset handling
         bool IsPresetActive(LPFFQ_PRESET pst, bool *can_modify = NULL);
         void PresetChanged(LPFFQ_PRESET pst);
+
+        //Public access to previewing commands
         bool PreviewCommand(wxString cmd, bool add_to_console);
+
+        //Public access to select a console
         void SelectConsole(FFQConsole* by_pointer, int by_index = -1);
 
     private:
@@ -128,6 +134,7 @@ class FFQMain: public wxFrame
         float m_LastColumnPct;
         int m_StatusColumnWidth; //Width of the status column, calculated with a screen DC
         bool m_AllowEvents; //Used to avoid event-filtering for programmatically triggered events
+        bool m_FirstIdle; //True if OnIdle is entered for the first time
         bool m_FirstShow; //True when frame receives focus for the first time
         bool m_Closed; //Has the frame been closed?
 
@@ -139,59 +146,60 @@ class FFQMain: public wxFrame
         int m_EncodingSuccess;
         uint64_t m_QueueStarted;
 
-        //FFQProcess* m_EncodingProcess; //The process used for encoding
-        //LPFFQ_QUEUE_ITEM m_CurrentItem; //The item currently being processed
-        //wxString m_CurrentCommand; //The command currently executed
-        //TIME_VALUE m_ItemDurationTime; //The duration to be encoded
-        //uint64_t m_ItemStartTick; //The tick count when the item started
-        //long m_ItemDurationFrames; //The number of frames to be encoded
-        //double m_LastPercentDone;
-
+        //Handlers for encoding slots / consoles
+        int  FindEncodingSlot(LPFFQ_QUEUE_ITEM item);
         void InitEncodingSlots();
 
-
+        //Item processing
         void AfterItemProcessing(LPENCODING_SLOT slot); //Called when an item has been processed
         bool BeforeItemProcessing(LPENCODING_SLOT slot); //Called when an item is about to be processed
+        void DeleteProcessedItems(); //Delete the jobs marked as qsDONE after queue has been processed
         LPFFQ_QUEUE_ITEM FindNextItemToProcess(LPFFQ_QUEUE_ITEM from_item); //Return the next queued item in the list
         void LogItemStatus(LPENCODING_SLOT slot, bool first_command); //Log the status of the item
         bool MustBeQueued(LPFFQ_QUEUE_ITEM item, long item_index, bool selected_only); //Checks if the items status allows queuing
         bool OverwritePrompt(bool selected_only); //Asks if the user wants to overwrite existing files before starting the queue
         bool ProcessNext(LPENCODING_SLOT slot); //Process the next item/command
-        int  FindEncodingSlot(LPFFQ_QUEUE_ITEM item);
+        void ProcessReadOutput(); //Reads output from the current job
+
+        //Queue handling
         void FinishQueue(); //Called when the queue finishes or is aborted
         void StartQueue(bool selected_only); //Starts processing of the requested items
         void StopQueue(bool selected_only); //Stops processing of the requested items
 
-        void BatchMakeJobs(wxArrayString *files, bool releaseFilesPtr);
 
+        //Item handling in the list
         void DefineItem(long index, LPFFQ_QUEUE_ITEM item, DEFINE_SELECT select, bool save_if_required); //Uused to modify items in the ListView
         void DeleteItem(long index); //Delete job and attached data
         void EditJob(long index, wxString forFileName = "", LPFFQ_QUEUE_ITEM clone = NULL); //Edit the job at idx
         void LoadItems(); //Load previously stored items
         void SaveItems(bool prompt = false); //Save items in queue
         void ValidateItems(); //Validate all items in the list for missing file(s)
-
         void MoveItems(bool up); //Used to move items up or down in the list
         void SwapItems(int a, int b); //Used to swap 2 items
 
-        void DeleteProcessedItems(); //Delete the jobs marked as qsDONE after queue has been processed
 
-        void ProcessReadOutput(); //Reads output from the current job
-
+        //UI related stuff
         void ResizeColumns(bool dragging = false); //Resizes the columns in the ListView when size of frame changes
-        void ShowFFMpegVersion(bool langInfo); //Displays FFMpeg version in the TextCtrl used as console
-        void ShowFFProbeInfo(LPFFQ_QUEUE_ITEM item = NULL); //Display ffprobe info for an item
         void UpdateControls(); //Used to enable/disable buttons according to the current state of query and listview
         void UpdateProgress(LPENCODING_SLOT slot, unsigned int pos); //Used to update progress in gauge and task bar
         void UpdateStatus(); //Used to update statusbar and current job progress
 
+        //Window position get and set
         wxString GetWindowPos();
         void SetWindowPos(wxString &wp);
 
+        //FFmpeg handling
+        void ShowFFMpegVersion(bool langInfo); //Displays FFMpeg version in the TextCtrl used as console
+        void ShowFFProbeInfo(LPFFQ_QUEUE_ITEM item = NULL); //Display ffprobe info for an item
+
+        //Tools and such
+        void BatchMakeJobs(wxArrayString *files, bool releaseFilesPtr);
         bool LaunchTool(short ToolID, long edit_index = -1, LPFFQ_QUEUE_ITEM edit_item = NULL); //Launches a tool to create commands
 
+        //Event handlers
         void OnChar(wxKeyEvent &event);
         void OnDropFiles(wxDropFilesEvent& event);
+        void OnIdle(wxIdleEvent &event);
         void OnMaximize(wxMaximizeEvent &event);
         void OnMove(wxMoveEvent &event);
         void OnShow(wxShowEvent &event);

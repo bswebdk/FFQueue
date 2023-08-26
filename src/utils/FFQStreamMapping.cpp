@@ -41,7 +41,7 @@ STREAM_MAPPING::STREAM_MAPPING()
 
 //---------------------------------------------------------------------------------------
 
-STREAM_MAPPING::STREAM_MAPPING(bool chk, int f_id, int s_id, wxString c_type, wxString pst_lst)
+STREAM_MAPPING::STREAM_MAPPING(bool chk, int f_id, int s_id, wxString c_type, wxString pst_lst, wxString cdc_name)
 {
 
     //Constructor that defines values
@@ -50,6 +50,7 @@ STREAM_MAPPING::STREAM_MAPPING(bool chk, int f_id, int s_id, wxString c_type, wx
     stream_id = s_id;
     codec_type = c_type;
     preset_list = pst_lst;
+    codec_name = cdc_name;
 
 }
 
@@ -82,6 +83,7 @@ bool STREAM_MAPPING::Parse(wxString &from)
         stream_id = Str2Long(GetToken(from, SPACE), -1);
         codec_type = GetToken(from, SPACE, false);
         preset_list = "";
+        codec_name = "";
 
     }
 
@@ -93,10 +95,19 @@ bool STREAM_MAPPING::Parse(wxString &from)
         file_id = Str2Long(GetToken(from, COMMA), -1);
         stream_id = Str2Long(GetToken(from, COMMA), -1);
         codec_type = GetToken(from, STREAM_MAPPING_SEPERATOR);
-        if (codec_type.Find(COMMA) > 0)
+
+        if (codec_type.Find(COMMA) >= 0)
         {
-            preset_list = codec_type.After(COMMA);
-            codec_type = codec_type.Before(COMMA);
+
+            preset_list = codec_type.AfterFirst(COMMA);
+            codec_type = codec_type.BeforeFirst(COMMA);
+
+            if (preset_list.Find(COMMA) >= 0)
+            {
+                codec_name = preset_list.AfterLast(COMMA);
+                preset_list = preset_list.BeforeLast(COMMA);
+            }
+
         }
 
     }
@@ -118,7 +129,7 @@ wxString STREAM_MAPPING::ToString(wxString long_codec_name)
 
     if (long_codec_name.Len() == 0) //Pack for use in FFQ_JOB::stream_map
         //res << BOOLSTR(checked) << "," << file_id << "," << stream_id << "," << codec_type << "," << preset_id;
-        res.Printf("%s,%d,%d,%s,%s", BOOLSTR(checked), file_id, stream_id, codec_type, preset_list);
+        res.Printf("%s,%d,%d,%s,%s,%s", BOOLSTR(checked), file_id, stream_id, codec_type, preset_list, codec_name);
 
     else //Pack for visual display (in the job editor etc.)
         //res << "#" << file_id << ":" << stream_id << " " << codec_type << " {" << long_codec_name << "}";

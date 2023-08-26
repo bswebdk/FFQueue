@@ -93,4 +93,10 @@ extern const unsigned char FONTS_CONF[];
 extern const uint32_t STR_ABOUT_SIZE;
 extern const unsigned char STR_ABOUT[];
 
+extern const uint32_t STR_X264_SIZE;
+extern const unsigned char STR_X264[];
+
+extern const uint32_t STR_X265_SIZE;
+extern const unsigned char STR_X265[];
+
 #endif //BIN_RES_H

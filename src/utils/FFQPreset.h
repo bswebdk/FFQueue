@@ -69,7 +69,8 @@ typedef struct FFQ_PRESET
              custom_args_1, //Custom command line arguments for 1st pass
              custom_args_2, //As "custom_args_1" but for second pass
              disposition, //Video,Audio,Subtitle disposition
-             finger_print; //Used to auto detect preset (see FFQJobEditAdv::GetPresetFingerPrint)
+             finger_print, //Used to auto detect preset (see FFQJobEditAdv::GetPresetFingerPrint)
+             fullspec_vid; //Storing any full spec settings for video
 
     wxArrayString filters; //The video and audio filters
 

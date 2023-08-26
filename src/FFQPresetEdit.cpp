@@ -23,6 +23,7 @@
 
 #include "FFQPresetEdit.h"
 #include "FFQMain.h"
+#include "FFQFullSpec.h"
 #include "utils/FFQLang.h"
 #include "utils/FFQConfig.h"
 #include "utils/FFQBuildCmd.h"
@@ -50,6 +51,7 @@
 const long FFQPresetEdit::ID_PRESETNAME = wxNewId();
 const long FFQPresetEdit::ID_PRESETTEMP = wxNewId();
 const long FFQPresetEdit::ID_VIDEOCODEC = wxNewId();
+const long FFQPresetEdit::ID_FULLSPECVIDBUTTON = wxNewId();
 const long FFQPresetEdit::ID_TWOPASS = wxNewId();
 const long FFQPresetEdit::ID_TWOPASSNULL = wxNewId();
 const long FFQPresetEdit::ID_VIDEOBITRATE = wxNewId();
@@ -148,6 +150,7 @@ const long FFQPresetEdit::ID_AUDIOFILTERSCOMPLEX = wxNewId();
 const long FFQPresetEdit::ID_FILTERTIP = wxNewId();
 const long FFQPresetEdit::ID_FILTERPAGE = wxNewId();
 const long FFQPresetEdit::ID_METADATA = wxNewId();
+const long FFQPresetEdit::ID_CLEARMETADATABTN = wxNewId();
 const long FFQPresetEdit::ID_STMD1 = wxNewId();
 const long FFQPresetEdit::ID_METADATAFOR = wxNewId();
 const long FFQPresetEdit::ID_METADATAPAGE = wxNewId();
@@ -269,20 +272,26 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 	VSBS1 = new wxStaticBoxSizer(wxHORIZONTAL, VideoPage, _T("Cd"));
 	FlexGridSizer18 = new wxFlexGridSizer(2, 1, 0, 0);
 	FlexGridSizer18->AddGrowableCol(0);
+	VideoCodecSizer = new wxFlexGridSizer(1, 2, 0, 0);
+	VideoCodecSizer->AddGrowableCol(0);
 	VideoCodec = new wxChoice(VideoPage, ID_VIDEOCODEC, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator, _T("ID_VIDEOCODEC"));
 	VSBS1->GetStaticBox()->SetLabel(FFQS(SID_PRESET_CODEC));
-	FlexGridSizer18->Add(VideoCodec, 1, wxALL|wxEXPAND, 3);
-	VidSizer1 = new wxFlexGridSizer(1, 2, 0, 0);
-	VidSizer1->AddGrowableRow(0);
+	VideoCodecSizer->Add(VideoCodec, 1, wxALL|wxEXPAND, 3);
+	FullSpecVidButton = new wxButton(VideoPage, ID_FULLSPECVIDBUTTON, _T("..."), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_FULLSPECVIDBUTTON"));
+	VideoCodecSizer->Add(FullSpecVidButton, 1, wxALL, 3);
+	FlexGridSizer18->Add(VideoCodecSizer, 0, wxEXPAND, 0);
+	VideoTwoPassSizer = new wxFlexGridSizer(1, 2, 0, 0);
+	VideoTwoPassSizer->AddGrowableCol(1);
+	VideoTwoPassSizer->AddGrowableRow(0);
 	TwoPass = new wxCheckBox(VideoPage, ID_TWOPASS, _T("2pass"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_TWOPASS"));
 	TwoPass->SetValue(false);
 	TwoPass->SetLabel(FFQS(SID_PRESET_TWO_PASS_ENCODING));
-	VidSizer1->Add(TwoPass, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
+	VideoTwoPassSizer->Add(TwoPass, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
 	TwoPassNull = new wxCheckBox(VideoPage, ID_TWOPASSNULL, _T("2p null"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_TWOPASSNULL"));
 	TwoPassNull->SetValue(false);
 	TwoPassNull->SetLabel(FFQS(SID_PRESET_FIRST_PASS_NULL_TARGET));
-	VidSizer1->Add(TwoPassNull, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
-	FlexGridSizer18->Add(VidSizer1, 1, wxALL|wxEXPAND, 3);
+	VideoTwoPassSizer->Add(TwoPassNull, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
+	FlexGridSizer18->Add(VideoTwoPassSizer, 1, wxALL|wxEXPAND, 0);
 	VSBS1->Add(FlexGridSizer18, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
 	FlexGridSizer13->Add(VSBS1, 1, wxALL|wxEXPAND, 5);
 	VideoPages = new wxNotebook(VideoPage, ID_VIDEOPAGES, wxDefaultPosition, wxDefaultSize, 0, _T("ID_VIDEOPAGES"));
@@ -747,9 +756,10 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 	FlexGridSizer10->AddGrowableCol(0);
 	FlexGridSizer10->AddGrowableRow(0);
 	MetaData = new wxGrid(MetaDataPage, ID_METADATA, wxDefaultPosition, wxDefaultSize, 0, _T("ID_METADATA"));
-	MetaData->CreateGrid(5,2);
+	MetaData->CreateGrid(5,3);
 	MetaData->SetColLabelValue(0, FFQS(SID_PRESET_METADATA_KEY));
-	MetaData->SetColLabelValue(1, FFQS(SID_PRESET_METADATA_VALUE));
+	MetaData->SetColLabelValue(1, FFQS(SID_PRESET_METADATA_STREAM));
+	MetaData->SetColLabelValue(2, FFQS(SID_PRESET_METADATA_VALUE));
 	SBS31->GetStaticBox()->SetLabel(FFQS(SID_PRESET_METADATA_DEFINE));
 	MetaData->EnableEditing(true);
 	MetaData->EnableGridLines(true);
@@ -757,9 +767,12 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 	MetaData->SetDefaultCellFont( MetaData->GetFont() );
 	MetaData->SetDefaultCellTextColour( MetaData->GetForegroundColour() );
 	FlexGridSizer10->Add(MetaData, 1, wxALL|wxEXPAND, 3);
-	FlexGridSizer29 = new wxFlexGridSizer(1, 2, 0, 0);
+	FlexGridSizer29 = new wxFlexGridSizer(1, 3, 0, 0);
 	FlexGridSizer29->AddGrowableCol(0);
-	STMD1 = new wxStaticText(MetaDataPage, ID_STMD1, _T("Label"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STMD1"));
+	ClearMetaDataBtn = new wxButton(MetaDataPage, ID_CLEARMETADATABTN, _T("Cl"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CLEARMETADATABTN"));
+	ClearMetaDataBtn->SetLabel(FFQS(SID_COMMON_CLEAR));
+	FlexGridSizer29->Add(ClearMetaDataBtn, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 0);
+	STMD1 = new wxStaticText(MetaDataPage, ID_STMD1, _T("SD"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STMD1"));
 	STMD1->SetLabel(FFQS(SID_PRESET_METADATA_FOR));
 	FlexGridSizer29->Add(STMD1, 1, wxRIGHT|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 5);
 	MetaDataFor = new wxChoice(MetaDataPage, ID_METADATAFOR, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator, _T("ID_METADATAFOR"));
@@ -928,6 +941,7 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 	FlexGridSizer1->SetSizeHints(this);
 
 	Connect(ID_VIDEOCODEC,wxEVT_COMMAND_CHOICE_SELECTED,(wxObjectEventFunction)&FFQPresetEdit::OnChoiceChange);
+	Connect(ID_FULLSPECVIDBUTTON,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&FFQPresetEdit::OnButtonClick);
 	Connect(ID_TWOPASS,wxEVT_COMMAND_CHECKBOX_CLICKED,(wxObjectEventFunction)&FFQPresetEdit::OnButtonClick);
 	Connect(ID_USEVIDEOQSCALE,wxEVT_COMMAND_CHECKBOX_CLICKED,(wxObjectEventFunction)&FFQPresetEdit::OnChoiceChange);
 	Connect(ID_VIDEOQSCALE,wxEVT_COMMAND_SLIDER_UPDATED,(wxObjectEventFunction)&FFQPresetEdit::OnSubsScaleChange);
@@ -963,6 +977,8 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 	Connect(ID_FILTERUPBUTTON,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&FFQPresetEdit::OnButtonClick);
 	Connect(ID_FILTERDOWNBUTTON,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&FFQPresetEdit::OnButtonClick);
 	Connect(ID_FILTERPREVIEWBUTTON,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&FFQPresetEdit::OnButtonClick);
+	Connect(ID_METADATA,wxEVT_GRID_CELL_CHANGED,(wxObjectEventFunction)&FFQPresetEdit::OnMetaDataCellChange);
+	Connect(ID_CLEARMETADATABTN,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&FFQPresetEdit::OnButtonClick);
 	Connect(ID_METADATAFOR,wxEVT_COMMAND_CHOICE_SELECTED,(wxObjectEventFunction)&FFQPresetEdit::OnChoiceChange);
 	Connect(ID_DISPOSITIONSBTN,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&FFQPresetEdit::OnButtonClick);
 	Connect(ID_PAGES,wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGED,(wxObjectEventFunction)&FFQPresetEdit::OnNotebookPageChanged);
@@ -1092,6 +1108,11 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
     for (unsigned int i = 0; i < 5; i++) SegmentListType->Append(as[i]);
     delete[] as;
 
+    //Prepare the full spec editor
+    #ifndef DEBUG
+    FFQFullSpec::Initialize();
+    #endif
+
 }
 
 //---------------------------------------------------------------------------------------
@@ -1112,6 +1133,11 @@ FFQPresetEdit::~FFQPresetEdit()
 bool FFQPresetEdit::Execute(LPFFQ_PRESET preset)
 {
 
+    #ifdef DEBUG
+    FFQFullSpec::Finalize();
+    FFQFullSpec::Initialize();
+    #endif // DEBUG
+
     //Store pointer to preset
     m_Preset = preset;
 
@@ -1126,6 +1152,7 @@ bool FFQPresetEdit::Execute(LPFFQ_PRESET preset)
     //Video options
     wxString s = FFQCFG()->GetFFMpegCodecs(ctVIDEO), t;
     SetItems(VideoCodec, s, preset->video_codec);
+    m_FullSpecVid = preset->fullspec_vid;
     TwoPass->SetValue(preset->two_pass);
     TwoPassNull->SetValue(preset->two_pass_null);
 
@@ -1271,8 +1298,12 @@ bool FFQPresetEdit::Execute(LPFFQ_PRESET preset)
     m_SelMetaData = 0;
     MetaDataFor->SetSelection(m_SelMetaData);
     SetMetaData(m_MetaData[m_SelMetaData]);
-    MetaData->SetColSize(0, 150);
-    MetaData->SetColSize(1, MetaData->GetGrandParent()->GetSize().GetWidth() - MetaData->GetColLabelSize() - 170);
+    wxClientDC dc(MetaData);
+    wxSize ts = dc.GetTextExtent("W");
+    MetaData->SetColSize(0, ts.x * 14);
+    MetaData->SetColSize(1, ts.x * 6);
+    MetaData->SetColSize(2, Pages->GetClientSize().x - MetaData->GetColLabelSize() - (ts.x * 20));
+    //MetaData->SetColSize(2, MetaData->GetGrandParent()->GetSize().GetWidth() - MetaData->GetColLabelSize() - 320);
     //MetaData->SetColSize(1, MetaData->GetClientRect().GetWidth() - MetaData->GetColLabelSize() - 130);
 
 
@@ -1323,12 +1354,12 @@ bool FFQPresetEdit::Execute(LPFFQ_PRESET preset)
 
     //Update codec info, subtitle filter and validate controls
     UpdateCodecInfo();
-    UpdateControls(true);
     UpdateFilterMenu();
     UpdateSubtitleFilter(); //Just in case it has not yet been added
 
 
     //Tidy
+    UpdateControls(true);
     CenterOnParent();
 
 
@@ -1344,6 +1375,7 @@ bool FFQPresetEdit::Execute(LPFFQ_PRESET preset)
 
         //Save video settings
         preset->video_codec = VideoCodec->GetStringSelection().BeforeFirst(' ');
+        preset->fullspec_vid = m_FullSpecVid;
         preset->two_pass = TwoPass->GetValue();
         preset->two_pass_null = TwoPassNull->GetValue();
 
@@ -1658,14 +1690,15 @@ bool ValidMetaData(wxString &d)
 bool FFQPresetEdit::GetMetaData(wxString &data)
 {
 
-    wxString n, v;
+    wxString n, v, s;
     data = "";
 
     for (int i = 0; i < MetaData->GetNumberRows(); i++)
     {
 
         n = StrTrim(MetaData->GetCellValue(i, 0));
-        v = StrTrim(MetaData->GetCellValue(i, 1));
+        s = StrTrim(MetaData->GetCellValue(i, 1));
+        v = StrTrim(MetaData->GetCellValue(i, 2));
 
         if ((n.Len() > 0) && (v.Len() > 0)) //Skip blank values
         {
@@ -1676,13 +1709,20 @@ bool FFQPresetEdit::GetMetaData(wxString &data)
                 return false;
             }
 
-            if (v.Find(FILTER_SEPARATOR) >= 0) //Check for separator-value which is illegal
+            if ((s.Len() > 0) && (Str2Long(s, -1) < 0))
             {
                 MetaData->GoToCell(i, 1);
                 return false;
             }
 
+            if (v.Find(FILTER_SEPARATOR) >= 0) //Check for separator-value which is illegal
+            {
+                MetaData->GoToCell(i, 2);
+                return false;
+            }
+
             if (data.Len() > 0) data += FILTER_SEPARATOR; //Append separator
+            if (s.Len() > 0) n += PIPE + s;
             v.Replace("\"", "\\\""); //Escape quotes to prevent command-line skrew-ups
             data += n + "=\"" + v + "\""; //Values are always quoted
 
@@ -1718,12 +1758,13 @@ void FFQPresetEdit::SetMetaData(wxString data)
     int row = MetaData->GetNumberRows();
     if (row > 0) MetaData->DeleteRows(0, row);
 
-    wxString n, v;
+    wxString n, v, s;
 
     while (data.Len() > 0)
     {
 
-        n = GetToken(data, '=');
+        n = GetToken(data, EQUAL);
+        s = (n.Find(PIPE) > 0) ? GetLastToken(n, PIPE, true) : "";
         v = GetToken(data, FILTER_SEPARATOR);
 
         if ((n.Len() > 0) && (v.Len() > 0))
@@ -1739,7 +1780,8 @@ void FFQPresetEdit::SetMetaData(wxString data)
             MetaData->AppendRows();
             row = MetaData->GetNumberRows() - 1;
             MetaData->SetCellValue(row, 0, n);
-            MetaData->SetCellValue(row, 1, v);
+            MetaData->SetCellValue(row, 1, s);
+            MetaData->SetCellValue(row, 2, v);
 
         }
 
@@ -1794,8 +1836,11 @@ void FFQPresetEdit::UpdateControls(bool sizers)
         //Only performed when codec-choices change, selection of "0" means
         //copy and all possible encoding properties must be disabled
 
+        m_FullSpecVidIdx = venc ? FFQFullSpec::FindFullSpec(VideoCodec->GetString(VideoCodec->GetSelection())) : -1;
+        FullSpecVidButton->Enable(m_FullSpecVidIdx >= 0);
+
         //Video
-        EnableSizer(VidSizer1, venc); //Two pass
+        EnableSizer(VideoTwoPassSizer, venc); //Two pass
 
         //Audio
         EnableSizer(ASBS2, aenc);
@@ -1841,6 +1886,7 @@ void FFQPresetEdit::UpdateControls(bool sizers)
 
         //Disable video controls that cannot be changed
 
+        TwoPassNull->Enable(TwoPass->IsChecked());
 
         int sel_first = -1, sel_last = -2,
             mov_first = 0, f_count = FilterList->GetCount();
@@ -2140,7 +2186,14 @@ void FFQPresetEdit::OnButtonClick(wxCommandEvent& event)
     wxString *fs;
     int idx, evtId = event.GetId();
 
-    if (evtId == ID_ADDFILTERBUTTON)
+    if ((evtId == ID_FULLSPECVIDBUTTON) && (m_FullSpecVidIdx >= 0))
+    {
+        FFQFullSpec *fs = new FFQFullSpec(this);
+        fs->Execute(m_FullSpecVidIdx, m_FullSpecVid);
+        delete fs;
+    }
+
+    else if (evtId == ID_ADDFILTERBUTTON)
     {
 
         AddFilterButton->PopupMenu(&AddFilterMenu);
@@ -2222,6 +2275,14 @@ void FFQPresetEdit::OnButtonClick(wxCommandEvent& event)
     {
 
         PreviewFilters();
+
+    }
+
+    else if (evtId == ID_CLEARMETADATABTN)
+    {
+
+        m_MetaData[m_SelMetaData] = "";
+        SetMetaData("");
 
     }
 
@@ -2427,8 +2488,8 @@ void FFQPresetEdit::OnMetaDataCellChange(wxGridEvent& event)
     //Make sure that there is always an empty last row
     event.Skip();
     if (event.GetCol() != 0) return;
-    int lastRow = MetaData->GetNumberRows() - 1;
-    if ((event.GetRow() == lastRow) && (StrTrim(MetaData->GetCellValue(lastRow, 0)) != "")) MetaData->AppendRows();
+    int rows = MetaData->GetNumberRows() - 1;
+    if ((event.GetRow() == rows) && (StrTrim(MetaData->GetCellValue(rows, 0)) != "")) MetaData->AppendRows(); //EnsureGridRow(MetaData, "", m_SelMetaData > 0);
 
 }
 

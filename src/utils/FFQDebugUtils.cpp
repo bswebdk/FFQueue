@@ -26,12 +26,15 @@
 #include "../utils/FFQLang.h"
 #include "FFQConst.h"
 #include "FFQConsole.h"
+#include "FFQCompress.h"
+#include "../FFQFullSpec.h"
 #include "version.h"
 #include <wx/ffile.h>
 #include <wx/file.h>
 #include <wx/stdpaths.h>
 #include <wx/filename.h>
 #include <wx/xml/xml.h>
+//#include <zlib.h>
 
 wxString MakeArrayName(wxString array_name, int array_len, bool for_header)
 {
@@ -232,13 +235,15 @@ bool MakeBinaryResources()
     s += MakeArrayName("MAIN_LOGO", 0, true) + CRLF;
     s += MakeArrayName("FONTS_CONF", 0, true) + CRLF;
     s += MakeArrayName("STR_ABOUT", 0, true) + CRLF;
+    s += MakeArrayName("STR_X264", 0, true) + CRLF;
+    s += MakeArrayName("STR_X265", 0, true) + CRLF;
     s += "#endif //BIN_RES_H";
 
     //Update the header as required
     wxString t = LoadString("src/bin_res.h");
     if (s != t) SaveString("src/bin_res.h", s);
 
-    //Encrypt the about atrings
+    //Encrypt the about strings
     t = ABOUT_KEY;
     STR_HASH key;
     HashString(t, key);
@@ -277,6 +282,20 @@ bool MakeBinaryResources()
     s += FileToArray("res/MainLogo.png", "MAIN_LOGO") + CRLF + CRLF;
     s += FileToArray("res/fonts.conf", "FONTS_CONF") + CRLF + CRLF;
     s += BufToArray((unsigned char*)about, about_len, "STR_ABOUT") + CRLF + CRLF;
+
+    //Compress x264 full spec
+    wxString fs = LoadString("res/x264" + FULLSPEC_FILE_EXTENSION);
+    uint32_t fs_len = 0;
+    uint8_t *fs_buf = CompressString(fs, &fs_len);
+    s += BufToArray((unsigned char*)fs_buf, fs_len /*x264size + sizeof(x264len)*/, "STR_X264") + CRLF + CRLF;
+    delete[] fs_buf;
+
+    //Compress x265 full spec
+    fs = LoadString("res/x265" + FULLSPEC_FILE_EXTENSION);
+    fs_len = 0;
+    fs_buf = CompressString(fs, &fs_len);
+    s += BufToArray((unsigned char*)fs_buf, fs_len /*x264size + sizeof(x264len)*/, "STR_X265") + CRLF + CRLF;
+    delete[] fs_buf;
 
     //Update the implementation as required
     t = LoadString("src/bin_res.cpp");

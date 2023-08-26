@@ -50,6 +50,12 @@ const wxUniChar SCOLON = ';';
 const wxUniChar COMMA = ',';
 const wxUniChar HASH = '#';
 const wxUniChar DOT = '.';
+const wxUniChar EQUAL = '=';
+const wxUniChar QUESTION = '?';
+const wxUniChar QUOTE = '\'';
+const wxUniChar DQUOTE = '"';
+const wxUniChar EXCLAM = '!';
+const wxUniChar PIPE = '|';
 
 #define BOOLSTR(bval) (bval ? STR_YES : STR_NO)
 #define STRBOOL(sval) (sval == STR_YES)

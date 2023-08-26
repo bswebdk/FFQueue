@@ -59,7 +59,7 @@ void CleanupFinishedJob(LPFFQ_JOB job);
 wxString EscapeFilterString(wxString s, bool un_escape = false);
 wxString FormatFileName(wxString fn);
 //bool FormatCuts(FFQ_CUTS &cuts, wxString &stream_tag, bool video, TIME_VALUE duration, int &filter_id);
-wxString FormatCuts(wxArrayPtrVoid &streams, int &filter_id);
+wxString FormatCuts(wxArrayPtrVoid &streams, int &filter_id, wxArrayInt *unique_files_only = 0);
 bool FormatFilter(wxString &filter, wxString &vid_in, wxString &aud_in, wxString &sub_in, wxString &req_in, int &filter_id);
 bool FormatStreamRate(wxString &rate, bool video, wxString stream_tag = wxEmptyString);
 

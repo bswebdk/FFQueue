@@ -71,6 +71,7 @@ class FFQConsole
         unsigned int GetEncodedFrames();
         TIME_VALUE GetEncodedTime();
         uint64_t GetStatisticsTotal();
+        wxTextCtrl* GetTextCtrl();
         void ReplaceLine(int LineNo, const wxString &NewLine);
         bool SaveAsHtml(const wxString &FileName);
         void SetTextCtrl(wxTextCtrl* ctrl);

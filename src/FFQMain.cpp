@@ -25,6 +25,7 @@
 #include "utils/FFQLang.h"
 #include "FFQLangEdit.h"
 #include "FFQPresetMgr.h"
+#include "FFQFullSpec.h"
 #include "utils/FFQConfig.h"
 #include "utils/FFQConst.h"
 #include "utils/FFQMisc.h"
@@ -36,7 +37,13 @@
 #ifdef DEBUG
     #include "utils/FFQDebugUtils.h"
     #include "utils/FFQCodecInfo.h"
+    #include "utils/FFQCompress.h"
+    #include "utils/FFQParsing.h"
     #include <wx/cmdline.h>
+    #include <wx/ffile.h>
+    #include <wx/regex.h>
+    #include <wx/dir.h>
+    #include <zlib.h>
     //#include "utils/FFQNvpList.h"
     //#include "FFQFilterEdit.h"
 #endif // DEBUG
@@ -44,6 +51,7 @@
 #include <wx/stdpaths.h>
 #include <wx/filename.h>
 #include <wx/mstream.h>
+//#include <wx/app.h>
 
 #ifdef __WINDOWS__
     #include <windows.h>
@@ -373,10 +381,14 @@ FFQMain::FFQMain(wxWindow* parent, wxWindowID id)
     Vid2GifItem->SetItemLabel(FFQS(SID_VIDEO2GIF_TITLE) + "...");
 
     Bind(wxEVT_CHAR_HOOK, &FFQMain::OnChar, this);
+    //Bind(wxEVT_IDLE, &FFQMain::OnIdle, this);
+    Bind(wxEVT_MAXIMIZE, &FFQMain::OnMaximize, this);
+    Bind(wxEVT_MOVE, &FFQMain::OnMove, this);
+    Bind(wxEVT_SHOW, &FFQMain::OnShow, this);
 
-    Connect(wxEVT_MAXIMIZE,(wxObjectEventFunction)&FFQMain::OnMaximize);
-    Connect(wxEVT_MOVE,(wxObjectEventFunction)&FFQMain::OnMove);
-    Connect(wxEVT_SHOW,(wxObjectEventFunction)&FFQMain::OnShow);
+    //Connect(wxEVT_MAXIMIZE,(wxObjectEventFunction)&FFQMain::OnMaximize);
+    //Connect(wxEVT_MOVE,(wxObjectEventFunction)&FFQMain::OnMove);
+    //Connect(wxEVT_SHOW,(wxObjectEventFunction)&FFQMain::OnShow);
 
     ListView->DragAcceptFiles(true);
     ListView->Connect(wxEVT_DROP_FILES, wxDropFilesEventHandler(FFQMain::OnDropFiles), NULL, this);
@@ -400,6 +412,7 @@ FFQMain::FFQMain(wxWindow* parent, wxWindowID id)
 
     m_PtrList = new wxArrayPtrVoid();
     m_AllowEvents = false;
+    m_FirstIdle = true;
     m_FirstShow = true;
     m_Closed = false;
     m_RestoredRect.SetPosition(GetPosition());
@@ -417,7 +430,11 @@ FFQMain::FFQMain(wxWindow* parent, wxWindowID id)
     OpenFilesDlg->SetDirectory(FFQCFG()->GetBrowseRoot());
 
     m_JobsFileName = FFQCFG()->app_name.Lower() + ".job";
+    #ifdef DEBUG
+    SetTitle(FFQCFG()->app_name + " - DEBUG");
+    #else
     SetTitle(FFQCFG()->app_name);
+    #endif // DEBUG
 
     FFQMain::m_Instance = this;
 
@@ -689,40 +706,95 @@ void FFQMain::SelectConsole(FFQConsole* by_pointer, int by_index)
 
 //---------------------------------------------------------------------------------------
 
+int FFQMain::FindEncodingSlot(LPFFQ_QUEUE_ITEM item)
+{
+
+    //Find the index of the processing slot belonging to "item".
+    //If item is NULL, the index of the first unused slot is returned
+    for (int i = 0; i < m_NumEncodingSlots; i++) if (m_EncodingSlots[i].item == item) return i;
+    return -1;
+
+}
+
+//---------------------------------------------------------------------------------------
+
 void FFQMain::InitEncodingSlots()
 {
 
-    //Initialize encoding slots
+    //Initialize encoding slots..
     int nes = FFQCFG()->num_encode_slots < 1 ? 1 : FFQCFG()->num_encode_slots;
-    if (m_EncodingActive || (m_NumEncodingSlots == nes)) return; //Do nothing
 
-    m_NumEncodingSlots = nes;
-    m_EncodingActive = false;
-    m_EncodingSlots = new ENCODING_SLOT[m_NumEncodingSlots];
-
-    wxFont fnt(10, wxFONTFAMILY_TELETYPE, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, _T("Monospace"), wxFONTENCODING_DEFAULT);
-    for (int i = 0; i < m_NumEncodingSlots; i++)
+    if (nes > m_NumEncodingSlots)
     {
 
-        LPENCODING_SLOT slot = &m_EncodingSlots[i];
-        slot->index = i;
-        wxPanel *pan = new wxPanel(Consoles, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
-        wxFlexGridSizer *fgs = new wxFlexGridSizer(2, 1, 0, 0);
-        fgs->AddGrowableCol(0);
-        fgs->AddGrowableRow(0);
-        wxTextCtrl *tc = new wxTextCtrl(pan, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_READONLY|wxTE_RICH|wxTE_DONTWRAP|wxBORDER_NONE, wxDefaultValidator);
-        tc->SetFont(fnt);
-        fgs->Add(tc, 0, wxEXPAND, 5);
-        slot->gauge = new wxGauge(pan, wxID_ANY, GAUGE_MAX);
-        //slot->gauge->SetValue(GAUGE_MAX / 2);
-        fgs->Add(slot->gauge, 1, wxALL|wxEXPAND, 0);
-        pan->SetSizer(fgs);
-        fgs->Fit(pan);
-        fgs->SetSizeHints(pan);
-        Consoles->AddPage(pan, FFQSF(SID_MAINFRAME_NB_FOR_JOB, (i+1)), false);
-        Consoles->SetPageImage(i + 1, CONSOLE_IMAGE_OFF);//i == 0 ? CONSOLE_IMAGE_OFF : CONSOLE_IMAGE_ON);
-        slot->console.SetTextCtrl(tc);
+        //Increasing the number of encoding slots always works..
+        LPENCODING_SLOT slots = new ENCODING_SLOT[nes];
+        wxFont fnt(10, wxFONTFAMILY_TELETYPE, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, _T("Monospace"), wxFONTENCODING_DEFAULT);
+        for (int i = 0; i < nes; i++)
+        {
+            LPENCODING_SLOT slot = &slots[i];
+            slot->index = i;
+            if (i < m_NumEncodingSlots)
+            {
+                //Copy existing slot
+                slot->gauge = m_EncodingSlots[i].gauge;
+                slot->console.SetTextCtrl(m_EncodingSlots[i].console.GetTextCtrl());
+            }
+            else
+            {
+                wxPanel *pan = new wxPanel(Consoles, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
+                wxFlexGridSizer *fgs = new wxFlexGridSizer(2, 1, 0, 0);
+                fgs->AddGrowableCol(0);
+                fgs->AddGrowableRow(0);
+                wxTextCtrl *tc = new wxTextCtrl(pan, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_READONLY|wxTE_RICH|wxTE_DONTWRAP|wxBORDER_NONE, wxDefaultValidator);
+                tc->SetFont(fnt);
+                fgs->Add(tc, 0, wxEXPAND, 5);
+                slot->gauge = new wxGauge(pan, wxID_ANY, GAUGE_MAX);
+                //slot->gauge->SetValue(GAUGE_MAX / 2);
+                fgs->Add(slot->gauge, 1, wxALL|wxEXPAND, 0);
+                pan->SetSizer(fgs);
+                fgs->Fit(pan);
+                fgs->SetSizeHints(pan);
+                Consoles->AddPage(pan, FFQSF(SID_MAINFRAME_NB_FOR_JOB, (i+1)), false);
+                Consoles->SetPageImage(i + 1, CONSOLE_IMAGE_OFF);//i == 0 ? CONSOLE_IMAGE_OFF : CONSOLE_IMAGE_ON);
+                slot->console.SetTextCtrl(tc);
+            }
+        }
 
+        if (m_EncodingSlots) delete[] m_EncodingSlots;
+        m_EncodingSlots = slots;
+        m_NumEncodingSlots = nes;
+
+    }
+    else if ((!m_EncodingActive) && (nes < m_NumEncodingSlots))
+    {
+
+        //Decreasing number of encoding slots only works if not encoding and the
+        //slots to remove have empty text controls..
+        int keep = m_NumEncodingSlots;
+        for (int i = m_NumEncodingSlots - 1; i >= nes; i--)
+        {
+            if (m_EncodingSlots[i].console.GetTextCtrl()->IsEmpty())
+            {
+                Consoles->DeletePage(i+1);
+                keep--;
+            }
+            else break;
+        }
+
+        if (keep < m_NumEncodingSlots)
+        {
+            LPENCODING_SLOT slots = new ENCODING_SLOT[keep];
+            for (int i = 0; i < keep; i++)
+            {
+                //Copy existing slot
+                slots[i].gauge = m_EncodingSlots[i].gauge;
+                slots[i].console.SetTextCtrl(m_EncodingSlots[i].console.GetTextCtrl());
+            }
+            delete[] m_EncodingSlots;
+            m_EncodingSlots = slots;
+            m_NumEncodingSlots = keep;
+        }
     }
 
 }
@@ -839,6 +911,24 @@ bool FFQMain::BeforeItemProcessing(LPENCODING_SLOT slot)
 
     //Return success|not
     return start;
+
+}
+
+//---------------------------------------------------------------------------------------
+
+void FFQMain::DeleteProcessedItems()
+{
+
+    if (!FFQCFG()->auto_remove_jobs) return;
+
+    ListView->Freeze();
+    int idx = 0;
+    while (idx < ListView->GetItemCount())
+    {
+        if (GetItemAtIndex(idx)->status == qsDONE) DeleteItem(idx);
+        else idx++;
+    }
+    ListView->Thaw();
 
 }
 
@@ -1189,13 +1279,41 @@ bool FFQMain::ProcessNext(LPENCODING_SLOT slot)
 
 //---------------------------------------------------------------------------------------
 
-int FFQMain::FindEncodingSlot(LPFFQ_QUEUE_ITEM item)
+void FFQMain::ProcessReadOutput()
 {
 
-    //Find the index of the processing slot belonging to "item".
-    //If item is NULL, the index of the first unused slot is returned
-    for (int i = 0; i < m_NumEncodingSlots; i++) if (m_EncodingSlots[i].item == item) return i;
-    return -1;
+    //Reads output from ffmpeg, and adds it to the TextCtrl
+
+    wxString s;
+    bool ok, update = false;
+
+    for (int i = 0; i < m_NumEncodingSlots; i++)
+    {
+
+        LPENCODING_SLOT slot = &m_EncodingSlots[i];
+
+        //Read stdout
+        do {
+
+            s = slot->process.GetProcessOutputLine(false);
+            ok = s.Len() > 0;
+            if (ok) slot->console.AppendFFOutput(s, true);
+
+        } while (ok);
+
+        //Read errout
+        do {
+
+            s = slot->process.GetProcessOutputLine(true);
+            ok = s.Len() > 0;
+            if (ok && (slot->console.AppendFFOutput(s, false) == mtSTATS)) update = true;
+
+        } while (ok);
+
+    }
+
+    //Update status if needed
+    if (update) UpdateStatus();
 
 }
 
@@ -1212,6 +1330,9 @@ void FFQMain::FinishQueue()
 
     //Delete processed jobs
     DeleteProcessedItems();
+
+    //Update number of encoding slots
+    InitEncodingSlots();
 
     //Update controls
     UpdateControls();
@@ -1313,39 +1434,6 @@ void FFQMain::StopQueue(bool selected_only)
     ListView->Thaw();
 
     if (update) UpdateControls();
-
-}
-
-//---------------------------------------------------------------------------------------
-
-void FFQMain::BatchMakeJobs(wxArrayString *files, bool releaseFilesPtr)
-{
-
-    if ((files->GetCount() == 1) && wxFileExists(files->Item(0)))
-        EditJob(-1, files->Item(0)); //If only one file is being batched - use the job editor
-
-    else
-    {
-        if (BatchMaker == NULL) BatchMaker = new FFQBatchMake(this);
-        BatchMaker->SetFiles(files);
-        if (BatchMaker->Execute())
-        {
-
-            ListView->Freeze();
-            for (long i = 0; i < ListView->GetItemCount(); i++) ListView->Select(i, false);
-            for (unsigned int i = 0; i < BatchMaker->GetJobCount(); i++) DefineItem(-1, (LPFFQ_JOB)BatchMaker->GetJob(i), dsAPPEND, false);
-            ListView->Thaw();
-            BatchMaker->Clear();
-
-            //Save items if required
-            if (FFQCFG()->save_on_modify) SaveItems();
-
-        }
-    }
-
-    if (releaseFilesPtr) delete files;
-
-    UpdateControls();
 
 }
 
@@ -1652,64 +1740,6 @@ void FFQMain::SwapItems(int a, int b)
 
 //---------------------------------------------------------------------------------------
 
-void FFQMain::DeleteProcessedItems()
-{
-
-    if (!FFQCFG()->auto_remove_jobs) return;
-
-    ListView->Freeze();
-    int idx = 0;
-    while (idx < ListView->GetItemCount())
-    {
-        if (GetItemAtIndex(idx)->status == qsDONE) DeleteItem(idx);
-        else idx++;
-    }
-    ListView->Thaw();
-
-}
-
-//---------------------------------------------------------------------------------------
-
-void FFQMain::ProcessReadOutput()
-{
-
-    //Reads output from ffmpeg, and adds it to the TextCtrl
-
-    wxString s;
-    bool ok, update = false;
-
-    for (int i = 0; i < m_NumEncodingSlots; i++)
-    {
-
-        LPENCODING_SLOT slot = &m_EncodingSlots[i];
-
-        //Read stdout
-        do {
-
-            s = slot->process.GetProcessOutputLine(false);
-            ok = s.Len() > 0;
-            if (ok) slot->console.AppendFFOutput(s, true);
-
-        } while (ok);
-
-        //Read errout
-        do {
-
-            s = slot->process.GetProcessOutputLine(true);
-            ok = s.Len() > 0;
-            if (ok && (slot->console.AppendFFOutput(s, false) == mtSTATS)) update = true;
-
-        } while (ok);
-
-    }
-
-    //Update status if needed
-    if (update) UpdateStatus();
-
-}
-
-//---------------------------------------------------------------------------------------
-
 void FFQMain::ResizeColumns(bool dragging)
 {
     //Resize the columns in the listview
@@ -1739,117 +1769,6 @@ void FFQMain::ResizeColumns(bool dragging)
         ListView->Thaw();
     }
     m_AllowEvents = false;
-}
-
-//---------------------------------------------------------------------------------------
-
-void FFQMain::ShowFFMpegVersion(bool langInfo)
-{
-    if (FFQCFG()->ffmpeg_ok)
-    {
-
-        Console->AppendLine(FFQSF(SID_LOG_FFMPEG_FOUND, FFQCFG()->GetFFMpegVersion(true)), COLOR_BLUE);//, true);
-
-        //Enable supported tools
-        ThumbsItem->Enable(FFQCFG()->AreFiltersAvailable("select,fps,scale,tile"));
-        SlideshowItem->Enable(FFQCFG()->AreFiltersAvailable("concat"));
-        ConcatItem->Enable(FFQCFG()->AreFiltersAvailable("concat"));
-        VidStabItem->Enable(FFQCFG()->AreFiltersAvailable("vidstabdetect,vidstabtransform"));
-
-    }
-
-    else Console->AppendLine(FFQS(SID_LOG_FFMPEG_NOT_FOUND), COLOR_RED);//, true);
-
-    //Console->AppendLine("DUMMY", COLOR_BLUE);
-    //ShowInfo(BOOLSTR(langInfo));
-
-    if (langInfo)
-    {
-        FFQLang *l = FFQL();
-        unsigned int skip = l->GetNumberOfSkippedStringsInFile(),
-                     scnt = l->GetCount(),
-                     snew = scnt - l->GetFlagCount(SF_STORED),
-                     smod = l->GetFlagCount(SF_MODIFIED);
-        //if ( (skip == 0) && (snew == scnt) ) //Check if internal language is used
-        //{
-            //Not internal
-            if ( (snew != scnt) && (skip + snew + smod > 0) )
-                Console->AppendLine(CRLF + FFQSF(SID_LANGUAGE_OUTDATED, snew, skip, smod), COLOR_ORANGE);
-        //}
-    }
-
-    #ifdef DEBUG
-
-
-        //Show a list of unsupported filters
-        wxString sl = ",", fl = FFQCFG()->GetFFMpegFilters(), cur, res = "";
-        for (unsigned int i = 0; i < FILTER_COUNT; i++) sl += FILTER_NAMES[i] + ",";
-        while (fl.Len() > 0)
-        {
-            cur = GetToken(fl, ",", true);
-            if ((cur.Len() > 0) && (sl.Find("," + cur + ",") == wxNOT_FOUND)) res += cur + CRLF;
-        }
-        Console->AppendLine(CRLF + "Unsupported filters:" + CRLF + res, COLOR_BLUE);
-        res = FFQCFG()->GetFFMpegFormats();
-        res.Replace("\n", CRLF);
-        Console->AppendLine(CRLF + "Muxers" + CRLF + res + CRLF, COLOR_RED);
-        TextCtrl->SetSelection(0, 0);
-        TextCtrl->ShowPosition(0);
-
-    #endif // DEBUG
-
-}
-
-//---------------------------------------------------------------------------------------
-
-void FFQMain::ShowFFProbeInfo(LPFFQ_QUEUE_ITEM item)
-{
-
-    //Show ffprobe info for the selected item or the item given as argument
-
-    if (item == NULL)
-    {
-
-        item = GetSelectedItem();
-        if (item == NULL) return;
-
-    }
-
-    TextCtrl->Freeze();
-    //Console->Clear();
-
-    wxString fn;
-    FFQProcess *p = new FFQProcess();
-
-    try
-    {
-
-        for (unsigned int fidx = 0; fidx < item->inputs.Count(); fidx++)
-        {
-
-            fn = item->GetInput(fidx).path;
-            if (wxFileExists(fn))
-            {
-
-                Console->AppendLine(FFQSF(SID_LOG_FFPROBE_INFO_FOR, fn)/* + CRLF*/, COLOR_BLACK);
-                p->FFProbe(fn);
-                Console->AppendLine(p->GetProcessOutput(false) + CRLF, COLOR_BLUE);
-
-            }
-
-        }
-
-    } catch (std::exception &err)
-    {
-
-        Console->AppendLine(FFQSF(SID_LOG_FFPROBE_ERROR, fn, err.what()), COLOR_RED);
-
-    }
-
-    delete p;
-
-    TextCtrl->Thaw();
-
 }
 
 //---------------------------------------------------------------------------------------
@@ -2061,6 +1980,150 @@ void FFQMain::SetWindowPos(wxString &wp)
 
 //---------------------------------------------------------------------------------------
 
+void FFQMain::ShowFFMpegVersion(bool langInfo)
+{
+    if (FFQCFG()->ffmpeg_ok)
+    {
+
+        Console->AppendLine(FFQSF(SID_LOG_FFMPEG_FOUND, FFQCFG()->GetFFMpegVersion(true)), COLOR_BLUE);//, true);
+
+        //Enable supported tools
+        ThumbsItem->Enable(FFQCFG()->AreFiltersAvailable("select,fps,scale,tile"));
+        SlideshowItem->Enable(FFQCFG()->AreFiltersAvailable("concat"));
+        ConcatItem->Enable(FFQCFG()->AreFiltersAvailable("concat"));
+        VidStabItem->Enable(FFQCFG()->AreFiltersAvailable("vidstabdetect,vidstabtransform"));
+
+    }
+
+    else Console->AppendLine(FFQS(SID_LOG_FFMPEG_NOT_FOUND), COLOR_RED);//, true);
+
+    //Console->AppendLine("DUMMY", COLOR_BLUE);
+    //ShowInfo(BOOLSTR(langInfo));
+
+    if (langInfo)
+    {
+        FFQLang *l = FFQL();
+        unsigned int skip = l->GetNumberOfSkippedStringsInFile(),
+                     scnt = l->GetCount(),
+                     snew = scnt - l->GetFlagCount(SF_STORED),
+                     smod = l->GetFlagCount(SF_MODIFIED);
+        //if ( (skip == 0) && (snew == scnt) ) //Check if internal language is used
+        //{
+            //Not internal
+            if ( (snew != scnt) && (skip + snew + smod > 0) )
+                Console->AppendLine(CRLF + FFQSF(SID_LANGUAGE_OUTDATED, snew, skip, smod), COLOR_ORANGE);
+        //}
+    }
+
+    #ifdef DEBUG
+
+
+        //Show a list of unsupported filters
+        wxString sl = ",", fl = FFQCFG()->GetFFMpegFilters(), cur, res = "";
+        for (unsigned int i = 0; i < FILTER_COUNT; i++) sl += FILTER_NAMES[i] + ",";
+        while (fl.Len() > 0)
+        {
+            cur = GetToken(fl, ",", true);
+            if ((cur.Len() > 0) && (sl.Find("," + cur + ",") == wxNOT_FOUND)) res += cur + CRLF;
+        }
+        Console->AppendLine(CRLF + "Unsupported filters:" + CRLF + res, COLOR_BLUE);
+        res = FFQCFG()->GetFFMpegFormats();
+        res.Replace("\n", CRLF);
+        Console->AppendLine(CRLF + "Muxers" + CRLF + res + CRLF, COLOR_RED);
+        TextCtrl->SetSelection(0, 0);
+        TextCtrl->ShowPosition(0);
+
+    #endif // DEBUG
+
+}
+
+//---------------------------------------------------------------------------------------
+
+void FFQMain::ShowFFProbeInfo(LPFFQ_QUEUE_ITEM item)
+{
+
+    //Show ffprobe info for the selected item or the item given as argument
+
+    if (item == NULL)
+    {
+
+        item = GetSelectedItem();
+        if (item == NULL) return;
+
+    }
+
+    TextCtrl->Freeze();
+    //Console->Clear();
+
+    wxString fn;
+    FFQProcess *p = new FFQProcess();
+
+    try
+    {
+
+        for (unsigned int fidx = 0; fidx < item->inputs.Count(); fidx++)
+        {
+
+            fn = item->GetInput(fidx).path;
+            if (wxFileExists(fn))
+            {
+
+                Console->AppendLine(FFQSF(SID_LOG_FFPROBE_INFO_FOR, fn)/* + CRLF*/, COLOR_BLACK);
+                p->FFProbe(fn);
+                Console->AppendLine(p->GetProcessOutput(false) + CRLF, COLOR_BLUE);
+
+            }
+
+        }
+
+    } catch (std::exception &err)
+    {
+
+        Console->AppendLine(FFQSF(SID_LOG_FFPROBE_ERROR, fn, err.what()), COLOR_RED);
+
+    }
+
+    delete p;
+
+    TextCtrl->Thaw();
+
+}
+
+//---------------------------------------------------------------------------------------
+
+void FFQMain::BatchMakeJobs(wxArrayString *files, bool releaseFilesPtr)
+{
+
+    if ((files->GetCount() == 1) && wxFileExists(files->Item(0)))
+        EditJob(-1, files->Item(0)); //If only one file is being batched - use the job editor
+
+    else
+    {
+        if (BatchMaker == NULL) BatchMaker = new FFQBatchMake(this);
+        BatchMaker->SetFiles(files);
+        if (BatchMaker->Execute())
+        {
+
+            ListView->Freeze();
+            for (long i = 0; i < ListView->GetItemCount(); i++) ListView->Select(i, false);
+            for (unsigned int i = 0; i < BatchMaker->GetJobCount(); i++) DefineItem(-1, (LPFFQ_JOB)BatchMaker->GetJob(i), dsAPPEND, false);
+            ListView->Thaw();
+            BatchMaker->Clear();
+
+            //Save items if required
+            if (FFQCFG()->save_on_modify) SaveItems();
+
+        }
+    }
+
+    if (releaseFilesPtr) delete files;
+
+    UpdateControls();
+
+}
+
+//---------------------------------------------------------------------------------------
+
 bool FFQMain::LaunchTool(short ToolID, long edit_index, LPFFQ_QUEUE_ITEM edit_item)
 {
 
@@ -2152,6 +2215,261 @@ bool FFQMain::LaunchTool(short ToolID, long edit_index, LPFFQ_QUEUE_ITEM edit_it
     }
 
     return false;
+
+}
+
+//---------------------------------------------------------------------------------------
+
+void FFQMain::OnChar(wxKeyEvent &event)
+{
+
+    //Convert a key event to a button or menu command event
+    int cmd = -1, key = event.GetKeyCode();
+
+    if ( ((key == WXK_ADD) || (key == WXK_INSERT) || (key == WXK_NUMPAD_ADD)) && ToolBarAdd->IsEnabled() ) cmd = ID_TOOLBARADD;
+
+    else if ( ((key == WXK_SUBTRACT) || (key == WXK_DELETE) || (key == WXK_NUMPAD_SUBTRACT)) && ToolBarRemove->IsEnabled() ) cmd = ID_TOOLBARREMOVE;
+
+    else if (event.ControlDown())
+    {
+
+        if ( ((key == WXK_RETURN) || (key == WXK_SPACE)) && ToolBarPreview->IsEnabled()) cmd = ID_TOOLBARPREVIEW;
+        else if ( (key == WXK_UP) && MenuMoveUp->IsEnabled() ) cmd = ID_MENU_MOVEUP;
+        else if ( (key == WXK_DOWN) && MenuMoveDown->IsEnabled() ) cmd = ID_MENU_MOVEDOWN;
+        else if ( (wxChar(key) == 'Q') && MenuStartSel->IsEnabled() ) cmd = ID_MENU_STARTSEL;
+        else if ( (wxChar(key) == 'A') && MenuStopSel->IsEnabled() ) cmd = ID_MENU_STOPSEL;
+        else if ( (wxChar(key) == 'B') && ToolBarBatch->IsEnabled() ) cmd = ID_TOOLBARBATCH;
+        else if ( (wxChar(key) == 'O') && ToolBarOptions->IsEnabled() ) cmd = ID_TOOLBAROPTIONS;
+        else if ( (wxChar(key) == 'P') && ToolBarPresets->IsEnabled() ) cmd = ID_TOOLBARPRESETS;
+        else if ( (wxChar(key) == 'T') && ToolBarTools->IsEnabled() ) cmd = ID_TOOLBARTOOLS;
+        else if ( wxChar(key) == 'S' )
+        {
+
+            SaveItems(true);
+            return;
+
+        }
+
+    }
+
+    if (cmd < 0) event.Skip(); //No command, skip key event
+    else
+    {
+
+        //Execute the converted command
+        wxCommandEvent evt = wxCommandEvent(wxEVT_BUTTON);
+        evt.SetId(cmd);
+        OnToolBarButtonClick(evt);
+
+    }
+
+
+}
+
+//---------------------------------------------------------------------------------------
+
+void FFQMain::OnDropFiles(wxDropFilesEvent& event)
+{
+
+    //Files have been dropped onto the list, raise the frame
+    Raise();
+
+    //Get the dropped files
+    wxString* fl = event.GetFiles();//, s;
+    if (fl == NULL) return;
+
+    //Convert files to an array
+    wxArrayString* files = new wxArrayString();
+    for (int i = 0; i < event.GetNumberOfFiles(); i++)
+    {
+        //Let batch-maker expand the paths
+        files->Add(fl[i]);
+    }
+
+    //Launch the batch maker
+    BatchMakeJobs(files, true);
+
+}
+
+//---------------------------------------------------------------------------------------
+
+void FFQMain::OnIdle(wxIdleEvent &event)
+{
+
+    /*
+
+    This is not entirely ready yet, so it is not implemented in V1.7.62 yet!
+
+    if ((!m_FirstShow) && m_FirstIdle)
+    {
+
+        m_FirstIdle = false; //This should only be done once after the window is shown..
+        int fs_idx = -1;
+
+        //Check command line for important messages from the local submarine
+        for (int i = 1; i < wxTheApp->argc; i++)
+        {
+            wxString arg = wxTheApp->argv[i];
+            if (arg.StartsWith("--test-fs="))
+            {
+                arg = arg.AfterFirst(EQUAL);
+                FFQFullSpec::Initialize();
+                fs_idx = FFQFullSpec::FindFullSpecID(arg);
+                if (fs_idx < 0) Console->AppendLine(FFQSF(SID_FULLSPEC_BAD_ID, arg), COLOR_RED);
+            }
+            else Console->AppendLine(FFQSF(SID_BAD_COMMAND_LINE_ARG, arg), COLOR_RED);
+        }
+
+        //Respond to those submarine whisperings
+        if (fs_idx >= 0)
+        {
+            FFQFullSpec *fs = new FFQFullSpec(this);
+            wxString cmd;
+            while (fs->Execute(fs_idx, cmd))
+            {
+                Console->AppendLine(cmd, COLOR_BLUE);
+                wxTheApp->Yield(true);
+            };
+            delete fs;
+        }
+
+    }
+    */
+
+}
+
+//---------------------------------------------------------------------------------------
+
+void FFQMain::OnMaximize(wxMaximizeEvent &event)
+{
+
+    //Skip to let base class do the handling
+    event.Skip();
+
+    //Resize columns in list
+    ResizeColumns();
+
+}
+
+//---------------------------------------------------------------------------------------
+
+void FFQMain::OnMove(wxMoveEvent &event)
+{
+
+    //Skip to let base class do the handling
+    event.Skip();
+
+    //Save restored rect
+    if ((!IsMaximized()) && (!IsIconized())) m_RestoredRect = GetScreenRect();
+
+}
+
+//---------------------------------------------------------------------------------------
+
+#define NO_GETTEXTEXTENT
+
+void FFQMain::OnShow(wxShowEvent &event)
+{
+
+    //Skip to let base class do the handling
+    event.Skip();
+
+    if (m_FirstShow)
+    {
+
+        try
+        {
+            //Do initial stuff for the first appearance
+            FFQCFG()->GetTaskBar()->SetWindowHandle(GetHandle());
+            //ResizeColumns();
+            FFQCFG()->InitPresetManager(this);
+            FFQCFG()->LoadConfig();
+            InitEncodingSlots();
+            ShowFFMpegVersion(true);
+            LoadItems();
+            if (FFQCFG()->validate_on_load) ValidateItems();
+            UpdateControls();
+
+            //wxString path;
+            //if (wxGetEnv("PATH", &path)) Console->AppendLine(path, 0);
+
+            /*Console->AppendLine("AppDocumentsDir    = " + wxStandardPaths::Get().GetAppDocumentsDir(), 0);
+            Console->AppendLine("ConfigDir          = " + wxStandardPaths::Get().GetConfigDir(), 0);
+            Console->AppendLine("DataDir            = " + wxStandardPaths::Get().GetDataDir(), 0);
+            Console->AppendLine("DocumentsDir       = " + wxStandardPaths::Get().GetDocumentsDir(), 0);
+            Console->AppendLine("ExecutablePath     = " + wxStandardPaths::Get().GetExecutablePath(), 0);
+            Console->AppendLine("LocalDataDir       = " + wxStandardPaths::Get().GetLocalDataDir(), 0);
+            Console->AppendLine("PluginsDir         = " + wxStandardPaths::Get().GetPluginsDir(), 0);
+            Console->AppendLine("ResourcesDir       = " + wxStandardPaths::Get().GetResourcesDir(), 0);
+            Console->AppendLine("TempDir            = " + wxStandardPaths::Get().GetTempDir(), 0);
+            Console->AppendLine("UserConfigDir      = " + wxStandardPaths::Get().GetUserConfigDir(), 0);
+            Console->AppendLine("UserDataDir        = " + wxStandardPaths::Get().GetUserDataDir(), 0);
+            Console->AppendLine("UserLocalDataDir   = " + wxStandardPaths::Get().GetUserLocalDataDir(), 0);
+            */
+
+            /* SNAP
+                AppDocumentsDir    = /home/tnb/
+                ConfigDir          = /etc
+                DataDir            = /snap/ffqueue/x2/usr/local/share/ffqueue
+                DocumentsDir       = /home/tnb/
+                ExecutablePath     = /snap/ffqueue/x2/usr/local/bin/ffqueue
+                LocalDataDir       = /etc/ffqueue
+                PluginsDir         = /snap/ffqueue/x2/usr/local/lib/ffqueue
+                ResourcesDir       = /snap/ffqueue/x2/usr/local/share/ffqueue
+                TempDir            = /tmp
+                UserConfigDir      = /home/tnb/snap/ffqueue/x2
+                UserDataDir        = /home/tnb/snap/ffqueue/x2/.ffqueue
+                UserLocalDataDir   = /home/tnb/snap/ffqueue/x2/.ffqueue
+            */
+
+
+            //Console->AppendLine("MakeConfigFileName = " + wxStandardPaths::Get().MakeConfigFileName("cfg-file-name"), 0);
+
+        #ifdef NO_GETTEXTEXTENT
+
+            //Calculate the size of the status column, the dirty way - but it seems to work
+            m_StatusColumnWidth = 0;
+            for (unsigned int i = 0; i < QUEUE_STATUS_COUNT; i++)
+            {
+                int len = (int)FFQL()->QUEUE_STATUS_NAMES[i].Len();
+                if (len > m_StatusColumnWidth) m_StatusColumnWidth = len;
+            }
+            m_StatusColumnWidth += 3; //Padding
+            m_StatusColumnWidth *= ListView->GetFont().GetPixelSize().GetX();
+
+            //Make sure that the column is at least an inch wide on screen
+            wxClientDC dc(this);
+            if (m_StatusColumnWidth < dc.GetPPI().GetX()) m_StatusColumnWidth = dc.GetPPI().GetX();
+
+        #else
+
+            //Using a DC to calculate the actual string width is borked - or at least
+            //on Linux it is not working as expected since GetTextExtent returns string
+            //widths which are much smaller than the actual size shown on screen. If
+            //anyone has a fix for this, please say so.
+            wxClientDC dc(this);
+            dc.SetFont(ListView->GetFont());
+            m_StatusColumnWidth = 0;
+            for (unsigned int i = 0; i < QUEUE_STATUS_COUNT; i++)
+            {
+                wxSize s = dc.GetTextExtent(FFQL()->QUEUE_STATUS_NAMES[i]);
+                if (s.GetWidth() > m_StatusColumnWidth) m_StatusColumnWidth = s.GetWidth();
+            }
+            m_StatusColumnWidth *= (m_StatusColumnWidth / 20); //Padding
+
+        #endif
+
+            if (FFQCFG()->save_window_pos) SetWindowPos(FFQCFG()->window_position);
+            else ResizeColumns();
+        }
+        catch (...)
+        {
+        }
+
+        //Make sure this is only done once
+        m_FirstShow = false;
+
+    }
 
 }
 
@@ -2365,7 +2683,11 @@ void FFQMain::OnToolBarButtonClick(wxCommandEvent& event)
 
         if (OptionsDlg == NULL) OptionsDlg = new FFQConfigEdit(this);
 
-        if (OptionsDlg->Execute()) ShowFFMpegVersion(true);
+        if (OptionsDlg->Execute())
+        {
+            ShowFFMpegVersion(true);
+            InitEncodingSlots();
+        }
 
     }
 
@@ -2406,14 +2728,74 @@ void FFQMain::OnToolBarButtonClick(wxCommandEvent& event)
 
         //Handler used to test all sorts of madness
 
-        wxRect rct = m_RestoredRect;// GetScreenRect();
+        /*wxString str = wxString::FromUTF8("abc\rdef\nght\nyui\r\nå\næ\n\n\n");
+        FFQLineParser lp(str);
+        while (lp.has_more()) Console->AppendLine("\"" + lp.next() + "\"", 0);
+        //return;
+
+
+        str = wxString::FromUTF8("abc|*|def|*|ght|*|yui|*|å|*|æ|*||*|");
+        FFQTokenParser tp(str, "|*|");
+        while (!tp.done()) Console->AppendLine("\"" + tp.next() + "\"", 0);
+        return;*/
+
+        /*LPFFQ_QUEUE_ITEM sel = GetSelectedItem();
+        Console->AppendLine(sel->ToString(), 0);
+        return;*/
+
+        /*wxString test = "-Hello Dude! Hello Dude! Hello Dude! Hello Dude! Hello Dude! Hello Dude!-";
+        uint32_t len = 0;
+        uint8_t *buf = CompressString(test, &len, 7);
+        Console->AppendLine("Compressed = " + ToStr(len), 0);
+        test = DecompressString(buf, len, 7);
+        Console->AppendLine("Decompressed = \"" + test + "\"", 0);
+        delete[] buf;
+        return;*/
+
+        /*uint32_t buflen;
+        memcpy(&buflen, STR_X264, sizeof(buflen));
+        uint8_t *buf = new uint8_t[buflen];
+        long unsigned int zs = buflen;
+        uncompress(buf, &zs, &STR_X264[sizeof(buflen)], STR_X264_SIZE - sizeof(buflen));
+        wxString spec(buf, buflen);
+        delete[] buf;*/
+
+        /*wxString test = "libx264 - H.264 / AVC / MPEG-4 AVC / MPEG-4 part 10 (codec h264)";
+        wxRegEx re("[[:blank:]][hx]264)$", wxRE_BASIC);
+        if (!re.IsValid()) Console->AppendLine("Invalid regex", 0);
+        else if (re.Matches(test)) Console->AppendLine("Matches: " + re.GetMatch(test), 0);
+        else Console->AppendLine("No match", 0);*/
+
+        //profile=main:keyint=25:no-cabac:vbv-init=0.99000:psy-rd=1.0,0.1
+        //profile=main:preset=veryslow:tune=animation:keyint=25:b-pyramid=strict:no-cabac:pulldown=64:vbv-init=0.99000:aq-mode=1:direct=auto:weightp=1:me=umh:subme=5:psy-rd=1.0,0.1:trellis=1:overscan=show:videoformat=secam:fullrange=off:colorprim=bt470bg:transfer=linear:colormatrix=bt470bg:nal-hdr=vbr
+        wxString cmd = "asm=SSE4,SSE4.1,SSE4.2";//-x264opts \"no-fast-intra:profile=main:preset=veryslow:tune=animation:keyint=25:b-pyramid=strict:no-cabac:pulldown=64:vbv-init=0.99000:aq-mode=1:direct=auto:weightp=1:me=umh:subme=5:psy-rd=1.0,0.1:trellis=1:overscan=show:videoformat=secam:fullrange=off:colorprim=bt470bg:transfer=linear:colormatrix=bt470bg:nal-hdr=vbr\"", spec;
+
+        /*wxFFile ff;
+        ff.Open("res/x264.ffqc", "r");
+        ff.ReadAll(&spec);
+        ff.Close();*/
+        FFQFullSpec::Finalize();
+        FFQFullSpec::Initialize();
+        int idx = FFQFullSpec::FindFullSpec("gdg fsdfg x264)");
+        Console->AppendLine("x264=" + ToStr(idx), 0);
+        //int idx = FFQFullSpec::FindFullSpec("gdg fsdfg hevc)");
+        //Console->AppendLine("x265=" + ToStr(idx), 0);
+        if (idx >= 0)
+        {
+            FFQFullSpec *fs = new FFQFullSpec(this);
+            if (fs->Execute(idx, cmd)) Console->AppendLine(cmd, 0);
+            delete fs;
+        }
+
+
+        /*wxRect rct = m_RestoredRect;// GetScreenRect();
         wxSize siz = GetSize();
         Console->AppendLine(wxString::Format("%i %i %i %i | %i %i", rct.GetLeft(), rct.GetTop(), rct.GetWidth(), rct.GetHeight(), siz.GetWidth(), siz.GetHeight()), 0);
         wxString wp = GetWindowPos();
         Console->AppendLine(wp, 0);
 
         wxSize sz = wxDLG_UNIT(this, wxSize(10, 10));
-        Console->AppendLine(wxString::Format("DLG_UNIT = %d, %d", sz.GetWidth(), sz.GetHeight()), 0);
+        Console->AppendLine(wxString::Format("DLG_UNIT = %d, %d", sz.GetWidth(), sz.GetHeight()), 0);*/
 
 
         /*wxArrayString as;
@@ -2555,214 +2937,6 @@ void FFQMain::OnToolBarButtonClick(wxCommandEvent& event)
     }
 
     UpdateControls();
-
-}
-
-//---------------------------------------------------------------------------------------
-
-void FFQMain::OnChar(wxKeyEvent &event)
-{
-
-    //Convert a key event to a button or menu command event
-    int cmd = -1, key = event.GetKeyCode();
-
-    if ( ((key == WXK_ADD) || (key == WXK_INSERT) || (key == WXK_NUMPAD_ADD)) && ToolBarAdd->IsEnabled() ) cmd = ID_TOOLBARADD;
-
-    else if ( ((key == WXK_SUBTRACT) || (key == WXK_DELETE) || (key == WXK_NUMPAD_SUBTRACT)) && ToolBarRemove->IsEnabled() ) cmd = ID_TOOLBARREMOVE;
-
-    else if (event.ControlDown())
-    {
-
-        if ( ((key == WXK_RETURN) || (key == WXK_SPACE)) && ToolBarPreview->IsEnabled()) cmd = ID_TOOLBARPREVIEW;
-        else if ( (key == WXK_UP) && MenuMoveUp->IsEnabled() ) cmd = ID_MENU_MOVEUP;
-        else if ( (key == WXK_DOWN) && MenuMoveDown->IsEnabled() ) cmd = ID_MENU_MOVEDOWN;
-        else if ( (wxChar(key) == 'Q') && MenuStartSel->IsEnabled() ) cmd = ID_MENU_STARTSEL;
-        else if ( (wxChar(key) == 'A') && MenuStopSel->IsEnabled() ) cmd = ID_MENU_STOPSEL;
-        else if ( (wxChar(key) == 'B') && ToolBarBatch->IsEnabled() ) cmd = ID_TOOLBARBATCH;
-        else if ( (wxChar(key) == 'O') && ToolBarOptions->IsEnabled() ) cmd = ID_TOOLBAROPTIONS;
-        else if ( (wxChar(key) == 'P') && ToolBarPresets->IsEnabled() ) cmd = ID_TOOLBARPRESETS;
-        else if ( (wxChar(key) == 'T') && ToolBarTools->IsEnabled() ) cmd = ID_TOOLBARTOOLS;
-        else if ( wxChar(key) == 'S' )
-        {
-
-            SaveItems(true);
-            return;
-
-        }
-
-    }
-
-    if (cmd < 0) event.Skip(); //No command, skip key event
-    else
-    {
-
-        //Execute the converted command
-        wxCommandEvent evt = wxCommandEvent(wxEVT_BUTTON);
-        evt.SetId(cmd);
-        OnToolBarButtonClick(evt);
-
-    }
-
-
-}
-
-//---------------------------------------------------------------------------------------
-
-void FFQMain::OnDropFiles(wxDropFilesEvent& event)
-{
-
-    //Files have been dropped onto the list, raise the frame
-    Raise();
-
-    //Get the dropped files
-    wxString* fl = event.GetFiles();//, s;
-    if (fl == NULL) return;
-
-    //Convert files to an array
-    wxArrayString* files = new wxArrayString();
-    for (int i = 0; i < event.GetNumberOfFiles(); i++)
-    {
-        //Let batch-maker expand the paths
-        files->Add(fl[i]);
-    }
-
-    //Launch the batch maker
-    BatchMakeJobs(files, true);
-
-}
-
-//---------------------------------------------------------------------------------------
-
-void FFQMain::OnMaximize(wxMaximizeEvent &event)
-{
-
-    //Skip to let base class do the handling
-    event.Skip();
-
-    //Resize columns in list
-    ResizeColumns();
-
-}
-
-//---------------------------------------------------------------------------------------
-
-void FFQMain::OnMove(wxMoveEvent &event)
-{
-
-    //Skip to let base class do the handling
-    event.Skip();
-
-    //Save restored rect
-    if ((!IsMaximized()) && (!IsIconized())) m_RestoredRect = GetScreenRect();
-
-}
-
-//---------------------------------------------------------------------------------------
-
-#define NO_GETTEXTEXTENT
-
-void FFQMain::OnShow(wxShowEvent &event)
-{
-
-    //Skip to let base class do the handling
-    event.Skip();
-
-    if (m_FirstShow)
-    {
-
-        try
-        {
-            //Do initial stuff for the first appearance
-            FFQCFG()->GetTaskBar()->SetWindowHandle(GetHandle());
-            //ResizeColumns();
-            FFQCFG()->InitPresetManager(this);
-            FFQCFG()->LoadConfig();
-            InitEncodingSlots();
-            ShowFFMpegVersion(true);
-            LoadItems();
-            if (FFQCFG()->validate_on_load) ValidateItems();
-            UpdateControls();
-
-            //wxString path;
-            //if (wxGetEnv("PATH", &path)) Console->AppendLine(path, 0);
-
-            /*Console->AppendLine("AppDocumentsDir    = " + wxStandardPaths::Get().GetAppDocumentsDir(), 0);
-            Console->AppendLine("ConfigDir          = " + wxStandardPaths::Get().GetConfigDir(), 0);
-            Console->AppendLine("DataDir            = " + wxStandardPaths::Get().GetDataDir(), 0);
-            Console->AppendLine("DocumentsDir       = " + wxStandardPaths::Get().GetDocumentsDir(), 0);
-            Console->AppendLine("ExecutablePath     = " + wxStandardPaths::Get().GetExecutablePath(), 0);
-            Console->AppendLine("LocalDataDir       = " + wxStandardPaths::Get().GetLocalDataDir(), 0);
-            Console->AppendLine("PluginsDir         = " + wxStandardPaths::Get().GetPluginsDir(), 0);
-            Console->AppendLine("ResourcesDir       = " + wxStandardPaths::Get().GetResourcesDir(), 0);
-            Console->AppendLine("TempDir            = " + wxStandardPaths::Get().GetTempDir(), 0);
-            Console->AppendLine("UserConfigDir      = " + wxStandardPaths::Get().GetUserConfigDir(), 0);
-            Console->AppendLine("UserDataDir        = " + wxStandardPaths::Get().GetUserDataDir(), 0);
-            Console->AppendLine("UserLocalDataDir   = " + wxStandardPaths::Get().GetUserLocalDataDir(), 0);
-            */
-
-            /* SNAP
-                AppDocumentsDir    = /home/tnb/
-                ConfigDir          = /etc
-                DataDir            = /snap/ffqueue/x2/usr/local/share/ffqueue
-                DocumentsDir       = /home/tnb/
-                ExecutablePath     = /snap/ffqueue/x2/usr/local/bin/ffqueue
-                LocalDataDir       = /etc/ffqueue
-                PluginsDir         = /snap/ffqueue/x2/usr/local/lib/ffqueue
-                ResourcesDir       = /snap/ffqueue/x2/usr/local/share/ffqueue
-                TempDir            = /tmp
-                UserConfigDir      = /home/tnb/snap/ffqueue/x2
-                UserDataDir        = /home/tnb/snap/ffqueue/x2/.ffqueue
-                UserLocalDataDir   = /home/tnb/snap/ffqueue/x2/.ffqueue
-            */
-
-
-            //Console->AppendLine("MakeConfigFileName = " + wxStandardPaths::Get().MakeConfigFileName("cfg-file-name"), 0);
-
-        #ifdef NO_GETTEXTEXTENT
-
-            //Calculate the size of the status column, the dirty way - but it seems to work
-            m_StatusColumnWidth = 0;
-            for (unsigned int i = 0; i < QUEUE_STATUS_COUNT; i++)
-            {
-                int len = (int)FFQL()->QUEUE_STATUS_NAMES[i].Len();
-                if (len > m_StatusColumnWidth) m_StatusColumnWidth = len;
-            }
-            m_StatusColumnWidth += 3; //Padding
-            m_StatusColumnWidth *= ListView->GetFont().GetPixelSize().GetX();
-
-            //Make sure that the column is at least an inch wide on screen
-            wxClientDC dc(this);
-            if (m_StatusColumnWidth < dc.GetPPI().GetX()) m_StatusColumnWidth = dc.GetPPI().GetX();
-
-        #else
-
-            //Using a DC to calculate the actual string width is borked - or at least
-            //on Linux it is not working as expected since GetTextExtent returns string
-            //widths which are much smaller than the actual size shown on screen. If
-            //anyone has a fix for this, please say so.
-            wxClientDC dc(this);
-            dc.SetFont(ListView->GetFont());
-            m_StatusColumnWidth = 0;
-            for (unsigned int i = 0; i < QUEUE_STATUS_COUNT; i++)
-            {
-                wxSize s = dc.GetTextExtent(FFQL()->QUEUE_STATUS_NAMES[i]);
-                if (s.GetWidth() > m_StatusColumnWidth) m_StatusColumnWidth = s.GetWidth();
-            }
-            m_StatusColumnWidth *= (m_StatusColumnWidth / 20); //Padding
-
-        #endif
-
-            if (FFQCFG()->save_window_pos) SetWindowPos(FFQCFG()->window_position);
-            else ResizeColumns();
-        }
-        catch (...)
-        {
-        }
-
-        //Make sure this is only done once
-        m_FirstShow = false;
-
-    }
 
 }
 

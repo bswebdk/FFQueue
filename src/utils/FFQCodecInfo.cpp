@@ -56,8 +56,8 @@ const wxString DEFAULT_CODEC_INFO = "*v=0,31,1,0,0\n" //Values used for any vide
                                     "libxvid=1,31,1,0,0\n"
                                     "libx265=1,0,0,51,0\n"  //Untested
                                     "mjpeg=1,31,1,0,0\n"
-                                    "libvpx=1,0,0,63,4\n"
-                                    "libvpx-vp9=1,0,0,63,4\n"
+                                    "libvpx=1,0,0,63,0\n" //Was before V1.7.62: "libvpx=1,0,0,63,4\n"
+                                    "libvpx-vp9=1,0,0,63,0\n" //As above "libvpx-vp9=1,0,0,63,4\n"
                                     "wmv1=1,31,1,0,0\n"
                                     "wmv2=1,31,1,0,0\n"
                                     "libmp3lame=1,9,0,0,0\n"

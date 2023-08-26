@@ -71,11 +71,13 @@ class FFQPresetEdit: public wxDialog
 		FFQThumbPanel* ThumbsPanel;
 		wxButton* AddFilterButton;
 		wxButton* CancelButton;
+		wxButton* ClearMetaDataBtn;
 		wxButton* DispositionsBtn;
 		wxButton* EditFilterButton;
 		wxButton* FilterDownButton;
 		wxButton* FilterPreviewButton;
 		wxButton* FilterUpButton;
+		wxButton* FullSpecVidButton;
 		wxButton* OKButton;
 		wxButton* RemoveFilterButton;
 		wxCheckBox* AudioFiltersComplex;
@@ -126,11 +128,12 @@ class FFQPresetEdit: public wxDialog
 		wxFlexGridSizer* SceneChangeSizer;
 		wxFlexGridSizer* SubsSizer2;
 		wxFlexGridSizer* SubsSizer3;
-		wxFlexGridSizer* VidSizer1;
 		wxFlexGridSizer* VideoBitRateSizer;
+		wxFlexGridSizer* VideoCodecSizer;
 		wxFlexGridSizer* VideoHWDecodeSizer;
 		wxFlexGridSizer* VideoOtherSizer;
 		wxFlexGridSizer* VideoQualitySizer;
+		wxFlexGridSizer* VideoTwoPassSizer;
 		wxGrid* MetaData;
 		wxListBox* FilterList;
 		wxMenu AddFilterMenu;
@@ -242,6 +245,7 @@ class FFQPresetEdit: public wxDialog
 		static const long ID_PRESETNAME;
 		static const long ID_PRESETTEMP;
 		static const long ID_VIDEOCODEC;
+		static const long ID_FULLSPECVIDBUTTON;
 		static const long ID_TWOPASS;
 		static const long ID_TWOPASSNULL;
 		static const long ID_VIDEOBITRATE;
@@ -340,6 +344,7 @@ class FFQPresetEdit: public wxDialog
 		static const long ID_FILTERTIP;
 		static const long ID_FILTERPAGE;
 		static const long ID_METADATA;
+		static const long ID_CLEARMETADATABTN;
 		static const long ID_STMD1;
 		static const long ID_METADATAFOR;
 		static const long ID_METADATAPAGE;
@@ -384,9 +389,9 @@ class FFQPresetEdit: public wxDialog
 		//*)
 
 		FFQFilterEdit *FilterEditor;
-		wxString m_PreviewFile;
+		wxString m_PreviewFile, m_FullSpecVid;
 		wxArrayString m_MetaData;
-		int m_SelMetaData;
+		int m_SelMetaData, m_FullSpecVidIdx;
 		CODEC_INFO m_VidCodecInfo, m_AudCodecInfo;
 		bool m_ShowPreviewDlg, m_CanSegment, m_CanSSegment;
 		LPFFQ_PRESET m_Preset;

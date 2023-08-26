@@ -91,6 +91,7 @@ const wxString CFG_SUBS_CHARENC = "subs_charenc";
 const wxString CFG_LOCALE = "locale";
 const wxString CFG_COLORS = "colors";
 const wxString CFG_NUM_ENC_SLOTS = "num_encode_slots";
+const wxString CFG_DONT_SAVE_FFMPEG = "dont_save_ffmpeg";
 
 //Private helper functions
 
@@ -505,6 +506,7 @@ void FFQConfig::DefaultOptions()
     validate_on_load = true;
     confirm_delete_jobs = true;
     preview_map_subs = false;
+    dont_save_ffmpeg = false;
     saved_commands = "";
     subs_charenc = "";
     user_locale = "";
@@ -533,6 +535,7 @@ void FFQConfig::DefaultOptions()
     m_VideoCodecs = "";
     m_HWAccels = "";
     m_HWDecoders = "";
+    m_CapsFile = "";
 
 }
 
@@ -1150,6 +1153,7 @@ void FFQConfig::LoadConfig()
                     else if (name == CFG_VALIDATE_ON_LOAD) validate_on_load = STRBOOL(line);
                     else if (name == CFG_CONFIRM_DELETE_JOBS) confirm_delete_jobs = STRBOOL(line);
                     else if (name == CFG_PREVIEW_MAP_SUBS) preview_map_subs = STRBOOL(line);
+                    else if (name == CFG_DONT_SAVE_FFMPEG) dont_save_ffmpeg = STRBOOL(line);
                     else if (name == CFG_SUBS_CHARENC) subs_charenc = line;
                     else if (name == CFG_LOCALE) user_locale = line;
                     else if (name == CFG_NUM_ENC_SLOTS) num_encode_slots = (int)Str2Long(line, (long)num_encode_slots);
@@ -1303,6 +1307,7 @@ void FFQConfig::SaveConfig()
         cfg.AddLine(CFG_VALIDATE_ON_LOAD + "=" + BOOLSTR(validate_on_load));
         cfg.AddLine(CFG_CONFIRM_DELETE_JOBS + "=" + BOOLSTR(confirm_delete_jobs));
         cfg.AddLine(CFG_PREVIEW_MAP_SUBS + "=" + BOOLSTR(preview_map_subs));
+        cfg.AddLine(CFG_DONT_SAVE_FFMPEG + "=" + BOOLSTR(dont_save_ffmpeg));
         cfg.AddLine(CFG_SUBS_CHARENC + "=" + subs_charenc);
         cfg.AddLine(CFG_LOCALE + "=" + user_locale);
         cfg.AddLine(CFG_NUM_ENC_SLOTS + "=" + ToStr(num_encode_slots));
@@ -1360,6 +1365,10 @@ void FFQConfig::SaveConfig()
 
     //Close configurations file if opened
     if (opened) cfg.Close();
+
+    bool caps_exist = wxFileExists(m_CapsFile);
+    if (dont_save_ffmpeg && caps_exist) wxRemoveFile(m_CapsFile);
+    else if ((!dont_save_ffmpeg) && (!caps_exist)) SaveFFmpegCapabilities();
 
 }
 
@@ -1469,7 +1478,28 @@ bool FFQConfig::ValidateFFMpegPath(wxString path, bool set_config_path_if_valid)
     if (!set_config_path_if_valid) return true;
 
     //Version information is valid, make short version
-    wxString short_ver = st + " " + t, a_codecs = "", v_codecs = "", s_codecs = "", filters = "";
+    wxString short_ver = st + " " + t;
+
+    //Create file extension for capabilities
+    const wxString VERSION_CHARS = "0123456789.-";
+    size_t vl = 0;
+    while ((vl < st.Len()) && (VERSION_CHARS.Find(st.GetChar(vl)) >= 0)) vl++;
+    m_CapsFile = m_ConfigPath + wxFileName::GetPathSeparator() + "ffmpeg-caps." + st.SubString(0, vl - 1);
+
+    //Variables used to store ffmpeg capabilities
+    wxString a_codecs = "", v_codecs = "", s_codecs = "", filters = "", hwacl = "", hwdec = "", muxers = "", pixfmtstr = "";
+
+    //Check if capabilities have been previously stored
+    if ((!dont_save_ffmpeg) && LoadFFmpegCapabilities())
+    {
+        //Capabilities was loaded from file
+        ffmpeg_ok = true;
+        fonts_conf_checked = fonts_conf_checked && (m_FFPath == path);
+        m_FFPath = path;
+        m_FFMpegShortVersion = short_ver;
+        m_FFMpegLongVersion = long_ver;
+        return true;
+    }
 
     //Extract supported codecs for encoding
     s = proc->GetFFMpegEncoders(path);
@@ -1490,7 +1520,6 @@ bool FFQConfig::ValidateFFMpegPath(wxString path, bool set_config_path_if_valid)
     }
 
     CODEC_TYPE ct;
-
     while (s.Len() > 0)
     {
 
@@ -1510,7 +1539,6 @@ bool FFQConfig::ValidateFFMpegPath(wxString path, bool set_config_path_if_valid)
     }
 
     //Hardware accelerators (for decoding)
-    wxString hwacl = "";
     s = proc->GetFFMpegOther("-hwaccels", path);
     while (s.Len() > 0)
     {
@@ -1520,7 +1548,7 @@ bool FFQConfig::ValidateFFMpegPath(wxString path, bool set_config_path_if_valid)
     if (hwacl.Len() > 0) hwacl.RemoveLast();
 
     //Hardware decoders
-    wxString hwdec = (hwacl.Len() > 0) ? ParseHWDecoders(proc->GetFFMpegOther("-decoders", path), hwacl) : "";
+    hwdec = (hwacl.Len() > 0) ? ParseHWDecoders(proc->GetFFMpegOther("-decoders", path), hwacl) : "";
 
     //Create a list of supported filters
     s = proc->GetFFMpegFilters(path);
@@ -1573,20 +1601,21 @@ bool FFQConfig::ValidateFFMpegPath(wxString path, bool set_config_path_if_valid)
             //Yup! Add to formats
             st = StrTrim(GetToken(t, " "));
             if (st.Find(',') > 0) st = st.BeforeFirst(','); //Remove alternate format names (eg. stream_segment,ssegment)
-            m_Formats += st + " - " + StrTrim(t) + "\n";
+            muxers += st + " - " + StrTrim(t) + "\n";
 
         }
 
     }
 
     //Remove last ","
-    if (m_Formats.Len() > 0) m_Formats.RemoveLast();
+    if (muxers.Len() > 0) muxers.RemoveLast();
 
     //Create list of pixel formats
     LPPIXEL_FORMAT pixfmts = ParsePixelFormats(proc->GetFFMpegPixelFormats(path));
 
     //Release the process
     delete proc;
+
 
     //Ensure that filters are encapsulated in commas (for easier filter validation with AreFiltersAvailable)
     if (filters.Len() > 0 ) filters += ",";
@@ -1603,8 +1632,12 @@ bool FFQConfig::ValidateFFMpegPath(wxString path, bool set_config_path_if_valid)
     m_SubtitleCodecs = s_codecs;
     m_HWAccels = hwacl;
     m_HWDecoders = hwdec;
+    m_Formats = muxers;
     if (m_PixelFormats) delete m_PixelFormats;
     m_PixelFormats = pixfmts;
+
+    //Create a file with the extracted capabilities
+    if (!dont_save_ffmpeg) SaveFFmpegCapabilities();
 
     //Return success
     return true;
@@ -1709,6 +1742,78 @@ FFQConfig::FFQConfig()
     m_TaskBar = new FFQTaskBar();
 
     DefaultOptions();
+
+}
+
+//---------------------------------------------------------------------------------------
+
+bool FFQConfig::LoadFFmpegCapabilities()
+{
+    //return false;
+    if (!wxFileExists(m_CapsFile)) return false;
+    try
+    {
+        wxTextFile tf(m_CapsFile);
+        if (tf.IsOpened() || tf.Open())
+        {
+            wxString *cur = NULL, l, pixfmt = wxEmptyString;
+            bool first = true;
+            while (!tf.Eof())
+            {
+                l = first ? tf.GetFirstLine() : tf.GetNextLine();
+                first = false;
+                if (l.Len() > 0)
+                {
+                    if (l == "::AENC") cur = &m_AudioCodecs;
+                    else if (l == "::VENC") cur = &m_VideoCodecs;
+                    else if (l == "::SENC") cur = &m_SubtitleCodecs;
+                    else if (l == "::FLTR") cur = &m_Filters;
+                    else if (l == "::HWAC") cur = &m_HWAccels;
+                    else if (l == "::HWDC") cur = &m_HWDecoders;
+                    else if (l == "::FMTS") cur = &m_Formats;
+                    else if (l == "::PXFT") cur = &pixfmt;
+                    else if (cur != NULL) *cur += l + CRLF;
+                }
+            }
+            tf.Close();
+            if (pixfmt.Len() > 0)
+            {
+                if (m_PixelFormats) delete m_PixelFormats;
+                m_PixelFormats = new PIXEL_FORMAT(pixfmt);// ParsePixelFormats(m_PixFmtStr);
+            }
+            return true;
+        }
+    } catch (std::exception &err) {}
+
+    //!TODO: Do something God dammit you lazy sack of beans!!!
+
+    return false;
+}
+
+//---------------------------------------------------------------------------------------
+
+void FFQConfig::SaveFFmpegCapabilities()
+{
+    try
+    {
+        if (wxFileExists(m_CapsFile)) wxRemoveFile(m_CapsFile);
+        wxFile tf(m_CapsFile, wxFile::write);
+        if (tf.IsOpened())
+        {
+            tf.Write("::AENC\n"); tf.Write(m_AudioCodecs); tf.Write(CRLF);
+            tf.Write("::VENC\n"); tf.Write(m_VideoCodecs); tf.Write(CRLF);
+            tf.Write("::SENC\n"); tf.Write(m_SubtitleCodecs); tf.Write(CRLF);
+            tf.Write("::FLTR\n"); tf.Write(m_Filters); tf.Write(CRLF);
+            tf.Write("::HWAC\n"); tf.Write(m_HWAccels); tf.Write(CRLF);
+            tf.Write("::HWDC\n"); tf.Write(m_HWDecoders); tf.Write(CRLF);
+            tf.Write("::FMTS\n"); tf.Write(m_Formats); tf.Write(CRLF);
+            if (m_PixelFormats)
+            {
+                tf.Write("::PXFT\n"); tf.Write(m_PixelFormats->ToString()); tf.Write(CRLF);
+            }
+            tf.Close();
+        }
+    } catch (std::exception &err) {}
 
 }
 

@@ -178,6 +178,16 @@ wxString StrToBase64(const wxString &str, size_t wrap_len)
 //---------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------------
 
+bool IsNumber(wxString value, bool allow_float)
+{
+    if (value.Len() == 0) return false;
+    wxString nums = wxString("+-0123456789") + (allow_float ? "." : "");
+    for (size_t i = 0; i < value.Len(); i++) if (nums.Find(value.GetChar(i)) < 0) return false;
+    return true;
+}
+
+//---------------------------------------------------------------------------------------
+
 double Str2Float(wxString str, double def)
 {
 
@@ -206,10 +216,84 @@ long long Str2LongLong(wxString str, long long def)
 
     //Convert a long long to string, returning the
     //"def" argument if fail
-
-    wxString nums = "+-0123456789";
-    for (unsigned int i = 0; i < str.Len(); i++) if (nums.Find(str.GetChar(i)) < 0) return def;
+    if (!IsNumber(str, false)) return def;
+    //wxString nums = "+-0123456789";
+    //for (unsigned int i = 0; i < str.Len(); i++) if (nums.Find(str.GetChar(i)) < 0) return def;
     return strtol(str.c_str().AsChar(), NULL, 10);
+
+}
+
+//---------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------
+
+bool LogicCompare(wxString value, wxString logic)
+{
+    //Compare a value against a logic statement which starts with
+    // "=": equal, "!": not equal, ">": lesser, "<": greater
+    // using ">" and "<" requires numeric values
+
+    //Empty equals empty
+    if (logic.Len() == 0) return (value.Len() == 0);
+
+    //Check for valid logic, perform string compare if not found
+    if (wxString("!=<>").Find(logic.GetChar(0)) < 0) return value.compare(logic) == 0;
+
+    //Get and remove the logic
+    char l;
+    if (!logic.GetChar(0).GetAsChar(&l)) return false;
+    logic.Remove(0, 1);
+
+    //The seals are howling today, maybe the wind..
+    if (IsNumber(value) && IsNumber(logic))
+    {
+
+        //Numeric compare
+        if ((value.Find('.') < 0) && (logic.Find('.') < 0))
+        {
+
+            //Integer
+            switch (l)
+            {
+                case('='): return Str2Long(value) == Str2Long(logic); break;
+                case('!'): return Str2Long(value) != Str2Long(logic); break;
+                case('<'): return Str2Long(value) < Str2Long(logic); break;
+                case('>'): return Str2Long(value) > Str2Long(logic); break;
+            }
+
+        }
+        else
+        {
+
+            //Floating point
+            switch (l)
+            {
+                case('='): return fabs(Str2Float(value) - Str2Float(logic)) < std::numeric_limits<double>::epsilon(); break;
+                case('!'): return fabs(Str2Float(value) - Str2Float(logic)) > std::numeric_limits<double>::epsilon(); break;
+                case('<'): return Str2Float(value) < Str2Float(logic); break;
+                case('>'): return Str2Float(value) > Str2Float(logic); break;
+            }
+
+        }
+
+    }
+    else
+    {
+
+        //String compare
+        switch (l)
+        {
+            case('='): return value.compare(logic) == 0; break;
+            case('!'): return value.compare(logic) != 0; break;
+            case('<'): return value.compare(logic) < 0; break;
+            case('>'): return value.compare(logic) > 0; break;
+        }
+
+    }
+
+    //Unable to compare = no match
+    return false;
 
 }
 
@@ -407,6 +491,25 @@ wxString GetToken(wxString &from, const wxString delim, bool del_token)
 
 //---------------------------------------------------------------------------------------
 
+bool StrSplit(wxString &value, wxString &key, wxUniChar separator, bool trim)
+{
+    if (value.Find(separator) < 0) return false;
+    if (trim)
+    {
+        key = StrTrim(value.BeforeFirst(separator));
+        value = StrTrim(value.AfterFirst(separator));
+    }
+    else
+    {
+        key = value.BeforeFirst(separator);
+        value = value.AfterFirst(separator);
+    }
+    return true;
+
+}
+
+
+//---------------------------------------------------------------------------------------
 wxString StrTrim(wxString str)
 {
 

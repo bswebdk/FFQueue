@@ -31,6 +31,7 @@
 #include "FFQConsole.h"
 //#include "FFQProbing.h"
 #include <wx/filename.h>
+#include <wx/regex.h>
 
 //---------------------------------------------------------------------------------------
 
@@ -583,7 +584,37 @@ wxString MakeMetaData(wxString meta_data, wxString stream_tag)
     //Make a list of -metadata "meta info" tags for the specified stream
     wxString res;
     if (stream_tag.Len() > 0) stream_tag = ":s:" + stream_tag;
-    while (meta_data.Len() > 0) res += "-metadata" + stream_tag + SPACE + GetToken(meta_data, FILTER_SEPARATOR) + SPACE;
+    while (meta_data.Len() > 0)
+    {
+
+        wxString v = GetToken(meta_data, FILTER_SEPARATOR); //Get the metadata token
+        wxString n = GetToken(v, EQUAL); //Get name:stream_tag part
+        wxString st; //Additional stream tag(s)
+
+        if (n.Find(PIPE) > 0) st = COLON + GetLastToken(n, PIPE, true);
+        else
+        {
+
+            wxRegEx rx(":[cgps](:|\\z)", wxRE_EXTENDED);
+            if (rx.Matches(n))
+            {
+
+                size_t pos = 0;
+                if (rx.GetMatch(&pos, 0, 0))
+                {
+
+                    st = n.SubString(pos, n.Len());
+                    n.Remove(pos, n.Len());
+
+                }
+
+            }
+
+        }
+
+        res += "-metadata" + stream_tag + st + SPACE + n + EQUAL + v + SPACE;//GetToken(meta_data, FILTER_SEPARATOR) + SPACE;
+
+    }
     return res;
 }
 
@@ -716,7 +747,7 @@ void TerminateOutputTags(wxArrayPtrVoid &streams, wxString &filters)
     //terminated with a copy filter in order to maintain the correct
     //position in the output file. If none are present, just remove
     //the tags..
-    bool use_copy = (filters.Find("concat=") > 0) || (filters.Find("split=") > 0);
+    bool use_copy = (filters.Find("]concat=") > 0) || (filters.Find("]split=") > 0);
 
     for (size_t i = 0; i < streams.Count(); i++)
     {
@@ -999,6 +1030,9 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
         //Adjust audio_filter_complex according to preset
         if (pst->af_complex) audio_filters_complex = true;
 
+        //To prevent the streams in one file to be cut twice
+        wxArrayInt cutted_files;
+
         //Make filters for all streams
         wxString vf, af; //Video filters and audio filters
         SBINFO dummy(0, 0, 0, 0, "", FFQ_CUTS(),0); //Dummy used as empty pointer
@@ -1011,8 +1045,9 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
             //Get the stream info
             LPSBINFO sbi = (LPSBINFO)streams[sidx];
 
-            //Select all streams in the same file
+            //Select all streams in the same file for cutting
             if (can_cut) SelectStreams(streams, sel_streams, sbi->file_id, -1);
+            else sel_streams.Clear();
 
             //Can video filters be applied?
             if ((!copy_vid) && (sbi->type == 0))
@@ -1023,7 +1058,7 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
                 wxString subs = sub_filter.Clone();
 
                 //Add cuts first?
-                if (can_cut && (sbi->cuts.filter_first || sbi->cuts.quick)) vf += FormatCuts(sel_streams, filter_id);
+                if (can_cut && (sbi->cuts.filter_first || sbi->cuts.quick)) vf += FormatCuts(sel_streams, filter_id, &cutted_files);
 
                 //Apply all other video filters from the presets filter list
                 for (size_t fidx = 0; fidx < pst->filters.Count(); fidx++)
@@ -1074,7 +1109,7 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
                 if (FormatFilter(subs, sbi->tag, first_aud->tag, sub_in, req_in, filter_id)) vf += subs;
 
                 //Add cuts last?
-                if (can_cut && (!sbi->cuts.filter_first) && (!sbi->cuts.quick)) vf += FormatCuts(sel_streams, filter_id);
+                if (can_cut && (!sbi->cuts.filter_first) && (!sbi->cuts.quick)) vf += FormatCuts(sel_streams, filter_id, &cutted_files);
 
                 //if (can_cut && (!sbi->cuts.filter_first) && FormatCuts(sbi->cuts, sbi->tag, true, sbi->dur, filter_id))
                 //    vf += sbi->cuts.cuts;
@@ -1087,36 +1122,41 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
 
             }
 
-            //Can audio filters be applied?
-            else if ((!copy_aud) && (sbi->type == 1))
+            else if (/*(!copy_aud) &&*/ (sbi->type == 1))
             {
 
-                //Prepare audio cuts
-                //wxString cuts = (can_cut && FormatCuts(sbi->cuts, sbi->tag, false, sbi->dur, filter_id)) ? sbi->cuts.cuts : "";
-                bool has_cuts = sbi->cuts.cuts.Len() > 0;
-
-                //Cuts requires complex audio filtering
-                if (has_cuts || (sbi->split > 0)) audio_filters_complex = true;
-
-                //Apply audio cutting first?
-                if (has_cuts && (sbi->cuts.filter_first || sbi->cuts.quick))
-                {
-                    af += FormatCuts(sel_streams, filter_id);
-                    has_cuts = false; //Prevent add last
-                }
-
-                //Process audio filters from the list
-                for (size_t fidx = 0; fidx < pst->filters.Count(); fidx++)
+                //Can audio filters be applied?
+                if (!copy_aud)
                 {
 
-                    FFMPEG_FILTER fltr = FFMPEG_FILTER(pst->filters[fidx]);
-                    if (fltr.IsAudio() && FormatFilter(fltr.ff_filter, first_vid->tag, sbi->tag, sub_in, req_in, filter_id))
-                        af += fltr.ff_filter;
+                    //Prepare audio cuts
+                    //wxString cuts = (can_cut && FormatCuts(sbi->cuts, sbi->tag, false, sbi->dur, filter_id)) ? sbi->cuts.cuts : "";
+                    bool has_cuts = sbi->cuts.cuts.Len() > 0;
+
+                    //Cuts requires complex audio filtering
+                    if (has_cuts || (sbi->split > 0)) audio_filters_complex = true;
+
+                    //Apply audio cutting first?
+                    if (has_cuts && (sbi->cuts.filter_first || sbi->cuts.quick))
+                    {
+                        af += FormatCuts(sel_streams, filter_id, &cutted_files);
+                        has_cuts = false; //Prevent add last
+                    }
+
+                    //Process audio filters from the list
+                    for (size_t fidx = 0; fidx < pst->filters.Count(); fidx++)
+                    {
+
+                        FFMPEG_FILTER fltr = FFMPEG_FILTER(pst->filters[fidx]);
+                        if (fltr.IsAudio() && FormatFilter(fltr.ff_filter, first_vid->tag, sbi->tag, sub_in, req_in, filter_id))
+                            af += fltr.ff_filter;
+
+                    }
+
+                    //Apply audio cutting last?
+                    if (has_cuts && (!sbi->cuts.filter_first)) af += FormatCuts(sel_streams, filter_id, &cutted_files);
 
                 }
-
-                //Apply audio cutting last?
-                if (has_cuts && (!sbi->cuts.filter_first)) af += FormatCuts(sel_streams, filter_id);
 
                 //Must the stream be split?
                 if (sbi->split > 0)
@@ -1237,6 +1277,9 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
 
             //Closed GOP when segmenting - this should be a user choice in a future release
             //if (segment) preset += "-flags +cgop ";
+
+            //Full specification video arguments
+            if (pst->fullspec_vid.Len() > 0) preset += pst->fullspec_vid + SPACE;
 
         }
 
@@ -1564,158 +1607,33 @@ wxString FormatFileName(wxString fn)
 
 //---------------------------------------------------------------------------------------
 
-/*const wxString TRIM_FILTER = "{$%i}%strim=%s:%s,%ssetpts=PTS-STARTPTS";
-
-//---------------------------------------------------------------------------------------
-
-void AppendTrim(wxString &fltr, wxString &concat, int &fid, int &tid, bool video, TIME_VALUE from, TIME_VALUE to, TIME_VALUE duration, unsigned int compensate = 0)
-{
-
-    //Compensation required?
-    if (compensate > 0)
-    {
-
-        //When removing parts the time values must be compensated with the
-        //duration of one frame in order to be accurate - this we do now
-        if (from.ToMilliseconds() > 0) from = TIME_VALUE(from.ToMilliseconds() + compensate);
-        if (to.ToMilliseconds() < duration.ToMilliseconds()) to = TIME_VALUE(to.ToMilliseconds() - compensate);
-
-    }
-
-    //Append filter - notice that we use an input tag id instead
-    //of a stream tag in order to be able to prepend a split filter
-    //if required
-    fltr += wxString::Format(TRIM_FILTER, tid++, video?"":"a", from.ToShortString(), to.ToShortString(), video?"":"a");
-
-    //Get an output tag
-    wxString tag = NextFilterID(fid);
-
-    //Append output tag to filter and concat
-    fltr += tag + ";";
-    concat += tag;
-
-}
-
-//---------------------------------------------------------------------------------------
-
-bool FormatCuts(FFQ_CUTS &cuts, wxString &stream_tag, bool video, TIME_VALUE duration, int &filter_id)
+wxString FormatCuts(wxArrayPtrVoid &streams, int &filter_id, wxArrayInt *unique_files_only)
 {
 
     //Converts a list of from_time;to_time[..] to a filter
     //that utilizes the trim & concat filters for video
     //and audio
 
-    //Return false if no stream tag
-    if (stream_tag.Len() == 0) return false;
+    //Exit if streams is empty
+    if (streams.Count() == 0) return wxEmptyString;
 
-    //Handy vars
-    bool beginning = true;
-    wxString res, concat, save_tag = stream_tag;
-    TIME_VALUE from, to, prev_to(0);
-    int tag_id = 0;
+    //Get info for the first stream
+    LPSBINFO sbi = (LPSBINFO)streams[0];
 
-    //Make filter
-    while (cuts.cuts.Len() > 0)
+    //Check if the file has already been processed
+    if (unique_files_only)
     {
+        //Exit if processed
+        if (unique_files_only->Index(sbi->file_id) > -1) return wxEmptyString;
 
-        //Get trim times
-        from = TIME_VALUE(GetToken(cuts.cuts, SCOLON, true));
-        to = TIME_VALUE(GetToken(cuts.cuts, SCOLON, true));
-
-        if (cuts.keep)
-        {
-
-            //Add simple trim to keep the part
-            AppendTrim(res, concat, filter_id, tag_id, video, from, to, duration);
-
-        }
-
-        else
-        {
-
-            //If we are not at the beginning or from > 0 then
-            //we must add filters to trim prev_to => from
-            if ((!beginning) || (from.ToMilliseconds() > 0))
-                AppendTrim(res, concat, filter_id, tag_id, video, prev_to, from, duration, cuts.frame_time);
-
-            //We are no longer at the beginning
-            beginning = false;
-
-            //If we are at the end (cuts is empty) then we must check if
-            //something there must be kept
-            if ((cuts.cuts.Len() == 0) && (to.ToMilliseconds() < duration.ToMilliseconds()))
-                AppendTrim(res, concat, filter_id, tag_id, video, to, duration, duration, cuts.frame_time);
-
-            //Store to for next iteration
-            prev_to = to;
-
-        }
-
+        //Add if not
+        unique_files_only->Add(sbi->file_id);
     }
 
-    //Count number of tags in concat
-    int cf = concat.Freq('[');
-
-    if (cf > 1)
-    {
-
-        //More than one tag = create output stream tag and concat filter
-        stream_tag = NextFilterID(filter_id);
-        res += concat + wxString::Format("concat=n=%i:v=%i:a=%i%s;", cf, video?1:0, video?0:1, stream_tag);
-
-    }
-    else if (cf > 0)
-    {
-
-        //Only one tag = get output stream tag and don't concat
-        filter_id--;
-        stream_tag = NextFilterID(filter_id);
-
-    }
-
-    //If tag_id is above one and the supplied stream_tag if not
-    //a [file:stream] tag, then we need to prepend a split filter
-    //for each trim performed
-    if ((tag_id > 1) && (save_tag.Find(':') == wxNOT_FOUND))
-    {
-
-        //Yes we do, create and replace tags
-        wxString split, tag;
-        for (int i = 0; i < tag_id; i++)
-        {
-            tag = NextFilterID(filter_id);
-            split += tag;
-            res.Replace(wxString::Format("{$%i}", i), tag);
-        }
-
-        //Prepend split filter
-        res = wxString::Format("%s%ssplit=%i%s;", save_tag, video?"":"a", tag_id, split) + res;
-
-    }
-
-    //Nope, we do not need to use a split filter, insert
-    //saved stream tag instead
-    else for (int i = 0; i < tag_id; i++)
-        res.Replace(wxString::Format("{$%i}", i), save_tag);
-
-    //Set cuts and return success
-    cuts.cuts = res;
-    return res.Len() > 0;
-
-}*/
-
-//---------------------------------------------------------------------------------------
-
-wxString FormatCuts(wxArrayPtrVoid &streams, int &filter_id)
-{
-
-    //Converts a list of from_time;to_time[..] to a filter
-    //that utilizes the trim & concat filters for video
-    //and audio
+    //Used to correct time stamps after trimming
     const wxString SETPTS = "%ssetpts=PTS-STARTPTS";
 
     //Prepare the cuts with initial vars
-    LPSBINFO sbi = (LPSBINFO)streams[0];
     wxString cuts = sbi->cuts.KeepParts(sbi->dur), s, t, res;
     if (cuts.Len() == 0) return "";
     bool quick = sbi->cuts.quick, use_split;
@@ -1740,7 +1658,7 @@ wxString FormatCuts(wxArrayPtrVoid &streams, int &filter_id)
         sbi->data.Clear(); //Used to store stream tags
         sbi->cuts.Reset(); //Prevent cuts from being re-created for other streams
 
-        for (size_t i = 0; i < streams.Count(); i++)
+        for (i = 0; i < streams.Count(); i++)
         {
 
             //Get stream info and create a split filter if required
@@ -1786,7 +1704,7 @@ wxString FormatCuts(wxArrayPtrVoid &streams, int &filter_id)
     cc_tags.SetCount(num_parts);
 
     //Create the trim filters for all streams
-    for (size_t i = 0; i < streams.Count(); i++)
+    for (i = 0; i < streams.Count(); i++)
     {
 
         sbi = (LPSBINFO)streams[i];
@@ -1798,7 +1716,7 @@ wxString FormatCuts(wxArrayPtrVoid &streams, int &filter_id)
         {
 
             from = TIME_VALUE(GetToken(cc, SCOLON));
-            to = TIME_VALUE(GetToken(cc, SCOLON));
+            to = cc.Len() == 0 ? sbi->dur : TIME_VALUE(GetToken(cc, SCOLON));
             t = sbi->type == 0 ? "" : "a"; //Type
             tag = GetToken(sbi->data, SPACE, true);
             pts = (from.ToMilliseconds() > 0) ? wxString::Format(SETPTS, t) : ""; //If the setpts filter is used for offset 0, audio comes out of sync
@@ -1816,7 +1734,8 @@ wxString FormatCuts(wxArrayPtrVoid &streams, int &filter_id)
 
     }
 
-    //Create the concat filter
+
+    //Create the concat filter for multiple parts
     for (size_t i = 0; i < cc_tags.Count(); i++) res += cc_tags[i];
     int vids = 0, auds = 0;
     t = "";
@@ -1828,6 +1747,9 @@ wxString FormatCuts(wxArrayPtrVoid &streams, int &filter_id)
         else auds++;
         t += sbi->tag;
     }
+
+    //Clear streams to prevent re-processing
+    //streams.Clear();
 
     return res + wxString::Format("concat=n=%d:v=%d:a=%d%s;", num_parts, vids, auds, t);
 

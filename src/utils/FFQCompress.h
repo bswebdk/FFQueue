@@ -26,11 +26,14 @@
 
 #include <cstddef>
 #include <wx/string.h>
+#include "FFQConst.h"
 
 void CompressAndBase64(const void* src_buf, const size_t src_len, wxString &base64, size_t wrap_len = 0);
 void CompressAndBase64(wxString &src_and_dst, size_t wrap_len = 0);
+uint8_t* CompressString(wxString &str, uint32_t *res_len, uint32_t prefix_gap = 0);
 bool DecompressFromBase64(wxString &base64, void* dest_buf, size_t* dest_len);
 bool DecompressFromBase64(wxString &base64);
+wxString DecompressString(uint8_t* buf, uint32_t len, uint32_t prefix_gap = 0);
 
 
 #endif // FFQCOMPRESS_H

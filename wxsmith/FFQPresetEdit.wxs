@@ -52,18 +52,36 @@
 												<rows>2</rows>
 												<growablecols>0</growablecols>
 												<object class="sizeritem">
-													<object class="wxChoice" name="ID_VIDEOCODEC" variable="VideoCodec" member="yes">
-														<extra_code>VSBS1-&gt;GetStaticBox()-&gt;SetLabel(FFQS(SID__PRESET__CODEC));</extra_code>
-														<handler function="OnChoiceChange" entry="EVT_CHOICE" />
-													</object>
-													<flag>wxALL|wxEXPAND</flag>
-													<border>3</border>
-													<option>1</option>
-												</object>
-												<object class="sizeritem">
-													<object class="wxFlexGridSizer" variable="VidSizer1" member="yes">
+													<object class="wxFlexGridSizer" variable="VideoCodecSizer" member="yes">
 														<cols>2</cols>
 														<rows>1</rows>
+														<growablecols>0</growablecols>
+														<object class="sizeritem">
+															<object class="wxChoice" name="ID_VIDEOCODEC" variable="VideoCodec" member="yes">
+																<extra_code>VSBS1-&gt;GetStaticBox()-&gt;SetLabel(FFQS(SID__PRESET__CODEC));</extra_code>
+																<handler function="OnChoiceChange" entry="EVT_CHOICE" />
+															</object>
+															<flag>wxALL|wxEXPAND</flag>
+															<border>3</border>
+															<option>1</option>
+														</object>
+														<object class="sizeritem">
+															<object class="wxButton" name="ID_FULLSPECVIDBUTTON" variable="FullSpecVidButton" member="yes">
+																<label>...</label>
+																<handler function="OnButtonClick" entry="EVT_BUTTON" />
+															</object>
+															<flag>wxALL</flag>
+															<border>3</border>
+															<option>1</option>
+														</object>
+													</object>
+													<flag>wxEXPAND</flag>
+												</object>
+												<object class="sizeritem">
+													<object class="wxFlexGridSizer" variable="VideoTwoPassSizer" member="yes">
+														<cols>2</cols>
+														<rows>1</rows>
+														<growablecols>1</growablecols>
 														<growablerows>0</growablerows>
 														<object class="sizeritem">
 															<object class="wxCheckBox" name="ID_TWOPASS" variable="TwoPass" member="yes">
@@ -86,7 +104,6 @@
 														</object>
 													</object>
 													<flag>wxALL|wxEXPAND</flag>
-													<border>3</border>
 													<option>1</option>
 												</object>
 											</object>
@@ -1365,10 +1382,11 @@
 												<growablerows>0</growablerows>
 												<object class="sizeritem">
 													<object class="wxGrid" name="ID_METADATA" variable="MetaData" member="yes">
-														<cols>2</cols>
+														<cols>3</cols>
 														<rows>5</rows>
 														<labelcolwidth>1</labelcolwidth>
-														<extra_code>MetaData-&gt;SetColLabelValue(0, FFQS(SID__PRESET__METADATA__KEY));&#x0A;MetaData-&gt;SetColLabelValue(1, FFQS(SID__PRESET__METADATA__VALUE));&#x0A;SBS31-&gt;GetStaticBox()-&gt;SetLabel(FFQS(SID__PRESET__METADATA__DEFINE));</extra_code>
+														<extra_code>MetaData-&gt;SetColLabelValue(0, FFQS(SID__PRESET__METADATA__KEY));&#x0A;MetaData-&gt;SetColLabelValue(1, FFQS(SID__PRESET__METADATA__STREAM));&#x0A;MetaData-&gt;SetColLabelValue(2, FFQS(SID__PRESET__METADATA__VALUE));&#x0A;SBS31-&gt;GetStaticBox()-&gt;SetLabel(FFQS(SID__PRESET__METADATA__DEFINE));</extra_code>
+														<handler function="OnMetaDataCellChange" entry="EVT_CMD_GRID_CELL_CHANGED" />
 													</object>
 													<flag>wxALL|wxEXPAND</flag>
 													<border>3</border>
@@ -1376,12 +1394,21 @@
 												</object>
 												<object class="sizeritem">
 													<object class="wxFlexGridSizer" variable="FlexGridSizer29" member="no">
-														<cols>2</cols>
+														<cols>3</cols>
 														<rows>1</rows>
 														<growablecols>0</growablecols>
 														<object class="sizeritem">
+															<object class="wxButton" name="ID_CLEARMETADATABTN" variable="ClearMetaDataBtn" member="yes">
+																<label>Cl</label>
+																<extra_code>ClearMetaDataBtn-&gt;SetLabel(FFQS(SID__COMMON__CLEAR));</extra_code>
+																<handler function="OnButtonClick" entry="EVT_BUTTON" />
+															</object>
+															<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+															<option>1</option>
+														</object>
+														<object class="sizeritem">
 															<object class="wxStaticText" name="ID_STMD1" variable="STMD1" member="yes">
-																<label>Label</label>
+																<label>SD</label>
 																<extra_code>STMD1-&gt;SetLabel(FFQS(SID__PRESET__METADATA__FOR));</extra_code>
 															</object>
 															<flag>wxRIGHT|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL</flag>

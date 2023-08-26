@@ -359,6 +359,7 @@ FFQLang::FFQLang(bool loadFile)
     SetString(SID_INLINE_SHELL_CODE_WARNING,    "The command you are about to execute seems to contain inline shell code which may be harmful for your system. Are you sure that you want to take the risk?");
     SetString(SID_ADVANCED_CUTS_WARNING,        "You have combined advanced cuts with remapping (copy codec) and this will cause the job to fail. Continue anyway?");
     SetString(SID_CONFIRM_SORT_PRESETS,         "This will re-arrange all presets alphabetically, do you want to continue?");
+    SetString(SID_BAD_COMMAND_LINE_ARG,         "The following command line argument argument is invalid: %s");
 
 
     //Log related messages
@@ -689,6 +690,7 @@ FFQLang::FFQLang(bool loadFile)
     SetString(SID_PRESET_METADATA_FOR_ITEMS,            "All (global)|Video|Audio|Subtitle");
     SetString(SID_PRESET_DISPOSITION,                   "Dispositions");
     SetString(SID_PRESET_DISPOSITION_UNSET,             "Un-set existing");
+    SetString(SID_PRESET_METADATA_STREAM,               "Stream");
 
 
     //Video sync mode strings
@@ -734,6 +736,7 @@ FFQLang::FFQLang(bool loadFile)
     SetString(SID_OPTIONS_CONFIRM_DELETE_JOBS,      "Confirm removal of jobs");
     SetString(SID_OPTIONS_PREVIEW_MAP_SUBS,         "Always map subtitles when previewing");
     SetString(SID_OPTIONS_NUM_ENCODING_SLOTS,       "Number of simultaneous jobs to process");
+    SetString(SID_OPTIONS_DONT_SAVE_FFMPEG,         "Do not save FFmpeg capabilities for fast reload");
 
 
     //Thumb maker UI strings
@@ -820,6 +823,15 @@ FFQLang::FFQLang(bool loadFile)
     SetString(SID_VIDEO2GIF_NO_VIDEO,               "No video found in input file");
     SetString(SID_VIDEO2GIF_BEYOND_END_OF_VID,      "Start time and/or time length is beyond end of video");
     SetString(SID_VIDEO2GIF_PRECISE_CUTS,           "Use filters to increase cut precision");
+
+
+    //FullSpec UI strings
+    SetString(SID_FULLSPEC_TITLE,                   "Full specification for: %s");
+    SetString(SID_FULLSPEC_REQUIRED_FIELD,          "The value of the field \"%s\" must be specified");
+    SetString(SID_FULLSPEC_COLON_NOT_ALLOWED,       "Colons are not allowed in values, should you use comma instead?");
+    SetString(SID_FULLSPEC_TEST,                    "Test");
+    SetString(SID_FULLSPEC_BAD_ID,                  "No full specification with ID \"%s\" found!");
+    SetString(SID_FULLSPEC_SELECT_FILE,             "Select file for testing");
 
 
     //Filter editor UI strings

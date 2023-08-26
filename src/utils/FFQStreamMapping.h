@@ -37,10 +37,11 @@ typedef struct STREAM_MAPPING
     int file_id, //The index of the file used with -map (starting from 1, must be decremented when used in the ffmpeg command)
         stream_id; //The index of the stream in the file (starting from 0 - unlike file_id)
     wxString codec_type, //The codec type of the stream (video, audio or subtitle)
-             preset_list; //A list of space-separated preset id's to be used with this stream
+             preset_list, //A list of space-separated preset id's to be used with this stream
+             codec_name; //The short codec name used in this stream
 
     STREAM_MAPPING();
-    STREAM_MAPPING(bool chk, int f_id, int s_id, wxString c_type, wxString pst_lst);
+    STREAM_MAPPING(bool chk, int f_id, int s_id, wxString c_type, wxString pst_lst, wxString cdc_name);
     STREAM_MAPPING(wxString &from);
 
     bool Parse(wxString &from);

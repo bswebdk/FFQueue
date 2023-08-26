@@ -103,7 +103,7 @@ am_ffqueue_OBJECTS = ffqueue-FFQAbout.$(OBJEXT) \
 	ffqueue-FFQApp.$(OBJEXT) ffqueue-FFQBatchMake.$(OBJEXT) \
 	ffqueue-FFQBitRatePanel.$(OBJEXT) \
 	ffqueue-FFQConfigEdit.$(OBJEXT) \
-	ffqueue-FFQFilterEdit.$(OBJEXT) \
+	ffqueue-FFQFilterEdit.$(OBJEXT) ffqueue-FFQFullSpec.$(OBJEXT) \
 	ffqueue-FFQJobEditAdv.$(OBJEXT) \
 	ffqueue-FFQJobEditAdvCuts.$(OBJEXT) \
 	ffqueue-FFQJobEditAdvPopup.$(OBJEXT) \
@@ -163,6 +163,7 @@ am_ffqueue_OBJECTS = ffqueue-FFQAbout.$(OBJEXT) \
 	utils/ffqueue-FFQLang.$(OBJEXT) \
 	utils/ffqueue-FFQMisc.$(OBJEXT) \
 	utils/ffqueue-FFQNvpList.$(OBJEXT) \
+	utils/ffqueue-FFQParsing.$(OBJEXT) \
 	utils/ffqueue-FFQPixFmt.$(OBJEXT) \
 	utils/ffqueue-FFQPreset.$(OBJEXT) \
 	utils/ffqueue-FFQProbing.$(OBJEXT) \
@@ -199,6 +200,7 @@ am__depfiles_remade = ./$(DEPDIR)/ffqueue-FFQAbout.Po \
 	./$(DEPDIR)/ffqueue-FFQBitRatePanel.Po \
 	./$(DEPDIR)/ffqueue-FFQConfigEdit.Po \
 	./$(DEPDIR)/ffqueue-FFQFilterEdit.Po \
+	./$(DEPDIR)/ffqueue-FFQFullSpec.Po \
 	./$(DEPDIR)/ffqueue-FFQJobEditAdv.Po \
 	./$(DEPDIR)/ffqueue-FFQJobEditAdvCuts.Po \
 	./$(DEPDIR)/ffqueue-FFQJobEditAdvPopup.Po \
@@ -269,6 +271,7 @@ am__depfiles_remade = ./$(DEPDIR)/ffqueue-FFQAbout.Po \
 	utils/$(DEPDIR)/ffqueue-FFQLang.Po \
 	utils/$(DEPDIR)/ffqueue-FFQMisc.Po \
 	utils/$(DEPDIR)/ffqueue-FFQNvpList.Po \
+	utils/$(DEPDIR)/ffqueue-FFQParsing.Po \
 	utils/$(DEPDIR)/ffqueue-FFQPixFmt.Po \
 	utils/$(DEPDIR)/ffqueue-FFQPreset.Po \
 	utils/$(DEPDIR)/ffqueue-FFQProbing.Po \
@@ -425,6 +428,7 @@ ffqueue_SOURCES = FFQAbout.cpp\
 	FFQBitRatePanel.cpp\
 	FFQConfigEdit.cpp\
 	FFQFilterEdit.cpp\
+	FFQFullSpec.cpp\
 	FFQJobEditAdv.cpp\
 	FFQJobEditAdvCuts.cpp\
 	FFQJobEditAdvPopup.cpp\
@@ -495,6 +499,7 @@ ffqueue_SOURCES = FFQAbout.cpp\
 	utils/FFQLang.cpp\
 	utils/FFQMisc.cpp\
 	utils/FFQNvpList.cpp\
+	utils/FFQParsing.cpp\
 	utils/FFQPixFmt.cpp\
 	utils/FFQPreset.cpp\
 	utils/FFQProbing.cpp\
@@ -718,6 +723,8 @@ utils/ffqueue-FFQMisc.$(OBJEXT): utils/$(am__dirstamp) \
 	utils/$(DEPDIR)/$(am__dirstamp)
 utils/ffqueue-FFQNvpList.$(OBJEXT): utils/$(am__dirstamp) \
 	utils/$(DEPDIR)/$(am__dirstamp)
+utils/ffqueue-FFQParsing.$(OBJEXT): utils/$(am__dirstamp) \
+	utils/$(DEPDIR)/$(am__dirstamp)
 utils/ffqueue-FFQPixFmt.$(OBJEXT): utils/$(am__dirstamp) \
 	utils/$(DEPDIR)/$(am__dirstamp)
 utils/ffqueue-FFQPreset.$(OBJEXT): utils/$(am__dirstamp) \
@@ -760,6 +767,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ffqueue-FFQBitRatePanel.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ffqueue-FFQConfigEdit.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ffqueue-FFQFilterEdit.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ffqueue-FFQFullSpec.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ffqueue-FFQJobEditAdv.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ffqueue-FFQJobEditAdvCuts.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ffqueue-FFQJobEditAdvPopup.Po@am__quote@ # am--include-marker
@@ -830,6 +838,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@utils/$(DEPDIR)/ffqueue-FFQLang.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@utils/$(DEPDIR)/ffqueue-FFQMisc.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@utils/$(DEPDIR)/ffqueue-FFQNvpList.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@utils/$(DEPDIR)/ffqueue-FFQParsing.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@utils/$(DEPDIR)/ffqueue-FFQPixFmt.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@utils/$(DEPDIR)/ffqueue-FFQPreset.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@utils/$(DEPDIR)/ffqueue-FFQProbing.Po@am__quote@ # am--include-marker
@@ -947,6 +956,20 @@ ffqueue-FFQFilterEdit.obj: FFQFilterEdit.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='FFQFilterEdit.cpp' object='ffqueue-FFQFilterEdit.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ffqueue_CXXFLAGS) $(CXXFLAGS) -c -o ffqueue-FFQFilterEdit.obj `if test -f 'FFQFilterEdit.cpp'; then $(CYGPATH_W) 'FFQFilterEdit.cpp'; else $(CYGPATH_W) '$(srcdir)/FFQFilterEdit.cpp'; fi`
+
+ffqueue-FFQFullSpec.o: FFQFullSpec.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ffqueue_CXXFLAGS) $(CXXFLAGS) -MT ffqueue-FFQFullSpec.o -MD -MP -MF $(DEPDIR)/ffqueue-FFQFullSpec.Tpo -c -o ffqueue-FFQFullSpec.o `test -f 'FFQFullSpec.cpp' || echo '$(srcdir)/'`FFQFullSpec.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/ffqueue-FFQFullSpec.Tpo $(DEPDIR)/ffqueue-FFQFullSpec.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='FFQFullSpec.cpp' object='ffqueue-FFQFullSpec.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ffqueue_CXXFLAGS) $(CXXFLAGS) -c -o ffqueue-FFQFullSpec.o `test -f 'FFQFullSpec.cpp' || echo '$(srcdir)/'`FFQFullSpec.cpp
+
+ffqueue-FFQFullSpec.obj: FFQFullSpec.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ffqueue_CXXFLAGS) $(CXXFLAGS) -MT ffqueue-FFQFullSpec.obj -MD -MP -MF $(DEPDIR)/ffqueue-FFQFullSpec.Tpo -c -o ffqueue-FFQFullSpec.obj `if test -f 'FFQFullSpec.cpp'; then $(CYGPATH_W) 'FFQFullSpec.cpp'; else $(CYGPATH_W) '$(srcdir)/FFQFullSpec.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/ffqueue-FFQFullSpec.Tpo $(DEPDIR)/ffqueue-FFQFullSpec.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='FFQFullSpec.cpp' object='ffqueue-FFQFullSpec.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ffqueue_CXXFLAGS) $(CXXFLAGS) -c -o ffqueue-FFQFullSpec.obj `if test -f 'FFQFullSpec.cpp'; then $(CYGPATH_W) 'FFQFullSpec.cpp'; else $(CYGPATH_W) '$(srcdir)/FFQFullSpec.cpp'; fi`
 
 ffqueue-FFQJobEditAdv.o: FFQJobEditAdv.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ffqueue_CXXFLAGS) $(CXXFLAGS) -MT ffqueue-FFQJobEditAdv.o -MD -MP -MF $(DEPDIR)/ffqueue-FFQJobEditAdv.Tpo -c -o ffqueue-FFQJobEditAdv.o `test -f 'FFQJobEditAdv.cpp' || echo '$(srcdir)/'`FFQJobEditAdv.cpp
@@ -1928,6 +1951,20 @@ utils/ffqueue-FFQNvpList.obj: utils/FFQNvpList.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ffqueue_CXXFLAGS) $(CXXFLAGS) -c -o utils/ffqueue-FFQNvpList.obj `if test -f 'utils/FFQNvpList.cpp'; then $(CYGPATH_W) 'utils/FFQNvpList.cpp'; else $(CYGPATH_W) '$(srcdir)/utils/FFQNvpList.cpp'; fi`
 
+utils/ffqueue-FFQParsing.o: utils/FFQParsing.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ffqueue_CXXFLAGS) $(CXXFLAGS) -MT utils/ffqueue-FFQParsing.o -MD -MP -MF utils/$(DEPDIR)/ffqueue-FFQParsing.Tpo -c -o utils/ffqueue-FFQParsing.o `test -f 'utils/FFQParsing.cpp' || echo '$(srcdir)/'`utils/FFQParsing.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) utils/$(DEPDIR)/ffqueue-FFQParsing.Tpo utils/$(DEPDIR)/ffqueue-FFQParsing.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='utils/FFQParsing.cpp' object='utils/ffqueue-FFQParsing.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ffqueue_CXXFLAGS) $(CXXFLAGS) -c -o utils/ffqueue-FFQParsing.o `test -f 'utils/FFQParsing.cpp' || echo '$(srcdir)/'`utils/FFQParsing.cpp
+
+utils/ffqueue-FFQParsing.obj: utils/FFQParsing.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ffqueue_CXXFLAGS) $(CXXFLAGS) -MT utils/ffqueue-FFQParsing.obj -MD -MP -MF utils/$(DEPDIR)/ffqueue-FFQParsing.Tpo -c -o utils/ffqueue-FFQParsing.obj `if test -f 'utils/FFQParsing.cpp'; then $(CYGPATH_W) 'utils/FFQParsing.cpp'; else $(CYGPATH_W) '$(srcdir)/utils/FFQParsing.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) utils/$(DEPDIR)/ffqueue-FFQParsing.Tpo utils/$(DEPDIR)/ffqueue-FFQParsing.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='utils/FFQParsing.cpp' object='utils/ffqueue-FFQParsing.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ffqueue_CXXFLAGS) $(CXXFLAGS) -c -o utils/ffqueue-FFQParsing.obj `if test -f 'utils/FFQParsing.cpp'; then $(CYGPATH_W) 'utils/FFQParsing.cpp'; else $(CYGPATH_W) '$(srcdir)/utils/FFQParsing.cpp'; fi`
+
 utils/ffqueue-FFQPixFmt.o: utils/FFQPixFmt.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ffqueue_CXXFLAGS) $(CXXFLAGS) -MT utils/ffqueue-FFQPixFmt.o -MD -MP -MF utils/$(DEPDIR)/ffqueue-FFQPixFmt.Tpo -c -o utils/ffqueue-FFQPixFmt.o `test -f 'utils/FFQPixFmt.cpp' || echo '$(srcdir)/'`utils/FFQPixFmt.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) utils/$(DEPDIR)/ffqueue-FFQPixFmt.Tpo utils/$(DEPDIR)/ffqueue-FFQPixFmt.Po
@@ -2220,6 +2257,7 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/ffqueue-FFQBitRatePanel.Po
 	-rm -f ./$(DEPDIR)/ffqueue-FFQConfigEdit.Po
 	-rm -f ./$(DEPDIR)/ffqueue-FFQFilterEdit.Po
+	-rm -f ./$(DEPDIR)/ffqueue-FFQFullSpec.Po
 	-rm -f ./$(DEPDIR)/ffqueue-FFQJobEditAdv.Po
 	-rm -f ./$(DEPDIR)/ffqueue-FFQJobEditAdvCuts.Po
 	-rm -f ./$(DEPDIR)/ffqueue-FFQJobEditAdvPopup.Po
@@ -2290,6 +2328,7 @@ distclean: distclean-am
 	-rm -f utils/$(DEPDIR)/ffqueue-FFQLang.Po
 	-rm -f utils/$(DEPDIR)/ffqueue-FFQMisc.Po
 	-rm -f utils/$(DEPDIR)/ffqueue-FFQNvpList.Po
+	-rm -f utils/$(DEPDIR)/ffqueue-FFQParsing.Po
 	-rm -f utils/$(DEPDIR)/ffqueue-FFQPixFmt.Po
 	-rm -f utils/$(DEPDIR)/ffqueue-FFQPreset.Po
 	-rm -f utils/$(DEPDIR)/ffqueue-FFQProbing.Po
@@ -2352,6 +2391,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/ffqueue-FFQBitRatePanel.Po
 	-rm -f ./$(DEPDIR)/ffqueue-FFQConfigEdit.Po
 	-rm -f ./$(DEPDIR)/ffqueue-FFQFilterEdit.Po
+	-rm -f ./$(DEPDIR)/ffqueue-FFQFullSpec.Po
 	-rm -f ./$(DEPDIR)/ffqueue-FFQJobEditAdv.Po
 	-rm -f ./$(DEPDIR)/ffqueue-FFQJobEditAdvCuts.Po
 	-rm -f ./$(DEPDIR)/ffqueue-FFQJobEditAdvPopup.Po
@@ -2422,6 +2462,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f utils/$(DEPDIR)/ffqueue-FFQLang.Po
 	-rm -f utils/$(DEPDIR)/ffqueue-FFQMisc.Po
 	-rm -f utils/$(DEPDIR)/ffqueue-FFQNvpList.Po
+	-rm -f utils/$(DEPDIR)/ffqueue-FFQParsing.Po
 	-rm -f utils/$(DEPDIR)/ffqueue-FFQPixFmt.Po
 	-rm -f utils/$(DEPDIR)/ffqueue-FFQPreset.Po
 	-rm -f utils/$(DEPDIR)/ffqueue-FFQProbing.Po

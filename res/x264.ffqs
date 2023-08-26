@@ -1,0 +1,478 @@
+FFQ_FULLSPEC_HEADER_1
+#source https://gist.github.com/newfront/875122
+#test=-i $INFILE -map 0:v:0 -b:v 1000 -c:v libx264 $TESTARGS -an -o $OUTFILE
+composite=-x264opts
+display=H.264
+id=x264
+matches=[[:blank:]][hx]264\)($|\Z|\r)
+prefix=
+separator=:
+
+#:Presets
+
+#profile
+#text=Profile
+#type=choice
+#value=baseline:main:high
+#default=high
+
+#preset
+#text=Preset
+#type=choice
+#value=ultrafast:superfast:veryfast:faster:fast:medium:slow:slower:veryslow:placebo
+#default=medium
+
+#tune
+#text=Tune
+#type=choice
+#value=film:animation:grain:stillimage:psnr:ssim:fastdecode:zerolatency
+#default=film
+
+#slow-firstpass
+#text=Enable slow first pass
+
+
+:Frame type options
+
+keyint
+text=Maximum GOP size
+type=integer
+default=250
+
+min-keyint
+text=Minimum GOP size
+type=integer
+
+no-scenecut
+text=Disable adaptive I-frame decision
+
+scenecut
+text=How aggressively to insert extra I-frames
+type=integer
+default=40
+#require=!no-scenecut
+
+intra-refresh
+text=Use Periodic Intra Refresh instead of IDR frames
+
+bframes
+text=Number of B-frames between I and P
+type=integer
+default=3
+
+b-adapt
+text=Adaptive B-frame decision method
+type=choice
+value=0=Disabled:1=Fast:2=Optimal
+default=1
+
+b-bias
+text=Influences how often B-frames are used
+type=integer
+default=0
+
+b-pyramid
+text=Keep some B-frames as references
+type=choice
+value=none=Disabled:strict=Strictly hierarchical pyramid:normal=Non-strict (not Blu-ray compatible)
+default=normal
+
+no-cabac
+text=Disable CABAC
+
+ref
+text=Number of reference frames
+type=integer
+default=3
+
+no-deblock
+text=Disable loop filter
+
+deblock
+text=Loop filter parameters (alpha,beta)
+type=string
+default=0,0
+
+slices
+text=Number of slices per frame
+type=integer
+
+slice-max-size
+text=Limit the size of each slice in bytes
+type=integer
+
+slice-max-mbs
+text=Limit the size of each slice in macroblocks
+type=integer
+
+tff
+text=Enable interlaced mode (top field first)
+
+bff
+text=Enable interlaced mode (bottom field first)
+
+constrained-intra
+text=Enable constrained intra prediction
+
+#pulldown
+#text=Use soft pulldown to change frame rate (requires cfr input)
+#type=choice
+#value=none:22:32:64:double:triple:euro
+
+fake-interlaced
+text=Flag stream as interlaced but encode progressive
+
+
+:Ratecontrol
+
+qp
+text=Force constant QP (0-51, 0=lossless)
+type=integer
+range=0 51
+
+bitrate
+text=Set bitrate (kbit/s)
+type=integer
+
+crf
+text=Quality-based VBR (0-51, 0=lossless)
+type=float
+range=0 51
+
+rc-lookahead
+text=Number of frames for frametype lookahead
+type=integer
+default=40
+
+vbv-maxrate
+text=Max local bitrate (kbit/s)
+type=integer
+default=0
+
+vbv-bufsize
+text=Set size of the VBV buffer (kbit)
+type=integer
+default=0
+
+vbv-init
+text=Initial VBV buffer occupancy
+type=float
+default=0.9
+
+crf-max
+text=With CRF+VBV, limit RF to this value
+type=float
+
+qpmin
+text=Set min QP
+type=integer
+default=10
+
+qpmax
+text=Set max QP
+type=integer
+default=51
+
+qpstep
+text=Set max QP step
+type=integer
+default=4
+
+ratetol
+text=Tolerance of ABR ratecontrol and VBV
+type=float
+default=1.0
+
+ipratio
+text=QP factor between I and P
+type=float
+default=1.4
+
+pbratio
+text=QP factor between P and B
+type=float
+default=1.3
+
+chroma-qp-offset
+text=QP difference between chroma and luma
+type=integer
+default=0
+
+aq-mode
+text=AQ method
+type=choice
+value=0=Disabled:1=Variance AQ (complexity mask):2=Auto-variance AQ (experimental)
+default=1
+
+aq-strength
+text=AQ strength
+type=float
+default=1.0
+
+#pass
+#text=Enable multipass ratecontrol
+#type=choice
+#value=1=First pass creates stats file:2=Last pass does not overwrite stats file:3=Nth pass overwrites stats file
+
+#stats
+#text=Filename for 2 pass stats
+#type=string
+#default=x264_2pass.log
+
+no-mbtree
+text=Disable mb-tree ratecontrol
+
+qcomp
+text=QP curve compression
+type=float
+default=0.6
+
+cplxblur
+text=Reduce fluctuations in QP (before curve compression)
+type=float
+default=20.0
+
+qblur
+text=Reduce fluctuations in QP (after curve compression)
+type=float
+default=0.5
+
+zones
+text=Tweak the bitrate of regions of the video
+type=string
+
+qpfile
+text=Force frametypes and QPs for some or all frames
+type=string
+
+
+:Analysis
+
+partitions
+text=Partitions to consider
+type=string
+default=p8x8,b8x8,i8x8,i4x4
+
+direct
+text=Direct MV prediction mode
+type=choice
+value=none:spatial:temporal:auto
+default=spatial
+
+no-weightb
+text=Disable weighted prediction for B-frames
+
+weightp
+text=Weighted prediction for P-frames
+type=choice
+value=0=Disabled:1=Blind offset:2=Smart analysis
+default=2
+
+me
+text=Integer pixel motion estimation method
+type=choice
+value=dia=diamond search radius 1 (fast):hex=hexagonal search radius 2:umh=uneven multi-hexagon search:esa=exhaustive search:tesa=hadamard exhaustive search (slow)
+default=hex
+
+merange
+text=Maximum motion vector search range
+type=integer
+default=16
+
+mvrange
+text=Maximum motion vector length
+type=integer
+default=-1
+
+mvrange-thread
+text=Minimum buffer between threads
+type=integer
+default=-1
+
+subme
+text=Subpixel motion estimation and mode decision
+type=choice
+value=0=fullpel only (not recommended):1=SAD mode decision one qpel iteration:2=SATD mode decision:3=Progressively more qpel (3):4=Progressively more qpel (4):5=Progressively more qpel (5):6=RD mode decision for I/P-frames:7=RD mode decision for all frames:8=RD refinement for I/P-frames:9=RD refinement for all frames:10=QP-RD - requires trellis=2 + aq-mode>0
+default=7
+
+psy-rd
+text=Strength of psychovisual optimization
+type=string
+default=1.0,0.0
+
+no-psy
+text=Disable all visual optimizations that worsen both PSNR and SSIM
+
+no-mixed-refs
+text=Don't decide references on a per partition basis
+
+no-chroma-me
+text=Ignore chroma in motion estimation
+
+no-8x8dct
+text=Disable adaptive spatial transform size
+
+trellis
+text=Trellis RD quantization (requires CABAC)
+type=choice
+value=0=disabled:1=enabled only on the final encode of a MB:2=enabled on all mode decisions
+default=1
+require=!no-cabac
+
+no-fast-pskip
+text=Disable early SKIP detection on P-frames
+
+no-dct-decimate
+text=Disable coefficient thresholding on P-frames
+
+nr
+text=Noise reduction
+type=integer
+default=0
+
+deadzone-inter
+text=Size of the inter luma quantization deadzone
+type=integer
+default=21
+
+deadzone-intra
+text=Size of the intra luma quantization deadzone
+type=integer
+default=11
+
+cqm
+text=Preset quant matrices
+type=choice
+value=jvt:flat
+
+#cqmfile
+#text=Read custom quant matrices from a JM-compatible file
+#type=string
+
+cqm4
+text=4x4 quant matrices
+type=string
+
+#cqm4i
+#cqm4p
+#cqm4iy
+#cqm4ic
+#cqm4py
+#cqm4pc
+
+cqm8
+text=8x8 quant matrices
+type=string
+
+#cqm8i
+#cqm8p
+
+
+:Video Usability Info
+
+overscan
+text=Crop overscan setting
+type=choice
+value=undef:show:crop
+default=undef
+
+videoformat
+text=Video format
+type=choice
+value=component:pal:ntsc:secam:mac:undef
+default=undef
+
+fullrange
+text=Full range samples setting
+type=choice
+value=on:off
+default=off
+
+colorprim
+text=Color primaries
+type=choice
+value=undef:bt709:bt470m:bt470bg:smpte170m:smpte240m:film
+default=undef
+
+transfer
+text=Transfer characteristics
+type=choice
+value=undef:bt709:bt470m:bt470bg:linear:log100:log316:smpte170m:smpte240m
+default=undef
+
+colormatrix
+text=Color matrix setting
+type=choice
+value=undef:bt709:fcc:bt470bg:smpte170m:smpte240m:GBR:YCgCo
+default=undef
+
+chromaloc
+text=Specify chroma sample location
+type=integer
+range=0 5
+default=0
+
+#nal-hdr
+#text=Signal HRD information (requires vbv-bufsize)
+#type=choice
+#value=none=none:vbr=vbr:cbr=cbr (not allowed in .mp4)
+#require=vbv-bufsize
+
+pic-struct
+text=Force pic_struct in Picture Timing SEI
+
+
+:Input / Output
+
+#output
+#muxer
+#demuxer
+#index
+#sar
+#fps
+#seek
+#frames
+
+level
+text=Level as defined by Annex A
+type=string
+
+#verbose
+#no-progress
+#quiet
+
+psnr
+text=Enable PSNR computation
+
+ssim
+text=Enable SSIM computation
+
+#threads
+#sliced-threads
+#thread-input
+#sync-lookahead
+#non-deterministic
+#asm
+
+no-asm
+text=Disable all CPU optimizations
+
+#visualize
+#text=Show MB types overlayed on the encoded video
+
+#dump-yuv
+
+sps-id
+text=Set SPS and PPS id numbers
+type=integer
+default=0
+
+aud
+text=Use access unit delimiters
+
+force-cfr
+text=Force constant framerate timestamp generation
+
+#tcfile-in
+#tcfile-out
+#timebase

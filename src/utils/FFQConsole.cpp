@@ -396,6 +396,16 @@ uint64_t FFQConsole::GetStatisticsTotal()
 
 //---------------------------------------------------------------------------------------
 
+wxTextCtrl* FFQConsole::GetTextCtrl()
+{
+
+    //Return the attached text control
+    return m_Ctrl;
+
+}
+
+//---------------------------------------------------------------------------------------
+
 void FFQConsole::ReplaceLine(int LineNo, const wxString &NewLine)
 {
 

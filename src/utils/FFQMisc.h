@@ -66,6 +66,7 @@ wxString StrFromBase64(wxString base64);
 wxString StrToBase64(const wxString &str, size_t wrapLen = 0);
 
 //String conversion
+bool IsNumber(wxString value, bool allow_float = true);
 double Str2Float(wxString str, double def = 0);
 long Str2Long(wxString str, long def = 0);
 long long Str2LongLong(wxString str, long long def = 0);
@@ -78,11 +79,15 @@ template <typename T> wxString ToStr(const T &what)
     return str;
 }
 
+//Logical comparison
+bool LogicCompare(wxString value, wxString logic);
+
 //Various string handling
 wxString GetLastToken(wxString &from, const wxString delim, bool del_token = true);
 wxString GetLine(wxString &from, bool del_line = true);
 wxString GetSubLine(wxString &from, size_t &offset);
 wxString GetToken(wxString &from, const wxString delim, bool del_token = true);
+bool     StrSplit(wxString &value, wxString &key, wxUniChar separator, bool trim = true);
 wxString StrTrim(wxString str);
 wxString Unescape(wxString str);
 

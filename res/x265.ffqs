@@ -1,0 +1,893 @@
+FFQ_FULLSPEC_HEADER_1
+#source https://x265.readthedocs.io/en/master/cli.html
+checkval=1
+composite=-x265-params
+display=H.265 / HEVC
+id=x265
+matches=[[:blank:]]hevc\)($|\Z|\r)
+prefix=
+separator=:
+
+
+:Performance Options
+
+#asm
+#text=CPU SIMD architectures
+#type=checklist
+#value=MMX2:SSE:SSE2:SSE3:SSSE3:SSE4:SSE4.1:SSE4.2:AVX:XOP:FMA4:AVX2:FMA3
+#default=*
+#require=!no-asm
+#dangerous=1
+
+no-asm
+text=Disable CPU SIMD architectures
+
+frame-threads
+text=Number of concurrently encoded frames (0 = auto-detect)
+type=choice
+value=0=Auto:1:2:3:4:5:6:7:8:9:10:11:12:13:14:15:16
+default=0
+
+pools
+text=Comma separated list of threads per NUMA node
+type=string
+
+no-wpp
+text=Disable Wavefront Parallel Processing
+
+pmode
+text=Parallel mode decision / distributed mode analysis
+
+pme
+text=Parallel motion estimation
+
+preset
+text=Preset
+type=choice
+value=ultrafast:superfast:veryfast:faster:fast:medium:slow:slower:veryslow:placebo
+default=medium
+
+tune
+text=Tune
+type=choice
+value=psnr:ssim:grain:zero-latency:fast-decode:animation
+
+slices
+text=Encode each frame as this number of parallel slices
+type=integer
+default=1
+require=!no-wpp
+
+#no-copy-pic
+#text=Disallow encoder to copy input pictures to internal buffers
+
+
+:Profile, Level, Tier
+
+#profile
+#text=Enforce the requirements of the specified profile
+#type=choice
+#value=main:main-intra:mainstillpicture:main444-8:main444-intra:main444-stillpicture:main10:main10-intra:main422-10:main422-10-intra:main444-10:main444-10-intra:main12:main12-intra:main422-12:main422-12-intra:main444-12:main444-12-intra
+
+level-idc
+text=Minimum decoder requirement level
+type=combo
+value=1:2:2.1:3:3.1:4:4.1:5:5.1:5.2:6:6.1:6.2:8.5
+
+no-high-tier
+text=Disable support of high tier for decoder requirement level
+
+ref
+text=Maximum number of L0 references to be allowed
+type=integer
+default=3
+range=1 16
+
+allow-non-conformance
+text=Allow generation of a bitstream with profile and level NONE
+
+uhd-bd
+text=Enable Ultra HD Blu-ray format support
+
+
+:Mode decision / Analysis
+
+rd
+text=Level of RDO in mode decision
+type=choice
+value=1=recon generated (better intra), RDO merge/skip selection:2=RDO splits and merge/skip selection:3=RDO mode and split decisions, chroma residual used for sa8d:5=Adds RDO prediction decisions
+default=3
+
+ctu
+text=Maximum CU size (width and height)
+type=choice
+value=16:32:64
+default=64
+
+min-cu-size
+text=Minimum CU size (width and height)
+type=choice
+value=8:16:32
+default=8
+
+limit-refs
+text=Limit analyzed references
+type=choice
+value=0:1:2:3
+default=3
+
+limit-modes
+text=Limit modes analyzed for each CU
+
+rect
+text=Enable analysis of rectangular motion partitions
+
+amp
+text=Enable analysis of asymmetric motion partitions
+
+early-skip
+text=Measure 2Nx2N merge candidates first
+
+rskip
+text=Mode for early exit from CU depth recursion
+type=choice
+value=0=Disabled:1=Neighbour costs and CU homogenity:1=Comparison with inter2Nx2N:2=CU edge density
+default=1
+
+rskip-edge-threshold
+text=Minimum expected edge-density percentage within the CU
+type=integer
+range=0-100
+default=5
+
+splitrd-skip
+text=Enable skipping split RD analysis
+
+?
+text=Perform an initial scan of every fifth intra angular mode
+type=choice
+value=fast-intra=Yes:no-fast-intra=No
+
+b-intra
+text=Enables the evaluation of intra modes in B slices
+
+cu-lossless
+text=Evaluate lossless encode of the best non-lossless mode option as a potential rate distortion optimization
+
+tskip-fast
+text=Only evaluate transform skip for NxN intra predictions
+
+rd-refine
+text=For each analysed CU, calculate R-D cost on the best partition mode for a range of QP values
+
+#analysis-save
+#analysis-load
+#analysis-reuse-file
+#analysis-save-reuse-level
+#analysis-load-reuse-level
+#refine-mv-type
+#refine-ctu-distortion
+#scale-factor
+#refine-intra
+#refine-inter
+#dynamic-refine
+#refine-mv
+
+no-rdoq-level
+text=Disable rate-distortion analysis to use within quantization
+
+rdoq-level
+text=Rate-distortion analysis to use within quantization
+type=choice
+value=0=Rate-distortion cost is not considered in quant:1=Find optimal rounding values for each level:2=Make decimate decisions on each 4x4 coding group
+require=!no-rdoq-level
+
+tu-intra-depth
+text=Number of extra recursion depth which can be attempted for intra coded units
+type=choice
+value=1:2:3:4
+default=1
+
+tu-inter-depth
+text=Number of extra recursion depth which can be attempted for inter coded units
+type=choice
+value=1:2:3:4
+default=1
+
+limit-tu
+text=Early exit from TU depth recursion, for inter coded blocks
+type=choice
+value=0=Disabled:1=Level 1:2=Level 2:3=Level 3:4=Level 4
+default=0
+
+nr-intra
+text=Noise reduction (intra, 0=disabled)
+type=integer
+default=0
+range=0 2000
+
+nr-inter
+text=Noise reduction (inter, 0=disabled)
+type=integer
+default=0
+range=0 2000
+
+tskip
+text=Enable evaluation of transform skip
+
+rdpenalty
+text=RD Penalty
+type=choice
+value=0=Disabled:1=32x32 are given a 4x bit cost penalty:2=32x32 are not even attempted
+default=0
+
+max-tu-size
+text=Maximum TU size (width and height)
+type=choice
+value=4:8:16:32
+default=32
+
+dynamic-rd
+text=Increase RD level at points where quality drops due to VBV rate control enforcement
+type=choice
+value=0:1:2:3:4
+default=0
+
+?
+text=SSIM RDO
+type=choice
+value=ssim-rd=Yes:no-ssim-rd=No
+
+
+:Temporal / motion search options
+
+max-merge
+text=Maximum candidate blocks to consider for merging motion predictions
+type=integer
+range=1 5
+default=2
+
+me
+text=Motion search method
+type=choice
+value=0=dia:1=hex:2=umh:3=star:4=sea:5=full
+default=1
+
+subme
+text=Amount of subpel refinement to perform
+type=integer
+range=0 7
+default=2
+
+merange
+text=Motion search range
+type=integer
+range=0 32768
+default=57
+
+no-temporal-mvp
+text=Disable temporal motion vector predictors in P and B slices
+
+no-weightp
+text=Disable weighted prediction in P slices
+
+weightb
+text=Enable weighted prediction in B slices
+
+analyze-src-pics
+text=Enable motion estimation with source frame pixels
+
+hme
+text=Enable 3-level Hierarchical motion estimation at One-Sixteenth, Quarter and Full resolution
+
+hme-search
+text=Motion search method for HME Level 0, 1 and 2
+type=string
+default=hex,umh,umh
+
+hme-range
+text=Search range for HME level 0, 1 and 2
+type=string
+default=16,32,48
+
+
+:Spatial/intra options
+
+no-strong-intra-smoothing
+text=Disable strong intra smoothing for 32x32 intra blocks
+
+constrained-intra
+text=Constrained intra prediction
+
+
+:Psycho-visual options
+
+psy-rd
+text=Influence rate distortion optimized mode decision
+type=float
+default=2.0
+range=0 5
+
+psy-rdoq
+text=
+type=float
+default=0
+range=0 50
+
+
+:Slice decision options
+
+no-open-gop
+text=Disable open GOP
+
+keyint
+text=Maximum GOP size
+type=integer
+default=250
+
+min-keyint
+text=Minimum GOP size
+type=integer
+default=0
+range=0 max
+
+scenecut
+text=How aggressively I-frames need to be inserted
+type=integer
+default=40
+range=0 max
+
+scenecut-bias
+text=% difference between the inter cost and intra cost of a frame used in scenecut detection
+type=float
+default=5
+range=0 100
+
+hist-scenecut
+text=Detect scenecuts using luma edge and chroma histograms
+
+hist-threshold
+text=Threshold for normalized SAD of edge histograms used in scenecut
+type=float
+range=0 1
+default=0.03
+require=hist-scenecut
+
+radl
+text=Number of RADL pictures allowed infront of IDR
+type=integer
+default=0
+range=0 max
+require=no-open-gop
+
+#ctu-info
+#text=Receive CTU information asynchronously
+#type=choice
+#value=0:1:2:4:6
+#default=0
+#dangerous=1
+
+intra-refresh
+text=Enable Periodic Intra Refresh(PIR) instead of keyframe insertion
+
+rc-lookahead
+text=Number of frames for slice-type decision lookahead
+type=integer
+range=1 250
+default=20
+
+gop-lookahead
+text=Number of frames for GOP boundary decision lookahead
+type=integer
+range=0 max
+default=0
+
+lookahead-slices
+text=Number of worker threads to measure the estimated cost of each frame within the lookahead
+type=integer
+range=0 16
+
+lookahead-threads
+text=Number of worker threads dedicated to doing only lookahead
+type=integer
+range=0 1024
+default=0
+
+b-adapt
+text=Level of effort in determining B frame placement
+type=choice
+value=0=GOP structure is fixed:1=A light lookahead is used:2=Viterbi B path selection is performed (trellis)
+default=2
+
+bframes
+text=Maximum number of consecutive b-frames
+type=integer
+range=0 16
+default=4
+
+bframe-bias
+text=Bias towards B frames in slicetype decision
+type=integer
+range=-90 100
+default=0
+
+no-b-pyramid
+text=Do not use B-frames as references
+
+force-flush
+text=Force the encoder to flush frames
+type=choice
+value=0=When all the input pictures are over:1=Even when the input is not over:2=Slicetype decided frames only
+default=0
+
+fades
+text=Detect and handle fade-in regions
+
+
+:Quality, rate control and rate distortion options
+
+bitrate
+text=Average bitrate in kbps
+type=integer
+range=0 max
+default=0
+
+crf
+text=Constant quality (lower value = better quality)
+type=float
+range=0 51
+default=28
+
+crf-max
+text=Maximum constant quality value
+type=float
+range=0 51
+default=0
+
+crf-min
+text=Minimum constant quality value
+type=float
+range=0 51
+default=0
+
+vbv-bufsize
+text=Size of the VBV buffer (kbits)
+type=integer
+range=0 max
+default=0
+require=vbv-maxrate
+
+vbv-maxrate
+text=Maximum local bitrate (kbits/sec)
+type=integer
+range=0 max
+default=0
+
+vbv-init
+text=Initial buffer occupancy
+type=float
+range=0 1
+default=0.9
+
+vbv-end
+text=Final buffer fullness
+type=float
+range=0 1
+default=0
+
+#vbv-end-fr-adj
+#text=Frame from which qp has to be adjusted to achieve final decode buffer fullness
+#type=float
+#range=0 1
+#default=0
+#dangerous=1
+
+min-vbv-fullness
+text=Minimum VBV fullness percentage to be maintained
+type=float
+range=0 100
+default=50
+
+max-vbv-fullness
+text=Maximum VBV fullness percentage to be maintained
+type=float
+range=0 100
+default=80
+
+qp
+text=Base quantization parameter for Constant QP rate control
+type=integer
+range=0 51
+default=0
+
+lossless
+text=Enable true lossless coding
+
+aq-mode
+text=Adaptive Quantization operating mode
+type=choice
+value=0=Disabled:1=AQ enabled:2=AQ enabled with auto-variance:3=AQ enabled with auto-variance and bias to dark scenes:4=AQ enabled with auto-variance and edge information
+default=2
+
+aq-strength
+text=Strength of the adaptive quantization offsets
+type=float
+range=0 3
+default=1
+
+hevc-aq
+text=Enable adaptive quantization
+
+qp-adaptation-range
+text=Delta-QP range by QP adaptation based on a psycho-visual model
+type=float
+range=1 6
+default=0
+
+aq-motion
+text=Adjust the AQ offsets based on the relative motion of each block with respect to the motion of the frame
+
+qg-size
+text=Specify the minimum CU size at which QP can be adjusted
+type=choice
+value=64:32:16:8
+
+no-cutree
+text=Disable the use of lookahead’s lowres motion vector fields
+
+#pass
+#stats
+
+no-slow-firstpass
+text=Enable slow first pass
+
+multi-pass-opt-analysis
+text=Enable multipass analysis refinement along with multipass ratecontrol
+
+multi-pass-opt-distortion
+text=Enable multipass refinement based on distortion data along with multipass ratecontrol
+
+strict-cbr
+text=Enable stricter control of bitrate deviance from the target bitrate in ABR mode
+
+cbqpoffs
+text=Offset of Cb chroma QP from the luma QP selected by rate control
+type=integer
+range=-12 12
+default=0
+
+crqpoffs
+text=Offset of Cr chroma QP from the luma QP selected by rate control
+type=integer
+range=-12 12
+default=0
+
+ipratio
+text=QP ratio factor between I and P slices
+type=float
+range=0 max
+default=1.4
+
+qcomp
+text=Quantizer curve compression factor
+type=float
+range=0.5 1
+default=0.6
+
+qpstep
+text=Maximum single adjustment in QP allowed to rate control
+type=integer
+range=0 max
+default=4
+
+qpmin
+text=Hard lower limit on QP allowed to ratecontrol
+type=integer
+range=0 max
+default=0
+
+qpmax
+text=Hard upper limit on QP allowed to ratecontrol
+type=integer
+range=0 max
+default=69
+
+rc-grain
+text=Enable specialised ratecontrol algorithm for film grain content
+
+const-vbv
+text=Enable VBV algorithm to be consistent across runs
+
+qblur
+text=Temporally blur quants
+type=float
+range=0 max
+default=0.5
+
+cplxblur
+text=Temporally blur complexity
+type=float
+range=0 max
+default=20
+
+#zonefile
+
+scenecut-aware-qp
+text=Reduce the bits spent on the inter-frames within the scenecut
+type=choice
+value=0=Disabled:1=Forward masking:2=Backward masking:3=Bi-directional masking
+default=0
+
+masking-strength
+text=Specify duration and offset for the QP increment for inter-frames
+type=string
+
+#vbv-live-multi-pass
+
+
+:Quantization Options
+
+no-signhide
+text=Do not hide sign bit of one coeff per TU (rdo)
+
+#qpfile
+#scaling-list
+#lambda-file
+
+max-ausize-factor
+text=Maximum AU size defined in specification
+type=float
+range=0.5 1
+default=1
+
+
+:Loop filters
+
+deblock
+text=Deblocking strength offsets
+type=string
+default=0,0
+require=!no-deblock
+
+no-deblock
+text=Disable deblocking
+
+no-sao
+text=Disable sample adaptive offset (SAO) loop filter
+
+sao-non-deblock
+text=Use non-deblocked pixels for SAO analysis
+
+limit-sao
+text=Limit SAO filter computation
+
+selective-sao
+text=Toggle SAO at slice level
+type=choice
+value=0=Disabled:1=Only for I-slices:2=For both I- & P-slices:3=For all reference slices:4=For all slices
+default=0
+
+:VUI (Video Usability Information) options
+
+#sar
+#text=Sample Aspect Ratio (w,h)
+#type=string
+
+display-window
+text=Define the (overscan) region of the image that does not contain information
+type=string
+
+overscan
+text=Specify if the decoder should display or crop the overscan are
+type=choice
+value=show:crop
+
+videoformat
+text=Source format of the original analog video prior to digitizing and encoding
+type=choice
+value=0=Component:1=PAL:2=NTSC:3=SECAM:4=MAC:5=Unknown
+
+range
+text=Output range of black level and range of luma and chroma signals
+type=choice
+value=full:limited
+
+colorprim
+text=Specify color primaries to use when converting to RGB
+type=choice
+value=1=bt709:2=unknown:4=bt470m:5=bt470bg:6=smpte170m:7=smpte240m:8=film:9=bt2020:10=smpte428:11=smpte431:12=smpte432
+
+transfer
+text=Specify transfer characteristics
+type=choice
+value=1=bt709:2=unknown:4=bt470m:5=bt470bg:6=smpte170m:7=smpte240m:8=linear:9=log100:10=log316:11=iec61966-2-4:12=bt1361e:13=iec61966-2-1:14=bt2020-10:15=bt2020-12:16=smpte2084:17=smpte428:18=arib-std-b67
+
+colormatrix
+text=Color matrix coefficients used in deriving the luma and chroma
+type=choice
+value=0=gbr:1=bt709:4=fcc:5=bt470bg:6=smpte170m:7=smpte240m:8=ycgco:9=bt2020nc:10=bt2020c:11=smpte2085:12=chroma-derived-nc:13=chroma-derived-c:14=ictcp
+
+chromaloc
+text=Chroma sample location for 4:2:0 inputs
+type=integer
+range=0 5
+
+master-display
+text=SMPTE ST 2086 mastering display color volume SEI info
+type=string
+
+max-cll
+text=Maximum content light level
+type=string
+
+no-cll
+text=Do not emit content light level SEI
+
+hdr10
+text=Force signaling of HDR10 parameters in SEI packets
+
+hdr10-opt
+text=Enable block-level luma and chroma QP optimization for HDR10 content
+
+#dhdr10-info
+
+?
+text=Inserts SEI only for IDR frames
+type=choice
+value=dhdr10-opt=Yes:no-dhdr10-opt=No
+
+min-luma
+text=Minimum luma value allowed for input pictures
+type=integer
+
+max-luma
+text=Maximum luma value allowed for input pictures
+type=integer
+
+#nalu-file
+
+atc-sei
+text=Emit the alternative transfer characteristics SEI message
+type=integer
+
+pic-struct
+text=Picture structure emitted in the picture timing SEI message
+type=integer
+range=0 12
+
+#video-signal-type-preset
+
+
+:Bitstream options
+
+#no-annexb
+#text=Do not place start codes before NAL
+
+repeat-headers
+text=Emit VPS, SPS, and PPS headers with every keyframe
+
+aud
+text=Emit an access unit delimiter NAL at the start of each slice access unit
+
+#eob
+#text=Emit an end of bitstream NAL unit at the end of the bitstream
+
+#eos
+#text=Emit an end of sequence NAL unit at the end of every coded video sequence
+
+hrd
+text=Enable the signaling of HRD parameters to the decoder
+
+hrd-concat
+text=Set concatenation flag for the first keyframe in the HRD buffering period SEI
+
+dolby-vision-profile
+text=Generate bitstreams confirming to the specified Dolby Vision profile
+type=combo
+value=5.0:8.1:8.2
+
+#dolby-vision-rpu
+
+no-info
+text=Do not emit an SEI with the stream headers which describes the encoder version
+
+hash
+text=Emit decoded picture hash SEI
+type=choice
+value=1=MD5:2=CRC:3=Checksum
+
+?
+text=Enable a temporal sub layer
+type=choice
+value=temporal-layers=Yes:no-temporal-layers=No
+
+log2-max-poc-lsb
+text=Maximum of the picture order count
+type=integer
+default=8
+
+no-vui-timing-info
+text=Do not emit VUI timing info in bitstream
+
+?
+text=Emit VUI HRD info in bitstream
+type=choice
+value=vui-hrd-info=Yes:no-vui-hrd-info=No
+
+opt-qp-pps
+text=Optimize QP in PPS
+
+opt-ref-list-length-pps
+text=Optimize L0 and L1 ref list length in PPS
+
+multi-pass-opt-rps
+text=Enable storing commonly used RPS in SPS in multi pass mode
+
+opt-cu-delta-qp
+text=Optimize CU level QPs by pulling up lower QPs
+
+idr-recovery-sei
+text=Emit RecoveryPoint info as SEI in bitstream for each IDR frame
+
+single-sei
+text=Emit SEI messages in a single NAL unit instead of multiple NALs
+
+
+#:DCT Approximations
+#lowpass-dct
+
+
+#:Debugging options
+#recon
+#recon-depth
+#recon-y4m-exec
+
+
+#:ABR-ladder Options
+#abr-ladder
+
+
+#:SVT-HEVC Encoder Options
+
+#svt
+#text=Enable SVT-HEVC encoder if x265 is built with SVT-HEVC library
+
+#no-svt-hme
+#text=Disable Hierarchical Motion Estimation(HME) in SVT-HEVC
+
+#svt-search-width
+#text=Search Area Width used during motion estimation
+#type=integer
+#range=1 256
+
+#svt-search-height
+#text=Search Area Height used during motion estimation
+#type=integer
+#range=1 256
+
+#?
+#svt-compressed-ten-bit-format,no-svt-compressed-ten-bit-format
+
+#svt-speed-control
+#svt-hierarchical-level
+#svt-base-layer-switch-mode
+#svt-pred-struct
+#svt-fps-in-vps
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

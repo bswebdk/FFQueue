@@ -8,6 +8,7 @@ ffqueue_SOURCES=FFQAbout.cpp\
 	FFQBitRatePanel.cpp\
 	FFQConfigEdit.cpp\
 	FFQFilterEdit.cpp\
+	FFQFullSpec.cpp\
 	FFQJobEditAdv.cpp\
 	FFQJobEditAdvCuts.cpp\
 	FFQJobEditAdvPopup.cpp\
@@ -78,6 +79,7 @@ ffqueue_SOURCES=FFQAbout.cpp\
 	utils/FFQLang.cpp\
 	utils/FFQMisc.cpp\
 	utils/FFQNvpList.cpp\
+	utils/FFQParsing.cpp\
 	utils/FFQPixFmt.cpp\
 	utils/FFQPreset.cpp\
 	utils/FFQProbing.cpp\

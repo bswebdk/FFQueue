@@ -36,13 +36,14 @@ typedef struct PIXEL_FORMAT
     bool hwaccl; //Hardware accelerated
     wxString name; //The name of the pixel format
 
-    PIXEL_FORMAT(wxString pix_fmt);
+    PIXEL_FORMAT(wxString &pix_fmt);
     ~PIXEL_FORMAT();
 
     PIXEL_FORMAT* Find(wxString fmt);
     unsigned int  GetCount();
     PIXEL_FORMAT* GetNext();
     bool          Is10BitQuantizer();
+    wxString      ToString();
 
 private:
 

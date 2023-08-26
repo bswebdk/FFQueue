@@ -107,6 +107,48 @@ void CompressAndBase64(wxString &src_and_dst, size_t wrap_len)
 
 //---------------------------------------------------------------------------------------
 
+uint8_t* CompressString(wxString &str, uint32_t *res_len, uint32_t prefix_gap)
+{
+
+    //If no data, return nothing
+    if (str.Len() == 0) return NULL;
+
+    //Get UTF8 encoded data
+    wxCharBuffer cb = str.ToUTF8();
+
+    //Get the amount of data to compress and create a buffer for it
+    uint32_t l = cb.length();
+    uint8_t *cc = new uint8_t[l + sizeof(l) + prefix_gap]; //prefix_gap = reserved space in the beginning of the buffer
+
+    //To deliver the buffer size and retrieve the size of the compressed data
+    long unsigned int ll = l;
+
+    //Compress..
+    if (compress2((unsigned char*)&cc[sizeof(l) + prefix_gap], &ll, (const unsigned char*)cb.data(), ll, Z_BEST_COMPRESSION) != Z_OK)
+    {
+
+        //If failed, store the original data
+        ll = l;
+        memcpy(&cc[sizeof(l) + prefix_gap], cb.data(), l);
+
+        //Set l = 0 to indicate no compression
+        l = 0;
+
+    }
+
+    //Copy "l" into the beginning of the buffer, minding the prefix_gap
+    memcpy(&cc[prefix_gap], &l, sizeof(l));
+
+    //Set the combined length of the returned data
+    *res_len = ll + sizeof(l) + prefix_gap;
+
+    //Return the buffer (OH NO!! You are not allowed to do that!! BAD BOY!! BEND OVER.....! Meh..)
+    return cc;
+
+}
+
+//---------------------------------------------------------------------------------------
+
 bool DecompressFromBase64(wxString &base64, void* dest_buf, size_t* dest_len)
 {
 
@@ -258,3 +300,40 @@ bool DecompressFromBase64(wxString &base64)
     return ok;
 
 }
+
+//---------------------------------------------------------------------------------------
+
+wxString DecompressString(uint8_t* buf, uint32_t len, uint32_t prefix_gap)
+{
+
+    //Get the length of the compressed data from the beginning of the buffer
+    uint32_t *l = (uint32_t*)&buf[prefix_gap];
+
+    //If length = 0 then it is uncompressed
+    if (*l == 0) return wxString::FromUTF8((char*)&buf[sizeof(l) + prefix_gap], len - sizeof(*l) - prefix_gap);
+    else
+    {
+
+        //Create a buffer for uncompressed data
+        uint8_t *cc = new uint8_t[*l];
+
+        //Create variables to deliver the buffer size
+        long unsigned int ll = *l;
+
+        //Result
+        wxString res;
+
+        //Un-compress the data and put it into result
+        if (uncompress((unsigned char*)cc, &ll, (unsigned char*)&buf[sizeof(*l) + prefix_gap], len - sizeof(*l) - prefix_gap) == Z_OK)
+            res = wxString::FromUTF8((char*)cc, *l);
+
+        //Release the buffer
+        delete[] cc;
+
+        //Return the result - which will be empty if de-compression failed..
+        return res;
+
+    }
+
+}
+
