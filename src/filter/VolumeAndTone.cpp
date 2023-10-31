@@ -28,7 +28,7 @@ VolumeAndTone::VolumeAndTone(wxWindow* parent) : FilterBasePanel(parent)
 
     SetControlPadding(5); //Label padding
 
-    wxFlexGridSizer *fgs1 = new wxFlexGridSizer(2, 5, 0, 0)/*, //
+    wxFlexGridSizer *fgs1 = new wxFlexGridSizer(3, 5, 0, 0)/*, //
                     *fgs2 = new wxFlexGridSizer(3, 1, 0, 0)*/;
 
     fgs1->AddGrowableCol(4);
@@ -40,9 +40,10 @@ VolumeAndTone::VolumeAndTone(wxWindow* parent) : FilterBasePanel(parent)
     MakeLabel(FFQS(SID_VOLTONE_TREBLE), fgs1, wxLEFT|wxRIGHT|wxALIGN_CENTER|wxALIGN_CENTER_VERTICAL);
     fgs1->Add(-1, -1, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 0);
 
+    //Middle row - labels
     MakeSliderLabels(fgs1, _T("+20"), _T("0"), _T("-20"), true);
 
-    //Bottom row - sliders
+    //Middle row - sliders
     m_Volume = new wxSlider(this, wxID_ANY, 20, 0, 40, wxDefaultPosition, wxSize(-1, 300), wxSL_VERTICAL|wxSL_INVERSE);
     fgs1->Add(m_Volume, 1, wxALL|wxALIGN_CENTER|wxALIGN_CENTER_VERTICAL, 3);
 
@@ -53,6 +54,15 @@ VolumeAndTone::VolumeAndTone(wxWindow* parent) : FilterBasePanel(parent)
     fgs1->Add(m_Treble, 1, wxALL|wxALIGN_CENTER|wxALIGN_CENTER_VERTICAL, 3);
 
     fgs1->Add(-1, -1, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 0);
+
+    //Bottom row - selection labels
+    fgs1->Add(-1, -1, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 0);
+    m_LVolume = MakeLabel(wxEmptyString, fgs1, wxLEFT|wxRIGHT|wxALIGN_CENTER|wxALIGN_CENTER_VERTICAL);
+    m_LBass = MakeLabel(wxEmptyString, fgs1, wxLEFT|wxRIGHT|wxALIGN_CENTER|wxALIGN_CENTER_VERTICAL);
+    m_LTreble = MakeLabel(wxEmptyString, fgs1, wxLEFT|wxRIGHT|wxALIGN_CENTER|wxALIGN_CENTER_VERTICAL);
+    fgs1->Add(-1, -1, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 0);
+
+    Bind(wxEVT_SLIDER, &VolumeAndTone::OnSliderChange, this);
 
     SetSizer(fgs1);
     fgs1->Fit(this);
@@ -94,6 +104,8 @@ void VolumeAndTone::SetFilter(LPFFMPEG_FILTER fltr)
 
     }
 
+    UpdateLabels();
+
 }
 
 //---------------------------------------------------------------------------------------
@@ -110,9 +122,35 @@ bool VolumeAndTone::GetFilter(LPFFMPEG_FILTER fltr)
     float fv = (v + 20) / 20.0;
 
     fltr->friendly = FFQSF(SID_VOLTONE_USERFRIENDLY, FFQL()->FILTER_NAMES[fltr->type], v, b, t);
-    fltr->ff_filter.Printf("%svolume=%f,bass=g=%i,treble=g=%i%s", FILTER_AUDIO_IN, fv, b, t, FILTER_AUDIO_OUT);
+
+    wxString ff;
+    if (v != 0) ff += wxString::Format("volume=%f,", fv);
+    if (b != 0) ff += wxString::Format("bass=g=%i,", b);
+    if (t != 0) ff += wxString::Format("treble=g=%i,", t);
+
+    //fltr->ff_filter.Printf("%svolume=%f,bass=g=%i,treble=g=%i%s", FILTER_AUDIO_IN, fv, b, t, FILTER_AUDIO_OUT);
+    fltr->ff_filter = FILTER_AUDIO_IN + ff.RemoveLast(1) + FILTER_AUDIO_OUT;
     fltr->editable.Printf("%i,%i,%i", m_Volume->GetValue(), m_Bass->GetValue(), m_Treble->GetValue());
 
     return true;
 
 }
+
+//---------------------------------------------------------------------------------------
+
+void VolumeAndTone::OnSliderChange(wxCommandEvent &event)
+{
+    event.Skip();
+    UpdateLabels();
+}
+
+//---------------------------------------------------------------------------------------
+
+void VolumeAndTone::UpdateLabels()
+{
+    m_LVolume->SetLabel(ToStr(m_Volume->GetValue() - 20));
+    m_LBass->SetLabel(ToStr(m_Bass->GetValue() - 20));
+    m_LTreble->SetLabel(ToStr(m_Treble->GetValue() - 20));
+    Layout();
+}
+

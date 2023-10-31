@@ -239,13 +239,13 @@ void FFQLangEdit::Execute()
 void FFQLangEdit::LoadList()
 {
     Description->SetValue(m_EditLang->GetDescription());
-    Description->SetModified(false);
+    //Description->SetModified(false);
     if (m_EditLang->HasPassword())
     {
         Password1->SetValue(DUMMY_PASSWORD);
-        Password1->SetModified(false);
+        //Password1->SetModified(false);
         Password2->SetValue(DUMMY_PASSWORD);
-        Password2->SetModified(false);
+        //Password2->SetModified(false);
     }
     ListView->Freeze();
     for (unsigned int i = 0; i < m_EditLang->GetCount(); i++) SetListItem(-1, m_EditLang->GetPtrAtIndex(i));
@@ -318,7 +318,7 @@ void FFQLangEdit::LoadEditStr(bool internal)
     m_EditListSize = s.Replace("|", CRLF) + 1;
     s.Replace("\a", "||"); //Return "||" to the string
     StrEdit->ChangeValue(s);
-    StrEdit->SetModified(false);
+    //StrEdit->SetModified(false);
     ListView->EnsureVisible(m_EditIndex);
     UpdateStatus();
 }
@@ -331,13 +331,13 @@ bool FFQLangEdit::SaveEditStr(bool force, bool clear)
     if (m_EditStr != NULL)
     {
 
-        if (force || StrEdit->IsModified())
+        //Get value
+        wxString s = StrTrim(StrEdit->GetValue());
+
+        if (force || (m_EditStr->str != s))// StrEdit->IsModified())
         {
 
             //The content of the string has been modified - full verification is needed
-
-            //Get value
-            wxString s = StrTrim(StrEdit->GetValue());
 
             //Validate value
             s.Replace("||", "\a");
@@ -411,7 +411,7 @@ bool FFQLangEdit::SaveEditStr(bool force, bool clear)
 
     }
 
-    StrEdit->SetModified(false);
+    //StrEdit->SetModified(false);
     UpdateStatus();
     return true;
 
@@ -421,6 +421,8 @@ bool FFQLangEdit::SaveEditStr(bool force, bool clear)
 
 bool FFQLangEdit::SavePwdAndDesc()
 {
+
+    //Set description, if modified
     wxString s = StrTrim(Description->GetValue());
     unsigned int r;
     do { r = s.Replace("<br>", SPACE); } while (r > 0);
@@ -431,15 +433,19 @@ bool FFQLangEdit::SavePwdAndDesc()
         m_EditLang->SetDescription(s);
         m_Modified++;
     }
+
+    //Verify password
     s = Password1->GetValue();
-    if ((s == Password2->GetValue()) && (s != DUMMY_PASSWORD))
+    if (s != Password2->GetValue()) return ShowError(Password2, "The passwords are not equal and cannot be set");
+
+    //Store password, if changed
+    if ((s != DUMMY_PASSWORD) && (!m_EditLang->CheckPassword(s)))
     {
         m_EditLang->ChangePassword(s);
         m_Modified++;
     }
-    else if (s != Password2->GetValue())
-        return ShowError(Password2, "The passwords are not equal and cannot be set");
 
+    //All OK
     return true;
 }
 
@@ -512,14 +518,14 @@ void FFQLangEdit::OnKeyDown(wxKeyEvent &event)
         if ((key == WXK_UP) && (sel > 0))
         {
             //if (StrEdit->IsModified()) LoadEditStr();
-            StrEdit->SetModified(false);
+            //StrEdit->SetModified(false);
             ListView->Select(sel-1, true);
         }
 
         else if ((key == WXK_DOWN) && (sel < ListView->GetItemCount() - 1))
         {
             //if (StrEdit->IsModified()) LoadEditStr();
-            StrEdit->SetModified(false);
+            //StrEdit->SetModified(false);
             ListView->Select(sel+1, true);
         }
 

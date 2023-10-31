@@ -46,6 +46,7 @@
 const long FFQAbout::ID_STATICBITMAP = wxNewId();
 const long FFQAbout::ID_ANIMPANEL = wxNewId();
 const long FFQAbout::ID_TEXTCTRL = wxNewId();
+const long FFQAbout::ID_HELPBUTTON = wxNewId();
 const long FFQAbout::ID_CLOSEBUTTON = wxNewId();
 //*)
 
@@ -157,18 +158,22 @@ FFQAbout::FFQAbout(wxWindow* parent,wxWindowID id)
 	FlexGridSizer6->Add(TextCtrl, 1, wxLEFT|wxRIGHT|wxEXPAND, 5);
 	FlexGridSizer1->Add(FlexGridSizer6, 1, wxALL|wxEXPAND, 5);
 	BoxSizer1 = new wxBoxSizer(wxHORIZONTAL);
+	HelpButton = new wxButton(this, ID_HELPBUTTON, _("H"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_HELPBUTTON"));
+	HelpButton->SetLabel(FFQS(SID_COMMON_HELP));
+	BoxSizer1->Add(HelpButton, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+	BoxSizer1->Add(-1,-1,1, wxALL|wxEXPAND, 5);
 	BoxSizer1->Add(-1,-1,1, wxALL|wxEXPAND, 5);
 	CloseButton = new wxButton(this, ID_CLOSEBUTTON, _("C"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CLOSEBUTTON"));
 	CloseButton->SetDefault();
 	CloseButton->SetLabel(FFQS(SID_COMMON_CLOSE));
 	BoxSizer1->Add(CloseButton, 1, wxALL, 5);
-	BoxSizer1->Add(-1,-1,1, wxALL|wxEXPAND, 5);
 	FlexGridSizer1->Add(BoxSizer1, 1, wxALL|wxEXPAND, 5);
 	SetSizer(FlexGridSizer1);
 	FlexGridSizer1->Fit(this);
 	FlexGridSizer1->SetSizeHints(this);
 	Center();
 
+	Connect(ID_HELPBUTTON,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&FFQAbout::OnButtonCloseClick);
 	Connect(ID_CLOSEBUTTON,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&FFQAbout::OnButtonCloseClick);
 	Connect(wxID_ANY,wxEVT_CLOSE_WINDOW,(wxObjectEventFunction)&FFQAbout::OnClose);
 	//*)
@@ -207,6 +212,9 @@ FFQAbout::~FFQAbout()
 {
 	//(*Destroy(FFQAbout)
 	//*)
+
+	//Delete the exported help-file for the snap version
+	if (FFQCFG()->is_snap && wxFileExists(m_HelpPath)) wxRemoveFile(m_HelpPath);
 }
 
 //---------------------------------------------------------------------------------------
@@ -308,8 +316,11 @@ int GetSeasonColor(int day_of_year)
 void FFQAbout::Execute()
 {
 
-    //Set color of the text control to suit the time of the year
+    //Get help path and enable button accordingly
+    m_HelpPath = FFQCFG()->GetHelpPath();
+    HelpButton->Enable(m_HelpPath.Len() > 0);
 
+    //Set color of the text control to suit the time of the year
     TextCtrl->SetBackgroundColour(GetSeasonColor(wxDateTime::Now().GetDayOfYear()));
     TextCtrl->Clear();
     wxString txt, s;
@@ -320,7 +331,7 @@ void FFQAbout::Execute()
 
     //Info about programmer, version and language
     TextCtrl->SetDefaultStyle(wxTextAttr(0xAA0000));
-    TextCtrl->AppendText(wxString::Format(ABOUT_1, AutoVersion::FULLVERSION_STRING, s, FFQL()->GetDescription(), FFQCFG()->GetConfigPath()));
+    TextCtrl->AppendText(wxString::Format(ABOUT_1, AutoVersion::FULLVERSION_STRING, s, FFQL()->GetDescription() + " - " + FFQL()->GetFFQVersion(), FFQCFG()->GetConfigPath()));
 
     //Info about environment and compiler
     s = wxString::Format("%i.%i.%i", wxMAJOR_VERSION, wxMINOR_VERSION, wxRELEASE_NUMBER);
@@ -364,7 +375,8 @@ void FFQAbout::Execute()
 
 void FFQAbout::OnButtonCloseClick(wxCommandEvent& event)
 {
-    EndModal(0);
+    if (event.GetId() == ID_HELPBUTTON) wxLaunchDefaultBrowser("file://" + m_HelpPath);// Application(m_HelpPath);
+    else EndModal(0);
 }
 
 //---------------------------------------------------------------------------------------

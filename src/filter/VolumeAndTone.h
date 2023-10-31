@@ -41,6 +41,10 @@ class VolumeAndTone : public FilterBasePanel
 
     private:
         wxSlider *m_Volume, *m_Bass, *m_Treble;
+        wxStaticText *m_LVolume, *m_LBass, *m_LTreble;
+
+        void OnSliderChange(wxCommandEvent &event);
+        void UpdateLabels();
 
 };
 

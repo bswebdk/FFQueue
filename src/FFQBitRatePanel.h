@@ -45,8 +45,9 @@ class FFQBitRatePanel: public wxPanel
 		FFQBitRatePanel(wxWindow* parent);
 		virtual ~FFQBitRatePanel();
 
-		void SetValues(wxString values);
         bool GetValues(wxString &values, bool showErr);
+        bool HasValue();
+		void SetValues(wxString values);
 
 		//(*Declarations(FFQBitRatePanel)
 		wxChoice* BitRateType;

@@ -27,6 +27,7 @@
 #include "FFQConfig.h"
 #include "FFQJob.h"
 #include "FFQHash.h"
+#include "../../version.h"
 
 #include <wx/filename.h>
 #include <wx/stdpaths.h>
@@ -41,9 +42,17 @@ const unsigned short FFQLang::AUDIO_CHANNEL_COUNT = 25;
 
 //---------------------------------------------------------------------------------------
 
+//Size of the file header
+const uint8_t LANG_FILE_HEADER_SIZE = 20;
+
 //Version 1.0 header of the language file
-const char LANG_FILE_HEADER_10[20] = {
+const char LANG_FILE_HEADER_10[LANG_FILE_HEADER_SIZE] = {
     'F','F','Q','U','E','U','E','_','L','A','N','G','_','1','0','\x00','\xFF','\x66','\xAB','\x3E'
+};
+
+//Version 1.1 header of the language file
+const char LANG_FILE_HEADER_11[LANG_FILE_HEADER_SIZE] = {
+    'F','F','Q','U','E','U','E','_','L','A','N','G','_','1','1','\x00','\xEE','\x54','\xBA','\x4C'
 };
 
 //---------------------------------------------------------------------------------------
@@ -433,6 +442,7 @@ FFQLang::FFQLang(bool loadFile)
     SetString(SID_COMMON_DRY_RUN,               "Dry run...");
     SetString(SID_COMMON_ATTACHMENT,            "Attachment");
     SetString(SID_COMMON_DATA,                  "Data");
+    SetString(SID_COMMON_HELP,                  "Help");
 
 
     //Main frame UI strings
@@ -485,58 +495,63 @@ FFQLang::FFQLang(bool loadFile)
     SetString(SID_BATCHMAKE_ALSO_INCLUDE,      "If available, also include:");
 
     //Job editor UI strings
-    SetString(SID_JOBEDIT_TITLE,                "Edit job");
-    SetString(SID_JOBEDIT_INPUT_FILES,          "Input files");
-    SetString(SID_JOBEDIT_INPUT_NO_1,           "#1");
-    SetString(SID_JOBEDIT_INPUT_NO_2,           "#2");
-    SetString(SID_JOBEDIT_SELECT_STREAMS,       "Select stream(s) to include in output file");
-    SetString(SID_JOBEDIT_DBLCLK_FOR_INFO,      "INFO: Double click on a stream to get detailed information...");
-    SetString(SID_JOBEDIT_OUTPUT_FILE,          "Output file");
-    SetString(SID_JOBEDIT_OUTPUT_ENCODING,      "Encoding of output file");
-    SetString(SID_JOBEDIT_COMMAND_LINE,         "FFMpeg command line");
-    SetString(SID_JOBEDIT_PRESET,               "Preset command lines");
-    SetString(SID_JOBEDIT_NO_PRESET,            "No preset selected (use command line)");
+    SetString(SID_JOBEDIT_TITLE,                 "Edit job");
+    SetString(SID_JOBEDIT_INPUT_FILES,           "Input files");
+    SetString(SID_JOBEDIT_INPUT_NO_1,            "#1");
+    SetString(SID_JOBEDIT_INPUT_NO_2,            "#2");
+    SetString(SID_JOBEDIT_SELECT_STREAMS,        "Select stream(s) to include in output file");
+    SetString(SID_JOBEDIT_DBLCLK_FOR_INFO,       "INFO: Double click on a stream to get detailed information...");
+    SetString(SID_JOBEDIT_OUTPUT_FILE,           "Output file");
+    SetString(SID_JOBEDIT_OUTPUT_ENCODING,       "Encoding of output file");
+    SetString(SID_JOBEDIT_COMMAND_LINE,          "FFMpeg command line");
+    SetString(SID_JOBEDIT_PRESET,                "Preset command lines");
+    SetString(SID_JOBEDIT_NO_PRESET,             "No preset selected (use command line)");
 
     //Job editor advanced UI (used in combination with items above)
-    SetString(SID_JOBEDIT_ADV_ITSOFFSET,        "Offset / synchronize streams by");
-    SetString(SID_JOBEDIT_ADV_MILLISECONDS,     "milliseconds");
-    SetString(SID_JOBEDIT_ADV_FRAMERATE,        "Force frame rate to");
-    SetString(SID_JOBEDIT_ADV_FPS,              "frames per second");
-    SetString(SID_JOBEDIT_ADV_DISCARDCORRUPT,   "Discard corrupt frames");
-    SetString(SID_JOBEDIT_ADV_GENPTS,           "Generate presentation time stamps");
-    SetString(SID_JOBEDIT_ADV_IGNOREDTS,        "Ignore decoder time stamps");
-    SetString(SID_JOBEDIT_ADV_IGNOREIDX,        "Ignore index");
-    SetString(SID_JOBEDIT_ADV_ADD_INPUT,        "Add input file");
-    SetString(SID_JOBEDIT_ADV_DEL_INPUT,        "Remove input file");
-    SetString(SID_JOBEDIT_ADV_ADD_SECONDARY,    "Find secondary files");
-    SetString(SID_JOBEDIT_ADV_MORE,             "[MORE]");
-    SetString(SID_JOBEDIT_ADV_INPUT_SETTINGS,   "Per file input settings");
-    SetString(SID_JOBEDIT_ADV_MORE_TOOLTIP,     "offset=%s\nframe rate=%s\nflags=%s");
-    SetString(SID_JOBEDIT_ADV_FRAMERATE_SWITCH, "Force frame rate with -r rather than -framerate");
+    SetString(SID_JOBEDIT_ADV_ITSOFFSET,         "Offset / synchronize streams by");
+    SetString(SID_JOBEDIT_ADV_MILLISECONDS,      "milliseconds");
+    SetString(SID_JOBEDIT_ADV_FRAMERATE,         "Force frame rate to");
+    SetString(SID_JOBEDIT_ADV_FPS,               "frames per second");
+    SetString(SID_JOBEDIT_ADV_DISCARDCORRUPT,    "Discard corrupt frames");
+    SetString(SID_JOBEDIT_ADV_GENPTS,            "Generate presentation time stamps");
+    SetString(SID_JOBEDIT_ADV_IGNOREDTS,         "Ignore decoder time stamps");
+    SetString(SID_JOBEDIT_ADV_IGNOREIDX,         "Ignore index");
+    SetString(SID_JOBEDIT_ADV_ADD_INPUT,         "Add input file");
+    SetString(SID_JOBEDIT_ADV_DEL_INPUT,         "Remove input file");
+    SetString(SID_JOBEDIT_ADV_ADD_SECONDARY,     "Find secondary files");
+    SetString(SID_JOBEDIT_ADV_MORE,              "[MORE]");
+    SetString(SID_JOBEDIT_ADV_INPUT_SETTINGS,    "Per file input settings");
+    SetString(SID_JOBEDIT_ADV_MORE_TOOLTIP,      "offset=%s\nframe rate=%s\nloop=%s\nflags=%s");
+    SetString(SID_JOBEDIT_ADV_FRAMERATE_SWITCH,  "Force frame rate with -r rather than -framerate");
 
-    SetString(SID_JOBEDIT_ADV_CUTS,             "[Adv. cuts]");
-    SetString(SID_JOBEDIT_ADV_CUTS_TITLE,       "Advanced cutting");
-    SetString(SID_JOBEDIT_ADV_CUTS_LIST_TITLE,  "Time spans to process");
-    SetString(SID_JOBEDIT_ADV_CUTS_TOOLS_TITLE, "Time span");
-    SetString(SID_JOBEDIT_ADV_CUTS_FROM,        "From:");
-    SetString(SID_JOBEDIT_ADV_CUTS_TO,          "To:");
-    SetString(SID_JOBEDIT_ADV_CUTS_BAD_TIME,    "The specified time is not valid (hh:mm:ss.ms) or From is greater or equal to To");
-    SetString(SID_JOBEDIT_ADV_CUTS_OVERLAP_TIME,"The specified cut overlaps with another cut");
-    SetString(SID_JOBEDIT_ADV_CUTS_DURATION,    "Duration of input file: %s (%s seconds @ %s FPS)");
-    SetString(SID_JOBEDIT_ADV_CUTS_FRAME_CONV,  "Convert frame index to time value (calculated using FPS)");
-    SetString(SID_JOBEDIT_ADV_CUTS_BAD_FRAME,   "Frame index is not a numeric value or From is greater or equal to To");
-    SetString(SID_JOBEDIT_ADV_CUTS_TIME_DETAILS,"Show adv. time for period around:");
-    SetString(SID_JOBEDIT_ADV_CUTS_BAD_TIME_2,  "Invalid time, hh:mm:ss requested (milliseconds unused here)");
-    SetString(SID_JOBEDIT_ADV_CUTS_TRIM_MODE,   "The time spans should be:|Kept|Removed");
-    SetString(SID_JOBEDIT_ADV_CUTS_SET_FROM,    "Set from");
-    SetString(SID_JOBEDIT_ADV_CUTS_SET_TO,      "Set to");
-    SetString(SID_JOBEDIT_ADV_CUTS_INPUT_INFO,  "Input file info");
-    SetString(SID_JOBEDIT_ADV_CUTS_PREVIEW,     "Frame preview");
-    SetString(SID_JOBEDIT_ADV_CUTS_PREVIEW_CFG, "Preview settings");
-    SetString(SID_JOBEDIT_ADV_CUTS_CFG_ACCURACY,"Frame accuracy:|Low (fast)|High (slow)");
-    SetString(SID_JOBEDIT_ADV_CUTS_CFG_DELAY,   "Load delay:|Fast|Slow");
+    SetString(SID_JOBEDIT_ADV_CUTS,              "[Adv. cuts]");
+    SetString(SID_JOBEDIT_ADV_CUTS_TITLE,        "Advanced cutting");
+    SetString(SID_JOBEDIT_ADV_CUTS_LIST_TITLE,   "Time spans to process");
+    SetString(SID_JOBEDIT_ADV_CUTS_TOOLS_TITLE,  "Time span");
+    SetString(SID_JOBEDIT_ADV_CUTS_FROM,         "From:");
+    SetString(SID_JOBEDIT_ADV_CUTS_TO,           "To:");
+    SetString(SID_JOBEDIT_ADV_CUTS_BAD_TIME,     "The specified time is not valid (hh:mm:ss.ms) or From is greater or equal to To");
+    SetString(SID_JOBEDIT_ADV_CUTS_OVERLAP_TIME, "The specified cut overlaps with another cut");
+    SetString(SID_JOBEDIT_ADV_CUTS_DURATION,     "Duration of input file: %s (%s seconds @ %s FPS)");
+    SetString(SID_JOBEDIT_ADV_CUTS_FRAME_CONV,   "Convert frame index to time value (calculated using FPS)");
+    SetString(SID_JOBEDIT_ADV_CUTS_BAD_FRAME,    "Frame index is not a numeric value or From is greater or equal to To");
+    SetString(SID_JOBEDIT_ADV_CUTS_TIME_DETAILS, "Show adv. time for period around:");
+    SetString(SID_JOBEDIT_ADV_CUTS_BAD_TIME_2,   "Invalid time, hh:mm:ss requested (milliseconds unused here)");
+    SetString(SID_JOBEDIT_ADV_CUTS_TRIM_MODE,    "The time spans should be:|Kept|Removed");
+    SetString(SID_JOBEDIT_ADV_CUTS_SET_FROM,     "Set from");
+    SetString(SID_JOBEDIT_ADV_CUTS_SET_TO,       "Set to");
+    SetString(SID_JOBEDIT_ADV_CUTS_INPUT_INFO,   "Input file info");
+    SetString(SID_JOBEDIT_ADV_CUTS_PREVIEW,      "Frame preview");
+    SetString(SID_JOBEDIT_ADV_CUTS_PREVIEW_CFG,  "Preview settings");
+    SetString(SID_JOBEDIT_ADV_CUTS_CFG_ACCURACY, "Frame accuracy:|Low (fast)|High (slow)");
+    SetString(SID_JOBEDIT_ADV_CUTS_CFG_DELAY,    "Load delay:|Fast|Slow");
     SetString(SID_JOBEDIT_ADV_CUTS_CFG_PLACEMENT,"Trim filter placement:|First|Last");
-    SetString(SID_JOBEDIT_ADV_CUTS_QUICK_CUT,   "Perform quick cuts (may be less accurate)");
+    SetString(SID_JOBEDIT_ADV_CUTS_QUICK_CUT,    "Perform quick cuts (may be less accurate)");
+    SetString(SID_JOBEDIT_ADV_CUTS_OVERLAP_REMOVE, "Some of the cuts are overlapping which is not possible to remove. Do you wish to merge the conflicting overlaps?");
+    SetString(SID_JOBEDIT_ADV_CUTS_MENU_ITEMS,   "Add position|First|Last|Sorted|Jump to|From|To|Duplicate|Sort now|Merge overlaps");
+
+    SetString(SID_JOBEDIT_ADV_LOOP_STREAMS,      "Loop streams");
+    SetString(SID_JOBEDIT_ADV_LOOP_STREAMS_INFO, "0=No, -1=Forever");
 
     //Concat tool UI strings
     SetString(SID_CONCAT_TITLE,                 "Make slideshow / concat");
@@ -691,6 +706,9 @@ FFQLang::FFQLang(bool loadFile)
     SetString(SID_PRESET_DISPOSITION,                   "Dispositions");
     SetString(SID_PRESET_DISPOSITION_UNSET,             "Un-set existing");
     SetString(SID_PRESET_METADATA_STREAM,               "Stream");
+    SetString(SID_PRESET_SKIP_ENCODE_SAME,              "If possible, do not re-encode to same codec");
+    SetString(SID_PRESET_STOP_ENCODE_SHORTEST,          "Stop encoding when shortest stream ends");
+    SetString(SID_PRESET_NO_QUALITY_DEFINED,            "You have not defined bit rate or quality for audio and/or video which will cause FFmpeg to either fail or use a default value. Do you want this?");
 
 
     //Video sync mode strings
@@ -831,7 +849,7 @@ FFQLang::FFQLang(bool loadFile)
     SetString(SID_FULLSPEC_COLON_NOT_ALLOWED,       "Colons are not allowed in values, should you use comma instead?");
     SetString(SID_FULLSPEC_TEST,                    "Test");
     SetString(SID_FULLSPEC_BAD_ID,                  "No full specification with ID \"%s\" found!");
-    SetString(SID_FULLSPEC_SELECT_FILE,             "Select file for testing");
+    //SetString(SID_FULLSPEC_SELECT_FILE,             "Select file for testing");
 
 
     //Filter editor UI strings
@@ -1344,6 +1362,7 @@ FFQLang::FFQLang(bool loadFile)
     m_BadStrID = "";
     m_SkipCount = 0;
     m_LoadName = "";
+    m_FFQVersion = AutoVersion::FULLVERSION_STRING;
     memcpy(&m_PasswordHash, &NO_PASSWORD_HASH, sizeof(NO_PASSWORD_HASH));
     QUEUE_STATUS_NAMES = NULL;
     FILTER_NAMES = NULL;
@@ -1506,6 +1525,16 @@ const wxString& FFQLang::GetDescription()
 
     //Get description of language file
     return m_Description;
+
+}
+
+//---------------------------------------------------------------------------------------
+
+const wxString& FFQLang::GetFFQVersion()
+{
+
+    //Return the version of FFQueue with which the language has been created
+    return m_FFQVersion;
 
 }
 
@@ -1694,12 +1723,30 @@ bool FFQLang::LoadLanguage()
         //Create a buffer
         uint8_t *buffer = new uint8_t[BUFFER_SIZE];
 
-        //Check header
-        file->Read((void*)buffer, sizeof(LANG_FILE_HEADER_10));
-        if (memcmp(buffer, &LANG_FILE_HEADER_10, sizeof(LANG_FILE_HEADER_10)) != 0)
+        //Load the file header
+        file->Read((void*)buffer, LANG_FILE_HEADER_SIZE);
+
+        //Determine the version of the language file
+        uint8_t header_version = 0;
+        if (memcmp(buffer, &LANG_FILE_HEADER_10, LANG_FILE_HEADER_SIZE) == 0) header_version = 1;
+        else if (memcmp(buffer, &LANG_FILE_HEADER_11, LANG_FILE_HEADER_SIZE) == 0) header_version = 2;
+
+        if (header_version == 0)
         {
+            //If the header is invalid, stop here
             delete[] buffer;
             ThrowError("Invalid language file");
+        }
+
+        if (header_version == 2)
+        {
+            //Load the version of FFQueue which created the language file
+            char c;
+            m_FFQVersion = wxEmptyString;
+            do {
+                file->Read(&c, 1);
+                if (c > 0) m_FFQVersion += c;
+            } while (c > 0);
         }
 
         //Load garbage data and extract password hash
@@ -1802,7 +1849,10 @@ bool FFQLang::SaveLanguage()
         wxFile *file = new wxFile(path, wxFile::write);
 
         //Write header
-        file->Write((void*)&LANG_FILE_HEADER_10, sizeof(LANG_FILE_HEADER_10));
+        file->Write((void*)&LANG_FILE_HEADER_11, LANG_FILE_HEADER_SIZE);
+
+        //Write FFQ version
+        file->Write(AutoVersion::FULLVERSION_STRING, sizeof(AutoVersion::FULLVERSION_STRING));
 
         //Create a buffer
         uint8_t *buffer = new uint8_t[BUFFER_SIZE];

@@ -108,6 +108,12 @@ void FFQ_JOB::Cleanup()
     //Copy the file time
     CpFileTime(GetPreset(), out);
 
+    //Clear two-pass log file name
+    twopass_log.Clear();
+
+    //Cleanup base class
+    FFQ_QUEUE_ITEM::Cleanup();
+
 }
 
 //---------------------------------------------------------------------------------------
@@ -200,7 +206,7 @@ bool FFQ_JOB::UsesPreset(wxString pst_id)
 
 //---------------------------------------------------------------------------------------
 
-wxString FFQ_JOB::GetCommandAtIndex(int index)
+wxString FFQ_JOB::GetCommandAtIndex(int index, bool for_encode)
 {
 
     wxString res, dur = Duration().ToString();
@@ -219,7 +225,7 @@ wxString FFQ_JOB::GetCommandAtIndex(int index)
         {
 
             //Ensure path / directory is created, and fail if not
-            if (!ForcePath(out.BeforeLast(wxFileName::GetPathSeparator())))
+            if (for_encode && (!ForcePath(out.BeforeLast(wxFileName::GetPathSeparator()))))
             {
                 status = qsFAILED;
                 return "";
@@ -263,7 +269,7 @@ wxString FFQ_JOB::GetCommandAtIndex(int index)
                 pip->GetDuration(tv);
 
                 //Build command(s)
-                m_CmdList = BuildThumbsAndTilesCommand(pst->thumbs, out, tv, true);
+                m_CmdList = BuildThumbsAndTilesCommand(pst->thumbs, out, tv, for_encode);
 
                 //Update status
                 status = qsTHUMBS;
@@ -336,9 +342,10 @@ void FFQ_JOB::Reset(bool load)
 {
 
     //Reset the values of the job
-    out = "";
-    stream_map = "";
-    cmd_line = "";
+    out.Clear();
+    stream_map.Clear();
+    cmd_line.Clear();
+    twopass_log.Clear();
     out_len = TIME_VALUE();
     preset_id.Reset();
     preset_ptr = NULL;

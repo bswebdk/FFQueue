@@ -44,7 +44,7 @@ typedef struct FFQ_THUMB_JOB : FFQ_QUEUE_ITEM
 
 protected:
 
-    virtual wxString GetCommandAtIndex(int index);
+    virtual wxString GetCommandAtIndex(int index, bool for_encode);
 
 private:
 
@@ -95,7 +95,7 @@ typedef struct FFQ_VIDSTAB_JOB : FFQ_QUEUE_ITEM
 
 protected:
 
-    virtual wxString GetCommandAtIndex(int index);
+    virtual wxString GetCommandAtIndex(int index, bool for_encode);
 
 private:
 
@@ -136,6 +136,7 @@ typedef struct FFQ_CONCAT_JOB : FFQ_QUEUE_ITEM
 
     wxString out, //Destination file
              img_pattern, //The image pattern to use for slide show
+             merge_aspect, //The aspect ratio of the output file
              merge_filter, //Pre-build merge filter for audio + video
              merge_smap, //A simple [audio],[video] stream mapping
              merge_padding; //A filter used for padding
@@ -156,16 +157,16 @@ typedef struct FFQ_CONCAT_JOB : FFQ_QUEUE_ITEM
 
 protected:
 
-    virtual wxString GetCommandAtIndex(int index);
+    virtual wxString GetCommandAtIndex(int index, bool for_encode);
 
 private:
 
     wxString m_TempPath, m_CmdList;
     void *m_PresetPtr;
 
-    wxString MakeConcatCmd();
-    wxString MakeMergeCmd();
-    wxString MakeSlideshowCmd();
+    wxString MakeConcatCmd(bool for_encode);
+    wxString MakeMergeCmd(bool for_encode);
+    wxString MakeSlideshowCmd(bool for_encode);
 
     void Reset(bool load);
 
@@ -196,7 +197,7 @@ typedef struct FFQ_VID2GIF_JOB : FFQ_QUEUE_ITEM
 
 protected:
 
-    virtual wxString GetCommandAtIndex(int index);
+    virtual wxString GetCommandAtIndex(int index, bool for_encode);
 
 private:
 

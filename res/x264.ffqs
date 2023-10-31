@@ -1,10 +1,10 @@
 FFQ_FULLSPEC_HEADER_1
 #source https://gist.github.com/newfront/875122
-#test=-i $INFILE -map 0:v:0 -b:v 1000 -c:v libx264 $TESTARGS -an -o $OUTFILE
 composite=-x264opts
 display=H.264
 id=x264
 matches=[[:blank:]][hx]264\)($|\Z|\r)
+notebook=1
 prefix=
 separator=:
 

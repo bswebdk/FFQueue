@@ -29,6 +29,7 @@
 #include "utils/FFQParsing.h"
 #include "utils/FFQCompress.h"
 #include "bin_res.h"
+#include <wx/notebook.h>
 #include <wx/sizer.h>
 #include <wx/display.h>
 #include <wx/valnum.h>
@@ -40,24 +41,22 @@
 #include <algorithm>
 
 #ifndef WX_PRECOMP
-	//(*InternalHeadersPCH(FFQFullSpec)
+	//  (*InternalHeadersPCH(FFQFullSpec)
 	#include <wx/string.h>
-	//*)
+	//  *)
 #endif
-//(*InternalHeaders(FFQFullSpec)
-//*)
+//  (*InternalHeaders(FFQFullSpec)
+//  *)
 
-//(*IdInit(FFQFullSpec)
-const long FFQFullSpec::ID_SCROLLWIN = wxNewId();
-const long FFQFullSpec::ID_TESTBTN = wxNewId();
+//  (*IdInit(FFQFullSpec)
 const long FFQFullSpec::ID_OKBTN = wxNewId();
 const long FFQFullSpec::ID_CANCELBTN = wxNewId();
-//*)
+//  *)
 
-BEGIN_EVENT_TABLE(FFQFullSpec,wxDialog)
-	//(*EventTable(FFQFullSpec)
-	//*)
-END_EVENT_TABLE()
+//BEGIN_EVENT_TABLE(FFQFullSpec,wxDialog)
+	//  (*EventTable(FFQFullSpec)
+	//  *)
+//END_EVENT_TABLE()
 
 //---------------------------------------------------------------------------------------
 
@@ -97,6 +96,70 @@ wxString GetCmdToken(wxString &from)
 
 //---------------------------------------------------------------------------------------
 
+wxString GetFieldValue(FULLSPEC_FILE &file, FULLSPEC_FIELD &field)
+{
+    //if (!field.check->IsChecked()) return wxEmptyString;
+    wxString res;
+    wxTextEntry *te = dynamic_cast<wxTextEntry*>(field.ctrl);
+
+    if (te) res = te->GetValue(); //string (wxTextEntry) entry or combo
+
+    else if (field.type == ftCHOICE)
+    {
+
+        //Get the value from a choice
+        wxChoice *ch = dynamic_cast<wxChoice*>(field.ctrl);
+        int sel_idx = ch->GetSelection();
+        FFQTokenParser tp(field.value, file.separator);
+        while (sel_idx-- > 0) tp.next();
+        if (tp.has_more()) res = tp.next().BeforeFirst(EQUAL);
+
+    }
+
+    else if (field.type == ftCHECKLIST)
+    {
+
+        //Get the values from a checklist
+        wxCheckListBox *cl = dynamic_cast<wxCheckListBox*>(field.ctrl);
+        FFQTokenParser tp(field.value, file.separator);
+        for (int i = 0; i < (int)cl->GetCount(); i++)
+        {
+            wxString tok = tp.next();
+            if (cl->IsChecked(i)) res += tok.BeforeFirst(EQUAL) + COMMA;
+        }
+        if (res.Len() > 0) res = res.RemoveLast();
+
+    }
+
+    #ifdef DEBUG
+    else FFQConsole::Get()->AppendLine("FFQFullSpec: Bad field control \"" + field.text + "\"", COLOR_RED);
+    #endif
+
+    return res;
+
+}
+
+//---------------------------------------------------------------------------------------
+
+int IndexOfField(FULLSPEC_FILE &file, wxString field_name)
+{
+    //Return the index of the field with field_name
+    for (size_t i = 0; i < file.fields.size(); i++)
+    {
+        FULLSPEC_FIELD &field = file.fields[i];
+        if (field.name == QUESTION)
+        {
+            FFQTokenParser tp(field.value, file.separator);
+            while (tp.has_more()) if (tp.next().StartsWith(field_name + EQUAL)) return (int)i;
+        }
+        else if (file.fields[i].name == field_name) return (int)i;
+    }
+    //Field not found
+    return wxNOT_FOUND;
+}
+
+//---------------------------------------------------------------------------------------
+
 void LogSpecError(const uint8_t log_type, const wxString &line)//, const unsigned int line)
 {
     FFQConsole::Get()->AppendLine(wxString::Format(FS_INVALID, FS_LOG_TYPE[log_type], line), COLOR_RED);
@@ -104,11 +167,11 @@ void LogSpecError(const uint8_t log_type, const wxString &line)//, const unsigne
 
 //---------------------------------------------------------------------------------------
 
-void SetItemContainer(FULLSPEC_FILE *file, FULLSPEC_FIELD &field)
+void SetItemContainer(FULLSPEC_FILE &file, FULLSPEC_FIELD &field)
 {
     wxItemContainer *ic = dynamic_cast<wxItemContainer*>(field.ctrl);
     wxString cur, val;
-    FFQTokenParser tp(field.value, file->separator);
+    FFQTokenParser tp(field.value, file.separator);
     while (tp.has_more())
     {
         cur = tp.next(); //Get an item
@@ -124,9 +187,188 @@ void SetItemContainer(FULLSPEC_FILE *file, FULLSPEC_FIELD &field)
 }
 
 //---------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------
 
 bool FFQFullSpec::s_Initialized = false;
 std::vector<FULLSPEC_FILE> FFQFullSpec::s_Files = std::vector<FULLSPEC_FILE>();
+wxFont FFQFullSpec::s_HeaderFont = wxFont();
+
+//---------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------
+
+FFQFullSpecEvtHandler::FFQFullSpecEvtHandler(wxWindow *parent, FULLSPEC_FILE *file) : wxEvtHandler()
+{
+
+    m_File = file;
+    m_Parent = parent;
+    parent->PushEventHandler(this);
+
+	Bind(wxEVT_CHECKBOX, &FFQFullSpecEvtHandler::OnCommand, this);
+	Bind(wxEVT_CHECKLISTBOX, &FFQFullSpecEvtHandler::OnCommand, this);
+	Bind(wxEVT_CHOICE, &FFQFullSpecEvtHandler::OnCommand, this);
+	Bind(wxEVT_TEXT, &FFQFullSpecEvtHandler::OnCommand, this);
+
+}
+
+//---------------------------------------------------------------------------------------
+
+FFQFullSpecEvtHandler::~FFQFullSpecEvtHandler()
+{
+    m_Parent->RemoveEventHandler(this);
+}
+
+//---------------------------------------------------------------------------------------
+
+wxWindow* FFQFullSpecEvtHandler::GetParent()
+{
+    return m_Parent;
+}
+
+//---------------------------------------------------------------------------------------
+
+
+void FFQFullSpecEvtHandler::UpdateControls()
+{
+
+    //Enable all control with their checkboxes ticked
+    //if (!m_CtrlsCreated) return;
+    m_Parent->Freeze();
+    for (int i = 0; i < (int)m_File->fields.size(); i++)
+    {
+        FULLSPEC_FIELD &field = m_File->fields[i];
+        if (field.type != ftHEADER) UpdateField(field);
+    }
+    m_Parent->Thaw();
+
+}
+
+//---------------------------------------------------------------------------------------
+
+void FFQFullSpecEvtHandler::OnCommand(wxCommandEvent &event)
+{
+
+    //if (event.GetEventType() == wxEVT_CHECKBOX) FFQConsole::Get()->AppendLine("Checkbox intercepted", COLOR_BLUE);
+    //else if (event.GetEventType() == wxEVT_BUTTON) FFQConsole::Get()->AppendLine("Button intercepted", COLOR_BLUE);
+    //else FFQConsole::Get()->AppendLine("Event: " + ToStr(event.GetEventType()) + " intercepted", COLOR_BLUE);
+
+    //Some control has changed its state
+    if (event.GetEventType() == wxEVT_CHECKLISTBOX)
+    {
+        //Make sure that at least one item is checked
+        wxCheckListBox *cl = dynamic_cast<wxCheckListBox*>(event.GetEventObject());
+        if (cl)
+        {
+            wxArrayInt aint;
+            cl->GetCheckedItems(aint);
+            if (aint.GetCount() == 0) cl->Check(event.GetInt(), true);
+        }
+    }
+
+    UpdateControls();
+
+    //event.Skip();
+}
+
+//---------------------------------------------------------------------------------------
+
+void FFQFullSpecEvtHandler::UpdateField(FULLSPEC_FIELD &field)
+{
+
+    //Make sure that we are not running in circles..
+    if (m_UpdateStack.Index(field.name) >= 0)
+    {
+
+        //WARNING: Cyclic field requirements for: field.name
+        //#ifdef DEBUG
+        FFQConsole::Get()->AppendLine(wxString::Format(FS_CYCLIC_REQUIRE, field.name), COLOR_RED);
+        //#endif // DEBUG
+        return;
+
+    }
+    m_UpdateStack.Add(field.name);
+
+    bool enable = true;
+    FFQTokenParser tp(field.require, m_File->separator);
+    while (enable && tp.has_more())
+    {
+
+        //Get required field name and value
+        wxString v = tp.next(), n = GetToken(v, EQUAL, true);
+
+        //Get required check state
+        bool inverse = n.StartsWith(EXCLAM);
+        if (inverse) n = n.AfterFirst(EXCLAM);
+
+        //Get index of field
+        int idx = IndexOfField(*m_File, n);
+
+        //If the field is not found, it is ignored
+        if (idx < 0) continue;
+
+        FULLSPEC_FIELD &ff = m_File->fields[idx];
+
+        //Make sure that the required field has its requirements met
+        UpdateField(ff);
+
+        if (ff.check->IsEnabled())
+        {
+
+            //Validate the field value if applied
+            if (v.Len() > 0)
+            {
+
+                if (ff.check->IsChecked())
+                {
+                    if (!LogicCompare(GetFieldValue(*m_File, ff), v)) enable = false;
+                    //if (inverse == (v == GetFieldValue(ff))) enable = false;
+                }
+                else enable = false;
+
+            }
+
+            //Else validate checkbox state
+            else if (ff.check->IsChecked() == inverse) enable = false;
+
+        }
+
+        //Field is not available
+        else enable = false;
+
+    }
+
+    field.check->Enable(enable);
+    if (field.ctrl) field.ctrl->Enable(enable && field.check->IsChecked());
+
+    //Remove field from update stack
+    m_UpdateStack.RemoveAt(m_UpdateStack.Count() - 1);
+
+}
+
+//---------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------
+
+void FFQFullSpec::ClearControlsFor(FULLSPEC_FILE &file, bool delete_evt_handler)
+{
+
+    //Remove all pointers to controls which are about to be destroyed
+    for (size_t idx = 0; idx < file.fields.size(); idx++)
+    {
+        FULLSPEC_FIELD &field = file.fields[idx];
+        field.check = nullptr;
+        field.ctrl = nullptr;
+    }
+
+    //Delete the event handler as well?
+    if (delete_evt_handler && file.evt_handler)
+    {
+        delete file.evt_handler;
+        file.evt_handler = nullptr;
+    }
+
+}
 
 //---------------------------------------------------------------------------------------
 
@@ -173,11 +415,78 @@ void FFQFullSpec::Finalize()
 
 //---------------------------------------------------------------------------------------
 
+bool FFQFullSpec::GetCommandLine(FULLSPEC_FILE &file, wxString &cmd)
+{
 
-void FFQFullSpec::Initialize()
+    //Build a command line from the fields..
+
+    bool composite = file.composite.Len() > 0;
+    cmd.Clear();
+
+    for (size_t i = 0; i < file.fields.size(); i++)
+    {
+        //Get a reference to the field and continue if the field is a header or un-checked
+        FULLSPEC_FIELD &field = file.fields[i];
+        if ((field.type == ftHEADER) || (!field.check->IsEnabled()) || (!field.check->IsChecked())) continue;
+
+        //Get the value from the field, set to checkbox value if no control
+        wxString val = field.ctrl ? GetFieldValue(file, field) : file.checkval;
+
+        //Add field name to result
+        if (field.name == QUESTION)
+        {
+
+            cmd += (val.Len() > 0) ? file.prefix + val : "";
+            if (file.checkval.Len() > 0) cmd += EQUAL + file.checkval;
+
+        }
+        else
+        {
+
+            cmd += file.prefix + field.name;
+            //val = StrTrim(val);
+
+            if (val.Len() > 0)
+            {
+
+                //If a value exists, add the formatted value and the proper separators
+                cmd += composite ? EQUAL : SPACE;
+                //val.Replace(COLON, COMMA);
+                if (val.Find(SPACE) >= 0) cmd += '"' + val + '"';
+                else cmd += val;
+
+            }
+
+        }
+
+        //Terminate this field with a separator
+        cmd += composite ? COLON : SPACE;
+
+    }
+
+    if (cmd.Len() > 0)
+    {
+
+        //Remove last separator
+        cmd.RemoveLast();
+
+        //Add the composite argument and the value list
+        if (composite) cmd = file.composite + SPACE + '"' + cmd + '"';
+
+    }
+
+    return true;
+
+}
+
+//---------------------------------------------------------------------------------------
+
+
+void FFQFullSpec::Initialize(wxWindow *wnd)
 {
     if (s_Initialized) return;
     s_Initialized = true;
+    s_HeaderFont = wxFont(wnd->GetFont()).MakeLarger().MakeBold();
 
     wxString fn;
 
@@ -226,6 +535,165 @@ void FFQFullSpec::Initialize()
 
 //---------------------------------------------------------------------------------------
 
+
+/*
+
+    //Create the controls used to define the fields
+    if (m_CtrlsCreated) return;
+
+    m_CtrlSizer = new wxFlexGridSizer(m_File->fields.size(), 1, 0, 0);
+    m_HeaderFont = wxFont(GetFont()).MakeLarger().MakeBold();
+    std::for_each(m_File->fields.begin(), m_File->fields.end(), [this](FULLSPEC_FIELD &field) { AddFieldCtrl(field); });
+
+    ScrollWin->SetSizerAndFit(m_CtrlSizer);
+	MainSizer->Fit(this);
+
+    //Update title and scroll bars
+    //SetTitle(FFQSF(SID_FULLSPEC_TITLE, m_File->display));
+
+    //Update scroll bars based on the height of a checkbox
+    for (size_t i = 0; i < m_File->fields.size(); i++)
+    {
+
+        FULLSPEC_FIELD &field = m_File->fields[i];
+        if (field.check)
+        {
+
+            wxSize sz = field.check->GetSize();
+            ScrollWin->SetScrollbars(sz.GetHeight(), sz.GetHeight(), 3, 3, 0, 0);
+            break;
+
+        }
+
+    }
+
+    m_CtrlsCreated = true;
+
+*/
+
+bool FFQFullSpec::MakeControlsFor(FULLSPEC_FILE &file, wxWindow *parent)
+{
+
+    //Do not create controls if an event handler is already bound
+    if (file.evt_handler) return false;
+
+    //Common controls
+    wxFlexGridSizer *fgs = nullptr;
+    wxScrolledWindow *swin = nullptr;
+    wxNotebook *nbook = nullptr;
+
+    //Used to adjust sizes
+	wxDisplay d(wxDisplay::GetFromWindow(parent));
+	wxRect sz = d.GetClientArea();
+	wxSize swmax(int(float(sz.GetWidth()) * 0.75), int(float(sz.GetHeight()) * (file.notebook ? 0.65 : 0.75)));
+
+    auto new_swin = [&swin, &nbook, swmax]()
+    {
+        //Used to uniformly create a ScrolledWindow
+        swin = new wxScrolledWindow(nbook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxVSCROLL);
+        swin->SetMaxSize(swmax);
+        swin->SetScrollbars(25, 25, 3, 3, 0, 0); ///TODO: Use height of a checkbox!
+    };
+
+    if (file.notebook)
+    {
+
+        //Calculate number of controls per page
+        wxArrayInt page_sizes;
+        int page_size = 0;
+        for (size_t idx = 0; idx < file.fields.size(); idx++)
+        {
+            FULLSPEC_FIELD &field = file.fields[idx];
+            if (field.type == ftHEADER)
+            {
+                if (page_size > 0) page_sizes.Add(page_size);
+                page_size = 0;
+            }
+            else page_size++;
+        }
+        if (page_size > 0) page_sizes.Add(page_size);
+
+        //Create the notebook control
+        nbook = new wxNotebook(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0);
+        wxString page_name;
+        int page_idx = 0;
+
+        auto add_page = [&page_name, &swin, &nbook, &fgs]()
+        {
+            //Add the current page to the notebook control
+            swin->SetSizerAndFit(fgs);
+            nbook->AddPage(swin, page_name.Len() == 0 ? "???" : page_name);
+            fgs = nullptr;
+        };
+
+        for (size_t idx = 0; idx < file.fields.size(); idx++)
+        {
+
+            FULLSPEC_FIELD &field = file.fields[idx];
+
+            if (field.type == ftHEADER)
+            {
+
+                if (fgs != nullptr) add_page();
+                page_name = field.text;
+
+            }
+            else
+            {
+
+                //Create containers for the page?
+                if (fgs == nullptr)
+                {
+
+                    new_swin();
+                    /*swin = new wxScrolledWindow(nbook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxVSCROLL);
+                    swin->SetMaxSize(swmax);
+                    swin->SetScrollbars(25, 25, 3, 3, 0, 0);*/
+                    fgs = new wxFlexGridSizer(page_sizes[page_idx++], 1, 0, 0);
+                    fgs->AddGrowableCol(0);
+
+                }
+
+                MakeControlFor(file, field, swin, fgs);
+
+            }
+
+
+        }
+
+        if (fgs != nullptr) add_page();
+        file.evt_handler = new FFQFullSpecEvtHandler(nbook, &file);
+
+    }
+    else
+    {
+
+        new_swin();
+        /*swin = new wxScrolledWindow(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxVSCROLL);
+        swin->SetMaxSize(swmax);
+        swin->SetScrollbars(25, 25, 3, 3, 0, 0);*/
+
+        fgs = new wxFlexGridSizer(file.fields.size(), 1, 0, 0);
+        fgs->AddGrowableCol(0);
+
+        //Create the controls
+        for (size_t idx = 0; idx < file.fields.size(); idx++)
+        {
+            FULLSPEC_FIELD &field = file.fields[idx];
+            MakeControlFor(file, field, swin, fgs);
+        }
+
+        swin->SetSizerAndFit(fgs);
+        file.evt_handler = new FFQFullSpecEvtHandler(swin, &file);
+
+    }
+
+    return true;
+
+}
+
+//---------------------------------------------------------------------------------------
+
 int FFQFullSpec::FullSpecFileFromString(wxString &spec)
 {
 
@@ -257,7 +725,7 @@ int FFQFullSpec::FullSpecFileFromString(wxString &spec)
                 else if (k == "matches") file.matches = v;
                 else if (k == "prefix") file.prefix = v;
                 else if (k == "separator") file.separator = v;
-                else if (k == "test") file.test = v;
+                else if (k == "notebook") file.notebook = (v == STR_YES);
                 else LogSpecError(FS_LOG_BAD_PROPERTY, lp.last());
             }
             else LogSpecError(FS_LOG_BAD_VALUE, lp.last());
@@ -330,6 +798,7 @@ int FFQFullSpec::FullSpecFileFromString(wxString &spec)
 
             //Add the new spec
             file.body = new wxString(lp.rest()); //Save the rest for later
+            file.evt_handler = nullptr;
             s_Files.push_back(file);
             return (int)s_Files.size() - 1;
 
@@ -374,17 +843,362 @@ void FFQFullSpec::FullSpecsFromDir(wxString dir)
 
 //---------------------------------------------------------------------------------------
 
+void FFQFullSpec::MakeControlFor(FULLSPEC_FILE &file, FULLSPEC_FIELD &field, wxWindow *parent, wxSizer *sizer)
+{
+
+    if (field.type == ftHEADER)
+    {
+
+        //Header
+        wxStaticText *st = new wxStaticText(parent, wxID_ANY, field.text);
+        st->SetFont(s_HeaderFont);
+        sizer->Add(st, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
+        field.ctrl = st;
+
+    }
+    else
+    {
+
+        //Field always have a checketty checkbox
+        field.check = new wxCheckBox(parent, wxID_ANY, field.text);
+        wxString tt = field.name;
+        if (field.range.Len() > 0) tt += ", range: " + field.range.BeforeFirst(SPACE) + ".." + field.range.AfterFirst(SPACE);
+        if (field.def.Len() > 0) tt += ", default: " + field.def;
+        field.check->SetToolTip(tt);
+
+        //if (field.hide) field.check->SetForegroundColour(*wxRED);
+
+        if (field.type == ftCHECK)
+        {
+            sizer->Add(field.check, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
+            return;
+        }
+
+        else if (field.type == ftCHOICE)
+        {
+
+            //Create a choice control and parse the values for it
+            wxChoice *ch = new wxChoice(parent, wxID_ANY);
+            field.ctrl = ch;
+            SetItemContainer(file, field);
+            ch->SetSelection(field.defidx);
+
+        }
+        else if (field.type == ftFLOAT)
+        {
+
+            //Create a text control
+            wxTextCtrl *tc = new wxTextCtrl(parent, wxID_ANY);
+            field.ctrl = tc;
+
+            //Attach a floating point validator
+            wxFloatingPointValidator<float> val(5, NULL);//, wxNUM_VAL_ZERO_AS_BLANK);
+            tc->SetValidator(val);
+
+            //Set a valid input range
+            wxString r = field.range.Len() > 0 ? field.range : NUM_VAL_DEFAULT;
+            wxString m = GetToken(r, SPACE);
+            val.SetMin(m == RANGE_MIN ? std::numeric_limits<float>::min() : Str2Float(m, 0));
+            val.SetMax(r == RANGE_MAX ? std::numeric_limits<float>::max() : Str2Float(r, 0));
+
+            //Set default value
+            tc->ChangeValue(field.def);
+
+        }
+
+        else if (field.type == ftINTEGER)
+        {
+
+            //Same as with float, just for integers..
+            wxTextCtrl *tc = new wxTextCtrl(parent, wxID_ANY);
+            field.ctrl = tc;
+            wxIntegerValidator<int> val(NULL);//, wxNUM_VAL_ZERO_AS_BLANK);
+            tc->SetValidator(val);
+
+            //Set a valid input range
+            wxString r = field.range.Len() > 0 ? field.range : NUM_VAL_DEFAULT;
+            wxString m = GetToken(r, SPACE);
+            val.SetMin(m == RANGE_MIN ? std::numeric_limits<int>::min() : Str2Long(m, 0));
+            val.SetMax(r == RANGE_MAX ? std::numeric_limits<int>::max() : Str2Long(r, 0));
+
+            //Set default value
+            tc->ChangeValue(field.def);
+
+        }
+
+        else if (field.type == ftSTRING)
+        {
+
+            //Simple text control / input - validated in ActionClick()
+            wxTextCtrl *tc = new wxTextCtrl(parent, wxID_ANY);
+            field.ctrl = tc;
+            tc->ChangeValue(field.def);
+
+        }
+
+        else if (field.type == ftCOMBO)
+        {
+
+            //Create a combobox control and parse the values for it
+            wxComboBox *cb = new wxComboBox(parent, wxID_ANY);
+            field.ctrl = cb;
+            SetItemContainer(file, field);
+            cb->SetSelection(field.defidx);
+
+        }
+
+        else if (field.type == ftCHECKLIST)
+        {
+
+            //Create a checklist control and parse the values for it
+            wxCheckListBox *cl = new wxCheckListBox(parent, wxID_ANY);
+
+            ///TODO: Fiks dette..!!
+            //cl->SetMaxSize(wxSize(-1, OkBtn->GetSize().GetHeight() * 3));
+
+            field.ctrl = cl;
+            SetItemContainer(file, field);
+            if (field.def == "*") for (int i = 0; i < (int)cl->GetCount(); i++) cl->Check(i, true);
+            else cl->Check(field.defidx, true);
+        }
+
+        else return; //Something went sour..
+
+        //Create a sizer and add the control before adding the sizer to the control sizer..
+        wxFlexGridSizer *fgs = new wxFlexGridSizer(1, 2, 0, 0);
+        fgs->AddGrowableCol(0);
+        fgs->Add(field.check, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 0);
+        fgs->Add(field.ctrl, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 0);
+        sizer->Add(fgs, 1, wxALL|wxEXPAND, 3);
+
+    }
+
+}
+
+//---------------------------------------------------------------------------------------
+
+void FFQFullSpec::ParseSpecBody(FULLSPEC_FILE &file)
+{
+
+    //This will parse the body of the specification text
+    //and convert it to a list of fields
+
+    if (file.body == NULL) return;
+
+    FULLSPEC_FIELD_TYPE type = ftHEADER;
+    wxString key, val, name, text, value, range, def, require, required, hide;
+
+    FFQLineParser lp(*file.body);
+
+    do
+    {
+
+        //Get a line
+        val = StrTrim(lp.next());
+
+        //Process if not empty
+        if (val.Len() > 0)
+        {
+
+            //Skip comment?
+            if (val[0] == HASH) continue;
+
+            //Section header?
+            if (val[0] == COLON) file.fields.push_back(FULLSPEC_FIELD(StrTrim(val.SubString(1, val.Len()))));
+            else
+            {
+
+                //Split key / value
+                if (StrSplit(val, key, EQUAL))
+                {
+
+                    if (key == "text")
+                    {
+                        text = val;
+                        type = ftCHECK; //The default field type
+                    }
+                    else if (key == "type")
+                    {
+
+                        if (val == "check") type = ftCHECK;
+                        else if (val == "choice") type = ftCHOICE;
+                        else if (val == "float") type = ftFLOAT;
+                        else if (val == "integer") type = ftINTEGER;
+                        else if (val == "string") type = ftSTRING;
+                        else if (val == "combo") type = ftCOMBO;
+                        else if (val == "checklist") type = ftCHECKLIST;
+                        else LogSpecError(FS_LOG_BAD_TYPE, lp.last());
+
+                    }
+                    else if (key == "value") value = val;
+                    else if (key == "range") range = val;
+                    else if (key == "default") def = val;
+                    else if (key == "require") require = val;
+                    else if (key == "required") required = val;
+                    else if (key == "hide") hide = val;
+                    else LogSpecError(FS_LOG_BAD_FIELD, lp.last());
+
+                }
+                else
+                {
+
+                    name = StrTrim(val);
+                    if (name.Len() == 0) LogSpecError(FS_LOG_BAD_FIELD, lp.last());
+
+                }
+
+            }
+
+        }
+
+        else if (name.Len() > 0)
+        {
+
+            int idx = IndexOfField(file, name);
+            if (idx >= 0)
+            {
+
+                //Modifying an existing field
+                FULLSPEC_FIELD &field = file.fields[idx];
+                if (type != ftHEADER) field.type = type;
+                if (text.Len() > 0) field.text = text;
+                if (value.Len() > 0) field.value = value;
+                if (range.Len() > 0) field.range = range;
+                if (def.Len() > 0) field.def = def;
+                if (require.Len() > 0) field.require = require;
+                if (required.Len() > 0) field.required = (require == STR_YES);
+                if (hide.Len() > 0) field.hide = (hide == STR_YES);
+
+            }
+            else if ((text.Len() > 0) && (type != ftHEADER))
+            {
+
+                //Creating a new field
+                file.fields.push_back(FULLSPEC_FIELD(type, name, text, value, range, def, require, hide == STR_YES, required == STR_YES));
+
+            }
+
+            //Prepare next field
+            name = text = value = range = def = require = hide = required = wxEmptyString;
+            type = ftHEADER;
+
+        }
+
+    } while (lp.has_more());
+
+    delete file.body;
+    file.body = nullptr;
+
+    #ifdef DEBUG
+    //Oh! Please don't look at me, I'm not dressed yet..
+    /*FFQConsole::Get()->AppendLine(m_File->display + SPACE + m_File->composite + SPACE + m_File->separator + SPACE + m_File->matches, 0);
+    std::for_each(m_File->fields.begin(), m_File->fields.end(), [](const FULLSPEC_FIELD &field) {
+                  FFQConsole::Get()->AppendLine(ToStr(field.type) + " | " + field.name + " | " + field.text + " | " + field.value + " | " + field.def + " | " + field.range, 0);
+    });*/
+    #endif
+
+}
+
+//---------------------------------------------------------------------------------------
+
+void FFQFullSpec::SetCommandLine(FULLSPEC_FILE &file, wxString cmd)
+{
+
+    //This will parse the command line and set the
+    //recovered values to the corresponding controls
+
+    if ((file.composite.Len() > 0) && cmd.StartsWith(file.composite))
+    {
+
+        //Remove composite + SPACE + QUOTE
+        cmd.Remove(0, file.composite.Len() + 2);
+
+        //Ending QUOTE
+        cmd.Remove(cmd.Len() - 1, 1);
+
+    }
+
+    while (cmd.Len() > 0)
+    {
+
+        //Get field name and its index
+        wxString cur = GetCmdToken(cmd);
+        if (cur.StartsWith(file.prefix)) cur.Remove(0, file.prefix.Len());
+        int idx = IndexOfField(file, cur);
+
+        if (idx >= 0)
+        {
+
+            //Get a reference to the field and skip if it is a header
+            FULLSPEC_FIELD &field = file.fields[idx];
+            if (field.type == ftHEADER) continue;
+
+            //The checkbox must always be checked for fields in the command line
+            field.check->SetValue(true);
+
+            if (field.type != ftCHECK)
+            {
+
+                //Everything that is not a check box must have a value
+                wxString val = (field.name == QUESTION) ? cur : GetCmdToken(cmd);
+
+                wxTextEntry *te = dynamic_cast<wxTextEntry*>(field.ctrl);
+                if (te) te->ChangeValue(val); //wxTextEntry or wxComboBox?
+
+                else if (field.type == ftCHOICE)
+                {
+
+                    //Select the value in the choice
+                    wxChoice *ch = dynamic_cast<wxChoice*>(field.ctrl);
+                    FFQTokenParser tp(field.value, file.separator);
+                    for (idx = 0; (size_t)idx < ch->GetCount(); idx++)
+                    {
+                        if (val == tp.next().BeforeFirst(EQUAL))
+                        {
+                            ch->SetSelection(idx);
+                            break;
+                        }
+                    }
+
+                }
+
+                else if (field.type == ftCHECKLIST)
+                {
+
+                    //Check the items in the list
+                    wxCheckListBox *cl = dynamic_cast<wxCheckListBox*>(field.ctrl);
+                    FFQTokenParser tp(field.value, file.separator);
+                    val = COMMA + val + COMMA;
+                    int idx = 0;
+                    while (tp.has_more()) cl->Check(idx++, val.Find(COMMA + tp.next().BeforeFirst(EQUAL) + COMMA) > -1);
+
+                }
+
+            }
+
+        }
+
+        //else LOG ROUGE FIELD?
+
+    }
+
+}
+
+//---------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------
+
 FFQFullSpec::FFQFullSpec(wxWindow* parent, wxWindowID id)
 {
-	//(*Initialize(FFQFullSpec)
+	//  (*Initialize(FFQFullSpec)
 	Create(parent, id, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE, _T("id"));
 	MainSizer = new wxFlexGridSizer(2, 1, 0, 0);
-	ScrollWin = new wxScrolledWindow(this, ID_SCROLLWIN, wxDefaultPosition, wxDefaultSize, wxVSCROLL, _T("ID_SCROLLWIN"));
-	MainSizer->Add(ScrollWin, 1, wxALL|wxEXPAND, 5);
+	//ScrollWin = new wxScrolledWindow(this, ID_SCROLLWIN, wxDefaultPosition, wxDefaultSize, wxVSCROLL, _T("ID_SCROLLWIN"));
+	//MainSizer->Add(ScrollWin, 1, wxALL|wxEXPAND, 5);
 	BtnSizer = new wxBoxSizer(wxHORIZONTAL);
-	TestBtn = new wxButton(this, ID_TESTBTN, _T("T"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_TESTBTN"));
-	TestBtn->SetLabel(FFQS(SID_FULLSPEC_TEST));
-	BtnSizer->Add(TestBtn, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
+	//TestBtn = new wxButton(this, ID_TESTBTN, _T("T"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_TESTBTN"));
+	//TestBtn->SetLabel(FFQS(SID_FULLSPEC_TEST));
+	//BtnSizer->Add(TestBtn, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	BtnSizer->Add(-1,-1,1, wxALL|wxEXPAND, 5);
 	BtnSizer->Add(-1,-1,1, wxALL|wxEXPAND, 5);
 	OkBtn = new wxButton(this, ID_OKBTN, _T("O"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_OKBTN"));
@@ -396,34 +1210,35 @@ FFQFullSpec::FFQFullSpec(wxWindow* parent, wxWindowID id)
 	BtnSizer->Add(CancelBtn, 1, wxALL|wxEXPAND, 5);
 	MainSizer->Add(BtnSizer, 1, wxALL|wxEXPAND, 0);
 	SetSizer(MainSizer);
-	FileDlg = new wxFileDialog(this, wxEmptyString, wxEmptyString, wxEmptyString, wxFileSelectorDefaultWildcardStr, wxFD_DEFAULT_STYLE|wxFD_OPEN|wxFD_FILE_MUST_EXIST, wxDefaultPosition, wxDefaultSize, _T("wxFileDialog"));
 	MainSizer->Fit(this);
 	MainSizer->SetSizeHints(this);
 	Center();
 
-	Connect(ID_TESTBTN,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&FFQFullSpec::ActionClick);
 	Connect(ID_OKBTN,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&FFQFullSpec::ActionClick);
 	Connect(ID_CANCELBTN,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&FFQFullSpec::ActionClick);
-	//*)
+	//  *)
 
-	ScrollWin->SetScrollbars(25, 25, 3, 3, 0, 0);
+	/*ScrollWin->SetScrollbars(25, 25, 3, 3, 0, 0);
 	wxDisplay d(wxDisplay::GetFromWindow(this));
 	wxRect sz = d.GetClientArea();
-	ScrollWin->SetMaxSize(wxSize(sz.GetWidth(), int((float)sz.GetHeight() * 0.75)));
-	FileDlg->SetMessage(FFQS(SID_FULLSPEC_SELECT_FILE));
-    FileDlg->SetDirectory(FFQCFG()->GetBrowseRoot());
+	ScrollWin->SetMaxSize(wxSize(sz.GetWidth(), int((float)sz.GetHeight() * 0.75)));*/
+	//FileDlg->SetMessage(FFQS(SID_FULLSPEC_SELECT_FILE));
+    //FileDlg->SetDirectory(FFQCFG()->GetBrowseRoot());
 
-	m_CtrlSizer = 0;
-	m_File = 0;
+	m_CtrlSizer = nullptr;
+	m_File = nullptr;
     m_FirstIdle = true;
     m_FirstShow = true;
 	m_CtrlsCreated = false;
 
+	//m_EvtHandler = nullptr;
+
 	//Bind(wxEVT_BUTTON, &FFQFullSpec::OnCommand, this);
-	Bind(wxEVT_CHECKBOX, &FFQFullSpec::OnCommand, this);
-	Bind(wxEVT_CHECKLISTBOX, &FFQFullSpec::OnCommand, this);
-	Bind(wxEVT_CHOICE, &FFQFullSpec::OnCommand, this);
-	Bind(wxEVT_TEXT, &FFQFullSpec::OnCommand, this);
+	//Bind(wxEVT_CHECKBOX, &FFQFullSpec::OnCommand, this);
+	//Bind(wxEVT_CHECKLISTBOX, &FFQFullSpec::OnCommand, this);
+	//Bind(wxEVT_CHOICE, &FFQFullSpec::OnCommand, this);
+	//Bind(wxEVT_TEXT, &FFQFullSpec::OnCommand, this);
+
 	Bind(wxEVT_IDLE, &FFQFullSpec::OnIdle, this);
 	Bind(wxEVT_SHOW, &FFQFullSpec::OnShow, this);
 
@@ -434,11 +1249,16 @@ FFQFullSpec::FFQFullSpec(wxWindow* parent, wxWindowID id)
 FFQFullSpec::~FFQFullSpec()
 {
 
-	//(*Destroy(FFQFullSpec)
-	//*)
+	//  (*Destroy(FFQFullSpec)
+	//  *)
 
-    if (m_File) std::for_each(m_File->fields.begin(), m_File->fields.end(), [](FULLSPEC_FIELD &field) { field.check = NULL; field.ctrl = NULL; });
-    m_File = 0;
+	if (m_File) ClearControlsFor(*m_File, true);
+
+	//if (m_EvtHandler) delete m_EvtHandler;
+	//m_EvtHandler = nullptr;
+
+    //if (m_File) std::for_each(m_File->fields.begin(), m_File->fields.end(), [](FULLSPEC_FIELD &field) { field.check = NULL; field.ctrl = NULL; });
+    //m_File = nullptr;
 
 }
 
@@ -447,15 +1267,22 @@ FFQFullSpec::~FFQFullSpec()
 bool FFQFullSpec::Execute(int full_spec_index, wxString &cmd)
 {
     m_File = &s_Files[full_spec_index];
-    TestBtn->Show(m_File->test.Len() > 0);
     m_CmdLine = cmd;
     m_TestFile = wxEmptyString;
-    ParseSpecBody();
-    MakeControls();
-    ParseCmd(cmd);
-    UpdateControls();
+    ParseSpecBody(*m_File);
+    MakeControlsFor(*m_File, this);
+	MainSizer->Insert(0, m_File->evt_handler->GetParent(), 1, wxALL|wxEXPAND, 5);
+	MainSizer->Fit(this);
+	//Layout();
+
+    //MakeControls();
+    SetCommandLine(*m_File, cmd);
+    m_File->evt_handler->UpdateControls();
+    //m_EvtHandler = new FFQFullSpecEvtHandler(ScrollWin, m_File);
+    //m_EvtHandler->UpdateControls();
+    SetTitle(FFQSF(SID_FULLSPEC_TITLE, m_File->display));
     bool res = (ShowModal() == wxID_OK);
-    if (res) GetCmdLine(cmd);
+    if (res) res = GetCommandLine(*m_File, cmd);
     return res;
 }
 
@@ -490,7 +1317,7 @@ bool FFQFullSpec::Execute(int full_spec_index, wxString &cmd)
 
 //---------------------------------------------------------------------------------------
 
-void FFQFullSpec::AddFieldCtrl(FULLSPEC_FIELD &field)
+/*void FFQFullSpec::AddFieldCtrl(FULLSPEC_FIELD &field)
 {
 
     if (field.type == ftHEADER)
@@ -529,7 +1356,7 @@ void FFQFullSpec::AddFieldCtrl(FULLSPEC_FIELD &field)
             //Create a choice control and parse the values for it
             wxChoice *ch = new wxChoice(ScrollWin, wxID_ANY);
             field.ctrl = ch;
-            SetItemContainer(m_File, field);
+            SetItemContainer(*m_File, field);
             ch->SetSelection(field.defidx);
 
         }
@@ -591,7 +1418,7 @@ void FFQFullSpec::AddFieldCtrl(FULLSPEC_FIELD &field)
             //Create a combobox control and parse the values for it
             wxComboBox *cb = new wxComboBox(ScrollWin, wxID_ANY);
             field.ctrl = cb;
-            SetItemContainer(m_File, field);
+            SetItemContainer(*m_File, field);
             cb->SetSelection(field.defidx);
 
         }
@@ -603,7 +1430,7 @@ void FFQFullSpec::AddFieldCtrl(FULLSPEC_FIELD &field)
             wxCheckListBox *cl = new wxCheckListBox(ScrollWin, wxID_ANY);
             cl->SetMaxSize(wxSize(-1, OkBtn->GetSize().GetHeight() * 3));
             field.ctrl = cl;
-            SetItemContainer(m_File, field);
+            SetItemContainer(*m_File, field);
             if (field.def == "*") for (int i = 0; i < (int)cl->GetCount(); i++) cl->Check(i, true);
             else cl->Check(field.defidx, true);
         }
@@ -619,11 +1446,11 @@ void FFQFullSpec::AddFieldCtrl(FULLSPEC_FIELD &field)
 
     }
 
-}
+}*/
 
 //---------------------------------------------------------------------------------------
 
-bool FFQFullSpec::GetCmdLine(wxString &res)
+/*bool FFQFullSpec::GetCmdLine(wxString &res)
 {
 
     //Build a command line from the fields..
@@ -682,11 +1509,11 @@ bool FFQFullSpec::GetCmdLine(wxString &res)
 
     }
     return true;
-}
+}*/
 
 //---------------------------------------------------------------------------------------
 
-wxString FFQFullSpec::GetFieldValue(FULLSPEC_FIELD &field)
+/*wxString FFQFullSpec::GetFieldValue(FULLSPEC_FIELD &field)
 {
     //if (!field.check->IsChecked()) return wxEmptyString;
     wxString res;
@@ -717,11 +1544,11 @@ wxString FFQFullSpec::GetFieldValue(FULLSPEC_FIELD &field)
     else FFQConsole::Get()->AppendLine("FFQFullSpec: Bad field control \"" + field.text + "\"", COLOR_RED);
     #endif
     return res;
-}
+}*/
 
 //---------------------------------------------------------------------------------------
 
-int FFQFullSpec::IndexOfField(wxString field_name)
+/*int FFQFullSpec::IndexOfField(wxString field_name)
 {
 
     //Return the index of the field with field_name
@@ -738,25 +1565,26 @@ int FFQFullSpec::IndexOfField(wxString field_name)
     //Field not found
     return wxNOT_FOUND;
 
-}
+}*/
 
 //---------------------------------------------------------------------------------------
 
-void FFQFullSpec::MakeControls()
+/*void FFQFullSpec::MakeControls()
 {
 
     //Create the controls used to define the fields
     if (m_CtrlsCreated) return;
 
     m_CtrlSizer = new wxFlexGridSizer(m_File->fields.size(), 1, 0, 0);
-    m_HeaderFont = wxFont(GetFont()).MakeLarger().MakeBold();
-    std::for_each(m_File->fields.begin(), m_File->fields.end(), [this](FULLSPEC_FIELD &field) { AddFieldCtrl(field); });
+    //m_HeaderFont = wxFont(GetFont()).MakeLarger().MakeBold();
+
+    for (size_t idx = 0; idx < m_File->fields.size(); idx++) MakeControlFor(*m_File, m_File->fields[idx], ScrollWin, m_CtrlSizer);
 
     ScrollWin->SetSizerAndFit(m_CtrlSizer);
 	MainSizer->Fit(this);
 
     //Update title and scroll bars
-    SetTitle(FFQSF(SID_FULLSPEC_TITLE, m_File->display));
+    //SetTitle(FFQSF(SID_FULLSPEC_TITLE, m_File->display));
 
     //Update scroll bars based on the height of a checkbox
     for (size_t i = 0; i < m_File->fields.size(); i++)
@@ -776,11 +1604,11 @@ void FFQFullSpec::MakeControls()
 
     m_CtrlsCreated = true;
 
-}
+}*/
 
 //---------------------------------------------------------------------------------------
 
-void FFQFullSpec::ParseCmd(wxString cmd)
+/*void FFQFullSpec::ParseCmd(wxString cmd)
 {
 
     //This will parse the command line and set the
@@ -803,7 +1631,7 @@ void FFQFullSpec::ParseCmd(wxString cmd)
         //Get field name and its index
         wxString cur = GetCmdToken(cmd);
         if (cur.StartsWith(m_File->prefix)) cur.Remove(0, m_File->prefix.Len());
-        int idx = IndexOfField(cur);
+        int idx = IndexOfField(*m_File, cur);
 
         if (idx >= 0)
         {
@@ -861,11 +1689,11 @@ void FFQFullSpec::ParseCmd(wxString cmd)
 
     }
 
-}
+}*/
 
 //---------------------------------------------------------------------------------------
 
-void FFQFullSpec::ParseSpecBody()
+/*void FFQFullSpec::ParseSpecBody()
 {
 
     //This will parse the body of the specification text
@@ -874,7 +1702,7 @@ void FFQFullSpec::ParseSpecBody()
     if (m_File->body == NULL) return;
 
     FULLSPEC_FIELD_TYPE type = ftHEADER;
-    wxString key, val, name, text, value, range, def, require, hide;
+    wxString key, val, name, text, value, range, def, require, required, hide;
 
     FFQLineParser lp(*m_File->body);
 
@@ -922,6 +1750,7 @@ void FFQFullSpec::ParseSpecBody()
                     else if (key == "range") range = val;
                     else if (key == "default") def = val;
                     else if (key == "require") require = val;
+                    else if (key == "required") required = val;
                     else if (key == "hide") hide = val;
                     else LogSpecError(FS_LOG_BAD_FIELD, lp.last());
 
@@ -953,6 +1782,7 @@ void FFQFullSpec::ParseSpecBody()
                 if (range.Len() > 0) field.range = range;
                 if (def.Len() > 0) field.def = def;
                 if (require.Len() > 0) field.require = require;
+                if (required.Len() > 0) field.required = (require == STR_YES);
                 if (hide.Len() > 0) field.hide = (hide == STR_YES);
 
             }
@@ -960,12 +1790,12 @@ void FFQFullSpec::ParseSpecBody()
             {
 
                 //Creating a new field
-                m_File->fields.push_back(FULLSPEC_FIELD(type, name, text, value, range, def, require, hide == STR_YES));
+                m_File->fields.push_back(FULLSPEC_FIELD(type, name, text, value, range, def, require, hide == STR_YES, required == STR_YES));
 
             }
 
             //Prepare next field
-            name = text = value = range = def = require = hide = wxEmptyString;
+            name = text = value = range = def = require = hide = required = wxEmptyString;
             type = ftHEADER;
 
         }
@@ -979,16 +1809,16 @@ void FFQFullSpec::ParseSpecBody()
 
     #ifdef DEBUG
     //Oh! Please don't look at me, I'm not dressed yet..
-    /*FFQConsole::Get()->AppendLine(m_File->display + SPACE + m_File->composite + SPACE + m_File->separator + SPACE + m_File->matches, 0);
+    / *FFQConsole::Get()->AppendLine(m_File->display + SPACE + m_File->composite + SPACE + m_File->separator + SPACE + m_File->matches, 0);
     std::for_each(m_File->fields.begin(), m_File->fields.end(), [](const FULLSPEC_FIELD &field) {
                   FFQConsole::Get()->AppendLine(ToStr(field.type) + " | " + field.name + " | " + field.text + " | " + field.value + " | " + field.def + " | " + field.range, 0);
-    });*/
+    });* /
     #endif
-}
+}*/
 
 //---------------------------------------------------------------------------------------
 
-void FFQFullSpec::UpdateControls()
+/*void FFQFullSpec::UpdateControls()
 {
 
     //Enable all control with their checkboxes ticked
@@ -1001,11 +1831,11 @@ void FFQFullSpec::UpdateControls()
     }
     ScrollWin->Thaw();
 
-}
+}*/
 
 //---------------------------------------------------------------------------------------
 
-void FFQFullSpec::UpdateField(FULLSPEC_FIELD &field)
+/*void FFQFullSpec::UpdateField(FULLSPEC_FIELD &field)
 {
 
     //Make sure that we are not running in circles..
@@ -1034,7 +1864,7 @@ void FFQFullSpec::UpdateField(FULLSPEC_FIELD &field)
         if (inverse) n = n.AfterFirst(EXCLAM);
 
         //Get index of field
-        int idx = IndexOfField(n);
+        int idx = IndexOfField(*m_File, n);
 
         //If the field is not found, it is ignored
         if (idx < 0) continue;
@@ -1053,7 +1883,7 @@ void FFQFullSpec::UpdateField(FULLSPEC_FIELD &field)
 
                 if (ff.check->IsChecked())
                 {
-                    if (!LogicCompare(GetFieldValue(ff), v)) enable = false;
+                    if (!LogicCompare(GetFieldValue(*m_File, ff), v)) enable = false;
                     //if (inverse == (v == GetFieldValue(ff))) enable = false;
                 }
                 else enable = false;
@@ -1076,18 +1906,18 @@ void FFQFullSpec::UpdateField(FULLSPEC_FIELD &field)
     //Remove field from update stack
     m_UpdateStack.RemoveAt(m_UpdateStack.Count() - 1);
 
-}
+}*/
 
 //---------------------------------------------------------------------------------------
 
-bool FFQFullSpec::ValidateRequires()
+/*bool FFQFullSpec::ValidateRequires()
 {
     return false;
-}
+}*/
 
 //---------------------------------------------------------------------------------------
 
-void FFQFullSpec::OnCommand(wxCommandEvent &evt)
+/*void FFQFullSpec::OnCommand(wxCommandEvent &evt)
 {
 
     //Some control has changed its state
@@ -1105,7 +1935,7 @@ void FFQFullSpec::OnCommand(wxCommandEvent &evt)
 
     UpdateControls();
 
-}
+}*/
 
 
 //---------------------------------------------------------------------------------------
@@ -1163,13 +1993,6 @@ void FFQFullSpec::ActionClick(wxCommandEvent& event)
         }
 
         EndModal(wxID_OK);
-
-    }
-    else if (evtId == ID_TESTBTN)
-    {
-
-        if (m_TestFile.Len() > 0) FileDlg->SetPath(m_TestFile);
-        if (FileDlg->ShowModal() != wxID_CANCEL) m_TestFile = FileDlg->GetPath();
 
     }
 

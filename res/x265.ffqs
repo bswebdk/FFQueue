@@ -5,6 +5,7 @@ composite=-x265-params
 display=H.265 / HEVC
 id=x265
 matches=[[:blank:]]hevc\)($|\Z|\r)
+notebook=1
 prefix=
 separator=:
 

@@ -490,16 +490,16 @@ void FFQConfig::DefaultOptions()
     keep_console = false;
     batch_config = "1,1,0,ac3,mp4";
     preferred_format = "mp4";
-    preferred_path = "";
+    preferred_path = wxEmptyString;
     output_name_pattern = PATTERN_VAR_FILENAME + "." + PATTERN_VAR_FILEFMT;
     temp_path = TEMP_PATH_SYST;
-    thumb_settings = "";
-    cust_player = "";
+    thumb_settings = wxEmptyString;
+    cust_player = wxEmptyString;
     second_file_extensions = "srt,ass,ssa,xsub,sub,mp3,wav";
-    window_position = "";
-    list_columns = "";
-    vidstab_settings = "";
-    console_cmd = "";
+    window_position = wxEmptyString;
+    list_columns = wxEmptyString;
+    vidstab_settings = wxEmptyString;
+    console_cmd = wxEmptyString;
     save_log = true;
     silent_qfinish = false;
     save_on_modify = false;
@@ -507,9 +507,9 @@ void FFQConfig::DefaultOptions()
     confirm_delete_jobs = true;
     preview_map_subs = false;
     dont_save_ffmpeg = false;
-    saved_commands = "";
-    subs_charenc = "";
-    user_locale = "";
+    saved_commands = wxEmptyString;
+    subs_charenc = wxEmptyString;
+    user_locale = wxEmptyString;
 
     num_encode_slots = 1;
 
@@ -525,17 +525,17 @@ void FFQConfig::DefaultOptions()
 
 	if (m_PresetManager) ((FFQPresetMgr*)m_PresetManager)->ClearPresets();
 
-    m_AudioCodecs = "";
-    m_FFMpegLongVersion = "";
-    m_FFMpegShortVersion = "";
-    m_FFPath = "";
-    m_Filters = "";
-    m_Formats = "";
-    m_SubtitleCodecs = "";
-    m_VideoCodecs = "";
-    m_HWAccels = "";
-    m_HWDecoders = "";
-    m_CapsFile = "";
+    m_AudioCodecs = wxEmptyString;
+    m_FFMpegLongVersion = wxEmptyString;
+    m_FFMpegShortVersion = wxEmptyString;
+    m_FFPath = wxEmptyString;
+    m_Filters = wxEmptyString;
+    m_Formats = wxEmptyString;
+    m_SubtitleCodecs = wxEmptyString;
+    m_VideoCodecs = wxEmptyString;
+    m_HWAccels = wxEmptyString;
+    m_HWDecoders = wxEmptyString;
+    m_CapsFile = wxEmptyString;
 
 }
 
@@ -583,16 +583,6 @@ unsigned int FFQConfig::FindSecondaryInputFiles(wxString &for_filename, wxArrayS
     }
 
     return cnt;
-
-}
-
-//---------------------------------------------------------------------------------------
-
-wxString FFQConfig::GetBrowseRoot()
-{
-
-    //Return the initial directory used for file dialogs
-    return wxStandardPaths::Get().GetDocumentsDir();
 
 }
 
@@ -836,6 +826,41 @@ wxString FFQConfig::GetFFMpegVersion(bool short_version)
 
 //---------------------------------------------------------------------------------------
 
+wxString FFQConfig::GetHelpPath()
+{
+    //Try to locate the help file / documentation
+    const wxString FFQ = "FFQueue";
+    const wxString HTM = ".htm";
+    wxString res;
+    if (is_snap)
+    {
+
+        //Nothing works in a snap :-(
+        //return wxEmptyString;
+
+        //res = GetConfigPath(FFQ.Lower() + HTM);
+        res = wxFileName(wxStandardPaths::Get().GetDocumentsDir(), FFQ.Lower() + HTM).GetFullPath();
+        wxString doc = m_SnapRoot + "usr/share/doc/" + FFQ.Lower() + "/" + FFQ.Lower() + HTM;
+        if ((!wxFileExists(res)) || (wxFileName(res).GetSize() != wxFileName(doc).GetSize())) wxCopyFile(doc, res, true);
+
+        //FFQConsole::Get()->AppendLine(res, COLOR_BLUE);
+        //FFQConsole::Get()->AppendLine(doc, COLOR_BLUE);
+
+        if (!wxFileExists(res)) res = wxEmptyString;
+
+    }
+    else
+    {
+        res = wxFileName(wxStandardPaths::Get().GetExecutablePath()).GetPath() + wxFileName::GetPathSeparator();
+        if (wxFileExists(res + FFQ + HTM)) res += FFQ + HTM;
+        else if (wxFileExists(res + FFQ.Lower() + HTM)) res += FFQ.Lower() + HTM;
+        else res = wxEmptyString;
+    }
+    return res;
+}
+
+//---------------------------------------------------------------------------------------
+
 wxString FFQConfig::GetHWAccelerators()
 {
 
@@ -951,7 +976,7 @@ wxString FFQConfig::GetTmpPath(wxString dest_path, bool make_sub_folder, wxStrin
         {
 
             //Make unique temp file
-            if (temp_file_extension.at(0) != '.') temp_file_extension = "." + temp_file_extension;
+            if (temp_file_extension.at(0) != DOT) temp_file_extension = DOT + temp_file_extension;
             while (wxFileExists(res + ToStr(idx) + temp_file_extension)) idx++;
             res += ToStr(idx) + temp_file_extension;
 
@@ -1384,6 +1409,17 @@ void FFQConfig::SetCtrlColors(wxGenericHyperlinkCtrl *ctrl)
 }
 
 //---------------------------------------------------------------------------------------
+
+void FFQConfig::SetBrowseRootFor(wxFileDialog *dlg)
+{
+
+    //Make sure that file dialogs in a snap start in a valid location
+    if (is_snap) dlg->SetDirectory(wxStandardPaths::Get().GetDocumentsDir());
+
+}
+
+//---------------------------------------------------------------------------------------
+
 bool FFQConfig::SetSaveLog(bool log, bool save_config)
 {
 
@@ -1737,6 +1773,10 @@ FFQConfig::FFQConfig()
     m_PresetManager = NULL;
     m_CodecInfo = NULL;
     m_PixelFormats = NULL;
+
+    //Is this a snap?
+    is_snap = wxGetEnv("SNAP", &m_SnapRoot);
+    if (is_snap && (!m_SnapRoot.EndsWith(wxFileName::GetPathSeparator()))) m_SnapRoot += wxFileName::GetPathSeparator();
 
     //Create task bar object
     m_TaskBar = new FFQTaskBar();

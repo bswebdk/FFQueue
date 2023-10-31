@@ -217,7 +217,7 @@ FFQConfigEdit::FFQConfigEdit(wxWindow* parent,wxWindowID id)
 
 	SetTitle(FFQS(SID_OPTIONS_TITLE));
 
-	OpenDialog->SetDirectory(FFQCFG()->GetBrowseRoot());
+	FFQCFG()->SetBrowseRootFor(OpenDialog);
 
 	wxSize sz = BrowseTemp->GetSize();
 	sz.SetWidth(-1);

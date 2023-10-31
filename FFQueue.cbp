@@ -139,7 +139,7 @@
 				<Option object_output="obj/Debug/" />
 				<Option type="0" />
 				<Option compiler="gcc" />
-				<Option parameters="--test-fs=x2648" />
+				<Option parameters="--test-fs=x264s" />
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
 					<Add option="-g" />
@@ -434,7 +434,6 @@
 					<wxDialog wxs="wxsmith/FFQJobEditAdvCuts.wxs" src="src/FFQJobEditAdvCuts.cpp" hdr="src/FFQJobEditAdvCuts.h" fwddecl="0" i18n="0" name="FFQJobEditAdvCuts" language="CPP" />
 					<wxDialog wxs="wxsmith/FFQVideoToGIF.wxs" src="src/tools/FFQVideoToGIF.cpp" hdr="src/tools/FFQVideoToGIF.h" fwddecl="0" i18n="1" name="FFQVideoToGIF" language="CPP" />
 					<wxPanel wxs="wxsmith/DummyPanel.wxs" src="src/DummyPanel.cpp" hdr="src/DummyPanel.h" fwddecl="0" i18n="1" name="DummyPanel" language="CPP" />
-					<wxDialog wxs="wxsmith/FFQFullSpec.wxs" src="src/FFQFullSpec.cpp" hdr="src/FFQFullSpec.h" fwddecl="0" i18n="0" name="FFQFullSpec" language="CPP" />
 				</resources>
 			</wxsmith>
 		</Extensions>

@@ -112,7 +112,7 @@ wxString FFQ_STATIC_JOB::ToString()
 
 //---------------------------------------------------------------------------------------
 
-wxString FFQ_STATIC_JOB::GetCommandAtIndex(int index)
+wxString FFQ_STATIC_JOB::GetCommandAtIndex(int index, bool for_encode)
 {
 
     //Return next command

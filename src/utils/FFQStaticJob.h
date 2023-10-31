@@ -44,7 +44,7 @@ typedef struct FFQ_STATIC_JOB : FFQ_QUEUE_ITEM
 
 protected:
 
-    virtual wxString GetCommandAtIndex(int index);
+    virtual wxString GetCommandAtIndex(int index, bool for_encode);
 
 private:
 

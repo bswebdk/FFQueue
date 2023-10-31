@@ -215,6 +215,7 @@ const FFQ_SID SID_COMMON_UPDATE                     = SID_COMMON_BASE + 30;
 const FFQ_SID SID_COMMON_DRY_RUN                    = SID_COMMON_BASE + 31;
 const FFQ_SID SID_COMMON_ATTACHMENT                 = SID_COMMON_BASE + 32;
 const FFQ_SID SID_COMMON_DATA                       = SID_COMMON_BASE + 33;
+const FFQ_SID SID_COMMON_HELP                       = SID_COMMON_BASE + 34;
 
 
 //Main frame UI
@@ -332,6 +333,11 @@ const FFQ_SID SID_JOBEDIT_ADV_CUTS_CFG_ACCURACY     = SID_JOBEDIT_ADV_BASE + 34;
 const FFQ_SID SID_JOBEDIT_ADV_CUTS_CFG_DELAY        = SID_JOBEDIT_ADV_BASE + 35;
 const FFQ_SID SID_JOBEDIT_ADV_CUTS_CFG_PLACEMENT    = SID_JOBEDIT_ADV_BASE + 36;
 const FFQ_SID SID_JOBEDIT_ADV_CUTS_QUICK_CUT        = SID_JOBEDIT_ADV_BASE + 37;
+const FFQ_SID SID_JOBEDIT_ADV_CUTS_OVERLAP_REMOVE   = SID_JOBEDIT_ADV_BASE + 38;
+const FFQ_SID SID_JOBEDIT_ADV_CUTS_MENU_ITEMS       = SID_JOBEDIT_ADV_BASE + 39;
+
+const FFQ_SID SID_JOBEDIT_ADV_LOOP_STREAMS          = SID_JOBEDIT_ADV_BASE + 40;
+const FFQ_SID SID_JOBEDIT_ADV_LOOP_STREAMS_INFO     = SID_JOBEDIT_ADV_BASE + 41;
 
 //Concat tool UI
 const FFQ_SID SID_CONCAT_BASE                       = 4500;
@@ -488,6 +494,9 @@ const FFQ_SID SID_PRESET_METADATA_FOR_ITEMS         = SID_PRESET_BASE + 109;
 const FFQ_SID SID_PRESET_DISPOSITION                = SID_PRESET_BASE + 110;
 const FFQ_SID SID_PRESET_DISPOSITION_UNSET          = SID_PRESET_BASE + 111;
 const FFQ_SID SID_PRESET_METADATA_STREAM            = SID_PRESET_BASE + 112;
+const FFQ_SID SID_PRESET_SKIP_ENCODE_SAME           = SID_PRESET_BASE + 113;
+const FFQ_SID SID_PRESET_STOP_ENCODE_SHORTEST       = SID_PRESET_BASE + 114;
+const FFQ_SID SID_PRESET_NO_QUALITY_DEFINED         = SID_PRESET_BASE + 115;
 
 
 //Video sync modes
@@ -633,7 +642,7 @@ const FFQ_SID SID_FULLSPEC_REQUIRED_FIELD       = SID_FULLSPEC_BASE + 1;
 const FFQ_SID SID_FULLSPEC_COLON_NOT_ALLOWED    = SID_FULLSPEC_BASE + 2;
 const FFQ_SID SID_FULLSPEC_TEST                 = SID_FULLSPEC_BASE + 3;
 const FFQ_SID SID_FULLSPEC_BAD_ID               = SID_FULLSPEC_BASE + 4;
-const FFQ_SID SID_FULLSPEC_SELECT_FILE          = SID_FULLSPEC_BASE + 5;
+//const FFQ_SID SID_FULLSPEC_SELECT_FILE          = SID_FULLSPEC_BASE + 5;
 
 //Filter editor UI
 const FFQ_SID SID_FILTER_BASE                   = 30000;
@@ -1137,6 +1146,7 @@ class FFQLang
         LPFFQ_STRING GetPtrAtIndex(unsigned int index);
         const unsigned int GetCount();
         const wxString& GetDescription();
+        const wxString& GetFFQVersion();
         const unsigned int GetFlagCount(STR_FLAG flag);
         const wxString& GetLoadedFileName();
         const unsigned int GetNumberOfSkippedStringsInFile();
@@ -1158,7 +1168,7 @@ class FFQLang
         unsigned int m_SkipCount;
         STR_HASH m_PasswordHash;
         wxVector<LPFFQ_STRING> *m_Strings;
-        wxString m_Description, m_Temp, m_DateTimeFmt, m_BadStrID, m_LoadName;
+        wxString m_Description, m_Temp, m_DateTimeFmt, m_BadStrID, m_LoadName, m_FFQVersion;
 
         void InitStringVars();
         void ValidateStrings();

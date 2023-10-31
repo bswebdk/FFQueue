@@ -40,10 +40,14 @@ typedef struct FFQ_PRESET
          two_pass_null, //Use null target file for fist pass in two pass encoding
          af_complex, //True if audio filters should be added to "-filter_complex" rather than "-af"
          mf_faststart, //True if -movflags faststart should be declared
-         keep_filetime; //True if the output file shall get the source file's time
+         keep_filetime, //True if the output file shall get the source file's time
+         shortest; //True if -shortest is used
+
+    uint8_t skip_encode_same; //Skip encoding to same codec; 0 = off, 1 = for audio, 2 = for video, 3 = for both
 
     wxString preset_name, //Name of the preset
              video_codec, //The video codec
+             video_codec_id, //The identifier of the video codec (eg. h264, hevc, mpeg)
              video_rate, //The video bit rate settings
              frame_rate, //Video frame rate
              video_sync, //video synchronization
@@ -51,6 +55,7 @@ typedef struct FFQ_PRESET
              key_frames, //Key frame detection settings
              hw_decode, //Settings for hardware decoding of video
              audio_codec, //Audio codec
+             audio_codec_id, //The identifier of the audio codec (eg. mp2, mp3, ac3)
              audio_rate, //Audio bit rate settings
              audio_quality, //Audio quality settings
              audio_channels, //Number of audio channels
@@ -70,7 +75,8 @@ typedef struct FFQ_PRESET
              custom_args_2, //As "custom_args_1" but for second pass
              disposition, //Video,Audio,Subtitle disposition
              finger_print, //Used to auto detect preset (see FFQJobEditAdv::GetPresetFingerPrint)
-             fullspec_vid; //Storing any full spec settings for video
+             fullspec_vid, //Storing any full spec settings for video
+             fullspec_aud; //Storing any full spec settings for audio
 
     wxArrayString filters; //The video and audio filters
 

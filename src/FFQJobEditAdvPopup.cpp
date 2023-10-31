@@ -40,6 +40,10 @@
 
 //(*IdInit(FFQJobEditAdvPopup)
 const long FFQJobEditAdvPopup::ID_PANEL1 = wxNewId();
+const long FFQJobEditAdvPopup::ID_ITSOFFSET = wxNewId();
+const long FFQJobEditAdvPopup::ID_STATICTEXT1 = wxNewId();
+const long FFQJobEditAdvPopup::ID_LOOPSTREAMS = wxNewId();
+const long FFQJobEditAdvPopup::ID_STATICTEXT2 = wxNewId();
 const long FFQJobEditAdvPopup::ID_STATICLINE1 = wxNewId();
 const long FFQJobEditAdvPopup::ID_CLEARBTN = wxNewId();
 const long FFQJobEditAdvPopup::ID_OKBTN = wxNewId();
@@ -80,20 +84,30 @@ FFQJobEditAdvPopup::FFQJobEditAdvPopup(wxWindow* parent)
 	BoxSizer2->Fit(Panel1);
 	BoxSizer2->SetSizeHints(Panel1);
 	FlexGridSizer4->Add(Panel1, 1, wxALL|wxEXPAND, 0);
-	FlexGridSizer2 = new wxFlexGridSizer(2, 3, 0, 0);
+	FlexGridSizer2 = new wxFlexGridSizer(3, 3, 0, 0);
 	ST1 = new wxStaticText(this, wxID_ANY, _T("L1"), wxDefaultPosition, wxDefaultSize, 0, _T("wxID_ANY"));
 	ST1->SetLabel(FFQS(SID_JOBEDIT_ADV_ITSOFFSET));
 	FlexGridSizer2->Add(ST1, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
-	ItsOffset = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("wxID_ANY"));
-	FlexGridSizer2->Add(ItsOffset, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
+	ItsOffset = new wxSpinCtrl(this, ID_ITSOFFSET, _T("0"), wxDefaultPosition, wxDefaultSize, 0, -999999, 999999, 0, _T("ID_ITSOFFSET"));
+	ItsOffset->SetValue(_T("0"));
+	FlexGridSizer2->Add(ItsOffset, 1, wxALL|wxEXPAND, 3);
 	ST2 = new wxStaticText(this, wxID_ANY, _T("L2"), wxDefaultPosition, wxDefaultSize, 0, _T("wxID_ANY"));
 	ST2->SetLabel(FFQS(SID_JOBEDIT_ADV_MILLISECONDS));
 	FlexGridSizer2->Add(ST2, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
+	ST5 = new wxStaticText(this, ID_STATICTEXT1, _T("L5"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT1"));
+	ST5->SetLabel(FFQS(SID_JOBEDIT_ADV_LOOP_STREAMS));
+	FlexGridSizer2->Add(ST5, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
+	LoopStreams = new wxSpinCtrl(this, ID_LOOPSTREAMS, _T("0"), wxDefaultPosition, wxDefaultSize, 0, -1, 99999, 0, _T("ID_LOOPSTREAMS"));
+	LoopStreams->SetValue(_T("0"));
+	FlexGridSizer2->Add(LoopStreams, 1, wxALL|wxEXPAND, 3);
+	ST6 = new wxStaticText(this, ID_STATICTEXT2, _T("L6"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT2"));
+	ST6->SetLabel(FFQS(SID_JOBEDIT_ADV_LOOP_STREAMS_INFO));
+	FlexGridSizer2->Add(ST6, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	ST3 = new wxStaticText(this, wxID_ANY, _T("L3"), wxDefaultPosition, wxDefaultSize, 0, _T("wxID_ANY"));
 	ST3->SetLabel(FFQS(SID_JOBEDIT_ADV_FRAMERATE));
 	FlexGridSizer2->Add(ST3, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
 	FrameRate = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("wxID_ANY"));
-	FlexGridSizer2->Add(FrameRate, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
+	FlexGridSizer2->Add(FrameRate, 1, wxALL|wxEXPAND, 3);
 	ST4 = new wxStaticText(this, wxID_ANY, _T("L4"), wxDefaultPosition, wxDefaultSize, 0, _T("wxID_ANY"));
 	ST4->SetLabel(FFQS(SID_JOBEDIT_ADV_FPS));
 	FlexGridSizer2->Add(ST4, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
@@ -149,9 +163,9 @@ FFQJobEditAdvPopup::FFQJobEditAdvPopup(wxWindow* parent)
 	Connect(wxEVT_CHAR,(wxObjectEventFunction)&FFQJobEditAdvPopup::OnChar);
 	//*)
 
-	wxIntegerValidator<int> offsval(NULL, wxNUM_VAL_ZERO_AS_BLANK);
-	offsval.SetRange(-1000000, 1000000);
-	ItsOffset->SetValidator(offsval);
+	//wxIntegerValidator<int> offsval(NULL, wxNUM_VAL_ZERO_AS_BLANK);
+	//offsval.SetRange(-1000000, 1000000);
+	//ItsOffset->SetValidator(offsval);
 
 	Connect(wxID_ANY, wxEVT_CHAR_HOOK, (wxObjectEventFunction)&FFQJobEditAdvPopup::OnChar);
 
@@ -174,11 +188,12 @@ bool FFQJobEditAdvPopup::Execute(void* data)
     LPINPUT_CTRLS ctrls = (LPINPUT_CTRLS)data;
 
     //Load values
-    ItsOffset->SetValue(ctrls->itsoffset);
+    ItsOffset->SetValue(ctrls->itsoffset.Len() == 0 ? "0" : ctrls->itsoffset);
     wxString fr = ctrls->framerate;
     FrameRateSwitch->SetValue(fr.StartsWith('~'));
     if (FrameRateSwitch->GetValue()) fr.Remove(0, 1);
     FrameRate->SetValue(fr);
+    LoopStreams->SetValue(ctrls->loop_streams.Len() == 0 ? "0" : ctrls->loop_streams);
     DiscardCorrupt->SetValue(ctrls->discard_corrupt);
     GenPTS->SetValue(ctrls->genpts);
     IgnDTS->SetValue(ctrls->igndts);
@@ -189,8 +204,9 @@ bool FFQJobEditAdvPopup::Execute(void* data)
     if (ShowModal() != wxID_OK) return false;
 
     //Save values
-    ctrls->itsoffset = ItsOffset->GetValue();
+    ctrls->itsoffset = ItsOffset->GetValue() == 0 ? "" : ToStr(ItsOffset->GetValue());
     ctrls->framerate = wxString(FrameRateSwitch->GetValue() ? "~" : "") + FrameRate->GetValue();
+    ctrls->loop_streams = LoopStreams->GetValue() == 0 ? "" : ToStr(LoopStreams->GetValue());
     ctrls->discard_corrupt = DiscardCorrupt->GetValue();
     ctrls->genpts = GenPTS->GetValue();
     ctrls->igndts = IgnDTS->GetValue();
@@ -206,7 +222,8 @@ void FFQJobEditAdvPopup::ResetCtrls()
 {
 
     //Reset controls to default values
-    ItsOffset->Clear();
+    ItsOffset->SetValue(0);
+    LoopStreams->SetValue(0);
     FrameRate->Clear();
     FrameRateSwitch->SetValue(false);
     DiscardCorrupt->SetValue(false);

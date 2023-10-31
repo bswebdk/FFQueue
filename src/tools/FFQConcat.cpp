@@ -526,9 +526,9 @@ FFQConcat::FFQConcat(wxWindow* parent)
 	FFQCFG()->SetCtrlColors(LimitDest);
 	FFQCFG()->SetCtrlColors(SSFrameStatus);
 
-    OpenOneDlg->SetDirectory(FFQCFG()->GetBrowseRoot());
-    OpenMoreDlg->SetDirectory(FFQCFG()->GetBrowseRoot());
-    SaveFileDlg->SetDirectory(FFQCFG()->GetBrowseRoot());
+	FFQCFG()->SetBrowseRootFor(OpenOneDlg);
+	FFQCFG()->SetBrowseRootFor(OpenMoreDlg);
+	FFQCFG()->SetBrowseRootFor(SaveFileDlg);
 
     m_EditJob = NULL;
     m_DoIdleTask = false;
@@ -731,7 +731,7 @@ bool FFQConcat::Execute(LPFFQ_CONCAT_JOB job)
                 job->merge_smap.Clear();
 
             }
-            else BuildMergeFilter(job->merge_filter, job->merge_smap);
+            else BuildMergeFilter(job->merge_filter, job->merge_smap, job->merge_aspect);
 
             CCSources->Freeze();
             for (int i = 0; i < (int)CCSources->GetCount(); i++)
@@ -820,7 +820,7 @@ void FFQConcat::AddConcatSources(wxArrayString *paths)
 
 //---------------------------------------------------------------------------------------
 
-void FFQConcat::BuildMergeFilter(wxString &filter, wxString &smap)
+void FFQConcat::BuildMergeFilter(wxString &filter, wxString &smap, wxString &merge_aspect)
 {
 
     //Generate the merge filter
@@ -836,8 +836,13 @@ void FFQConcat::BuildMergeFilter(wxString &filter, wxString &smap)
 
         cd = (LPCONCAT_DATA)CCSources->GetClientData(i);
 
-        //Set dimensions of first video
-        if (i == 0) { w = cd->width; h = cd->height; }
+        if (i == 0)
+        {
+            //Set dimensions of first video and store aspect ratio
+            w = cd->width;
+            h = cd->height;
+            merge_aspect = ToStr((float)w / (float)h); //CCSetSar->GetValue() ? ToStr((float)w / (float)h) : "";
+        }
 
         //Check if scaling must be applied to following video(s)
         else scale = ((w != cd->width) || (h != cd->height));
@@ -939,6 +944,7 @@ void FFQConcat::BuildMergeFilter(wxString &filter, wxString &smap)
                         //Set SAR of first video
                         t = "[CCSA0]";
                         filter += "[0:" + ToStr(pcd->videoID) + "]setsar=a" + t + ";";
+                        //filter += "[0:" + ToStr(pcd->videoID) + wxString::Format("]setsar=%f", sar) + t + ";";
                         cv = t;
 
                     }
@@ -946,6 +952,7 @@ void FFQConcat::BuildMergeFilter(wxString &filter, wxString &smap)
                     //Set SAR of current video
                     t = "[CCSA" + ToStr(i) + "]";
                     filter += s + "setsar=a" + t + ";";
+                    //filter += s + wxString::Format("setsar=%f", sar) + t + ";";
                     s = t;
 
                 }

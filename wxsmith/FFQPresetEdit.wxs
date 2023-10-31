@@ -80,7 +80,7 @@
 												<object class="sizeritem">
 													<object class="wxFlexGridSizer" variable="VideoTwoPassSizer" member="yes">
 														<cols>2</cols>
-														<rows>1</rows>
+														<rows>2</rows>
 														<growablecols>1</growablecols>
 														<growablerows>0</growablerows>
 														<object class="sizeritem">
@@ -101,6 +101,20 @@
 															<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
 															<border>3</border>
 															<option>1</option>
+														</object>
+														<object class="sizeritem">
+															<object class="wxCheckBox" name="ID_SKIPENCODESAMEVID" variable="SkipEncodeSameVid" member="yes">
+																<label>Sev</label>
+																<extra_code>SkipEncodeSameVid-&gt;SetLabel(FFQS(SID__PRESET__SKIP__ENCODE__SAME));</extra_code>
+															</object>
+															<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+															<border>3</border>
+															<option>1</option>
+														</object>
+														<object class="spacer">
+															<flag>wxALL|wxEXPAND</flag>
+															<option>1</option>
+															<size>-1,-1</size>
 														</object>
 													</object>
 													<flag>wxALL|wxEXPAND</flag>
@@ -822,8 +836,8 @@
 										<orient>wxVERTICAL</orient>
 										<object class="sizeritem">
 											<object class="wxFlexGridSizer" variable="FlexGridSizer12" member="no">
-												<cols>1</cols>
-												<rows>1</rows>
+												<cols>2</cols>
+												<rows>2</rows>
 												<growablecols>0</growablecols>
 												<object class="sizeritem">
 													<object class="wxChoice" name="ID_AUDIOCODEC" variable="AudioCodec" member="yes">
@@ -833,6 +847,29 @@
 													<flag>wxALL|wxEXPAND</flag>
 													<border>3</border>
 													<option>1</option>
+												</object>
+												<object class="sizeritem">
+													<object class="wxButton" name="ID_FULLSPECAUDBUTTON" variable="FullSpecAudButton" member="yes">
+														<label>...</label>
+														<handler function="OnButtonClick" entry="EVT_BUTTON" />
+													</object>
+													<flag>wxALL</flag>
+													<border>3</border>
+													<option>1</option>
+												</object>
+												<object class="sizeritem">
+													<object class="wxCheckBox" name="ID_SKIPENCODESAMEAUD" variable="SkipEncodeSameAud" member="yes">
+														<label>Sea</label>
+														<extra_code>SkipEncodeSameAud-&gt;SetLabel(FFQS(SID__PRESET__SKIP__ENCODE__SAME));</extra_code>
+													</object>
+													<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+													<border>3</border>
+													<option>1</option>
+												</object>
+												<object class="spacer">
+													<flag>wxALL|wxEXPAND</flag>
+													<option>1</option>
+													<size>-1,-1</size>
 												</object>
 											</object>
 											<flag>wxALL|wxEXPAND</flag>
@@ -1259,7 +1296,7 @@
 														<extra_code>AddFilterButton-&gt;SetLabel(FFQS(SID__COMMON__ADD));</extra_code>
 														<handler function="OnButtonClick" entry="EVT_BUTTON" />
 													</object>
-													<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<flag>wxALL|wxEXPAND</flag>
 													<border>3</border>
 													<option>1</option>
 												</object>
@@ -1269,7 +1306,7 @@
 														<extra_code>EditFilterButton-&gt;SetLabel(FFQS(SID__COMMON__EDIT));</extra_code>
 														<handler function="OnButtonClick" entry="EVT_BUTTON" />
 													</object>
-													<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<flag>wxALL|wxEXPAND</flag>
 													<border>3</border>
 													<option>1</option>
 												</object>
@@ -1279,7 +1316,7 @@
 														<extra_code>RemoveFilterButton-&gt;SetLabel(FFQS(SID__COMMON__REMOVE));</extra_code>
 														<handler function="OnButtonClick" entry="EVT_BUTTON" />
 													</object>
-													<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<flag>wxALL|wxEXPAND</flag>
 													<border>3</border>
 													<option>1</option>
 												</object>
@@ -1294,7 +1331,7 @@
 														<extra_code>FilterUpButton-&gt;SetLabel(FFQS(SID__COMMON__MOVE__UP));</extra_code>
 														<handler function="OnButtonClick" entry="EVT_BUTTON" />
 													</object>
-													<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<flag>wxALL|wxEXPAND</flag>
 													<border>3</border>
 													<option>1</option>
 												</object>
@@ -1304,7 +1341,7 @@
 														<extra_code>FilterDownButton-&gt;SetLabel(FFQS(SID__COMMON__MOVE__DOWN));</extra_code>
 														<handler function="OnButtonClick" entry="EVT_BUTTON" />
 													</object>
-													<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<flag>wxALL|wxEXPAND</flag>
 													<border>3</border>
 													<option>1</option>
 												</object>
@@ -1319,7 +1356,7 @@
 														<extra_code>FilterPreviewButton-&gt;SetLabel(FFQS(SID__COMMON__PREVIEW));</extra_code>
 														<handler function="OnButtonClick" entry="EVT_BUTTON" />
 													</object>
-													<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<flag>wxALL|wxEXPAND</flag>
 													<border>3</border>
 													<option>1</option>
 												</object>
@@ -1774,6 +1811,15 @@
 															<object class="wxCheckBox" name="ID_KEEPFILETIME" variable="KeepFileTime" member="yes">
 																<label>Kft</label>
 																<extra_code>KeepFileTime-&gt;SetLabel(FFQS(SID__PRESET__KEEP__FILETIME));</extra_code>
+															</object>
+															<flag>wxLEFT|wxRIGHT|wxALIGN_LEFT</flag>
+															<border>3</border>
+															<option>1</option>
+														</object>
+														<object class="sizeritem">
+															<object class="wxCheckBox" name="ID_STOPENCSHORTEST" variable="StopEncShortest" member="yes">
+																<label>Sts</label>
+																<extra_code>StopEncShortest-&gt;SetLabel(FFQS(SID__PRESET__STOP__ENCODE__SHORTEST));</extra_code>
 															</object>
 															<flag>wxLEFT|wxRIGHT|wxALIGN_LEFT</flag>
 															<border>3</border>

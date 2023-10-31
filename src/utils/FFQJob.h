@@ -42,7 +42,9 @@ typedef struct FFQ_JOB : FFQ_QUEUE_ITEM
 
     wxString out, //Output file
              stream_map, //Stream mapping for input files
-             cmd_line; //The job's command line
+             cmd_line, //The job's command line
+             twopass_log; //Used to define a temporary per-job two-pass log file
+
     TIME_VALUE out_len; //The time limit of the output file
     UNIQUE_ID preset_id; //The id of the preset to use for building the ffmpeg command
     void* preset_ptr; //A pointer to a preset to use for building the ffmpeg command (usually used by tools)
@@ -64,7 +66,7 @@ typedef struct FFQ_JOB : FFQ_QUEUE_ITEM
 
 protected:
 
-    virtual wxString GetCommandAtIndex(int index);
+    virtual wxString GetCommandAtIndex(int index, bool for_encode);
 
 private:
 

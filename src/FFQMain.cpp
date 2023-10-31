@@ -381,7 +381,7 @@ FFQMain::FFQMain(wxWindow* parent, wxWindowID id)
     Vid2GifItem->SetItemLabel(FFQS(SID_VIDEO2GIF_TITLE) + "...");
 
     Bind(wxEVT_CHAR_HOOK, &FFQMain::OnChar, this);
-    //Bind(wxEVT_IDLE, &FFQMain::OnIdle, this);
+    Bind(wxEVT_IDLE, &FFQMain::OnIdle, this);
     Bind(wxEVT_MAXIMIZE, &FFQMain::OnMaximize, this);
     Bind(wxEVT_MOVE, &FFQMain::OnMove, this);
     Bind(wxEVT_SHOW, &FFQMain::OnShow, this);
@@ -427,7 +427,7 @@ FFQMain::FFQMain(wxWindow* parent, wxWindowID id)
 
     Consoles->SetPageText(0, FFQS(SID_MAINFRAME_NB_DEFAULT));
 
-    OpenFilesDlg->SetDirectory(FFQCFG()->GetBrowseRoot());
+	FFQCFG()->SetBrowseRootFor(OpenFilesDlg);
 
     m_JobsFileName = FFQCFG()->app_name.Lower() + ".job";
     #ifdef DEBUG
@@ -2296,9 +2296,7 @@ void FFQMain::OnDropFiles(wxDropFilesEvent& event)
 void FFQMain::OnIdle(wxIdleEvent &event)
 {
 
-    /*
-
-    This is not entirely ready yet, so it is not implemented in V1.7.62 yet!
+    //This is not entirely ready yet, so it is not implemented in V1.7.62 yet!
 
     if ((!m_FirstShow) && m_FirstIdle)
     {
@@ -2313,7 +2311,7 @@ void FFQMain::OnIdle(wxIdleEvent &event)
             if (arg.StartsWith("--test-fs="))
             {
                 arg = arg.AfterFirst(EQUAL);
-                FFQFullSpec::Initialize();
+                FFQFullSpec::Initialize(this);
                 fs_idx = FFQFullSpec::FindFullSpecID(arg);
                 if (fs_idx < 0) Console->AppendLine(FFQSF(SID_FULLSPEC_BAD_ID, arg), COLOR_RED);
             }
@@ -2323,18 +2321,34 @@ void FFQMain::OnIdle(wxIdleEvent &event)
         //Respond to those submarine whisperings
         if (fs_idx >= 0)
         {
-            FFQFullSpec *fs = new FFQFullSpec(this);
+
+            bool fs_ok = true;
             wxString cmd;
-            while (fs->Execute(fs_idx, cmd))
+
+            while (fs_ok)
             {
+
+                //Run the spec's UI
+                FFQFullSpec *fs = new FFQFullSpec(this);
+                fs_ok = fs->Execute(fs_idx, cmd);
+                delete fs;
+
+                //Show the result
                 Console->AppendLine(cmd, COLOR_BLUE);
                 wxTheApp->Yield(true);
-            };
-            delete fs;
+
+                if (fs_ok)
+                {
+                    //Forcefully reload Full Specs for next iteration
+                    FFQFullSpec::Finalize();
+                    FFQFullSpec::Initialize(this);
+                }
+
+            }
+
         }
 
     }
-    */
 
 }
 
@@ -2728,6 +2742,54 @@ void FFQMain::OnToolBarButtonClick(wxCommandEvent& event)
 
         //Handler used to test all sorts of madness
 
+        /*const int ITEM_COUNT = 9;
+        wxString DISPLAY[ITEM_COUNT] = {
+            "Vacation 2023.mpg", //Job - preset
+            "Night Recording.mkv", //Job - command
+            "TV recording.mp4", //Thumbs
+            "Shaking Stevens.mp4", //VidStab
+            "Family Meme.mkv", //Vid2GIF
+            "Image Serie A1.jpg", //Concat: Images To Video
+            "List of Images.txt", //Concat: Images To Video
+            "Segment 1.avi", //Concat: Concat
+            "Paragliding 1.m4v", //Concat: Merge
+        };
+        wxString s;
+        for (int i = 0; i < ITEM_COUNT; i++)
+        {
+            ListView->InsertItem(i, DISPLAY[i]);
+            ListView->SetItemImage(i, i < 2 ? 0 : 1);
+            QUEUE_STATUS qs;
+            switch (i) {
+                case 0: s = FFQSF(SID_PRESET, "BluRay compatible FullHD"); qs = qsPASS1; break;
+                case 1: s = FFQSF(SID_COMMAND, "<%inputs%> -c:v copy -c:a aac -b:a 128k <%output%>"); qs = qsQUEUED; break;
+                case 2: s = FFQSF(SID_TOOL_JOB, FFQS(SID_MAINFRAME_TM_THUMBTOOL)); qs = qsTHUMBS; break;
+                case 3: s = FFQSF(SID_TOOL_JOB, FFQS(SID_VIDSTAB_TITLE)); qs = qsACTIVE; break;
+                case 4: s = FFQSF(SID_TOOL_JOB, FFQS(SID_VIDEO2GIF_TITLE)); qs = qsDONE; break;
+                case 5: s = FFQSF(SID_TOOL_JOB, FFQS(SID_CONCAT_VIDEO_FROM_IMAGES)); qs = qsFAILED; break;
+                case 6: s = FFQSF(SID_TOOL_JOB, FFQS(SID_CONCAT_VIDEO_FROM_IMAGES)); qs = qsDORMANT; break;
+                case 7: s = FFQSF(SID_TOOL_JOB, FFQS(SID_CONCAT_SIMPLE)); qs = qsABORTED; break;
+                case 8: s = FFQSF(SID_TOOL_JOB, FFQS(SID_CONCAT_MERGE_FILES)); qs = qsQUEUED; break;
+            }
+            ListView->SetItem(i, 1, s);
+            ListView->SetItem(i, 2, FFQL()->QUEUE_STATUS_NAMES[qs]);
+
+        }
+        SetSize(wxSize(1920, 1080));
+        Console->Clear();
+        Console->AppendWithTime(FFQSF(SID_LOG_JOB_TAB_STARTED, Consoles->GetPageText(2),  DISPLAY[0]), COLOR_BLUE);
+        Console->AppendWithTime(FFQSF(SID_LOG_JOB_TAB_FAILED, Consoles->GetPageText(2)), COLOR_RED);
+        Console->AppendWithTime(FFQSF(SID_LOG_JOB_TAB_STARTED, Consoles->GetPageText(1),  DISPLAY[1]), COLOR_BLUE);
+        Console->AppendWithTime(FFQSF(SID_LOG_JOB_TAB_STARTED, Consoles->GetPageText(2),  DISPLAY[2]), COLOR_BLUE);
+        Console->AppendWithTime(FFQSF(SID_LOG_JOB_TAB_ENDED, Consoles->GetPageText(1)), COLOR_BLUE);
+        Console->AppendWithTime(FFQSF(SID_LOG_JOB_TAB_STARTED, Consoles->GetPageText(1),  DISPLAY[3]), COLOR_BLUE);
+        Consoles->SetPageImage(1, CONSOLE_IMAGE_ON);
+        SetTitle("FFQueue");
+        s.Printf(FFQS(SID_STATUS_MESSAGE), ITEM_COUNT, 2, 3, 1, 1, 1, 0);
+        StatusBar->SetStatusText(s, 2);
+        StatusBar->SetStatusText(FFQS(SID_UNKNOWN_TIME_REMAINS), 1);
+        return;*/
+
         /*wxString str = wxString::FromUTF8("abc\rdef\nght\nyui\r\nå\næ\n\n\n");
         FFQLineParser lp(str);
         while (lp.has_more()) Console->AppendLine("\"" + lp.next() + "\"", 0);
@@ -2770,12 +2832,8 @@ void FFQMain::OnToolBarButtonClick(wxCommandEvent& event)
         //profile=main:preset=veryslow:tune=animation:keyint=25:b-pyramid=strict:no-cabac:pulldown=64:vbv-init=0.99000:aq-mode=1:direct=auto:weightp=1:me=umh:subme=5:psy-rd=1.0,0.1:trellis=1:overscan=show:videoformat=secam:fullrange=off:colorprim=bt470bg:transfer=linear:colormatrix=bt470bg:nal-hdr=vbr
         wxString cmd = "asm=SSE4,SSE4.1,SSE4.2";//-x264opts \"no-fast-intra:profile=main:preset=veryslow:tune=animation:keyint=25:b-pyramid=strict:no-cabac:pulldown=64:vbv-init=0.99000:aq-mode=1:direct=auto:weightp=1:me=umh:subme=5:psy-rd=1.0,0.1:trellis=1:overscan=show:videoformat=secam:fullrange=off:colorprim=bt470bg:transfer=linear:colormatrix=bt470bg:nal-hdr=vbr\"", spec;
 
-        /*wxFFile ff;
-        ff.Open("res/x264.ffqc", "r");
-        ff.ReadAll(&spec);
-        ff.Close();*/
         FFQFullSpec::Finalize();
-        FFQFullSpec::Initialize();
+        FFQFullSpec::Initialize(this);
         int idx = FFQFullSpec::FindFullSpec("gdg fsdfg x264)");
         Console->AppendLine("x264=" + ToStr(idx), 0);
         //int idx = FFQFullSpec::FindFullSpec("gdg fsdfg hevc)");
@@ -2867,7 +2925,7 @@ void FFQMain::OnToolBarButtonClick(wxCommandEvent& event)
 
         /*FFQFilterEdit *fe = new FFQFilterEdit(this);
         FFMPEG_FILTER fltr = FFMPEG_FILTER();
-        fltr.type = ftDEFLICKER;
+        fltr.type = ftVOLUME_AND_TONE;
         bool ok = true;
         while (ok)
         {
@@ -2927,7 +2985,7 @@ void FFQMain::OnToolBarButtonClick(wxCommandEvent& event)
         QUEUE_STATUS ss = item->status;
         item->PrepareProcessing();
         wxString cmd;
-        while (item->GetNextCommand(cmd))
+        while (item->GetNextCommand(cmd, false))
         {
             GetToken(cmd, ",", true); //Remove command length
             Console->AppendLine(cmd, COLOR_BLACK);

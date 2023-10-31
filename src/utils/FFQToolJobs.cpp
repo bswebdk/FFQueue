@@ -114,7 +114,7 @@ wxString FFQ_THUMB_JOB::ToString()
 
 //---------------------------------------------------------------------------------------
 
-wxString FFQ_THUMB_JOB::GetCommandAtIndex(int index)
+wxString FFQ_THUMB_JOB::GetCommandAtIndex(int index, bool for_encode)
 {
 
     //Return next command
@@ -134,8 +134,7 @@ wxString FFQ_THUMB_JOB::GetCommandAtIndex(int index)
             pip->GetDuration(tv);
 
             //Build command(s)
-            m_Commands = BuildThumbsAndTilesCommand(thumbs, GetInput(0).path, tv, true);
-
+            m_Commands = BuildThumbsAndTilesCommand(thumbs, GetInput(0).path, tv, for_encode);
 
         }
         delete pip;
@@ -323,7 +322,7 @@ wxString FFQ_VIDSTAB_JOB::ToString()
 
 //---------------------------------------------------------------------------------------
 
-wxString FFQ_VIDSTAB_JOB::GetCommandAtIndex(int index)
+wxString FFQ_VIDSTAB_JOB::GetCommandAtIndex(int index, bool for_encode)
 {
 
     if ((index == 0) && (!MakeCommands()))
@@ -582,6 +581,7 @@ FFQ_CONCAT_JOB::FFQ_CONCAT_JOB(const FFQ_CONCAT_JOB &copy_from) : FFQ_QUEUE_ITEM
 
     out = copy_from.out;
     img_pattern = copy_from.img_pattern;
+    merge_aspect = copy_from.merge_aspect;
     merge_filter = copy_from.merge_filter;
     merge_smap = copy_from.merge_smap;
     merge_padding = copy_from.merge_padding;
@@ -644,7 +644,7 @@ wxString FFQ_CONCAT_JOB::ToString()
 
     wxString s;
 
-    s.Printf("%s,%s,%s,%s,%s,%s,%s,%s,%g,%u,%u,%u,%u,%s",
+    s.Printf("%s,%s,%s,%s,%s,%s,%s,%s,%g,%u,%u,%u,%u,%s,%s",
 
              BOOLSTR(slideshow), BOOLSTR(scale_pad), BOOLSTR(force), BOOLSTR(loop_frames),
              BOOLSTR(simple_concat), BOOLSTR(concat_vid), BOOLSTR(concat_aud), BOOLSTR(concat_subs),
@@ -653,7 +653,9 @@ wxString FFQ_CONCAT_JOB::ToString()
 
              pad_color, img_first, img_count, map_streams,
 
-             BOOLSTR(file_is_list)
+             BOOLSTR(file_is_list),
+
+             merge_aspect
 
             );
 
@@ -673,7 +675,7 @@ wxString FFQ_CONCAT_JOB::ToString()
 
 //---------------------------------------------------------------------------------------
 
-wxString FFQ_CONCAT_JOB::GetCommandAtIndex(int index)
+wxString FFQ_CONCAT_JOB::GetCommandAtIndex(int index, bool for_encode)
 {
 
     /*if (index > 0)
@@ -699,13 +701,13 @@ wxString FFQ_CONCAT_JOB::GetCommandAtIndex(int index)
         }
 
         //Slide show?
-        if (slideshow) m_CmdList = MakeSlideshowCmd();
+        if (slideshow) m_CmdList = MakeSlideshowCmd(for_encode);
 
         //Simple concat?
-        else if (simple_concat) m_CmdList = MakeConcatCmd();
+        else if (simple_concat) m_CmdList = MakeConcatCmd(for_encode);
 
         //Merge!
-        else m_CmdList = MakeMergeCmd();
+        else m_CmdList = MakeMergeCmd(for_encode);
 
         if (m_CmdList.Len() == 0)
         {
@@ -728,7 +730,7 @@ wxString FFQ_CONCAT_JOB::GetCommandAtIndex(int index)
 
 //---------------------------------------------------------------------------------------
 
-wxString FFQ_CONCAT_JOB::MakeConcatCmd()
+wxString FFQ_CONCAT_JOB::MakeConcatCmd(bool for_encode)
 {
 
     //Make a simple concat command
@@ -761,29 +763,35 @@ wxString FFQ_CONCAT_JOB::MakeConcatCmd()
     //Create the temporary list file
     m_TempPath = FFQCFG()->GetTmpPath(out.BeforeLast(wxFileName::GetPathSeparator()), false, "txt");
 
-    wxFile *lf = new wxFile(m_TempPath, wxFile::write);
-    if (!lf->IsOpened())
+    if (for_encode)
     {
 
-        //Log error
+        //Only create the file if an actual encode is requested
+        wxFile *lf = new wxFile(m_TempPath, wxFile::write);
+        if (!lf->IsOpened())
+        {
+
+            //Log error
+            delete lf;
+            FFQConsole::Get()->AppendLine(FFQSF(SID_CREATE_WRITE_FILE_ERROR, m_TempPath), COLOR_RED);
+            return wxEmptyString;
+
+        }
+
+        //Save the list as ascii
+        wxScopedCharBuffer scb = s.ToUTF8();// s.ToAscii();
+        bool ok = lf->Write((void*)scb.data(), scb.length());
+        lf->Close();
         delete lf;
-        FFQConsole::Get()->AppendLine(FFQSF(SID_CREATE_WRITE_FILE_ERROR, m_TempPath), COLOR_RED);
-        return wxEmptyString;
 
-    }
+        if (!ok)
+        {
 
-    //Save the list as ascii
-    wxScopedCharBuffer scb = s.ToUTF8();// s.ToAscii();
-    bool ok = lf->Write((void*)scb.data(), scb.length());
-    lf->Close();
-    delete lf;
+            //Log error
+            FFQConsole::Get()->AppendLine(FFQSF(SID_CREATE_WRITE_FILE_ERROR, m_TempPath), COLOR_RED);
+            return wxEmptyString;
 
-    if (!ok)
-    {
-
-        //Log error
-        FFQConsole::Get()->AppendLine(FFQSF(SID_CREATE_WRITE_FILE_ERROR, m_TempPath), COLOR_RED);
-        return wxEmptyString;
+        }
 
     }
 
@@ -806,7 +814,7 @@ wxString FFQ_CONCAT_JOB::MakeConcatCmd()
 
 //---------------------------------------------------------------------------------------
 
-wxString FFQ_CONCAT_JOB::MakeMergeCmd()
+wxString FFQ_CONCAT_JOB::MakeMergeCmd(bool for_encode)
 {
 
     //Make input list and duration
@@ -905,6 +913,10 @@ wxString FFQ_CONCAT_JOB::MakeMergeCmd()
         cmd_len = limit_len.ToMilliseconds();
     }
 
+    //Ensure that the aspect ratio of the output file is set if not specified by the preset
+    if (((m_PresetPtr == 0) || (((LPFFQ_PRESET)m_PresetPtr)->aspect_ratio.Len() == 0)) && (merge_aspect.Len() > 0))
+        dst = "-aspect " + merge_aspect + " " + dst;
+
     //Disable audio to prevent issues with some files have audio and others don't
     if (!concat_aud) dst = "-an " + dst;
 
@@ -918,8 +930,10 @@ wxString FFQ_CONCAT_JOB::MakeMergeCmd()
 
 //---------------------------------------------------------------------------------------
 
-wxString FFQ_CONCAT_JOB::MakeSlideshowCmd()
+wxString FFQ_CONCAT_JOB::MakeSlideshowCmd(bool for_encode)
 {
+
+    //Info: https://trac.ffmpeg.org/wiki/Slideshow
 
     //Ensure that the destination is available and preset is compatible
     int img1st = img_first;
@@ -958,7 +972,10 @@ wxString FFQ_CONCAT_JOB::MakeSlideshowCmd()
 
     FFQ_JOB job = FFQ_JOB();
     job.cmd_line = CMD_DEFAULT;
-    job.preset_id = pst->preset_id;
+
+    job.preset_ptr = pst;
+
+    //job.preset_id = pst->preset_id;
     job.stream_map = "[0:v]" + CONCAT_FLTR_KEY1;
     job.out = out;
     if (aud.Len() > 0)
@@ -972,7 +989,6 @@ wxString FFQ_CONCAT_JOB::MakeSlideshowCmd()
     tmp = BuildCommandLine(&job, dummy);
 
     wxString in, fltr;
-
     if (scale_pad)
     {
         FFQ_INPUT_FILE &inf = GetInput(0);
@@ -991,7 +1007,7 @@ wxString FFQ_CONCAT_JOB::MakeSlideshowCmd()
         if (loop_frames) in +=  " -loop 1";
         if (force)
         {
-            if (fltr.Len() > 0) fltr = "," + fltr;
+            if (fltr.Len() > 0) fltr = COMMA + fltr;
             fltr = "setpts=PTS+(" + ToStr(frame_time) + "/TB)" + fltr;
         }
     }
@@ -1001,7 +1017,23 @@ wxString FFQ_CONCAT_JOB::MakeSlideshowCmd()
     tmp.Replace(CMD_INPUTS, in);
 
     wxString dst = "-shortest -y \"" + out + "\"";
-    if ((!file_is_list) && (pst->frame_rate.Len() == 0)) dst = "-r 25 " + dst; //Framerate of output video MUST be specified to make it work
+    //if ((!file_is_list) && (pst->frame_rate.Len() == 0)) dst = "-r 25 " + dst; //Framerate of output video MUST be specified to make it work
+    if (!file_is_list)
+    {
+        //Framerate of output video MUST be specified to make it work
+        //Using the -r argument works for MP4 but not always for MKV,
+        //so we add the "fps" filter if it is not already part of
+        //the preset to ensure the workings of the output
+        const wxString FPS_FILTER = "fps=";
+        bool fps_ok = false;
+        for (int i = 0; (!fps_ok) && (i < (int)pst->filters.Count()); i++) fps_ok = pst->filters[i].Find(FILTER_VIDEO_IN + FPS_FILTER) > 0;
+        if (!fps_ok)
+        {
+            if (fltr.Len() > 0) fltr += COMMA;
+            fltr += FPS_FILTER + (pst->frame_rate.Len() > 0 ? pst->frame_rate : "25");
+        }
+
+    }
     if (pst->pixel_format.Len() == 0) dst = "-pix_fmt yuv420p " + dst;
     if (!limit_len.IsUndefined()) dst = "-t " + limit_len.ToString() + " " + dst;
 
@@ -1048,6 +1080,7 @@ void FFQ_CONCAT_JOB::Reset(bool load)
 
     out.Clear();
     img_pattern.Clear();
+    merge_aspect.Clear();
     merge_filter.Clear();
     merge_padding.Clear();
     merge_smap.Clear();
@@ -1062,22 +1095,23 @@ void FFQ_CONCAT_JOB::Reset(bool load)
         //Load values
         wxString s = GetValue(CONCAT_SETTINGS);
 
-        slideshow = STRBOOLDEF(GetToken(s, ",", true), slideshow);
-        scale_pad = STRBOOLDEF(GetToken(s, ",", true), scale_pad);
-        force = STRBOOLDEF(GetToken(s, ",", true), force);
-        loop_frames = STRBOOLDEF(GetToken(s, ",", true), loop_frames);
-        simple_concat = STRBOOLDEF(GetToken(s, ",", true), simple_concat);
-        concat_vid = STRBOOLDEF(GetToken(s, ",", true), concat_vid);
-        concat_aud = STRBOOLDEF(GetToken(s, ",", true), concat_aud);
-        concat_subs = STRBOOLDEF(GetToken(s, ",", true), concat_subs);
+        slideshow = STRBOOLDEF(GetToken(s, COMMA, true), slideshow);
+        scale_pad = STRBOOLDEF(GetToken(s, COMMA, true), scale_pad);
+        force = STRBOOLDEF(GetToken(s, COMMA, true), force);
+        loop_frames = STRBOOLDEF(GetToken(s, COMMA, true), loop_frames);
+        simple_concat = STRBOOLDEF(GetToken(s, COMMA, true), simple_concat);
+        concat_vid = STRBOOLDEF(GetToken(s, COMMA, true), concat_vid);
+        concat_aud = STRBOOLDEF(GetToken(s, COMMA, true), concat_aud);
+        concat_subs = STRBOOLDEF(GetToken(s, COMMA, true), concat_subs);
 
-        frame_time = Str2Float(GetToken(s, ",", true), frame_time);
+        frame_time = Str2Float(GetToken(s, COMMA, true), frame_time);
 
-        pad_color = Str2Long(GetToken(s, ",", true), pad_color);
-        img_first = Str2Long(GetToken(s, ",", true), img_first);
-        img_count = Str2Long(GetToken(s, ",", true), img_count);
-        map_streams = Str2Long(GetToken(s, ",", true), map_streams);
-        file_is_list = STRBOOLDEF(GetToken(s, ",", true), file_is_list);
+        pad_color = Str2Long(GetToken(s, COMMA, true), pad_color);
+        img_first = Str2Long(GetToken(s, COMMA, true), img_first);
+        img_count = Str2Long(GetToken(s, COMMA, true), img_count);
+        map_streams = Str2Long(GetToken(s, COMMA, true), map_streams);
+        file_is_list = STRBOOLDEF(GetToken(s, COMMA, true), file_is_list);
+        merge_aspect = GetToken(s, COMMA, true);
 
         out = GetValue(VIDSTAB_OUTPUT, out);
         img_pattern = GetValue(CONCAT_IMG_PATTERN, img_pattern);
@@ -1192,7 +1226,7 @@ void appendFilter(wxString &appendTo, wxString append)
     }
 }
 
-wxString FFQ_VID2GIF_JOB::GetCommandAtIndex(int index)
+wxString FFQ_VID2GIF_JOB::GetCommandAtIndex(int index, bool for_encode)
 {
 
     //Return the command at the specified index

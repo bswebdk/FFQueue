@@ -91,6 +91,8 @@ class FFQConfig
 	    bool preview_map_subs;
 	    bool dont_save_ffmpeg;
 
+	    bool is_snap;
+
 	    wxString app_name;
 	    wxString batch_config;
 	    wxString console_cmd;
@@ -120,7 +122,6 @@ class FFQConfig
         void            DefaultOptions();
         wxString        FindSecondaryInputFile(wxString &for_filename);
         unsigned int    FindSecondaryInputFiles(wxString &for_filename, wxArrayString &dest, unsigned int limit = 0);
-        wxString        GetBrowseRoot();
         LPCODEC_INFO    GetCodecInfo();
         uint32_t        GetColor(uint32_t color, bool find_index = false);
 		wxString        GetConfigPath(wxString append_filename = "");
@@ -132,6 +133,7 @@ class FFQConfig
 		wxString        GetFFMpegFilters();
 		wxString        GetFFMpegFormats();
 		wxString        GetFFMpegVersion(bool shortVersion);
+		wxString        GetHelpPath();
 		wxString        GetHWAccelerators();
 		wxString        GetHWDecoders();
 		LPPIXEL_FORMAT  GetPixelFormats();
@@ -144,6 +146,7 @@ class FFQConfig
 	    void            LoadConfig();
 	    bool            SaveArrayString(wxString filename, wxArrayString* array_string);
 	    void            SaveConfig();
+        void            SetBrowseRootFor(wxFileDialog *dlg);
 	    void            SetCtrlColors(wxGenericHyperlinkCtrl *ctrl);
 	    bool            SetSaveLog(bool log, bool save_config = true);
 	    void            SetPreferredAndSave(wxString format, wxString path, bool save_always = false);
@@ -173,6 +176,7 @@ class FFQConfig
 	    wxString m_HWAccels; //List of supported hardware accelerators
 	    wxString m_HWDecoders; //List of hardware decoders
 	    wxString m_CapsFile; //File name used for ffmpeg capabilities
+	    wxString m_SnapRoot; //The root folder where the snap is mounted or empty if not snap
 
         FFQConfig(); //Private constructor to prevent instantiation.
         bool LoadFFmpegCapabilities();

@@ -37,7 +37,7 @@
 			<object class="sizeritem">
 				<object class="wxFlexGridSizer" variable="FlexGridSizer2" member="no">
 					<cols>3</cols>
-					<rows>2</rows>
+					<rows>3</rows>
 					<object class="sizeritem">
 						<object class="wxStaticText" name="wxID_ANY" variable="ST1" member="yes">
 							<label>L1</label>
@@ -48,8 +48,12 @@
 						<option>1</option>
 					</object>
 					<object class="sizeritem">
-						<object class="wxTextCtrl" name="wxID_ANY" variable="ItsOffset" member="yes" />
-						<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+						<object class="wxSpinCtrl" name="ID_ITSOFFSET" variable="ItsOffset" member="yes">
+							<value>0</value>
+							<min>-999999</min>
+							<max>999999</max>
+						</object>
+						<flag>wxALL|wxEXPAND</flag>
 						<border>3</border>
 						<option>1</option>
 					</object>
@@ -63,6 +67,34 @@
 						<option>1</option>
 					</object>
 					<object class="sizeritem">
+						<object class="wxStaticText" name="ID_STATICTEXT1" variable="ST5" member="yes">
+							<label>L5</label>
+							<extra_code>ST5-&gt;SetLabel(FFQS(SID__JOBEDIT__ADV__LOOP__STREAMS));</extra_code>
+						</object>
+						<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+						<border>3</border>
+						<option>1</option>
+					</object>
+					<object class="sizeritem">
+						<object class="wxSpinCtrl" name="ID_LOOPSTREAMS" variable="LoopStreams" member="yes">
+							<value>0</value>
+							<min>-1</min>
+							<max>99999</max>
+						</object>
+						<flag>wxALL|wxEXPAND</flag>
+						<border>3</border>
+						<option>1</option>
+					</object>
+					<object class="sizeritem">
+						<object class="wxStaticText" name="ID_STATICTEXT2" variable="ST6" member="yes">
+							<label>L6</label>
+							<extra_code>ST6-&gt;SetLabel(FFQS(SID__JOBEDIT__ADV__LOOP__STREAMS__INFO));</extra_code>
+						</object>
+						<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<border>5</border>
+						<option>1</option>
+					</object>
+					<object class="sizeritem">
 						<object class="wxStaticText" name="wxID_ANY" variable="ST3" member="yes">
 							<label>L3</label>
 							<extra_code>ST3-&gt;SetLabel(FFQS(SID__JOBEDIT__ADV__FRAMERATE));</extra_code>
@@ -73,7 +105,7 @@
 					</object>
 					<object class="sizeritem">
 						<object class="wxTextCtrl" name="wxID_ANY" variable="FrameRate" member="yes" />
-						<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+						<flag>wxALL|wxEXPAND</flag>
 						<border>3</border>
 						<option>1</option>
 					</object>

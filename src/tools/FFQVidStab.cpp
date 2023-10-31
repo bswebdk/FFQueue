@@ -397,9 +397,8 @@ FFQVidStab::FFQVidStab(wxWindow* parent)
     Pages->SetPageText(1, FFQS(SID_VIDSTAB_2ND_PASS));
     Pages->SetPageText(2, FFQS(SID_VIDSTAB_OTHER_OPTIONS));
 
-    OpenFileDlg->SetDirectory(FFQCFG()->GetBrowseRoot());
-    SaveFileDlg->SetDirectory(FFQCFG()->GetBrowseRoot());
-
+	FFQCFG()->SetBrowseRootFor(OpenFileDlg);
+	FFQCFG()->SetBrowseRootFor(SaveFileDlg);
 
     //m_FirstExecute = true;
     m_LastPreset = "";
@@ -722,7 +721,7 @@ void FFQVidStab::OnIdle(wxIdleEvent &event)
                     else if (si->codec_type == CODEC_TYPE_VIDEO) vid = si;
 
                     sm.codec_type = si->codec_type;
-                    sm.codec_name = si->codec_name;
+                    sm.codec_id = si->codec_name;
                     sm.stream_id = i;
                     if (m_StreamMap.Len() > 0) m_StreamMap += STREAM_MAPPING_SEPERATOR;
 

@@ -135,7 +135,7 @@ FFQ_INPUT_FILE::FFQ_INPUT_FILE(wxString from)
     //Parsing constructor - extract values from a string
 
     //Get version
-    int v = Str2Long(GetToken(from, ","), 1), d;
+    int version = Str2Long(GetToken(from, ","), 1), d;
 
     start = TIME_VALUE(GetToken(from, ","));
     duration = TIME_VALUE(GetToken(from, ","));
@@ -146,6 +146,7 @@ FFQ_INPUT_FILE::FFQ_INPUT_FILE(wxString from)
     height = (d < 0) ? 0 : (unsigned int)d;
 
     itsoffset = Str2Long(GetToken(from, ","));
+    if (version > 2) loop = Str2Long(GetToken(from, ","));
     framerate = GetToken(from, ",");
 
     fflags_discardcorrupt = STRBOOL(GetToken(from, ","));
@@ -157,7 +158,7 @@ FFQ_INPUT_FILE::FFQ_INPUT_FILE(wxString from)
     //fflags_bitexact = STRBOOL(GetToken(from, ","));
 
     //Check version, and get cuts
-    if (v > 1) cuts = FFQ_CUTS(GetToken(from, ",", true));
+    if (version > 1) cuts = FFQ_CUTS(GetToken(from, ",", true));
 
     //Now there is only the path left
     path = from;
@@ -180,6 +181,7 @@ void FFQ_INPUT_FILE::Reset()
     height = 0;
 
     itsoffset = 0;
+    loop = 0;
     framerate.Clear();
 
     fflags_discardcorrupt = false;
@@ -206,13 +208,13 @@ wxString FFQ_INPUT_FILE::ToString()
 
     res.Printf(
 
-        "2,%s,%s,%u,%u,%i,%s,%s,%s,%s,%s,%s,%s,%s", //,%s,%s",
+        "3,%s,%s,%u,%u,%i,%i,%s,%s,%s,%s,%s,%s,%s,%s", //,%s,%s",
 
         start.ToString(), duration.ToString(),
 
         width, height,
 
-        itsoffset, framerate,
+        itsoffset, loop, framerate,
 
         BOOLSTR(fflags_discardcorrupt), BOOLSTR(fflags_genpts),
         BOOLSTR(fflags_igndts), BOOLSTR(fflags_ignidx),
@@ -339,7 +341,7 @@ FFQ_QUEUE_ITEM* FFQ_QUEUE_ITEM::Clone(FFQ_QUEUE_ITEM* item)
 void FFQ_QUEUE_ITEM::Cleanup()
 {
 
-    //Does nothing by default
+    //Only implemented to avoid it being abstract
 
 }
 
@@ -388,7 +390,7 @@ bool FFQ_QUEUE_ITEM::GetLogFileName(wxString &name)
 
 //---------------------------------------------------------------------------------------
 
-bool FFQ_QUEUE_ITEM::GetNextCommand(wxString &command)
+bool FFQ_QUEUE_ITEM::GetNextCommand(wxString &command, bool for_encode)
 {
 
     //Check if item has an active status
@@ -403,7 +405,7 @@ bool FFQ_QUEUE_ITEM::GetNextCommand(wxString &command)
     }
 
     //Get the command at index
-    command = GetCommandAtIndex(m_CommandIdx);
+    command = GetCommandAtIndex(m_CommandIdx, for_encode);
 
     //Increment command index
     m_CommandIdx++;

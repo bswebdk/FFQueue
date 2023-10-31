@@ -26,10 +26,12 @@
 #include "utils/FFQBuildCmd.h"
 #include "utils/FFQStreamMapping.h"
 #include "utils/FFQConfig.h"
+#include "utils/FFQParsing.h"
 #include "FFQMain.h"
 
 #include <wx/filename.h>
 #include <wx/ffile.h>
+#include <wx/menu.h>
 
 #ifndef WX_PRECOMP
 	//(*InternalHeadersPCH(FFQJobEditAdvCuts)
@@ -54,6 +56,7 @@ const long FFQJobEditAdvCuts::ID_TIMEPREVIEWAT = wxNewId();
 const long FFQJobEditAdvCuts::ID_TIMEPREVIEW = wxNewId();
 const long FFQJobEditAdvCuts::ID_FRAMESLIDER = wxNewId();
 const long FFQJobEditAdvCuts::ID_PREVFRAME = wxNewId();
+const long FFQJobEditAdvCuts::ID_JUMPSIZE = wxNewId();
 const long FFQJobEditAdvCuts::ID_NEXTFRAME = wxNewId();
 const long FFQJobEditAdvCuts::ID_SETFROM = wxNewId();
 const long FFQJobEditAdvCuts::ID_SETTO = wxNewId();
@@ -73,6 +76,20 @@ END_EVENT_TABLE()
 #define MARGIN 7000
 #define SUBMARG(from) ( from >= MARGIN ? from - MARGIN : from )
 
+//Used to define menu items in the cuts menu
+const uint8_t MENU_ADD_SUBMENU    = 1;
+const uint8_t MENU_ADD_FIRST      = 2;
+const uint8_t MENU_ADD_LAST       = 3;
+const uint8_t MENU_ADD_SORTED     = 4;
+const uint8_t MENU_SORT_NOW       = 5;
+const uint8_t MENU_MERGE_OVERLAPS = 6;
+const uint8_t MENU_JUMP_SUBMENU   = 7;
+const uint8_t MENU_JUMP_TO_FROM   = 8;
+const uint8_t MENU_JUMP_TO_TO     = 9;
+const uint8_t MENU_MOVE_UP        = 10;
+const uint8_t MENU_MOVE_DOWN      = 11;
+const uint8_t MENU_DUPLICATE      = 12;
+
 //---------------------------------------------------------------------------------------
 
 FFQJobEditAdvCuts::FFQJobEditAdvCuts(wxWindow* parent)
@@ -90,6 +107,12 @@ FFQJobEditAdvCuts::FFQJobEditAdvCuts(wxWindow* parent)
     wxString *lng_delay = FFQL()->GetStringArray(SID_JOBEDIT_ADV_CUTS_CFG_DELAY, 3);
     wxString *lng_placement = FFQL()->GetStringArray(SID_JOBEDIT_ADV_CUTS_CFG_PLACEMENT, 3);
 
+    wxClientDC dc(this);
+    dc.SetFont(GetFont());
+    wxSize time_size = dc.GetTextExtent("0");
+    time_size.SetHeight(-1);
+    time_size.SetWidth(time_size.GetWidth() * 15);
+
 	//(*Initialize(FFQJobEditAdvCuts)
 	wxBoxSizer* BoxSizer1;
 	wxBoxSizer* BoxSizer2;
@@ -101,6 +124,7 @@ FFQJobEditAdvCuts::FFQJobEditAdvCuts(wxWindow* parent)
 	wxFlexGridSizer* FlexGridSizer2;
 	wxFlexGridSizer* FlexGridSizer3;
 	wxFlexGridSizer* FlexGridSizer4;
+	wxFlexGridSizer* FlexGridSizer5;
 	wxFlexGridSizer* FlexGridSizer6;
 	wxFlexGridSizer* FlexGridSizer7;
 	wxFlexGridSizer* FlexGridSizer8;
@@ -130,10 +154,13 @@ FFQJobEditAdvCuts::FFQJobEditAdvCuts(wxWindow* parent)
 	FlexGridSizer4->AddGrowableRow(0);
 	CutList = new wxListBox(this, ID_CUTLIST, wxDefaultPosition, wxSize(-1,150), 0, 0, wxLB_EXTENDED, wxDefaultValidator, _T("ID_CUTLIST"));
 	FlexGridSizer4->Add(CutList, 1, wxALL|wxEXPAND, 0);
+	FlexGridSizer5 = new wxFlexGridSizer(1, 1, 0, 0);
+	FlexGridSizer5->AddGrowableCol(0);
 	QuickCut = new wxCheckBox(this, ID_QUICKCUT, _T("Qc"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_QUICKCUT"));
 	QuickCut->SetValue(false);
 	QuickCut->SetLabel(FFQS(SID_JOBEDIT_ADV_CUTS_QUICK_CUT));
-	FlexGridSizer4->Add(QuickCut, 1, wxTOP|wxBOTTOM|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
+	FlexGridSizer5->Add(QuickCut, 1, wxTOP|wxBOTTOM|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
+	FlexGridSizer4->Add(FlexGridSizer5, 1, wxALL|wxEXPAND, 0);
 	FlexGridSizer15 = new wxFlexGridSizer(2, 2, 0, 0);
 	ST4 = new wxStaticText(this, wxID_ANY, _T("Cm"), wxDefaultPosition, wxDefaultSize, 0, _T("wxID_ANY"));
 	SBS1->GetStaticBox()->SetLabel(FFQS(SID_JOBEDIT_ADV_CUTS_LIST_TITLE));
@@ -180,16 +207,18 @@ FFQJobEditAdvCuts::FFQJobEditAdvCuts(wxWindow* parent)
 	ST1->SetLabel(FFQS(SID_JOBEDIT_ADV_CUTS_FROM));
 	FlexGridSizer2->Add(ST1, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
 	FromTime = new wxTextCtrl(this, ID_FROMTIME, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER|wxTE_RIGHT, wxDefaultValidator, _T("ID_FROMTIME"));
+	FromTime->SetMinClientSize(time_size);
 	FlexGridSizer2->Add(FromTime, 1, wxALL|wxEXPAND, 3);
 	ST2 = new wxStaticText(this, wxID_ANY, _T("T"), wxDefaultPosition, wxDefaultSize, 0, _T("wxID_ANY"));
 	ST2->SetLabel(FFQS(SID_JOBEDIT_ADV_CUTS_TO));
 	FlexGridSizer2->Add(ST2, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
 	ToTime = new wxTextCtrl(this, ID_TOTIME, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER|wxTE_RIGHT, wxDefaultValidator, _T("ID_TOTIME"));
+	ToTime->SetMinClientSize(time_size);
 	FlexGridSizer2->Add(ToTime, 1, wxALL|wxEXPAND, 3);
-	AddCut = new wxButton(this, ID_ADDCUT, _T("+"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_ADDCUT"));
-	FlexGridSizer2->Add(AddCut, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
-	RemoveCut = new wxButton(this, ID_REMOVECUT, _T("-"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_REMOVECUT"));
-	FlexGridSizer2->Add(RemoveCut, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+	AddCut = new wxButton(this, ID_ADDCUT, _T("  +  "), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT, wxDefaultValidator, _T("ID_ADDCUT"));
+	FlexGridSizer2->Add(AddCut, 1, wxALL|wxEXPAND, 3);
+	RemoveCut = new wxButton(this, ID_REMOVECUT, _T("  -  "), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT, wxDefaultValidator, _T("ID_REMOVECUT"));
+	FlexGridSizer2->Add(RemoveCut, 1, wxALL|wxEXPAND, 3);
 	FlexGridSizer6->Add(FlexGridSizer2, 1, wxALL|wxEXPAND, 0);
 	FrameConv = new wxCheckBox(this, ID_FRAMECONV, _T("FRC"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_FRAMECONV"));
 	FrameConv->SetValue(false);
@@ -207,7 +236,8 @@ FFQJobEditAdvCuts::FFQJobEditAdvCuts(wxWindow* parent)
 	ST3->SetLabel(FFQS(SID_JOBEDIT_ADV_CUTS_TIME_DETAILS));
 	FlexGridSizer3->Add(ST3, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
 	TimePreviewAt = new wxTextCtrl(this, ID_TIMEPREVIEWAT, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER|wxTE_RIGHT, wxDefaultValidator, _T("ID_TIMEPREVIEWAT"));
-	FlexGridSizer3->Add(TimePreviewAt, 1, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 3);
+	TimePreviewAt->SetMinClientSize(time_size);
+	FlexGridSizer3->Add(TimePreviewAt, 1, wxALL|wxEXPAND, 3);
 	TimePreview = new wxButton(this, ID_TIMEPREVIEW, _T("Td"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_TIMEPREVIEW"));
 	TimePreview->SetLabel(FFQS(SID_COMMON_PREVIEW));
 	FlexGridSizer3->Add(TimePreview, 1, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 3);
@@ -232,13 +262,17 @@ FFQJobEditAdvCuts::FFQJobEditAdvCuts(wxWindow* parent)
 	FrameSlider = new wxSlider(this, ID_FRAMESLIDER, 0, 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_TOP, wxDefaultValidator, _T("ID_FRAMESLIDER"));
 	FrameSlider->SetPageSize(25);
 	PreviewSizer1->Add(FrameSlider, 1, wxBOTTOM|wxEXPAND, 3);
-	FlexGridSizer10 = new wxFlexGridSizer(0, 5, 0, 0);
-	FlexGridSizer10->AddGrowableCol(4);
+	FlexGridSizer10 = new wxFlexGridSizer(0, 6, 0, 0);
+	FlexGridSizer10->AddGrowableCol(5);
 	FlexGridSizer10->AddGrowableRow(0);
-	PrevFrame = new wxButton(this, ID_PREVFRAME, _T("<"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_PREVFRAME"));
-	FlexGridSizer10->Add(PrevFrame, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
-	NextFrame = new wxButton(this, ID_NEXTFRAME, _T(">"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_NEXTFRAME"));
-	FlexGridSizer10->Add(NextFrame, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+	PrevFrame = new wxButton(this, ID_PREVFRAME, _T("  <  "), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT, wxDefaultValidator, _T("ID_PREVFRAME"));
+	FlexGridSizer10->Add(PrevFrame, 1, wxALL|wxEXPAND, 3);
+	JumpSize = new wxSpinCtrl(this, ID_JUMPSIZE, _T("0"), wxDefaultPosition, wxDefaultSize, 0, 1, 1000, 0, _T("ID_JUMPSIZE"));
+	JumpSize->SetValue(_T("0"));
+	JumpSize->SetMaxSize(wxSize(-1,-1));
+	FlexGridSizer10->Add(JumpSize, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+	NextFrame = new wxButton(this, ID_NEXTFRAME, _T("  >  "), wxDefaultPosition, wxDefaultSize, wxBU_EXACTFIT, wxDefaultValidator, _T("ID_NEXTFRAME"));
+	FlexGridSizer10->Add(NextFrame, 1, wxALL|wxEXPAND, 3);
 	SetFrom = new wxButton(this, ID_SETFROM, _T("Sf"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_SETFROM"));
 	SetFrom->SetLabel(FFQS(SID_JOBEDIT_ADV_CUTS_SET_FROM));
 	FlexGridSizer10->Add(SetFrom, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
@@ -246,7 +280,7 @@ FFQJobEditAdvCuts::FFQJobEditAdvCuts(wxWindow* parent)
 	SetTo->SetLabel(FFQS(SID_JOBEDIT_ADV_CUTS_SET_TO));
 	FlexGridSizer10->Add(SetTo, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
 	FramePos = new wxStaticText(this, wxID_ANY, _T("Pos"), wxDefaultPosition, wxDefaultSize, 0, _T("wxID_ANY"));
-	FlexGridSizer10->Add(FramePos, 1, wxALL|wxEXPAND, 3);
+	FlexGridSizer10->Add(FramePos, 1, wxALL|wxALIGN_CENTER_VERTICAL, 3);
 	PreviewSizer1->Add(FlexGridSizer10, 1, wxTOP|wxLEFT|wxRIGHT|wxEXPAND, 3);
 	SBS4->Add(PreviewSizer1, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
 	FlexGridSizer9->Add(SBS4, 1, wxALL|wxEXPAND, 3);
@@ -322,10 +356,40 @@ FFQJobEditAdvCuts::FFQJobEditAdvCuts(wxWindow* parent)
     delete[] lng_delay;
     delete[] lng_placement;
 
+    m_FirstShow = true;
+
 	if (FrameTimer.IsRunning()) FrameTimer.Stop();
 	m_DrawBuf = NULL;
 	FrameView->SetBackgroundStyle(wxBG_STYLE_PAINT); //Prevent flicker
 	FrameSlider->Bind(wxEVT_SLIDER, &FFQJobEditAdvCuts::ActionClick, this);
+
+    //Add order|First|Last|Sorted|Jump to|From|To|Sort now|Merge overlaps
+	wxString menus = FFQS(SID_JOBEDIT_ADV_CUTS_MENU_ITEMS);
+	FFQTokenParser tp(menus, PIPE);
+	m_CutMenu = new wxMenu();
+	m_CutMenu->Bind(wxEVT_MENU, &FFQJobEditAdvCuts::OnMenu, this);
+
+	wxMenu *sub = new wxMenu();
+	m_CutMenu->Append(MENU_ADD_SUBMENU, tp.next(), sub);
+
+	sub->Append(MENU_ADD_FIRST, tp.next(), wxEmptyString, wxITEM_RADIO);
+	sub->Append(MENU_ADD_LAST, tp.next(), wxEmptyString, wxITEM_RADIO);
+	sub->Append(MENU_ADD_SORTED, tp.next(), wxEmptyString, wxITEM_RADIO)->Check();
+
+	sub = new wxMenu();
+	m_CutMenu->Append(MENU_JUMP_SUBMENU, tp.next(), sub);
+
+	sub->Append(MENU_JUMP_TO_FROM, tp.next());
+	sub->Append(MENU_JUMP_TO_TO, tp.next());
+
+	m_CutMenu->Append(MENU_DUPLICATE, tp.next());
+	m_CutMenu->Append(MENU_SORT_NOW, tp.next());
+	m_CutMenu->Append(MENU_MERGE_OVERLAPS, tp.next());
+
+	m_CutMenu->Append(MENU_MOVE_UP, FFQS(SID_COMMON_MOVE_UP));
+	m_CutMenu->Append(MENU_MOVE_DOWN, FFQS(SID_COMMON_MOVE_DOWN));
+
+	CutList->Bind(wxEVT_RIGHT_DOWN, &FFQJobEditAdvCuts::OnMouse, this);
 
 }
 
@@ -360,6 +424,16 @@ bool FFQJobEditAdvCuts::Execute(FFQ_CUTS &cuts, wxString file_path, FFProbeInfoP
     wxBrush brs(FrameView->GetBackgroundColour());
     mdc.SetBrush(brs);
     mdc.DrawRectangle(0, 0, m_DrawBuf->GetWidth(), m_DrawBuf->GetHeight());
+
+    //Adjust control sizes
+    if (m_FirstShow)
+    {
+        m_FirstShow = false;
+        wxSize ms = OkButton->GetSize();
+        ms.SetWidth(-1);
+        FromTime->SetMinSize(ms);
+        PrevFrame->SetMinSize(ms);
+    }
 
     //Initialize the time span list from cuts
     CutList->Clear();
@@ -562,15 +636,15 @@ bool FFQJobEditAdvCuts::GetCut(wxString &cut, long &pos)
 {
 
     //Validate from..
-    wxString tsf = StrTrim(FromTime->GetValue());
+    wxString s = StrTrim(FromTime->GetValue());
     TIME_VALUE tvf;
-    if (!GetTimeValue(tsf, FrameConv->GetValue(), m_VidRate, tvf))
+    if (!GetTimeValue(s, FrameConv->GetValue(), m_VidRate, tvf))
         return ShowError(FromTime, FrameConv->GetValue() ? FFQS(SID_JOBEDIT_ADV_CUTS_BAD_FRAME) : FFQS(SID_JOBEDIT_ADV_CUTS_BAD_TIME));
 
     //Validate to..
-    wxString tst = StrTrim(ToTime->GetValue());
+    s = StrTrim(ToTime->GetValue());
     TIME_VALUE tvt;
-    if (!GetTimeValue(tst, FrameConv->GetValue(), m_VidRate, tvt))
+    if (!GetTimeValue(s, FrameConv->GetValue(), m_VidRate, tvt))
         return ShowError(ToTime, FrameConv->GetValue() ? FFQS(SID_JOBEDIT_ADV_CUTS_BAD_FRAME) : FFQS(SID_JOBEDIT_ADV_CUTS_BAD_TIME));
 
     //If to is 0, set to duration
@@ -580,36 +654,29 @@ bool FFQJobEditAdvCuts::GetCut(wxString &cut, long &pos)
     if (tvf.ToMilliseconds() >= tvt.ToMilliseconds())
         return ShowError(FrameConv->GetValue() ? FFQS(SID_JOBEDIT_ADV_CUTS_BAD_FRAME) : FFQS(SID_JOBEDIT_ADV_CUTS_BAD_TIME));
 
-    //Get values as millis
-    uint64_t msf = tvf.ToMilliseconds(), mst = tvt.ToMilliseconds(), ft, tt;
-
-    //Position in list
+    //Sorted position in list
     long find_pos = -1;
 
-    //Check for overlapping
+    //Set the cut as a string
+    cut = tvf.ToString(true, true) + CUT_SEP + tvt.ToString(true, true);
+
+    //Find the sorted insert position
     for (long i = 0; i < (long)CutList->GetCount(); i++)
     {
 
         //Skip the cuts current position
         if (pos == i) continue;
 
-        //Get values
-        wxString s = CutList->GetString(i);
-        ft = TIME_VALUE(StrTrim(GetToken(s, CUT_SEP, true))).ToMilliseconds();
-        tt = TIME_VALUE(s).ToMilliseconds();
-
-        //From in cut, to in cut or complete overlap
-        if ( ((msf >= ft) && (msf < tt)) ||
-             ((mst >= ft) && (mst < tt)) ||
-             ((msf < ft) && (mst > tt)) ) return ShowError(FFQS(SID_JOBEDIT_ADV_CUTS_OVERLAP_TIME));
-
-        //Insert position found?
-        if ((find_pos < 0) && (mst < ft)) find_pos = i;
+        //Compare and break if found
+        if (cut.Cmp(CutList->GetString(i)) <= 0)
+        {
+            find_pos = i;
+            break;
+        }
 
     }
 
-    //All green, set values and return success
-    cut = tvf.ToString(true, true) + CUT_SEP + tvt.ToString(true, true);
+    //Set the sorted position and return success
     pos = find_pos;
     return true;
 
@@ -675,6 +742,77 @@ void* FFQJobEditAdvCuts::MakePreviewJob(TIME_VALUE start_time, FFQ_CUTS cuts, bo
 
     //Return it
     return job;
+
+}
+
+//---------------------------------------------------------------------------------------
+
+int FFQJobEditAdvCuts::MergeOverlaps(wxArrayString &merged)
+{
+
+    //Exit if overlap is not possible
+    if (CutList->GetCount() < 2) return 0;
+
+    //Get a copy of the cuts in the list
+    //merged.Clear();
+    for (size_t i = 0; i < CutList->GetCount(); i++) merged.Add(CutList->GetString(i));
+
+    //Count the number of overlapping cuts and merge them
+    int res = 0, i = 0, ii;
+    uint64_t from1, to1, from2, to2;
+    wxString s;
+
+    while (i < (int)merged.Count() - 1) //The last cut cannot be tested against anything, so that is not tested
+    {
+
+        //Get the cut we are about to test for overlaps
+        s = merged[i];
+        from1 = TIME_VALUE(GetToken(s, CUT_SEP, true)).ToMilliseconds();
+        to1 = TIME_VALUE(s).ToMilliseconds();
+
+        //Test the cut against all the following cuts
+        ii = i + 1;
+        while (ii < (int)merged.Count())
+        {
+
+            //Get the item to test against
+            s = merged[ii];
+            from2 = TIME_VALUE(GetToken(s, CUT_SEP, true)).ToMilliseconds();
+            to2 = TIME_VALUE(s).ToMilliseconds();
+
+            //Test for overlaps
+            if ( ((from1 >= from2) && (from1 < to2)) || //Beginning inside
+                 ((to1 >= from2) && (to1 < to2)) || //End inside
+                 ((from1 < from2) && (to1 >= to2)) ) //Complete overlap
+            {
+
+                //Merge the overlap by getting the first "from" and the last "to"
+                if (from1 > from2) from1 = from2;
+                if (to1 < to2) to1 = to2;
+
+                //Set the merged cut back to the list
+                merged[i] = TIME_VALUE(from1).ToString(true, true) + CUT_SEP + TIME_VALUE(to1).ToString(true, true);
+
+                //Remove the overlapping / unused cut
+                merged.RemoveAt(ii);
+
+                //Increment overlap counter
+                res++;
+
+            }
+
+            //If no overlap, increment index
+            else ii++;
+
+        }
+
+        //Increment index
+        i++;
+
+    }
+
+    //Return the number of merged items
+    return res;
 
 }
 
@@ -810,18 +948,27 @@ void FFQJobEditAdvCuts::ShowTimePreview(TIME_VALUE &at_time)
 void FFQJobEditAdvCuts::UpdateControls()
 {
 
-    bool sel = false;
+    //Room for optimization?
+    wxArrayInt selections;
+    int sel = CutList->GetSelections(selections);
+
+    /*bool sel = false;
     for(unsigned int i = 0; i < CutList->GetCount(); i++)
-        if (CutList->IsSelected(i)) { sel=true; break; }
+        if (CutList->IsSelected(i)) { sel=true; break; }*/
+
+    //CutsMenu
+    m_CutMenu->FindItem(MENU_JUMP_SUBMENU)->Enable(sel == 1);
+    m_CutMenu->FindItem(MENU_MOVE_UP)->Enable((sel > 0) && (selections[0] > 0));
+    m_CutMenu->FindItem(MENU_MOVE_DOWN)->Enable((sel > 0) && (selections[selections.Count() - 1] < (int)CutList->GetCount() - 1));
+    m_CutMenu->FindItem(MENU_DUPLICATE)->Enable(sel > 0);
 
     //AddCut->Enable(true);
-    RemoveCut->Enable(sel);
+    RemoveCut->Enable(sel > 0);
 
     //Disable filer position controls if quick cuts are enabled
     ST11->Enable(!QuickCut->GetValue());
     FilterFirst->Enable(ST11->IsEnabled());
     FilterLast->Enable(ST11->IsEnabled());
-
 
     //Preview controls
     if ( FrameView->IsEnabled() )
@@ -833,6 +980,116 @@ void FFQJobEditAdvCuts::UpdateControls()
         FramePos->SetLabel(m_FramePos.ToString());
 
     }
+
+}
+
+//---------------------------------------------------------------------------------------
+
+void SwapItems(wxListBox *lb, size_t i1, size_t i2)
+{
+    wxString s1 = lb->GetString(i1), s2 = lb->GetString(i2);
+    lb->Delete(i1);
+    lb->Insert(s2, i1);
+    lb->Delete(i2);
+    lb->Insert(s1, i2);
+    lb->Deselect(i1);
+    lb->SetSelection(i2);
+    //lb->SetSelection(i2);
+}
+
+void FFQJobEditAdvCuts::OnMenu(wxCommandEvent &event)
+{
+
+    int evtId = event.GetId();
+
+    if (evtId == MENU_SORT_NOW)
+    {
+
+        wxArrayString items;
+        for (size_t i = 0; i < CutList->GetCount(); i++) items.Add(CutList->GetString(i));
+        items.Sort();
+        CutList->Freeze();
+        CutList->Set(items);
+        CutList->Thaw();
+
+    }
+
+    if (evtId == MENU_DUPLICATE)
+    {
+
+        wxArrayString items;
+        for (size_t i = 0; i < CutList->GetCount(); i++)
+        {
+            items.Add(CutList->GetString(i));
+            if (CutList->IsSelected(i)) items.Add(CutList->GetString(i));
+        }
+        CutList->Freeze();
+        CutList->Set(items);
+        CutList->Thaw();
+
+    }
+
+    else if (evtId == MENU_MERGE_OVERLAPS)
+    {
+
+        wxArrayString merged;
+        if (MergeOverlaps(merged) > 0)
+        {
+
+            CutList->Freeze();
+            CutList->Set(merged);
+            CutList->Thaw();
+
+        }
+
+    }
+
+    else if ((evtId == MENU_JUMP_TO_FROM) || (evtId == MENU_JUMP_TO_TO))
+    {
+
+        wxArrayInt sel;
+        if (CutList->GetSelections(sel) != 1) return;
+        wxString c = CutList->GetString(sel[0]);
+        if (evtId == MENU_JUMP_TO_FROM) c = GetToken(c, CUT_SEP, false);
+        else GetToken(c, CUT_SEP, true);
+        TIME_VALUE tv(c);
+        FrameSlider->SetValue(tv.ToMilliseconds() / m_FrameTime);
+        ExtractFrame();
+        return; //Do not UpdateControls() twice..
+    }
+
+    else if ((evtId == MENU_MOVE_UP) || (evtId == MENU_MOVE_DOWN))
+    {
+
+        bool up = (evtId == MENU_MOVE_UP);
+        wxArrayInt sel;
+        CutList->GetSelections(sel);
+        //if ((up && (sel[0] == 0)) || ((!up) && (sel[sel.Count() - 1] == CutList->GetCount() - 1))) return;
+        CutList->Freeze();
+        for (size_t i = 0; i < sel.Count(); i++)
+        {
+            int &from = sel[i], to = up ? from - 1 : from + 1;
+            SwapItems(CutList, from, to);
+            from = to;
+        }
+        for (size_t i = 0; i < CutList->GetCount(); i++)
+            if (sel.Index((int)i) == wxNOT_FOUND) CutList->Deselect(i);
+            else CutList->SetSelection(i);
+        CutList->Thaw();
+
+
+    }
+
+    UpdateControls();
+
+}
+
+//---------------------------------------------------------------------------------------
+
+void FFQJobEditAdvCuts::OnMouse(wxMouseEvent &event)
+{
+
+    CutList->PopupMenu(m_CutMenu);
 
 }
 
@@ -852,10 +1109,13 @@ void FFQJobEditAdvCuts::ActionClick(wxCommandEvent& event)
 
         if (GetCut(cut, pos))
         {
-
-            if (pos >= 0) pos = CutList->Insert(cut, pos);
-            else pos = CutList->Append(cut);
+            if (m_CutMenu->FindItem(MENU_ADD_FIRST)->IsChecked()) pos = CutList->Insert(cut, 0);
+            else if (m_CutMenu->FindItem(MENU_ADD_LAST)->IsChecked() || (pos < 0)) pos = CutList->Append(cut);
+            else pos = CutList->Insert(cut, pos);
             CutList->EnsureVisible(pos);
+            for (long i = 0; i < (long)CutList->GetCount(); i++)
+                if (i == pos) CutList->SetSelection(i);
+                else CutList->Deselect(i);
             FromTime->Clear();
             ToTime->Clear();
 
@@ -867,14 +1127,24 @@ void FFQJobEditAdvCuts::ActionClick(wxCommandEvent& event)
     {
 
         //Remove cuts
+        wxArrayInt sel;
+        CutList->GetSelections(sel);
         CutList->Freeze();
-        unsigned int idx = 0;
+        for (long i = (long)sel.Count() - 1; i > -1; i--) CutList->Delete(sel[i]);
+        CutList->Thaw();
+
+        //CutList->Freeze();
+        /*unsigned int idx = 0;
         while (idx < CutList->GetCount())
         {
-            if (CutList->IsSelected(idx)) CutList->Delete(idx);
+            if (CutList->IsSelected(idx))
+            {
+                //CutList->Deselect(idx);
+                CutList->Delete(idx);
+            }
             else idx++;
-        }
-        CutList->Thaw();
+        }*/
+        //CutList->Thaw();
 
     }
 
@@ -928,7 +1198,10 @@ void FFQJobEditAdvCuts::ActionClick(wxCommandEvent& event)
 
         //Navigate one frame update with no delay
         if (m_Process->IsProcessRunning()) return; //Relax m8! ;-)
-        FrameSlider->SetValue(FrameSlider->GetValue() + (evtId == ID_PREVFRAME ? -1 : 1));
+        int frame = FrameSlider->GetValue() + (evtId == ID_PREVFRAME ? -JumpSize->GetValue() : JumpSize->GetValue());
+        if (frame < 0) frame = 0;
+        else if (frame > FrameSlider->GetMax()) frame = FrameSlider->GetMax();
+        FrameSlider->SetValue(frame);//FrameSlider->GetValue() + (evtId == ID_PREVFRAME ? -1 : 1));
         ExtractFrame();
 
         //UpdateControls called in ExtractFrame
@@ -943,7 +1216,40 @@ void FFQJobEditAdvCuts::ActionClick(wxCommandEvent& event)
     else if (evtId == ID_SETTO) ToTime->SetValue(m_FramePos.ToString());
 
     //End dialog
-    else if (evtId == ID_OKBUTTON) EndModal(wxID_OK);
+    else if (evtId == ID_OKBUTTON)
+    {
+
+        if (RemoveCuts->GetValue())
+        {
+
+            //Since we cannot remove the same part twice, we must test for overlaps
+            wxArrayString merged;
+            int overlaps = MergeOverlaps(merged);
+            if (overlaps > 0)
+            {
+
+                //Ask user if the overlaps should be merged?
+                if (DoConfirm(CutList, FFQS(SID_JOBEDIT_ADV_CUTS_OVERLAP_REMOVE)))
+                {
+
+                    //Yep, set the merged items back to the list
+                    CutList->Freeze();
+                    CutList->Set(merged);
+                    CutList->Thaw();
+
+                }
+
+                //Do not end modal; Let user review the changes
+                return;
+
+            }
+
+        }
+
+        //All OK, end the dialog
+        EndModal(wxID_OK);
+
+    }
     else if (evtId == ID_CANCELBUTTON) EndModal(wxID_CANCEL);
 
     //Update controls

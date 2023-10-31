@@ -151,8 +151,8 @@ FFQJobEditAdv::FFQJobEditAdv(wxWindow* parent)
 	OutputSizer->AddGrowableCol(0);
 	Output = new wxTextCtrl(this, ID_OUTPUT, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_OUTPUT"));
 	OutputSizer->Add(Output, 0, wxALL|wxEXPAND, 3);
-	BrowseOutput = new wxButton(this, ID_BROWSEOUTPUT, _T("..."), wxDefaultPosition, wxSize(-1,-1), 0, wxDefaultValidator, _T("ID_BROWSEOUTPUT"));
-	OutputSizer->Add(BrowseOutput, 0, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+	BrowseOutput = new wxButton(this, ID_BROWSEOUTPUT, _T("  ...  "), wxDefaultPosition, wxSize(-1,-1), 0, wxDefaultValidator, _T("ID_BROWSEOUTPUT"));
+	OutputSizer->Add(BrowseOutput, 0, wxALL|wxEXPAND, 3);
 	OutputLength = new wxGenericHyperlinkCtrl(this, ID_OUTPUTLENGTH, _T("OutL"), wxEmptyString, wxDefaultPosition, wxDefaultSize, wxHL_CONTEXTMENU|wxHL_ALIGN_CENTRE, _T("ID_OUTPUTLENGTH"));
 	OutputSizer->Add(OutputLength, 0, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
 	OutputSizer->Add(-1,-1,1, wxALL|wxEXPAND, 0);
@@ -236,8 +236,8 @@ FFQJobEditAdv::FFQJobEditAdv(wxWindow* parent)
     FFQCFG()->SetCtrlColors(OutputLength);
     //m_Process = new FFQProcess();
 
-	OpenFile->SetDirectory(FFQCFG()->GetBrowseRoot());
-	SaveFile->SetDirectory(FFQCFG()->GetBrowseRoot());
+	FFQCFG()->SetBrowseRootFor(OpenFile);
+	FFQCFG()->SetBrowseRootFor(SaveFile);
 
 	//Connect(wxID_ANY, wxEVT_IDLE, (wxObjectEventFunction)&FFQJobEditAdv::OnIdle);
 	Bind(wxEVT_IDLE, &FFQJobEditAdv::OnIdle, this);
@@ -337,6 +337,7 @@ bool FFQJobEditAdv::Execute(LPFFQ_JOB job)
             inf.cuts = ctrls->cut_cfg;
 
             inf.itsoffset = Str2Long(ctrls->itsoffset, 0);
+            inf.loop = Str2Long(ctrls->loop_streams, 0);
             inf.framerate = ctrls->framerate;
             inf.fflags_discardcorrupt = ctrls->discard_corrupt;
             inf.fflags_genpts = ctrls->genpts;
@@ -437,6 +438,7 @@ void FFQJobEditAdv::AddInputFile(LPFFQ_INPUT_FILE in_file, bool select)
         ctrls->start_val = 0;
         ctrls->cut_cfg.Reset();
         ctrls->itsoffset.Clear();
+        ctrls->loop_streams.Clear();
         ctrls->framerate.Clear();
         ctrls->discard_corrupt = false;
         ctrls->genpts = false;
@@ -451,6 +453,7 @@ void FFQJobEditAdv::AddInputFile(LPFFQ_INPUT_FILE in_file, bool select)
         ctrls->start_val = in_file->start;
         ctrls->cut_cfg = in_file->cuts;
         ctrls->itsoffset = (in_file->itsoffset == 0) ? "" : wxString::Format("%i", in_file->itsoffset);
+        ctrls->loop_streams = (in_file->loop == 0) ? "" : wxString::Format("%i", in_file->loop);
         ctrls->framerate = in_file->framerate;
         ctrls->discard_corrupt = in_file->fflags_discardcorrupt;
         ctrls->genpts = in_file->fflags_genpts;
@@ -775,7 +778,7 @@ wxString FFQJobEditAdv::GetStreamMapping()
         s = "";
         for (unsigned int pi = 0; pi < sd->presets.Count(); pi++) s += sd->presets[pi] + SPACE;
         smap.preset_list = s.BeforeLast(SPACE);
-        smap.codec_name = sd->si->codec_name;
+        smap.codec_id = sd->si->codec_name;
         if (res.Len() > 0) res += STREAM_MAPPING_SEPERATOR;
         res += smap.ToString();
 
@@ -1170,7 +1173,7 @@ void FFQJobEditAdv::UpdateToolTip(LPINPUT_CTRLS ctrls)
         tip = new wxToolTip(_(""));
         ctrls->more->SetToolTip(tip);
     }
-    tip->SetTip(FFQSF(SID_JOBEDIT_ADV_MORE_TOOLTIP, ctrls->itsoffset, ctrls->framerate, ff));
+    tip->SetTip(FFQSF(SID_JOBEDIT_ADV_MORE_TOOLTIP, ctrls->itsoffset, ctrls->framerate, ctrls->loop_streams, ff));
     #ifdef __WINDOWS__
     tip->SetMaxWidth(1000);
     #endif // __WINDOWS__

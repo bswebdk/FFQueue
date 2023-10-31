@@ -138,22 +138,6 @@ FFQBitRatePanel::~FFQBitRatePanel()
 
 //---------------------------------------------------------------------------------------
 
-void FFQBitRatePanel::SetValues(wxString values)
-{
-
-    //Set values to controls
-    BitRate->SetValue(GetToken(values, ',', true));
-    BitRateType->SetSelection(Str2Long(GetToken(values, ',', true), 1));
-    MinRate->SetValue(GetToken(values, ',', true));
-    MaxRate->SetValue(GetToken(values, ',', true));
-    BufSize->SetValue(GetToken(values, ',', true));
-
-	UpdateLabels();
-
-}
-
-//---------------------------------------------------------------------------------------
-
 bool FFQBitRatePanel::GetValues(wxString &values, bool showErr)
 {
 
@@ -174,6 +158,32 @@ bool FFQBitRatePanel::GetValues(wxString &values, bool showErr)
 
     //Return result
     return ok;
+
+}
+
+//---------------------------------------------------------------------------------------
+
+bool FFQBitRatePanel::HasValue()
+{
+
+    //Determine whether a valid value is present
+    return (Str2Long(BitRate->GetValue(), 0) > 0) || (Str2Long(MinRate->GetValue(), 0) > 0) || (Str2Long(MaxRate->GetValue(), 0) > 0);
+
+}
+
+//---------------------------------------------------------------------------------------
+
+void FFQBitRatePanel::SetValues(wxString values)
+{
+
+    //Set values to controls
+    BitRate->SetValue(GetToken(values, ',', true));
+    BitRateType->SetSelection(Str2Long(GetToken(values, ',', true), 1));
+    MinRate->SetValue(GetToken(values, ',', true));
+    MaxRate->SetValue(GetToken(values, ',', true));
+    BufSize->SetValue(GetToken(values, ',', true));
+
+	UpdateLabels();
 
 }
 

@@ -53,6 +53,8 @@ const wxString PRESET_AUDIO_RESAMPLE = "audio_resample";
 const wxString PRESET_AUDIO_FILTERS_COMPLEX = "af_complex";
 const wxString PRESET_FASTSTART = "faststart";
 const wxString PRESET_KEEP_FILETIME = "keep_filetime";
+const wxString PRESET_SHORTEST = "shortest";
+const wxString PRESET_SKIP_ENCODE_SAME = "skip_encode_same";
 const wxString PRESET_METADATA = "metadata";
 const wxString PRESET_METADATA_V = "metadata_v";
 const wxString PRESET_METADATA_A = "metadata_a";
@@ -69,6 +71,7 @@ const wxString PRESET_THUMBS = "thumbs";
 const wxString PRESET_FILTER = "filter";
 const wxString PRESET_FINGER_PRINT = "finger_print";
 const wxString PRESET_FULLSPEC_VID = "fullspec_vid";
+const wxString PRESET_FULLSPEC_AUD = "fullspec_aud";
 const wxString PRESET_SEGMENTING = "segmenting";
 
 
@@ -106,12 +109,16 @@ FFQ_PRESET::FFQ_PRESET(wxString &preset)
         if (v.Len() == 0) return;
 
         //Split line into name and value
-        n = GetToken(v, '=');
+        n = GetToken(v, EQUAL);
 
         //Check the name and set the correct value
         if (n == PRESET_ID) preset_id = UNIQUE_ID(v);
         else if (n == PRESET_NAME) preset_name = v;
-        else if (n == PRESET_VIDEO_CODEC) video_codec = v;
+        else if (n == PRESET_VIDEO_CODEC)
+        {
+            video_codec_id = v;
+            video_codec = GetToken(video_codec_id, COMMA, true);
+        }
         else if (n == PRESET_VIDEO_RATE) video_rate = v;
         else if (n == PRESET_FRAME_RATE) frame_rate = v;
         else if (n == PRESET_KEY_FRAMES) key_frames = v;
@@ -120,7 +127,11 @@ FFQ_PRESET::FFQ_PRESET(wxString &preset)
         else if (n == PRESET_VIDEO_QUALITY) video_quality = v;
         else if (n == PRESET_TWO_PASS) two_pass = (v == STR_YES);
         else if (n == PRESET_TWO_PASS_NULL) two_pass_null = (v == STR_YES);
-        else if (n == PRESET_AUDIO_CODEC) audio_codec = v;
+        else if (n == PRESET_AUDIO_CODEC)
+        {
+            audio_codec_id = v;
+            audio_codec = GetToken(audio_codec_id, COMMA, true);
+        }
         else if (n == PRESET_AUDIO_RATE) audio_rate = v;
         else if (n == PRESET_AUDIO_QUALITY) audio_quality = v;
         else if (n == PRESET_AUDIO_CHANNELS) audio_channels = v;
@@ -129,6 +140,8 @@ FFQ_PRESET::FFQ_PRESET(wxString &preset)
         else if (n == PRESET_AUDIO_FILTERS_COMPLEX) af_complex = (v == STR_YES);
         else if (n == PRESET_FASTSTART) mf_faststart = (v == STR_YES);
         else if (n == PRESET_KEEP_FILETIME) keep_filetime = (v == STR_YES);
+        else if (n == PRESET_SHORTEST) shortest = (v == STR_YES);
+        else if (n == PRESET_SKIP_ENCODE_SAME) skip_encode_same = (uint8_t)Str2Long(v, skip_encode_same);
         else if (n == PRESET_METADATA) meta_data = v;
         else if (n == PRESET_METADATA_V) meta_data_v = v;
         else if (n == PRESET_METADATA_A) meta_data_a = v;
@@ -145,18 +158,19 @@ FFQ_PRESET::FFQ_PRESET(wxString &preset)
         else if (n == PRESET_DISPOSITION) disposition = v;
         else if (n == PRESET_FINGER_PRINT) finger_print = v;
         else if (n == PRESET_FULLSPEC_VID) fullspec_vid = v;
+        else if (n == PRESET_FULLSPEC_AUD) fullspec_aud = v;
         else if (n == PRESET_SUBTITLE)
         {
 
             //Subtitle settings
-            subtitles.bitmap = GetToken(v, ',') == STR_YES;
-            subtitles.size_type = Str2Long(GetToken(v, ','), 0);
-            subtitles.scale = Str2Long(GetToken(v, ','), 100);
-            subtitles.width = GetToken(v, ',');
+            subtitles.bitmap = GetToken(v, COMMA) == STR_YES;
+            subtitles.size_type = Str2Long(GetToken(v, COMMA), 0);
+            subtitles.scale = Str2Long(GetToken(v, COMMA), 100);
+            subtitles.width = GetToken(v, COMMA);
             if (Str2Long(subtitles.width, -1) < 0) subtitles.width.Clear(); //Validate bad-values (might have been set as codec)
-            subtitles.height = GetToken(v, ',');
+            subtitles.height = GetToken(v, COMMA);
             if (Str2Long(subtitles.height, -1) < 0) subtitles.height.Clear(); //Same as width
-            subtitles.codec = GetToken(v, ',');
+            subtitles.codec = GetToken(v, COMMA);
             subtitles.charenc = v;
 
         }
@@ -172,13 +186,13 @@ FFQ_PRESET::FFQ_PRESET(wxString &preset)
         {
 
             //Segmenting settings
-            segmenting.length = Str2Long(GetToken(v, ','), 0);
-            segmenting.length_type = Str2Long(GetToken(v, ','), 0);
-            segmenting.list_file = Str2Long(GetToken(v, ','), 0);
-            segmenting.break_bframes = GetToken(v, ',') == STR_YES;
-            segmenting.incremental_tc = GetToken(v, ',') == STR_YES;
-            segmenting.streaming = GetToken(v, ',') == STR_YES;
-            segmenting.reset_ts = GetToken(v, ',') == STR_YES;
+            segmenting.length = Str2Long(GetToken(v, COMMA), 0);
+            segmenting.length_type = Str2Long(GetToken(v, COMMA), 0);
+            segmenting.list_file = Str2Long(GetToken(v, COMMA), 0);
+            segmenting.break_bframes = GetToken(v, COMMA) == STR_YES;
+            segmenting.incremental_tc = GetToken(v, COMMA) == STR_YES;
+            segmenting.streaming = GetToken(v, COMMA) == STR_YES;
+            segmenting.reset_ts = GetToken(v, COMMA) == STR_YES;
 
         }
         else if (n == PRESET_THUMBS) thumbs = THUMBS_AND_TILES(v);
@@ -199,11 +213,11 @@ FFQ_PRESET::FFQ_PRESET(wxString &preset)
 
     }
 
-    if ( (video_quality.Len() == 0) && (video_rate.Freq(',') == 1) && (video_rate.AfterLast(',') == "6") )
+    if ( (video_quality.Len() == 0) && (video_rate.Freq(COMMA) == 1) && (video_rate.AfterLast(COMMA) == "6") )
     {
 
         //Convert old qscale
-        float qs = Str2Long(video_rate.BeforeFirst(','), 5);
+        float qs = Str2Long(video_rate.BeforeFirst(COMMA), 5);
         video_quality = "1," + ToStr(froundi(qs / 31 * 100.0));
         video_rate = "1000,1";
 
@@ -249,15 +263,20 @@ void FFQ_PRESET::Reset(bool new_preset)
     af_complex = false;
     mf_faststart = false;
     keep_filetime = false;
+    shortest = false;
+
+    skip_encode_same = 0;
 
     preset_name = "";
     video_codec = new_preset ? "libx264" : "";
+    video_codec_id = new_preset ? "h264" : "";
     video_rate = new_preset ? "1000,1" : "";
     video_sync = "";
     video_quality = "";
     key_frames = "";
     hw_decode = "";
-    audio_codec = new_preset ? "mp3" : "";
+    audio_codec = new_preset ? "libmp3lame" : "";
+    audio_codec_id = new_preset ? "mp3" : "";
     audio_rate = new_preset ? "128,1" : "";
     audio_quality = "";
     audio_channels = "";
@@ -279,6 +298,7 @@ void FFQ_PRESET::Reset(bool new_preset)
     disposition = "";
     finger_print = "";
     fullspec_vid = "";
+    fullspec_aud = "";
 
     fourcc.vids = "";
     fourcc.auds = "";
@@ -351,53 +371,56 @@ wxString FFQ_PRESET::ToString()
     if (tbs == default_pst.thumbs.ToString()) tbs.Clear();
 
     //Make the lines of key value pairs that defines the preset
-    res = PRESET_ID + "=" + preset_id.ToString() + CRLF +
-          PRESET_NAME + "=" + preset_name + CRLF;
+    res = PRESET_ID + EQUAL + preset_id.ToString() + CRLF +
+          PRESET_NAME + EQUAL + preset_name + CRLF;
 
     //Empty values are not saved in order to reduce the size of the presets
-    if (video_codec.Len() > 0) res += PRESET_VIDEO_CODEC + "=" + video_codec + CRLF;
-    if (video_rate.Len() > 0) res += PRESET_VIDEO_RATE + "=" + video_rate + CRLF;
-    if (frame_rate.Len() > 0) res += PRESET_FRAME_RATE + "=" + frame_rate + CRLF;
-    if (key_frames.Len() > 0) res += PRESET_KEY_FRAMES + "=" + key_frames + CRLF;
-    if (hw_decode.Len() > 0) res += PRESET_HW_DECODE + "=" + hw_decode + CRLF;
-    if (video_sync.Len() > 0) res += PRESET_VIDEO_SYNC + "=" + video_sync + CRLF;
-    if (video_quality.Len() > 0) res += PRESET_VIDEO_QUALITY + "=" + video_quality + CRLF;
-    if (two_pass) res += PRESET_TWO_PASS + "=" + STR_YES + CRLF;
-    if (two_pass_null) res += PRESET_TWO_PASS_NULL + "=" + STR_YES + CRLF;
-    if (audio_codec.Len() > 0) res += PRESET_AUDIO_CODEC + "=" + audio_codec + CRLF;
-    if (audio_rate.Len() > 0) res += PRESET_AUDIO_RATE + "=" + audio_rate + CRLF;
-    if (audio_quality.Len() > 0) res += PRESET_AUDIO_QUALITY + "=" + audio_quality + CRLF;
-    if (audio_channels.Len() > 0) res += PRESET_AUDIO_CHANNELS + "=" + audio_channels + CRLF;
-    if (audio_profile.Len() > 0) res += PRESET_AUDIO_PROFILE + "=" + audio_profile + CRLF;
-    if (af_complex) res += PRESET_AUDIO_FILTERS_COMPLEX + "=" + STR_YES + CRLF;
-    if (mf_faststart) res += PRESET_FASTSTART + "=" + STR_YES + CRLF;
-    if (keep_filetime) res += PRESET_KEEP_FILETIME + "=" + STR_YES + CRLF;
-    if (meta_data.Len() > 0) res += PRESET_METADATA + "=" + meta_data + CRLF;
-    if (meta_data_v.Len() > 0) res += PRESET_METADATA_V + "=" + meta_data_v + CRLF;
-    if (meta_data_a.Len() > 0) res += PRESET_METADATA_A + "=" + meta_data_a + CRLF;
-    if (meta_data_s.Len() > 0) res += PRESET_METADATA_S + "=" + meta_data_s + CRLF;
-    if (pixel_format.Len() > 0) res += PRESET_PIXEL_FMT + "=" + pixel_format + CRLF;
-    if (trellis.Len() > 0) res += PRESET_TRELLIS + "=" + trellis + CRLF;
-    if (threads.Len() > 0) res += PRESET_THREADS + "=" + threads + CRLF;
-    if (speed_preset.Len() > 0) res += PRESET_SPEED_PRESET + "=" + speed_preset + CRLF;
-    if (video_tuning.Len() > 0) res += PRESET_VIDEO_TUNING + "=" + video_tuning + CRLF;
-    if (aspect_ratio.Len() > 0) res += PRESET_ASPECT + "=" + aspect_ratio + CRLF;
-    if (output_format.Len() > 0) res += PRESET_OUTPUT_FORMAT + "=" + output_format + CRLF;
-    if (custom_args_1.Len() > 0) res += PRESET_CUSTOM_ARGS + "=" + custom_args_1 + CRLF;
-    if (custom_args_2.Len() > 0) res += PRESET_CUSTOM_ARGS_2 + "=" + custom_args_2 + CRLF;
-    if (disposition.Len() > 0) res += PRESET_DISPOSITION + "=" + disposition + CRLF;
-    if (finger_print.Len() > 0) res += PRESET_FINGER_PRINT + "=" + finger_print + CRLF;
-    if (fullspec_vid.Len() > 0) res += PRESET_FULLSPEC_VID + "=" + fullspec_vid + CRLF;
-    if (subs.Len() > 0) res += PRESET_SUBTITLE + "=" + subs + CRLF;
-    if (segm.Len() > 0) res += PRESET_SEGMENTING + "=" + segm + CRLF;
-    if (fourcc.vids.Len() + fourcc.auds.Len() > 0) res += PRESET_FOURCC + "=" + fourcc.vids + "," + fourcc.auds + CRLF;
-    if (tbs.Len() > 0) res += PRESET_THUMBS + "=" + tbs + CRLF;
+    if (video_codec.Len() > 0) res += PRESET_VIDEO_CODEC + EQUAL + video_codec + COMMA + video_codec_id + CRLF;
+    if (video_rate.Len() > 0) res += PRESET_VIDEO_RATE + EQUAL + video_rate + CRLF;
+    if (frame_rate.Len() > 0) res += PRESET_FRAME_RATE + EQUAL + frame_rate + CRLF;
+    if (key_frames.Len() > 0) res += PRESET_KEY_FRAMES + EQUAL + key_frames + CRLF;
+    if (hw_decode.Len() > 0) res += PRESET_HW_DECODE + EQUAL + hw_decode + CRLF;
+    if (video_sync.Len() > 0) res += PRESET_VIDEO_SYNC + EQUAL + video_sync + CRLF;
+    if (video_quality.Len() > 0) res += PRESET_VIDEO_QUALITY + EQUAL + video_quality + CRLF;
+    if (two_pass) res += PRESET_TWO_PASS + EQUAL + STR_YES + CRLF;
+    if (two_pass_null) res += PRESET_TWO_PASS_NULL + EQUAL + STR_YES + CRLF;
+    if (audio_codec.Len() > 0) res += PRESET_AUDIO_CODEC + EQUAL + audio_codec + COMMA + audio_codec_id + CRLF;
+    if (audio_rate.Len() > 0) res += PRESET_AUDIO_RATE + EQUAL + audio_rate + CRLF;
+    if (audio_quality.Len() > 0) res += PRESET_AUDIO_QUALITY + EQUAL + audio_quality + CRLF;
+    if (audio_channels.Len() > 0) res += PRESET_AUDIO_CHANNELS + EQUAL + audio_channels + CRLF;
+    if (audio_profile.Len() > 0) res += PRESET_AUDIO_PROFILE + EQUAL + audio_profile + CRLF;
+    if (af_complex) res += PRESET_AUDIO_FILTERS_COMPLEX + EQUAL + STR_YES + CRLF;
+    if (mf_faststart) res += PRESET_FASTSTART + EQUAL + STR_YES + CRLF;
+    if (keep_filetime) res += PRESET_KEEP_FILETIME + EQUAL + STR_YES + CRLF;
+    if (shortest) res += PRESET_SHORTEST + EQUAL + STR_YES + CRLF;
+    if (skip_encode_same > 0) res += PRESET_SKIP_ENCODE_SAME + EQUAL + ToStr((int)skip_encode_same) + CRLF;
+    if (meta_data.Len() > 0) res += PRESET_METADATA + EQUAL + meta_data + CRLF;
+    if (meta_data_v.Len() > 0) res += PRESET_METADATA_V + EQUAL + meta_data_v + CRLF;
+    if (meta_data_a.Len() > 0) res += PRESET_METADATA_A + EQUAL + meta_data_a + CRLF;
+    if (meta_data_s.Len() > 0) res += PRESET_METADATA_S + EQUAL + meta_data_s + CRLF;
+    if (pixel_format.Len() > 0) res += PRESET_PIXEL_FMT + EQUAL + pixel_format + CRLF;
+    if (trellis.Len() > 0) res += PRESET_TRELLIS + EQUAL + trellis + CRLF;
+    if (threads.Len() > 0) res += PRESET_THREADS + EQUAL + threads + CRLF;
+    if (speed_preset.Len() > 0) res += PRESET_SPEED_PRESET + EQUAL + speed_preset + CRLF;
+    if (video_tuning.Len() > 0) res += PRESET_VIDEO_TUNING + EQUAL + video_tuning + CRLF;
+    if (aspect_ratio.Len() > 0) res += PRESET_ASPECT + EQUAL + aspect_ratio + CRLF;
+    if (output_format.Len() > 0) res += PRESET_OUTPUT_FORMAT + EQUAL + output_format + CRLF;
+    if (custom_args_1.Len() > 0) res += PRESET_CUSTOM_ARGS + EQUAL + custom_args_1 + CRLF;
+    if (custom_args_2.Len() > 0) res += PRESET_CUSTOM_ARGS_2 + EQUAL + custom_args_2 + CRLF;
+    if (disposition.Len() > 0) res += PRESET_DISPOSITION + EQUAL + disposition + CRLF;
+    if (finger_print.Len() > 0) res += PRESET_FINGER_PRINT + EQUAL + finger_print + CRLF;
+    if (fullspec_vid.Len() > 0) res += PRESET_FULLSPEC_VID + EQUAL + fullspec_vid + CRLF;
+    if (fullspec_aud.Len() > 0) res += PRESET_FULLSPEC_AUD + EQUAL + fullspec_aud + CRLF;
+    if (subs.Len() > 0) res += PRESET_SUBTITLE + EQUAL + subs + CRLF;
+    if (segm.Len() > 0) res += PRESET_SEGMENTING + EQUAL + segm + CRLF;
+    if (fourcc.vids.Len() + fourcc.auds.Len() > 0) res += PRESET_FOURCC + EQUAL + fourcc.vids + COMMA + fourcc.auds + CRLF;
+    if (tbs.Len() > 0) res += PRESET_THUMBS + EQUAL + tbs + CRLF;
 
     //Remove last CRLF
     res.RemoveLast(CRLF.Len());
 
     //Append filters
-    for (unsigned int i = 0; i < filters.size(); i++) res += CRLF + PRESET_FILTER + "=" + filters.Item(i);
+    for (unsigned int i = 0; i < filters.size(); i++) res += CRLF + PRESET_FILTER + EQUAL + filters.Item(i);
 
     //Return the packed preset
     return res;

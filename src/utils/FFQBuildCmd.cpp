@@ -36,7 +36,7 @@
 //---------------------------------------------------------------------------------------
 
 //Constant that declares the name used for multipass log files
-const wxString FILENAME_MULTIPASSLOG = "ffqueue_ffmpeg_multipass";
+const wxString FILENAME_MULTIPASSLOG = "ffq_multipass_log_%u"; //ffqueue_ffmpeg_multipass
 
 //---------------------------------------------------------------------------------------
 
@@ -49,6 +49,8 @@ const wxString CODEC_TYPE_DATA = "data";
 const wxString CODEC_TYPE_ATTACHMENT = "attachment";
 const wxString CODEC_COPY = "copy";
 const wxString CODEC_SUBS_BURNIN = "BURN-IN";
+const wxString X265_PARAMS = "-x265-params";
+const wxString TWO_PASS_INSERT_POS = "$$TPIP$$";
 
 const unsigned int ENCODER_PRESET_COUNT = 9;
 const wxString ENCODER_PRESETS[ENCODER_PRESET_COUNT] = {
@@ -73,6 +75,7 @@ const wxString DISPOSITIONS[DISPOSITION_COUNT] = {
 };
 
 bool IsPreviewSafe = true;
+static unsigned int multipass_log_counter = 0; //To ensure a new file name for each job
 
 //---------------------------------------------------------------------------------------
 //Private helper functions
@@ -239,20 +242,34 @@ bool FormatVideoQuality(wxString &vq, const wxString &codec)
 
 //---------------------------------------------------------------------------------------
 
-void GetPassLogFileName(LPFFQ_JOB job, wxString &plf)
+void GetTwoPassLog(LPFFQ_JOB job, wxString &path)
 {
 
-    //For convenience
-    wxUniChar psep = wxFileName::GetPathSeparator();
+    if (job->twopass_log.Len() == 0)
+    {
 
-    //Get temp path
-    plf = FFQCFG()->GetTmpPath(job->out.BeforeLast(psep));
+        //For convenience
+        wxUniChar psep = wxFileName::GetPathSeparator();
 
-    //Make sure it end with a path-separator
-    if ((plf.Len() > 0) && (plf.Right(1) != psep)) plf += psep;
+        //Get temp path
+        job->twopass_log = FFQCFG()->GetTmpPath(job->out.BeforeLast(psep));
 
-    //Add name of passlogfile
-    plf += FILENAME_MULTIPASSLOG;
+        //Make sure it ends with a path-separator
+        if ((job->twopass_log.Len() > 0) && (job->twopass_log.Right(1) != psep)) job->twopass_log += psep;
+
+        //Find a unique name for the file
+        do
+        {
+            path = wxString::Format(FILENAME_MULTIPASSLOG, ++multipass_log_counter);
+        } while (wxFileExists(job->twopass_log + path));
+
+        //Assign the log file name
+        job->twopass_log += path;
+
+    }
+
+    //Get the file name
+    path = job->twopass_log;
 
 }
 
@@ -462,6 +479,9 @@ wxString MakeAudioEncoding(LPFFQ_PRESET pst, int stream_id)
         //Audio profile
         if (pst->audio_profile.Len() > 0) res += "-profile:a" + tag + SPACE + pst->audio_profile + SPACE;
 
+        //Audio fullspec
+        if (pst->fullspec_aud.Len() > 0) res += pst->fullspec_aud + SPACE;
+
     }
 
     return res;
@@ -483,7 +503,7 @@ int GetKeepParts(FFQ_INPUT_FILE &inf, wxString *keep = NULL, bool non_quick = fa
 
 //---------------------------------------------------------------------------------------
 
-void MakeInputFileArgs(wxArrayString &src, wxArrayString &dst)
+void MakeInputFileArgs(wxArrayString &src, wxArrayString &dst, bool cuts_allowed)
 {
 
     //This method will convert a list of packed FFQ_INPUT_FILE's
@@ -498,7 +518,7 @@ void MakeInputFileArgs(wxArrayString &src, wxArrayString &dst)
 
         //Get quick cuts
         wxString cuts;
-        int remain = GetKeepParts(inf, &cuts);
+        int remain = cuts_allowed ? GetKeepParts(inf, &cuts) : 1;
 
         while (remain-- > 0)
         {
@@ -509,8 +529,8 @@ void MakeInputFileArgs(wxArrayString &src, wxArrayString &dst)
 
                 //If quick cuts are used, the default stream start is ignored
                 //and a from-to span is defined instead
-                s = "-ss " + GetToken(cuts, SCOLON, true);
-                s += " -to " + GetToken(cuts, SCOLON, true) + SPACE;
+                s = "-ss " + GetToken(cuts, SCOLON, true) + SPACE;
+                if (cuts.Len() > 0) s += "-to " + GetToken(cuts, SCOLON, true) + SPACE; //To may be empty for the last cut!
 
             }
             else s = inf.start.IsUndefined() ? "" : "-ss " + inf.start.ToString() + SPACE;
@@ -534,6 +554,8 @@ void MakeInputFileArgs(wxArrayString &src, wxArrayString &dst)
                 if (inf.itsoffset < 0) t = "-" + t;
                 s += "-itsoffset " + t + " ";
             }
+
+            if (inf.loop != 0) s += "-stream_loop " + ToStr(inf.loop) + SPACE;
 
             //fflags
             t = "";
@@ -676,17 +698,17 @@ bool IsCommandSafe(wxString cmd)
 
 //---------------------------------------------------------------------------------------
 
-void MakeMappedFileIndicies(LPFFQ_JOB job, wxArrayInt &indicies)
+void MakeMappedFileIndicies(LPFFQ_JOB job, wxArrayInt &indicies, bool cuts_allowed)
 {
-    //Some files may be added multiple times to the command line
-    //causing the indices for the files following to be wrong,
-    //this will make a list of adjusted file indices.
+    //Some files may be added multiple times to the command line in order to perform quick cuts
+    //which causes the indices for the following files to be wrong. This will make a list of
+    //adjusted file indices to prevent this.
     indicies.Add(0);
     int cur = 0;
     for (int i = 0; i < (int)job->inputs.Count(); i++)
     {
         FFQ_INPUT_FILE inf(job->inputs[i]);
-        cur += GetKeepParts(inf);
+        cur += (cuts_allowed && inf.cuts.quick) ? GetKeepParts(inf) : 1;
         indicies.Add(cur);
     }
 }
@@ -705,10 +727,11 @@ typedef struct SBINFO
         split; //How many times the stream must be split
     wxString tag; //The stream tag used for filtering [X:Y]
     wxString data; //Used by FormatCuts
+    wxString codec; //Used to identify the source codec
     TIME_VALUE dur; //Stream duration
     FFQ_CUTS cuts; //A list of cuts to perform
 
-    SBINFO(int type, int file_id, int stream_id, int type_id, wxString tag, FFQ_CUTS cuts, TIME_VALUE dur)
+    SBINFO(int type, int file_id, int stream_id, int type_id, wxString tag, FFQ_CUTS cuts, TIME_VALUE dur, wxString codec)
     {
         this->type = type;
         this->file_id = file_id;
@@ -716,8 +739,10 @@ typedef struct SBINFO
         this->type_id = type_id;
         this->split = 0;
         this->tag = tag;
-        this->cuts = cuts;
+        //this->data = wxEmptyString;
+        this->codec = codec;
         this->dur = dur;
+        this->cuts = cuts;
     }
 
 } SBINFO, *LPSBINFO;
@@ -733,6 +758,76 @@ void SelectStreams(wxArrayPtrVoid &src, wxArrayPtrVoid &dst, int file_id, int st
         LPSBINFO si = (LPSBINFO)src[i];
         if ((si->file_id == file_id) || (si->type == stream_type)) dst.Add(si);
     }
+}
+
+//---------------------------------------------------------------------------------------
+
+wxString MakeCutsForStreams(wxArrayPtrVoid &streams, int &filter_id, bool first, wxArrayInt *cutted_files = 0)
+{
+
+    //This is used to make cuts for the streams in the list, minding
+    wxString res;
+
+    for (size_t i = 0; i < streams.GetCount(); i++)
+    {
+        //Get the stream info
+        LPSBINFO sbi = (LPSBINFO)streams[i];
+
+        //Skip to next stream if no cuts are available or if they are placed last
+        if (sbi->cuts.cuts.Len() > 0)
+        {
+
+            //Skip if filters are not at the right position
+            if (first != (sbi->cuts.quick || sbi->cuts.filter_first)) continue;
+
+            //Select the streams
+            wxArrayPtrVoid sel_streams;
+            SelectStreams(streams, sel_streams, sbi->file_id, -1);
+
+            //Make the cuts
+            res += FormatCuts(sel_streams, filter_id, cutted_files);
+
+        }
+
+    }
+
+    return res;
+
+}
+
+//---------------------------------------------------------------------------------------
+
+wxString MakeStreamSplits(wxArrayPtrVoid &streams, int &filter_id)
+{
+
+    //Create split filters for streams
+    wxString res;
+
+    for (size_t i = 0; i < streams.Count(); i++)
+    {
+
+        LPSBINFO sbi = (LPSBINFO)streams[i];
+
+        //Must the stream be split?
+        if (sbi->split > 0)
+        {
+            sbi->split++; //1=2, 2=3 etc.
+            res += sbi->tag + wxString::Format("%ssplit=%d", sbi->type == 0 ? "" : "a", sbi->split);
+            sbi->tag.Clear();
+            for (int ii = 0; ii < sbi->split; ii++)
+            {
+                wxString s = NextFilterID(filter_id);
+                sbi->tag += s + SPACE;
+                res += s;
+            }
+            res += SCOLON;
+            sbi->tag.RemoveLast();
+        }
+
+    }
+
+    return res;
+
 }
 
 //---------------------------------------------------------------------------------------
@@ -802,13 +897,13 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
 
     //List of input files and their arguments
     wxArrayString input_list;
-    if (!preset_only) MakeInputFileArgs(job->inputs, input_list);
+    //if (!preset_only) MakeInputFileArgs(job->inputs, input_list, true); //Moved to stream map handling
 
     //Array that hold a list of SBINFO for each audio &video stream in the job
     wxArrayPtrVoid streams, sel_streams;
 
     //Integers that define the first entry of each stream type in the list
-    int first_vid_idx = -1, first_aud_idx = -1;
+    int first_vid_idx = -1, first_aud_idx = -1, vid_count = 0, aud_count = 0;
 
     //Integers that define the current entry of each stream type in the list
     int cur_vid_idx = -1, cur_aud_idx = -1, cur_sub_idx = -1;
@@ -832,13 +927,14 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
     //Segmenting is only performed when not previewing and for single pass / second pass
     bool segment = (!for_preview) && ((encoding_pass==0) || (encoding_pass==2)) && (pst != NULL) && (pst->segmenting.length > 0);
 
-    //Create stream mapping for command line
-    STREAM_MAPPING smap;
+    //Get the stream mapping from the job
     wxString sm = job->stream_map;
-    int sub_stream_idx = -1;//, file_id_add = 0;
-    bool mapped_subs = false;
-    wxArrayInt file_idc;
-    MakeMappedFileIndicies(job, file_idc);
+
+    //Variables used to determine how the command line must be constructed
+    bool subs_burn_in = pst && (pst->subtitles.codec == CODEC_SUBS_BURNIN);
+    uint8_t skip_encode_same = pst ? pst->skip_encode_same : 0;
+    //bool mapped_subs = false;
+    bool cuts_allowed = true;
 
     if (preset_only)
     {
@@ -846,10 +942,10 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
         //When preset only is being build the streamMap only contains a
         //simple [VIDID],[AUDID] mapping
 
-        streams.Add(new SBINFO(0, 0, 0, 0, GetToken(sm, COMMA), FFQ_CUTS(), 0));
+        streams.Add(new SBINFO(0, 0, 0, 0, GetToken(sm, COMMA), FFQ_CUTS(), 0, wxEmptyString));
         first_vid_idx = 0;
 
-        streams.Add(new SBINFO(1, 0, 0, 0, GetToken(sm, COMMA), FFQ_CUTS(), 0));
+        streams.Add(new SBINFO(1, 0, 0, 0, GetToken(sm, COMMA), FFQ_CUTS(), 0, wxEmptyString));
         first_aud_idx = 1;
 
         //vid_in = GetToken(sm, ',');
@@ -859,149 +955,212 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
         //for the amount of input files that should be skipped in order to
         //maintain valid use of requested input files by filters (req_in)
         long in_count = job->skip_in_files;
-        while (in_count > 0)
-        {
+        while (in_count-- > 0) input_list.Add("");
+        /*{
             input_list.Add("");
             in_count--;
-        }
+        }*/
 
     }
-    else while (sm.Len() > 0)
+    else
     {
 
-        //This is an actual command line build and therefore the stream
-        //mapping is fully specified
+        //Create stream mapping for command line
+        STREAM_MAPPING smap;
+        int sub_stream_idx = -1;//, file_id_add = 0;
 
-        smap.Parse(sm);
-        smap.file_id--; //Decrement file_id since it starts from 1 in FFQ and 0 in FFM
-        int map_id = file_idc[smap.file_id];
+        //Before we can convert the stream mapping to a stream list, we need to know whether there are
+        //any mapped subtitles, which would disable cuts, and whether there are any cuts, which would
+        //disable conditional encoding (skip encode to same format)
 
-        if (smap.checked)
+        //NOTE: Mapping subtitles will not cause errors, but they may produce files which
+        //seems broken if the length (time) of the subtitles are exceeding the length (time)
+        //of the cut streams. For now, this is left to the user to handle
+        int /*num_subs = 0,*/ num_cuts = 0;
+        while (sm.Len() > 0)
+        {
+            smap.Parse(sm);
+            if (!smap.checked) continue;
+            //if (smap.codec_type == CODEC_TYPE_SUBTITLE) num_subs++;
+            FFQ_INPUT_FILE inf = job->GetInput(smap.file_id - 1);
+            if (inf.cuts.cuts.Len() > 0) num_cuts++;
+        }
+        //bool mapped_subs = subs_burn_in ? num_subs > 1 : num_subs > 0; // = num_subs > (int)subs_burn_in;
+        //if (mapped_subs) cuts_allowed = false; //If mapped subs, disable cuts
+        if (cuts_allowed && (num_cuts > 0)) skip_encode_same = 0; //If cuts, disable conditional encoding
+
+        //Make input file arguments..
+        MakeInputFileArgs(job->inputs, input_list, cuts_allowed);
+
+        //Make mapped file indices
+        wxArrayInt file_idc;
+        MakeMappedFileIndicies(job, file_idc, cuts_allowed);
+
+        //Now we are ready to feast on all them delicious streams of mappings..
+        sm = job->stream_map;
+        while (sm.Len() > 0)
         {
 
-            #ifdef DEBUG
-            //FFQConsole::Get()->AppendLine("SMAP=" + smap.ToString(), COLOR_BLACK);
-            #endif
+            //This is an actual command line build and therefore the stream
+            //mapping is fully specified
 
-            //Get file info
-            FFQ_INPUT_FILE inf = job->GetInput(smap.file_id);
+            smap.Parse(sm);
+            smap.file_id--; //Decrement file_id since it starts from 1 in FFQ and 0 in FFM
+            int map_id = file_idc[smap.file_id];
 
-            //Make stream tag(s)
-            wxString smcur = wxString::Format("%d:%d", map_id, smap.stream_id), smxtra;
-
-            //If a file is added more than once to the command line (for quick
-            //cutting etc.) there must be added extra mappings
-            int added = GetKeepParts(inf);
-            for (int add = 1; add < added; add++) smxtra += wxString::Format(" %d:%d", map_id + add, smap.stream_id);
-
-            if (smap.codec_type == CODEC_TYPE_VIDEO)
+            if (smap.checked)
             {
 
-                //Add stream
-                streams.Add(new SBINFO(0, map_id, smap.stream_id, ++cur_vid_idx, "[" + smcur + "]", inf.cuts, inf.duration));
+                #ifdef DEBUG
+                //FFQConsole::Get()->AppendLine("SMAP=" + smap.ToString(), COLOR_BLACK);
+                #endif
 
-                //Set index of first video stream
-                if (first_vid_idx < 0) first_vid_idx = cur_vid_idx;
+                //Get file info
+                FFQ_INPUT_FILE inf = job->GetInput(smap.file_id);
 
-            }
+                //Make stream tag(s)
+                wxString smcur = wxString::Format("%d:%d", map_id, smap.stream_id), smxtra;
 
-            else if (smap.codec_type == CODEC_TYPE_AUDIO)
-            {
-
-                //As with video
-                LPSBINFO sbi = new SBINFO(1, map_id, smap.stream_id, ++cur_aud_idx, "[" + smcur + "]", inf.cuts, inf.duration);
-                streams.Add(sbi);
-                if (first_aud_idx < 0) first_aud_idx = cur_aud_idx;
-
-                //Prevent audio from being mapped into two pass encode
-                if (encoding_pass == 1) continue;
-
-                //Since one audio-stream can be mapped multiple times with
-                //different codecs, we must handle that here:
-                while (smap.preset_list.Len() > 0)
+                //If a file is added more than once to the command line (for quick
+                //cutting etc.) there must be added extra mappings
+                int num_keep_parts = 0;
+                if (cuts_allowed)
                 {
 
-                    LPFFQ_PRESET p = FFQPresetMgr::Get()->GetPreset(GetToken(smap.preset_list, SPACE));
-                    if (p)
+                    num_keep_parts = GetKeepParts(inf);
+
+                    //If quick cuts, add extra mappings
+                    if (inf.cuts.quick) for (int add = 1; add < num_keep_parts; add++) smxtra += wxString::Format(" %d:%d", map_id + add, smap.stream_id);
+
+                }
+
+                if (smap.codec_type == CODEC_TYPE_VIDEO)
+                {
+
+                    //Add stream
+                    streams.Add(new SBINFO(0, map_id, smap.stream_id, ++cur_vid_idx, "[" + smcur + "]", inf.cuts, inf.duration, smap.codec_id));
+
+                    //Set index of first video stream
+                    if (first_vid_idx < 0) first_vid_idx = cur_vid_idx;
+
+                    //Increase number of video streams
+                    vid_count++;
+
+                }
+
+                else if (smap.codec_type == CODEC_TYPE_AUDIO)
+                {
+
+                    //As with video
+                    LPSBINFO sbi = new SBINFO(1, map_id, smap.stream_id, ++cur_aud_idx, "[" + smcur + "]", inf.cuts, inf.duration, smap.codec_id);
+                    streams.Add(sbi);
+                    if (first_aud_idx < 0) first_aud_idx = cur_aud_idx;
+
+                    //Prevent audio from being mapped into two pass encode
+                    if (encoding_pass == 1) continue;
+
+                    //Since one audio-stream can be mapped multiple times with
+                    //different codecs, we must handle that here:
+                    while (smap.preset_list.Len() > 0)
                     {
-                        if ((inf.cuts.cuts.Len() == 0) && ((pst == NULL) || (pst->GetFilters().Find(FILTER_AUDIO_IN) == wxNOT_FOUND)))
+
+                        LPFFQ_PRESET p = FFQPresetMgr::Get()->GetPreset(GetToken(smap.preset_list, SPACE));
+                        if (p)
                         {
-                            //Extra mappings must only be added if the stream is not being filtered
-                            for (int add = 0; add < added; add++) smxtra += wxString::Format(" %d:%d", map_id + add, smap.stream_id);
+
+                            //Make sure that we do not re-encode to same format if this is unwanted
+                            if (((skip_encode_same & 1) == 0) || (p->audio_codec_id != smap.codec_id))
+                            {
+
+                                if ((inf.cuts.cuts.Len() == 0) && ((pst == NULL) || (pst->GetFilters().Find(FILTER_AUDIO_IN) == wxNOT_FOUND)))
+                                {
+
+                                    //Extra mappings must only be added if the stream is not being filtered
+                                    for (int add = 0; add < num_keep_parts; add++) smxtra += wxString::Format(" %d:%d", map_id + add, smap.stream_id);
+
+                                }
+                                else sbi->split++;//Otherwise split with filter
+
+                                aud_extra += MakeAudioEncoding(p, ++cur_aud_idx);
+                                s = wxString::Format("a:%d", cur_aud_idx);
+                                metadata_extra += MakeMetaData(p->meta_data_a, s);
+                                disposition += MakeDisposition(p->disposition, 1, s);
+
+                            }
+
                         }
-                        else sbi->split++;// = added; //Otherwise split with filter
-                        aud_extra += MakeAudioEncoding(p, ++cur_aud_idx);
-                        s = wxString::Format("a:%d", cur_aud_idx);
-                        metadata_extra += MakeMetaData(p->meta_data_a, s);
-                        disposition += MakeDisposition(p->disposition, 1, s);
+                        //else handle invalid preset error
+
                     }
-                    //else handle invalid preset error
+
+                    //Increase number of sudio streams
+                    aud_count++;
+
 
                 }
 
+                else if (smap.codec_type == CODEC_TYPE_SUBTITLE)
+                {
+
+                    if (sub_in.Len() == 0)
+                    {
+
+                        //We are only interested in the first subtitle stream since
+                        //that is the one required for subtitle burn in
+                        sub_in = "[" + smcur + "]";
+                        sub_stream_idx++;
+
+                        //Map or burn-in?
+                        if (subs_burn_in)// (pst != NULL) && (pst->subtitles.codec == CODEC_SUBS_BURNIN))
+                        {
+
+                            //Create the subtitle burn in filter
+                            sub_filter = MakeSubtitleBurninFilter(sub_in, smap.stream_id /*sub_stream_idx*/, job->GetInput(smap.file_id).path, pst);
+
+                            //Prevent burned-in subtitles from being mapped
+                            continue;
+
+                        }
+                        else cur_sub_idx++; //else map
+
+                    }
+
+                    //Mapped subtitles does not work well with the preview function
+                    //so if not explicitly dictated by the user they are not mapped
+                    if (for_preview && !FFQCFG()->preview_map_subs) continue;
+
+                    //As with audio, subtitles may be mapped multiple times with different codecs
+                    while (smap.preset_list.Len() > 0)
+                    {
+
+                        LPFFQ_PRESET p = FFQPresetMgr::Get()->GetPreset(GetToken(smap.preset_list, SPACE));
+                        if (p)// && (p->subtitles.codec != CODEC_SUBS_BURNIN))
+                        {
+                            smcur += wxString::Format(" %d:%d", map_id, smap.stream_id);
+                            s = wxString::Format("s:%d", ++cur_sub_idx);
+                            subs_extra += wxString::Format("-c:%s %s ", s, p->subtitles.codec);
+                            metadata_extra += MakeMetaData(p->meta_data_s, s);
+                            disposition += MakeDisposition(p->disposition, 2, s);
+                        }
+                        //Else handle invalid preset error
+
+                    }
+
+
+                    //Prevent cuts if subtitles are mapped
+                    //mapped_subs = true;
+
+                }
+
+                //Add stream(s) to mapping
+                smcur += smxtra;
+                while (smcur.Len() > 0) mapping += "-map " + GetToken(smcur, SPACE) + SPACE;
 
             }
 
-            else if (smap.codec_type == CODEC_TYPE_SUBTITLE)
-            {
-
-                if (sub_in.Len() == 0)
-                {
-
-                    //We are only interested in the first subtitle stream since
-                    //that is the one required for subtitle burn in
-                    sub_in = "[" + smcur + "]";
-                    sub_stream_idx++;
-
-                    //Map or burn-in?
-                    if ((pst != NULL) && (pst->subtitles.codec == CODEC_SUBS_BURNIN))
-                    {
-
-                        //Create the subtitle burn in filter
-                        sub_filter = MakeSubtitleBurninFilter(sub_in, sub_stream_idx, job->GetInput(smap.file_id).path, pst);
-
-                        //Prevent burned-in subtitles from being mapped
-                        continue;
-
-                    }
-                    else cur_sub_idx++; //else map
-
-                }
-
-                //Mapped subtitles does not work well with the preview function
-                //so if not explicitly dictated by the user they are not mapped
-                if (for_preview && !FFQCFG()->preview_map_subs) continue;
-
-                //As with audio, subtitles may be mapped multiple times with different codecs
-                while (smap.preset_list.Len() > 0)
-                {
-
-                    LPFFQ_PRESET p = FFQPresetMgr::Get()->GetPreset(GetToken(smap.preset_list, SPACE));
-                    if (p && (p->subtitles.codec != CODEC_SUBS_BURNIN))
-                    {
-                        smcur += wxString::Format(" %d:%d", map_id, smap.stream_id);
-                        s = wxString::Format("s:%d", ++cur_sub_idx);
-                        subs_extra += wxString::Format("-c:%s %s ", s, p->subtitles.codec);
-                        metadata_extra += MakeMetaData(p->meta_data_s, s);
-                        disposition += MakeDisposition(p->disposition, 2, s);
-                    }
-                    //Else handle invalid preset error
-
-                }
-
-
-                //Prevent cuts if subtitles are mapped
-                mapped_subs = true;
-
-            }
-
-            //Add stream(s) to mapping
-            smcur += smxtra;
-            while (smcur.Len() > 0) mapping += "-map " + GetToken(smcur, ' ') + SPACE;
+            else if (smap.codec_type == CODEC_TYPE_SUBTITLE) sub_stream_idx++; //Beware of teletext!
 
         }
-
-        else if (smap.codec_type == CODEC_TYPE_SUBTITLE) sub_stream_idx++; //Beware of teletext!
 
     }
 
@@ -1012,17 +1171,20 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
          has_audio = (first_aud_idx >= 0) && (encoding_pass != 1),
 
          //Subtitles skipped in first pass if not burned in
-         has_subs = (sub_in.Len() > 0) && ( (encoding_pass != 1) || (sub_filter.Len() > 0) );
+         has_subs = (sub_in.Len() > 0) && ( (encoding_pass != 1) || (sub_filter.Len() > 0) ),
+
+         //Are we performing a pass in a multi-pass encoding?
+         two_pass = (!preset_only) && (!for_preview) && (encoding_pass > 0),
+
+         //Used to prevent switches that are useless for stream copy
+         copy_vid = (pst->video_codec == CODEC_COPY), copy_aud = (pst->audio_codec == CODEC_COPY);
 
     //Format preset if available and required by the command line
     if ((pst != NULL) && (job->cmd_line.Find(CMD_PRESET) >= 0))
     {
 
-        //Used to prevent switches that are useless for stream copy
-        bool copy_vid = (pst->video_codec == CODEC_COPY),
-             copy_aud = (pst->audio_codec == CODEC_COPY),
-             can_cut = /*(!has_subs) &&*/ (!mapped_subs) && ((!has_video) || (!copy_vid)) && ((!has_audio) || (!copy_aud));
-             //copySubs = (pst->SUBS.codec == CODEC_COPY); //Not used, removed until usefull
+        //Used to prevent cuts from being added if they cannot be performed
+        bool can_cut  = cuts_allowed /*(!mapped_subs)*/ && ((!has_video) || (!copy_vid)) && ((!has_audio) || (!copy_aud));
 
         //filterID is a counter used to create unique filter identifiers
         int filter_id = 1;
@@ -1035,9 +1197,13 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
 
         //Make filters for all streams
         wxString vf, af; //Video filters and audio filters
-        SBINFO dummy(0, 0, 0, 0, "", FFQ_CUTS(),0); //Dummy used as empty pointer
+        wxArrayString acodecs; //Used to keep track of which audio codecs have been added to the output
+        SBINFO dummy(0, 0, 0, 0, "", FFQ_CUTS(), 0, wxEmptyString); //Dummy used as empty pointer
         LPSBINFO first_vid = (has_video ? (LPSBINFO)streams[first_vid_idx] : &dummy),
                  first_aud = (has_audio ? (LPSBINFO)streams[first_aud_idx] : &dummy);
+
+        //Make cuts that are placed first in the filtergraph
+        if (can_cut) vf += MakeCutsForStreams(streams, filter_id, true, &cutted_files);
 
         for (size_t sidx = 0; sidx < streams.GetCount(); sidx++)
         {
@@ -1046,79 +1212,87 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
             LPSBINFO sbi = (LPSBINFO)streams[sidx];
 
             //Select all streams in the same file for cutting
-            if (can_cut) SelectStreams(streams, sel_streams, sbi->file_id, -1);
-            else sel_streams.Clear();
+            //if (can_cut) SelectStreams(streams, sel_streams, sbi->file_id, -1);
+            //else sel_streams.Clear();
 
             //Can video filters be applied?
             if ((!copy_vid) && (sbi->type == 0))
             {
 
-                //Since subtitles can be burned in to multiple streams,
-                //we need a var for a copy of the subs_filter
-                wxString subs = sub_filter.Clone();
-
-                //Add cuts first?
-                if (can_cut && (sbi->cuts.filter_first || sbi->cuts.quick)) vf += FormatCuts(sel_streams, filter_id, &cutted_files);
-
-                //Apply all other video filters from the presets filter list
-                for (size_t fidx = 0; fidx < pst->filters.Count(); fidx++)
+                //If the video stream is already the desired type, copy codec is appended to aud_extra
+                if ( ((skip_encode_same & 2) != 0) && (sbi->codec == pst->video_codec_id) )
                 {
 
-                    //Get filter
-                    FFMPEG_FILTER fltr = FFMPEG_FILTER(pst->filters[fidx]);
-
-                    if (fltr.IsVideo())
+                    if (vid_count > 1) aud_extra += wxString::Format("-c:%d %s ", (int)sidx, CODEC_COPY);
+                    else
                     {
-
-                        //Check if the filter has a required input file
-                        if (fltr.required_file.IsValid())
-                        {
-
-                            //Yup, add it to inputs and make a tag for it
-                            s = "-i \"" + fltr.required_file.path + "\" ";
-                            if (fltr.required_file.loop.Len() > 0) s = "-loop " + fltr.required_file.loop + SPACE + s;
-                            wxString tag = fltr.required_file.tag;
-                            if (tag.Len() > 0) tag = COLON + tag;
-                            req_in.Printf("[%u%s]", SIZEFMT(input_list.GetCount()), tag);
-                            input_list.Add(s);
-
-                        }
-
-                        //Format the filter
-                        if (FormatFilter(fltr.ff_filter, sbi->tag, first_aud->tag, sub_in, req_in, filter_id)) vf += fltr.ff_filter;
-
-                    }
-
-                    else if (fltr.type == ftSUBSBURNIN)
-                    {
-
-                        //Subtitle dummy-filter for placement in the filter chain found
-                        if (FormatFilter(subs, sbi->tag, first_aud->tag, sub_in, req_in, filter_id))
-                        {
-
-                            vf += subs;
-                            subs = ""; //Prevent it from being re-added later
-
-                        }
-
+                        //two_pass = false; //Two pass will not work for copy video
+                        copy_vid = true; //Do not apply video encoding settings
                     }
 
                 }
+                else
+                {
 
-                //If subtitle-filter has not been applied - do it now
-                if (FormatFilter(subs, sbi->tag, first_aud->tag, sub_in, req_in, filter_id)) vf += subs;
+                    //Since subtitles can be burned in to multiple streams,
+                    //we need a var for a copy of the subs_filter
+                    wxString subs = sub_filter.Clone();
 
-                //Add cuts last?
-                if (can_cut && (!sbi->cuts.filter_first) && (!sbi->cuts.quick)) vf += FormatCuts(sel_streams, filter_id, &cutted_files);
+                    //Add cuts first?
+                    //if (can_cut && (sbi->cuts.filter_first || sbi->cuts.quick)) vf += FormatCuts(sel_streams, filter_id, &cutted_files);
 
-                //if (can_cut && (!sbi->cuts.filter_first) && FormatCuts(sbi->cuts, sbi->tag, true, sbi->dur, filter_id))
-                //    vf += sbi->cuts.cuts;
+                    //Apply all other video filters from the presets filter list
+                    for (size_t fidx = 0; fidx < pst->filters.Count(); fidx++)
+                    {
 
-                //If the last filter tag is not removed from the filter string
-                //it must be mapped into the output with "-map [tag] output_file"
-                //Therefore we remove it here but we preserve the filter separator
-                //in order to be able to add filters for more streams
-                //if (vf.Right(1) == SCOLON) vf = vf.BeforeLast('[') + SCOLON;
+                        //Get filter
+                        FFMPEG_FILTER fltr = FFMPEG_FILTER(pst->filters[fidx]);
+
+                        if (fltr.IsVideo())
+                        {
+
+                            //Check if the filter has a required input file
+                            if (fltr.required_file.IsValid())
+                            {
+
+                                //Yup, add it to inputs and make a tag for it
+                                s = "-i \"" + fltr.required_file.path + "\" ";
+                                if (fltr.required_file.loop.Len() > 0) s = "-loop " + fltr.required_file.loop + SPACE + s;
+                                wxString tag = fltr.required_file.tag;
+                                if (tag.Len() > 0) tag = COLON + tag;
+                                req_in.Printf("[%u%s]", SIZEFMT(input_list.GetCount()), tag);
+                                input_list.Add(s);
+
+                            }
+
+                            //Format the filter
+                            if (FormatFilter(fltr.ff_filter, sbi->tag, first_aud->tag, sub_in, req_in, filter_id)) vf += fltr.ff_filter;
+
+                        }
+
+                        else if (fltr.type == ftSUBSBURNIN)
+                        {
+
+                            //Subtitle dummy-filter for placement in the filter chain found
+                            if (FormatFilter(subs, sbi->tag, first_aud->tag, sub_in, req_in, filter_id))
+                            {
+
+                                vf += subs;
+                                subs = ""; //Prevent it from being re-added later
+
+                            }
+
+                        }
+
+                    }
+
+                    //If subtitle-filter has not been applied - do it now
+                    if (FormatFilter(subs, sbi->tag, first_aud->tag, sub_in, req_in, filter_id)) vf += subs;
+
+                    //Add cuts last?
+                    //if (can_cut && (!sbi->cuts.filter_first) && (!sbi->cuts.quick)) vf += FormatCuts(sel_streams, filter_id, &cutted_files);
+
+                }
 
             }
 
@@ -1129,37 +1303,51 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
                 if (!copy_aud)
                 {
 
-                    //Prepare audio cuts
-                    //wxString cuts = (can_cut && FormatCuts(sbi->cuts, sbi->tag, false, sbi->dur, filter_id)) ? sbi->cuts.cuts : "";
-                    bool has_cuts = sbi->cuts.cuts.Len() > 0;
-
-                    //Cuts requires complex audio filtering
-                    if (has_cuts || (sbi->split > 0)) audio_filters_complex = true;
-
-                    //Apply audio cutting first?
-                    if (has_cuts && (sbi->cuts.filter_first || sbi->cuts.quick))
-                    {
-                        af += FormatCuts(sel_streams, filter_id, &cutted_files);
-                        has_cuts = false; //Prevent add last
-                    }
-
-                    //Process audio filters from the list
-                    for (size_t fidx = 0; fidx < pst->filters.Count(); fidx++)
+                    //Skip re-encoding if codec is the same?
+                    if ((skip_encode_same & 1) && (pst->audio_codec_id == sbi->codec))
                     {
 
-                        FFMPEG_FILTER fltr = FFMPEG_FILTER(pst->filters[fidx]);
-                        if (fltr.IsAudio() && FormatFilter(fltr.ff_filter, first_vid->tag, sbi->tag, sub_in, req_in, filter_id))
-                            af += fltr.ff_filter;
+                        if (aud_count > 1) aud_extra += wxString::Format("-c:%d %s ", (int)sidx, CODEC_COPY);
+                        else copy_aud = true;
 
                     }
+                    else
+                    {
 
-                    //Apply audio cutting last?
-                    if (has_cuts && (!sbi->cuts.filter_first)) af += FormatCuts(sel_streams, filter_id, &cutted_files);
+                        //Prepare audio cuts
+                        //wxString cuts = (can_cut && FormatCuts(sbi->cuts, sbi->tag, false, sbi->dur, filter_id)) ? sbi->cuts.cuts : "";
+                        //bool has_cuts = sbi->cuts.cuts.Len() > 0;
+                        bool has_cuts = can_cut && (sbi->cuts.cuts.Len() > 0);
+
+                        //Cuts requires complex audio filtering
+                        if (has_cuts || (sbi->split > 0)) audio_filters_complex = true;
+
+                        //Apply audio cutting first?
+                        /*if (has_cuts && (sbi->cuts.filter_first || sbi->cuts.quick))
+                        {
+                            af += FormatCuts(sel_streams, filter_id, &cutted_files);
+                            has_cuts = false; //Prevent add last
+                        }*/
+
+                        //Process audio filters from the list
+                        for (size_t fidx = 0; fidx < pst->filters.Count(); fidx++)
+                        {
+
+                            FFMPEG_FILTER fltr = FFMPEG_FILTER(pst->filters[fidx]);
+                            if (fltr.IsAudio() && FormatFilter(fltr.ff_filter, first_vid->tag, sbi->tag, sub_in, req_in, filter_id))
+                                af += fltr.ff_filter;
+
+                        }
+
+                        //Apply audio cutting last?
+                        //if (has_cuts && (!sbi->cuts.filter_first)) af += FormatCuts(sel_streams, filter_id, &cutted_files);
+
+                    }
 
                 }
 
                 //Must the stream be split?
-                if (sbi->split > 0)
+                /*if (sbi->split > 0)
                 {
                     sbi->split++; //1=2, 2=3 etc.
                     af += sbi->tag + wxString::Format("asplit=%d", sbi->split);
@@ -1172,7 +1360,7 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
                     }
                     af += SCOLON;
                     sbi->tag.RemoveLast();
-                }
+                }*/
 
                 //See comment for the same thing done on vf above
                 //if (af.Right(1) == SCOLON) af = af.BeforeLast('[') + SCOLON;
@@ -1180,6 +1368,17 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
             }
 
         }
+
+        if (audio_filters_complex)
+        {
+            vf += af;
+            af.Clear();
+        }
+
+        //Make cuts that are placed last in the filtergraph
+        if (can_cut) vf += MakeCutsForStreams(streams, filter_id, false, &cutted_files);
+
+        vf += MakeStreamSplits(streams, filter_id); ///PLACE AUDIO SPLITS HERE!!
 
         //Terminate output tags
         TerminateOutputTags(streams, vf);
@@ -1198,11 +1397,12 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
             //Add complex audio filters?
             if (audio_filters_complex && (af.Len() > 0))
             {
+
                 //Remove any output tags
                 //RemoveOutputTags(streams, af);
-
                 preset += af;
                 af.Clear(); //Prevent from being re-added
+
             }
 
             //Remove trailing ";" and close filter_complex
@@ -1212,8 +1412,8 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
         }
 
         //Add audio filters (if not already done above)
-        if (af.Len() > 0)
-        {
+        if (af.Len() > 0) preset += " -af \"" + af.RemoveLast() + "\" ";
+        /*{
 
             //Remove any output tags
             //RemoveOutputTags(streams, af);
@@ -1227,7 +1427,7 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
             //Add filters to preset
             preset += " \"" + af + "\" ";
 
-        }
+        }*/
 
         //preset += MakeOutputMapping(streams);
 
@@ -1237,7 +1437,7 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
         streams.Clear();
 
         //Video codec
-        if (has_video && (pst->video_codec.Len() > 0)) preset += "-c:v " + pst->video_codec + SPACE;
+        if (has_video && (pst->video_codec.Len() > 0)) preset += "-c:v " + (copy_vid ? CODEC_COPY : pst->video_codec) + SPACE;
 
         if ((!copy_vid) && has_video)
         {
@@ -1279,12 +1479,23 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
             //if (segment) preset += "-flags +cgop ";
 
             //Full specification video arguments
-            if (pst->fullspec_vid.Len() > 0) preset += pst->fullspec_vid + SPACE;
+            if (pst->fullspec_vid.Len() > 0)
+            {
+
+                wxString fsv = pst->fullspec_vid;
+
+                //Make it possible to integrate two-pass encoding into full-spec settings
+                if (two_pass && fsv.StartsWith(X265_PARAMS)) fsv = fsv.BeforeFirst(DQUOTE) + DQUOTE + TWO_PASS_INSERT_POS + fsv.AfterFirst(DQUOTE);
+
+                //Apply full spec to preset
+                preset += fsv + SPACE;
+
+            }
 
         }
 
         //Audio encoding
-        if (has_audio) preset += MakeAudioEncoding(pst, -1);
+        if (has_audio) preset += copy_aud ? ("-c:a " + CODEC_COPY + SPACE) : MakeAudioEncoding(pst, -1);
         preset += aud_extra;
 
         //Subtitle encoding
@@ -1338,6 +1549,9 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
         //Aspect ratio - does not need encoding - just video
         if (has_video && (pst->aspect_ratio.Len() > 0)) preset += "-aspect " + pst->aspect_ratio + SPACE;
 
+        //End after shortest stream ends?
+        if (pst->shortest) preset += "-shortest ";
+
         //Append the proper custom arguments
         if (for_preview && (pst->custom_args_1.Len() > 0)) s = pst->custom_args_1;
         else if ((encoding_pass < 2) && (pst->custom_args_1.Len() > 0)) s = pst->custom_args_1;
@@ -1384,18 +1598,24 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
     if (preset_only) return s;
 
     //Create output-file - depending on multipass (and what pass) or singlepass
-    if ((!for_preview) && (encoding_pass > 0))
+    if (two_pass) //(!for_preview) && (encoding_pass > 0))
     {
 
-        //Get name of passlogfile
-        GetPassLogFileName(job, t);
+        //Get name of two-pass log file
+        GetTwoPassLog(job, t);
 
         //Add pass number and passlogfile
         if (pst && (pst->video_codec.Find("x265") != wxNOT_FOUND))
         {
 
-            //x265 handles multiple passes different - here's how
-            t = "-x265-params pass=" + ToStr(encoding_pass) + ":stats=\"'" + FormatFileName(t) + "'\" ";
+            //x265 handles multiple passes different, so we need to handle this here
+            t = "pass=" + ToStr(encoding_pass)+ ":stats='" + FormatFileName(t) + "'";
+            if (s.Replace(TWO_PASS_INSERT_POS, t + COLON, false) == 1) t = wxEmptyString;
+            else
+            {
+                //t = "pass=" + ToStr(encoding_pass) + ":stats=\"'" + FormatFileName(t) + "'\" ";
+                t = X265_PARAMS + SPACE + "\"" + t + "\"" + SPACE;
+            }
 
         }
 
@@ -1415,11 +1635,11 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
     bool two_pass_null = false;
     wxString fmt = pst ? pst->output_format : "";
 
-    if ((!for_preview) && (encoding_pass == 1))
+    if ((!for_preview) && (encoding_pass == 1) && two_pass)
     {
 
         two_pass_null = (pst != NULL) && pst->two_pass_null; //pst should never be NULL here - but just in case..
-        t+= "-an "; //No audio for first pass
+        t += "-an "; //No audio for first pass
         if (two_pass_null) fmt = "null"; //Override output format to null for first pass
 
     }
@@ -1502,7 +1722,7 @@ void CleanupFinishedJob(LPFFQ_JOB job)
 
     //Clean up any temporary files or other garbage created by a job
     wxString plf, cf;
-    GetPassLogFileName(job, plf);
+    GetTwoPassLog(job, plf);
 
     //x265 files
     if (wxFileExists(plf)) wxRemoveFile(plf);

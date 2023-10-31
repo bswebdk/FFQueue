@@ -63,7 +63,7 @@ typedef struct INPUT_CTRLS
     wxTextCtrl *input;//, *itsoffset, *framerate;
     //wxFlexGridSizer *sizer;
     wxBoxSizer *sizer;
-    wxString validated_path, itsoffset, framerate;
+    wxString validated_path, itsoffset, loop_streams, framerate;
     bool valid, discard_corrupt, genpts, igndts, ignidx, can_cut;
     wxButton *browse;
     wxBitmapButton *play;

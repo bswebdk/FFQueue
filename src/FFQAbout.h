@@ -55,6 +55,7 @@ class FFQAbout: public wxDialog
 
 		//(*Declarations(FFQAbout)
 		wxButton* CloseButton;
+		wxButton* HelpButton;
 		wxPanel* AnimPanel;
 		wxStaticBitmap* StaticBitmap;
 		wxStaticText* Bacon;
@@ -69,6 +70,7 @@ class FFQAbout: public wxDialog
 		static const long ID_STATICBITMAP;
 		static const long ID_ANIMPANEL;
 		static const long ID_TEXTCTRL;
+		static const long ID_HELPBUTTON;
 		static const long ID_CLOSEBUTTON;
 		//*)
 
@@ -81,6 +83,7 @@ class FFQAbout: public wxDialog
 		//*)
 
 		wxAnimationCtrl *m_Anim;
+		wxString m_HelpPath;
 
 		#ifdef DEBUG
 		int cc;

@@ -200,7 +200,7 @@ class FFQConcat: public wxDialog
 		FFQTimeEdit *m_TimeEdit;
 		FFProbeInfoParser *m_PIP;
 
-		wxString m_ImgPatn, m_LastPst, m_Command, m_TempPath;
+		wxString m_ImgPatn, m_LastPst, m_Command, m_TempPath, m_MergeAspect;
 		bool m_DoIdleTask, m_BlurOK, m_ImgList;
 		unsigned int m_ImgCount, m_ImgFirst;
 		TIME_VALUE m_LimitLen;
@@ -208,7 +208,7 @@ class FFQConcat: public wxDialog
 		CONCAT_DATA m_AudInfo;
 
 		void AddConcatSources(wxArrayString *paths);
-		void BuildMergeFilter(wxString &filter, wxString &smap);
+		void BuildMergeFilter(wxString &filter, wxString &smap, wxString &merge_aspect);
 		bool EditTime(TIME_VALUE &tv);
 		bool EnumSlideshowFrames();
 		bool GetFileInfo(LPCONCAT_DATA cd, bool dimensionRequired);

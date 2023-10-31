@@ -42,6 +42,7 @@
 	//*)
 #endif
 //(*Headers(FFQJobEditAdvCuts)
+#include <wx/spinctrl.h>
 //*)
 
 #include "utils/FFQLang.h"
@@ -82,6 +83,7 @@ class FFQJobEditAdvCuts: public wxDialog
 		wxSlider* CfgAccuracy;
 		wxSlider* CfgDelay;
 		wxSlider* FrameSlider;
+		wxSpinCtrl* JumpSize;
 		wxStaticText* DurationLab;
 		wxStaticText* FramePos;
 		wxStaticText* ST10;
@@ -116,6 +118,7 @@ class FFQJobEditAdvCuts: public wxDialog
 		static const long ID_TIMEPREVIEW;
 		static const long ID_FRAMESLIDER;
 		static const long ID_PREVFRAME;
+		static const long ID_JUMPSIZE;
 		static const long ID_NEXTFRAME;
 		static const long ID_SETFROM;
 		static const long ID_SETTO;
@@ -134,19 +137,26 @@ class FFQJobEditAdvCuts: public wxDialog
 		//*)
 		TIME_VALUE m_Duration, m_FramePos;
 		wxString m_FilePath, m_SrtPath;
+		//wxArrayInt m_SelCuts;
 		wxImage *m_CurFrame;
 		wxBitmap *m_DrawBuf;
+		wxMenu *m_CutMenu;
 		FFQProcess *m_Process;
 		unsigned int m_FrameTime;
 		FFProbeInfoParser *m_Probe;
 		LPFFPROBE_STREAM_INFO m_VidInfo;
 		double m_VidRate;
+		bool m_FirstShow;
 
-		void ExtractFrame();
-		bool GetCut(wxString &cut, long &pos);
+		void  ExtractFrame();
+		bool  GetCut(wxString &cut, long &pos);
 		void* MakePreviewJob(TIME_VALUE start_time, FFQ_CUTS cuts, bool encode);
-		void ShowTimePreview(TIME_VALUE &at_time);
-		void UpdateControls();
+		int   MergeOverlaps(wxArrayString &merged);
+		void  ShowTimePreview(TIME_VALUE &at_time);
+		void  UpdateControls();
+
+		void OnMenu(wxCommandEvent &event);
+		void OnMouse(wxMouseEvent &event);
 
 		DECLARE_EVENT_TABLE()
 

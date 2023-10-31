@@ -54,6 +54,7 @@ const long FFQPresetEdit::ID_VIDEOCODEC = wxNewId();
 const long FFQPresetEdit::ID_FULLSPECVIDBUTTON = wxNewId();
 const long FFQPresetEdit::ID_TWOPASS = wxNewId();
 const long FFQPresetEdit::ID_TWOPASSNULL = wxNewId();
+const long FFQPresetEdit::ID_SKIPENCODESAMEVID = wxNewId();
 const long FFQPresetEdit::ID_VIDEOBITRATE = wxNewId();
 const long FFQPresetEdit::ID_BITRATEPAGE = wxNewId();
 const long FFQPresetEdit::ID_QST1 = wxNewId();
@@ -110,6 +111,8 @@ const long FFQPresetEdit::ID_HWDECODEPAGE = wxNewId();
 const long FFQPresetEdit::ID_VIDEOPAGES = wxNewId();
 const long FFQPresetEdit::ID_VIDEOPAGE = wxNewId();
 const long FFQPresetEdit::ID_AUDIOCODEC = wxNewId();
+const long FFQPresetEdit::ID_FULLSPECAUDBUTTON = wxNewId();
+const long FFQPresetEdit::ID_SKIPENCODESAMEAUD = wxNewId();
 const long FFQPresetEdit::ID_AUDIOBITRATE = wxNewId();
 const long FFQPresetEdit::ID_USEAUDIOQSCALE = wxNewId();
 const long FFQPresetEdit::ID_AST1 = wxNewId();
@@ -177,6 +180,7 @@ const long FFQPresetEdit::ID_DISPOSITIONSBTN = wxNewId();
 const long FFQPresetEdit::ID_OUTPUTFORMAT = wxNewId();
 const long FFQPresetEdit::ID_MF_FASTSTART = wxNewId();
 const long FFQPresetEdit::ID_KEEPFILETIME = wxNewId();
+const long FFQPresetEdit::ID_STOPENCSHORTEST = wxNewId();
 const long FFQPresetEdit::ID_MISCPAGE = wxNewId();
 const long FFQPresetEdit::ID_PAGES = wxNewId();
 const long FFQPresetEdit::ID_OKBUTTON = wxNewId();
@@ -204,6 +208,16 @@ const wxString VSYNC_FORMAT = "%s (%s)";
 
 const int DISPOSITION_MENU_ID_COUNT = 30;
 const int FILTER_MENU_BASE_ID = 1000;
+
+//---------------------------------------------------------------------------------------
+
+void GetCodecNameAndID(wxString src, wxString &name, wxString &id)
+{
+    name = src.BeforeFirst(SPACE);
+    src = src.AfterLast('(');
+    if (src.StartsWith("codec ") && src.EndsWith(')')) id = src.AfterFirst(SPACE).BeforeLast(')');
+    else id = name;
+}
 
 //---------------------------------------------------------------------------------------
 
@@ -280,7 +294,7 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 	FullSpecVidButton = new wxButton(VideoPage, ID_FULLSPECVIDBUTTON, _T("..."), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_FULLSPECVIDBUTTON"));
 	VideoCodecSizer->Add(FullSpecVidButton, 1, wxALL, 3);
 	FlexGridSizer18->Add(VideoCodecSizer, 0, wxEXPAND, 0);
-	VideoTwoPassSizer = new wxFlexGridSizer(1, 2, 0, 0);
+	VideoTwoPassSizer = new wxFlexGridSizer(2, 2, 0, 0);
 	VideoTwoPassSizer->AddGrowableCol(1);
 	VideoTwoPassSizer->AddGrowableRow(0);
 	TwoPass = new wxCheckBox(VideoPage, ID_TWOPASS, _T("2pass"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_TWOPASS"));
@@ -291,6 +305,11 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 	TwoPassNull->SetValue(false);
 	TwoPassNull->SetLabel(FFQS(SID_PRESET_FIRST_PASS_NULL_TARGET));
 	VideoTwoPassSizer->Add(TwoPassNull, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
+	SkipEncodeSameVid = new wxCheckBox(VideoPage, ID_SKIPENCODESAMEVID, _T("Sev"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_SKIPENCODESAMEVID"));
+	SkipEncodeSameVid->SetValue(false);
+	SkipEncodeSameVid->SetLabel(FFQS(SID_PRESET_SKIP_ENCODE_SAME));
+	VideoTwoPassSizer->Add(SkipEncodeSameVid, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
+	VideoTwoPassSizer->Add(-1,-1,1, wxALL|wxEXPAND, 0);
 	FlexGridSizer18->Add(VideoTwoPassSizer, 1, wxALL|wxEXPAND, 0);
 	VSBS1->Add(FlexGridSizer18, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
 	FlexGridSizer13->Add(VSBS1, 1, wxALL|wxEXPAND, 5);
@@ -556,11 +575,18 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 	FlexGridSizer3 = new wxFlexGridSizer(4, 1, 0, 0);
 	FlexGridSizer3->AddGrowableCol(0);
 	ASBS1 = new wxStaticBoxSizer(wxVERTICAL, AudioPage, _T("Cd"));
-	FlexGridSizer12 = new wxFlexGridSizer(1, 1, 0, 0);
+	FlexGridSizer12 = new wxFlexGridSizer(2, 2, 0, 0);
 	FlexGridSizer12->AddGrowableCol(0);
 	AudioCodec = new wxChoice(AudioPage, ID_AUDIOCODEC, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator, _T("ID_AUDIOCODEC"));
 	ASBS1->GetStaticBox()->SetLabel(FFQS(SID_PRESET_CODEC));
 	FlexGridSizer12->Add(AudioCodec, 1, wxALL|wxEXPAND, 3);
+	FullSpecAudButton = new wxButton(AudioPage, ID_FULLSPECAUDBUTTON, _T("..."), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_FULLSPECAUDBUTTON"));
+	FlexGridSizer12->Add(FullSpecAudButton, 1, wxALL, 3);
+	SkipEncodeSameAud = new wxCheckBox(AudioPage, ID_SKIPENCODESAMEAUD, _T("Sea"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_SKIPENCODESAMEAUD"));
+	SkipEncodeSameAud->SetValue(false);
+	SkipEncodeSameAud->SetLabel(FFQS(SID_PRESET_SKIP_ENCODE_SAME));
+	FlexGridSizer12->Add(SkipEncodeSameAud, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
+	FlexGridSizer12->Add(-1,-1,1, wxALL|wxEXPAND, 0);
 	ASBS1->Add(FlexGridSizer12, 1, wxALL|wxEXPAND, 0);
 	FlexGridSizer3->Add(ASBS1, 1, wxALL|wxEXPAND, 5);
 	ASBS2 = new wxStaticBoxSizer(wxHORIZONTAL, AudioPage, _T("Br"));
@@ -714,24 +740,24 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 	FlexGridSizer5->AddGrowableRow(8);
 	AddFilterButton = new wxButton(FilterPage, ID_ADDFILTERBUTTON, _T("+"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_ADDFILTERBUTTON"));
 	AddFilterButton->SetLabel(FFQS(SID_COMMON_ADD));
-	FlexGridSizer5->Add(AddFilterButton, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+	FlexGridSizer5->Add(AddFilterButton, 1, wxALL|wxEXPAND, 3);
 	EditFilterButton = new wxButton(FilterPage, ID_EDITFILTERBUTTON, _T("\?"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_EDITFILTERBUTTON"));
 	EditFilterButton->SetLabel(FFQS(SID_COMMON_EDIT));
-	FlexGridSizer5->Add(EditFilterButton, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+	FlexGridSizer5->Add(EditFilterButton, 1, wxALL|wxEXPAND, 3);
 	RemoveFilterButton = new wxButton(FilterPage, ID_REMOVEFILTERBUTTON, _T("-"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_REMOVEFILTERBUTTON"));
 	RemoveFilterButton->SetLabel(FFQS(SID_COMMON_REMOVE));
-	FlexGridSizer5->Add(RemoveFilterButton, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+	FlexGridSizer5->Add(RemoveFilterButton, 1, wxALL|wxEXPAND, 3);
 	FlexGridSizer5->Add(-1,15,1, wxALL|wxEXPAND, 0);
 	FilterUpButton = new wxButton(FilterPage, ID_FILTERUPBUTTON, _T("^"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_FILTERUPBUTTON"));
 	FilterUpButton->SetLabel(FFQS(SID_COMMON_MOVE_UP));
-	FlexGridSizer5->Add(FilterUpButton, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+	FlexGridSizer5->Add(FilterUpButton, 1, wxALL|wxEXPAND, 3);
 	FilterDownButton = new wxButton(FilterPage, ID_FILTERDOWNBUTTON, _T("v"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_FILTERDOWNBUTTON"));
 	FilterDownButton->SetLabel(FFQS(SID_COMMON_MOVE_DOWN));
-	FlexGridSizer5->Add(FilterDownButton, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+	FlexGridSizer5->Add(FilterDownButton, 1, wxALL|wxEXPAND, 3);
 	FlexGridSizer5->Add(-1,15,1, wxALL|wxEXPAND, 0);
 	FilterPreviewButton = new wxButton(FilterPage, ID_FILTERPREVIEWBUTTON, _T("Pw"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_FILTERPREVIEWBUTTON"));
 	FilterPreviewButton->SetLabel(FFQS(SID_COMMON_PREVIEW));
-	FlexGridSizer5->Add(FilterPreviewButton, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 3);
+	FlexGridSizer5->Add(FilterPreviewButton, 1, wxALL|wxEXPAND, 3);
 	FlexGridSizer5->Add(-1,-1,1, wxALL|wxEXPAND, 0);
 	FlexGridSizer7->Add(FlexGridSizer5, 1, wxALL|wxEXPAND, 3);
 	AudioFiltersComplex = new wxCheckBox(FilterPage, ID_AUDIOFILTERSCOMPLEX, _T("ACpl"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_AUDIOFILTERSCOMPLEX"));
@@ -909,6 +935,10 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 	KeepFileTime->SetValue(false);
 	KeepFileTime->SetLabel(FFQS(SID_PRESET_KEEP_FILETIME));
 	BoxSizer2->Add(KeepFileTime, 1, wxLEFT|wxRIGHT|wxALIGN_LEFT, 3);
+	StopEncShortest = new wxCheckBox(MiscPage, ID_STOPENCSHORTEST, _T("Sts"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_STOPENCSHORTEST"));
+	StopEncShortest->SetValue(false);
+	StopEncShortest->SetLabel(FFQS(SID_PRESET_STOP_ENCODE_SHORTEST));
+	BoxSizer2->Add(StopEncShortest, 1, wxLEFT|wxRIGHT|wxALIGN_LEFT, 3);
 	FlexGridSizer28->Add(BoxSizer2, 1, wxALL|wxEXPAND, 0);
 	SBS51->Add(FlexGridSizer28, 1, wxALL|wxEXPAND, 0);
 	FlexGridSizer14->Add(SBS51, 1, wxALL|wxEXPAND, 5);
@@ -960,6 +990,7 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 	Connect(ID_PIXFMT,wxEVT_COMMAND_COMBOBOX_SELECTED,(wxObjectEventFunction)&FFQPresetEdit::OnChoiceChange);
 	Connect(ID_PIXFMT,wxEVT_COMMAND_TEXT_UPDATED,(wxObjectEventFunction)&FFQPresetEdit::OnChoiceChange);
 	Connect(ID_AUDIOCODEC,wxEVT_COMMAND_CHOICE_SELECTED,(wxObjectEventFunction)&FFQPresetEdit::OnChoiceChange);
+	Connect(ID_FULLSPECAUDBUTTON,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&FFQPresetEdit::OnButtonClick);
 	Connect(ID_USEAUDIOQSCALE,wxEVT_COMMAND_CHECKBOX_CLICKED,(wxObjectEventFunction)&FFQPresetEdit::OnChoiceChange);
 	Connect(ID_AUDIOQSCALE,wxEVT_COMMAND_SLIDER_UPDATED,(wxObjectEventFunction)&FFQPresetEdit::OnSubsScaleChange);
 	Connect(ID_SUBSCODEC,wxEVT_COMMAND_CHOICE_SELECTED,(wxObjectEventFunction)&FFQPresetEdit::OnChoiceChange);
@@ -1080,7 +1111,7 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
     //Bind menu handler for both filters and dispositions
     Bind(wxEVT_COMMAND_MENU_SELECTED, &FFQPresetEdit::OnMenuSelected, this);
 
-	OpenFileDlg->SetDirectory(FFQCFG()->GetBrowseRoot());
+	FFQCFG()->SetBrowseRootFor(OpenFileDlg);
 
     FilterEditor = NULL;
 
@@ -1110,7 +1141,7 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 
     //Prepare the full spec editor
     #ifndef DEBUG
-    FFQFullSpec::Initialize();
+    FFQFullSpec::Initialize(this);
     #endif
 
 }
@@ -1135,7 +1166,7 @@ bool FFQPresetEdit::Execute(LPFFQ_PRESET preset)
 
     #ifdef DEBUG
     FFQFullSpec::Finalize();
-    FFQFullSpec::Initialize();
+    FFQFullSpec::Initialize(this);
     #endif // DEBUG
 
     //Store pointer to preset
@@ -1152,9 +1183,11 @@ bool FFQPresetEdit::Execute(LPFFQ_PRESET preset)
     //Video options
     wxString s = FFQCFG()->GetFFMpegCodecs(ctVIDEO), t;
     SetItems(VideoCodec, s, preset->video_codec);
+    m_FullSpecVCodec = preset->video_codec;
     m_FullSpecVid = preset->fullspec_vid;
     TwoPass->SetValue(preset->two_pass);
     TwoPassNull->SetValue(preset->two_pass_null);
+    SkipEncodeSameVid->SetValue(preset->skip_encode_same & 2);
 
     //Video bit rate values
     VideoBitRate->SetValues(preset->video_rate);
@@ -1236,6 +1269,9 @@ bool FFQPresetEdit::Execute(LPFFQ_PRESET preset)
     //Codec
     s = FFQCFG()->GetFFMpegCodecs(ctAUDIO);
     SetItems(AudioCodec, s, preset->audio_codec);
+    m_FullSpecACodec = preset->audio_codec;
+    m_FullSpecAud = preset->fullspec_aud;
+    SkipEncodeSameAud->SetValue(preset->skip_encode_same & 1);
 
     //Bit rate
     AudioBitRate->SetValues(preset->audio_rate);
@@ -1315,6 +1351,7 @@ bool FFQPresetEdit::Execute(LPFFQ_PRESET preset)
     Aspect->SetValue(preset->aspect_ratio);
     MF_FastStart->SetValue(preset->mf_faststart);
     KeepFileTime->SetValue(preset->keep_filetime);
+    StopEncShortest->SetValue(preset->shortest);
     OutputFormat->Clear();
     s = FFQCFG()->GetFFMpegFormats();
     int sel = -1;
@@ -1372,12 +1409,15 @@ bool FFQPresetEdit::Execute(LPFFQ_PRESET preset)
         //Save preset settings
         preset->preset_name = StrTrim(PresetName->GetValue());
         preset->is_temporary = PresetTemp->GetValue();
+        preset->skip_encode_same = 0;
 
         //Save video settings
-        preset->video_codec = VideoCodec->GetStringSelection().BeforeFirst(' ');
-        preset->fullspec_vid = m_FullSpecVid;
+        GetCodecNameAndID(VideoCodec->GetStringSelection(), preset->video_codec, preset->video_codec_id);
+        //preset->video_codec = VideoCodec->GetStringSelection().BeforeFirst(SPACE);
+        preset->fullspec_vid = (preset->video_codec == m_FullSpecVCodec) ?  m_FullSpecVid : "";
         preset->two_pass = TwoPass->GetValue();
         preset->two_pass_null = TwoPassNull->GetValue();
+        if (SkipEncodeSameVid->IsEnabled() && SkipEncodeSameVid->GetValue()) preset->skip_encode_same |= 2;
 
         //Video bit rate
         VideoBitRate->GetValues(preset->video_rate, false);
@@ -1418,7 +1458,10 @@ bool FFQPresetEdit::Execute(LPFFQ_PRESET preset)
 
 
         //Audio settings
-        preset->audio_codec = AudioCodec->GetStringSelection().BeforeFirst(SPACE);
+        GetCodecNameAndID(AudioCodec->GetStringSelection(), preset->audio_codec, preset->audio_codec_id);
+        preset->fullspec_aud = (preset->audio_codec == m_FullSpecACodec) ?  m_FullSpecAud : "";
+        if (SkipEncodeSameAud->IsEnabled() && SkipEncodeSameAud->GetValue()) preset->skip_encode_same |= 1;
+        //preset->audio_codec = AudioCodec->GetStringSelection().BeforeFirst(SPACE);
 
         //Audio bit rate
         AudioBitRate->GetValues(preset->audio_rate, false);
@@ -1477,6 +1520,7 @@ bool FFQPresetEdit::Execute(LPFFQ_PRESET preset)
         preset->aspect_ratio = StrTrim(Aspect->GetValue());
         preset->mf_faststart = MF_FastStart->GetValue();
         preset->keep_filetime = KeepFileTime->GetValue();
+        preset->shortest = StopEncShortest->GetValue();
         s = OutputFormat->GetValue();
         preset->output_format = GetToken(s, SPACE);
         preset->segmenting.length = Str2Long(SegmentLen->GetValue(), 0);
@@ -1505,6 +1549,34 @@ bool FFQPresetEdit::EditFilter(LPFFMPEG_FILTER filter)
 {
     if (FilterEditor == NULL) FilterEditor = new FFQFilterEdit(this);
     return FilterEditor->Execute(filter);
+}
+
+//---------------------------------------------------------------------------------------
+
+void FFQPresetEdit::EditFullSpec(wxString selected_codec, int fs_idx, wxString &for_codec, wxString &spec)
+{
+
+    //Get selected_codec for comparison
+    wxString codec, fs;
+    GetCodecNameAndID(selected_codec, codec, fs); //fs used as dummy here
+
+    //If the selected codec matches the stored one then use it otherwise use empty string
+    fs = (for_codec == codec) ? spec : "";
+
+    //Launch full spec UI
+    FFQFullSpec *dlg = new FFQFullSpec(this);
+    if (dlg->Execute(fs_idx, fs))
+    {
+
+        //If success, store the stuff back
+        spec = fs;
+        for_codec = codec;
+
+    }
+
+    //Do not keep the dialog in memory
+    delete dlg;
+
 }
 
 //---------------------------------------------------------------------------------------
@@ -1836,8 +1908,13 @@ void FFQPresetEdit::UpdateControls(bool sizers)
         //Only performed when codec-choices change, selection of "0" means
         //copy and all possible encoding properties must be disabled
 
-        m_FullSpecVidIdx = venc ? FFQFullSpec::FindFullSpec(VideoCodec->GetString(VideoCodec->GetSelection())) : -1;
+        //m_FullSpecAudIdx = aenc ? FFQFullSpec::FindFullSpec(AudioCodec->GetString(AudioCodec->GetSelection())) : -1;
+        //m_FullSpecVidIdx = venc ? FFQFullSpec::FindFullSpec(VideoCodec->GetString(VideoCodec->GetSelection())) : -1;
+        m_FullSpecAudIdx = aenc ? FFQFullSpec::FindFullSpec(AudioCodec->GetStringSelection()) : -1;
+        m_FullSpecVidIdx = venc ? FFQFullSpec::FindFullSpec(VideoCodec->GetStringSelection()) : -1;
+
         FullSpecVidButton->Enable(m_FullSpecVidIdx >= 0);
+        FullSpecAudButton->Enable(m_FullSpecAudIdx >= 0);
 
         //Video
         EnableSizer(VideoTwoPassSizer, venc); //Two pass
@@ -1846,6 +1923,7 @@ void FFQPresetEdit::UpdateControls(bool sizers)
         EnableSizer(ASBS2, aenc);
         EnableSizer(ASBS3, aenc);
         EnableSizer(ASBS4, aenc);
+        SkipEncodeSameAud->Enable(aenc);
 
         //Filters
         EnableSizer(FilterSizer, venc||aenc, &ID_FILTERTIP);
@@ -1884,10 +1962,6 @@ void FFQPresetEdit::UpdateControls(bool sizers)
     if (venc || aenc)
     {
 
-        //Disable video controls that cannot be changed
-
-        TwoPassNull->Enable(TwoPass->IsChecked());
-
         int sel_first = -1, sel_last = -2,
             mov_first = 0, f_count = FilterList->GetCount();
 
@@ -1909,6 +1983,9 @@ void FFQPresetEdit::UpdateControls(bool sizers)
         if (venc)
         {
 
+            //Disable video controls that cannot be used
+            TwoPassNull->Enable(TwoPass->IsChecked());
+            SkipEncodeSameVid->Enable(!TwoPass->IsChecked());
             CST2->Enable(TwoPass->GetValue());
             CustomArgs2->Enable(TwoPass->GetValue());
 
@@ -2075,7 +2152,7 @@ void FFQPresetEdit::UpdateVideoPages(bool sizers)
     VideoQScale->Enable(UseVideoQScale->GetValue());
     VideoQScaleVal->Enable(UseVideoQScale->GetValue());
 
-    b = m_VidCodecInfo.min_crf != m_VidCodecInfo.max_crf;
+    b = (!TwoPass->IsChecked()) && (m_VidCodecInfo.min_crf != m_VidCodecInfo.max_crf);
     UseConstRate->Enable(b);
     if (!b) UseConstRate->SetValue(false);
     ConstRate->Enable(UseConstRate->GetValue());
@@ -2188,9 +2265,20 @@ void FFQPresetEdit::OnButtonClick(wxCommandEvent& event)
 
     if ((evtId == ID_FULLSPECVIDBUTTON) && (m_FullSpecVidIdx >= 0))
     {
-        FFQFullSpec *fs = new FFQFullSpec(this);
+
+        EditFullSpec(VideoCodec->GetStringSelection(), m_FullSpecVidIdx, m_FullSpecVCodec, m_FullSpecVid);
+        /*FFQFullSpec *fs = new FFQFullSpec(this);
         fs->Execute(m_FullSpecVidIdx, m_FullSpecVid);
-        delete fs;
+        delete fs;*/
+    }
+
+    else if ((evtId == ID_FULLSPECAUDBUTTON) && (m_FullSpecAudIdx >= 0))
+    {
+
+        EditFullSpec(AudioCodec->GetStringSelection(), m_FullSpecAudIdx, m_FullSpecACodec, m_FullSpecAud);
+        /*FFQFullSpec *fs = new FFQFullSpec(this);
+        fs->Execute(m_FullSpecAudIdx, m_FullSpecAud);
+        delete fs;*/
     }
 
     else if (evtId == ID_ADDFILTERBUTTON)
@@ -2314,11 +2402,9 @@ void FFQPresetEdit::OnButtonClick(wxCommandEvent& event)
             return;
         }
 
-
         //Copy or encode?
         bool vCopy = (VideoCodec->GetSelection() == 0), aCopy = (AudioCodec->GetSelection() == 0);
         wxString s;
-
 
         //Validate video rates
         if (!VideoBitRate->GetValues(s, !vCopy))
@@ -2333,6 +2419,27 @@ void FFQPresetEdit::OnButtonClick(wxCommandEvent& event)
         {
             Pages->SetSelection(Pages->FindPage(AudioPage));
             return;
+        }
+
+        //Validate that a quality is selected for video & audio
+        bool vq_ok = vCopy || UseConstRate->IsChecked() || UseVideoQScale->IsChecked() || VideoBitRate->HasValue(),
+             aq_ok = aCopy || UseAudioQScale->IsChecked() || AudioBitRate->HasValue();
+        if ((!vq_ok) || (!aq_ok))
+        {
+            if (!DoConfirm(Pages, FFQS(SID_PRESET_NO_QUALITY_DEFINED)))
+            {
+                if (!vq_ok)
+                {
+                    Pages->SetSelection(Pages->FindPage(VideoPage));
+                    VideoPages->SetSelection(VideoPages->FindPage(BitRatePage));
+                }
+                else
+                {
+                    Pages->SetSelection(Pages->FindPage(AudioPage));
+                    //AudioPages->SetSelection(AudioPages->FindPage(AudBitRatePage));
+                }
+                return;
+            }
         }
 
         //Validate frame rate

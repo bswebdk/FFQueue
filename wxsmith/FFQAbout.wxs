@@ -132,6 +132,21 @@
 			</object>
 			<object class="sizeritem">
 				<object class="wxBoxSizer" variable="BoxSizer1" member="no">
+					<object class="sizeritem">
+						<object class="wxButton" name="ID_HELPBUTTON" variable="HelpButton" member="yes">
+							<label>H</label>
+							<extra_code>HelpButton-&gt;SetLabel(FFQS(SID__COMMON__HELP));</extra_code>
+							<handler function="OnButtonCloseClick" entry="EVT_BUTTON" />
+						</object>
+						<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+						<border>5</border>
+						<option>1</option>
+					</object>
+					<object class="spacer">
+						<flag>wxALL|wxEXPAND</flag>
+						<border>5</border>
+						<option>1</option>
+					</object>
 					<object class="spacer">
 						<flag>wxALL|wxEXPAND</flag>
 						<border>5</border>
@@ -145,11 +160,6 @@
 							<handler function="OnButtonCloseClick" entry="EVT_BUTTON" />
 						</object>
 						<flag>wxALL</flag>
-						<border>5</border>
-						<option>1</option>
-					</object>
-					<object class="spacer">
-						<flag>wxALL|wxEXPAND</flag>
 						<border>5</border>
 						<option>1</option>
 					</object>

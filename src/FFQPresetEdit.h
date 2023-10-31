@@ -77,6 +77,7 @@ class FFQPresetEdit: public wxDialog
 		wxButton* FilterDownButton;
 		wxButton* FilterPreviewButton;
 		wxButton* FilterUpButton;
+		wxButton* FullSpecAudButton;
 		wxButton* FullSpecVidButton;
 		wxButton* OKButton;
 		wxButton* RemoveFilterButton;
@@ -88,6 +89,9 @@ class FFQPresetEdit: public wxDialog
 		wxCheckBox* SegmentIncTime;
 		wxCheckBox* SegmentResetTS;
 		wxCheckBox* SegmentStreaming;
+		wxCheckBox* SkipEncodeSameAud;
+		wxCheckBox* SkipEncodeSameVid;
+		wxCheckBox* StopEncShortest;
 		wxCheckBox* TwoPass;
 		wxCheckBox* TwoPassNull;
 		wxCheckBox* UseAudioQScale;
@@ -248,6 +252,7 @@ class FFQPresetEdit: public wxDialog
 		static const long ID_FULLSPECVIDBUTTON;
 		static const long ID_TWOPASS;
 		static const long ID_TWOPASSNULL;
+		static const long ID_SKIPENCODESAMEVID;
 		static const long ID_VIDEOBITRATE;
 		static const long ID_BITRATEPAGE;
 		static const long ID_QST1;
@@ -304,6 +309,8 @@ class FFQPresetEdit: public wxDialog
 		static const long ID_VIDEOPAGES;
 		static const long ID_VIDEOPAGE;
 		static const long ID_AUDIOCODEC;
+		static const long ID_FULLSPECAUDBUTTON;
+		static const long ID_SKIPENCODESAMEAUD;
 		static const long ID_AUDIOBITRATE;
 		static const long ID_USEAUDIOQSCALE;
 		static const long ID_AST1;
@@ -371,6 +378,7 @@ class FFQPresetEdit: public wxDialog
 		static const long ID_OUTPUTFORMAT;
 		static const long ID_MF_FASTSTART;
 		static const long ID_KEEPFILETIME;
+		static const long ID_STOPENCSHORTEST;
 		static const long ID_MISCPAGE;
 		static const long ID_PAGES;
 		static const long ID_OKBUTTON;
@@ -389,9 +397,9 @@ class FFQPresetEdit: public wxDialog
 		//*)
 
 		FFQFilterEdit *FilterEditor;
-		wxString m_PreviewFile, m_FullSpecVid;
+		wxString m_PreviewFile, m_FullSpecVid, m_FullSpecAud, m_FullSpecVCodec, m_FullSpecACodec;
 		wxArrayString m_MetaData;
-		int m_SelMetaData, m_FullSpecVidIdx;
+		int m_SelMetaData, m_FullSpecVidIdx, m_FullSpecAudIdx;
 		CODEC_INFO m_VidCodecInfo, m_AudCodecInfo;
 		bool m_ShowPreviewDlg, m_CanSegment, m_CanSSegment;
 		LPFFQ_PRESET m_Preset;
@@ -402,6 +410,7 @@ class FFQPresetEdit: public wxDialog
 
 
 		bool EditFilter(LPFFMPEG_FILTER filter);
+		void EditFullSpec(wxString selected_codec, int fs_idx, wxString &for_codec, wxString &spec);
 		int FindFilter(FILTER_TYPE ft);
 		void PreviewFilters();
 		//void SwapFilters(size_t idx1, size_t idx2);

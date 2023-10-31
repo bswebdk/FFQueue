@@ -38,6 +38,7 @@
 	//*)
 #endif
 //(*Headers(FFQJobEditAdvPopup)
+#include <wx/spinctrl.h>
 #include <wx/statline.h>
 //*)
 
@@ -61,6 +62,8 @@ class FFQJobEditAdvPopup: public wxDialog
 		wxCheckBox* IgnDTS;
 		wxCheckBox* IgnIdx;
 		wxPanel* Panel1;
+		wxSpinCtrl* ItsOffset;
+		wxSpinCtrl* LoopStreams;
 		wxStaticLine* Line;
 		wxStaticLine* StaticLine1;
 		wxStaticText* ST0;
@@ -68,14 +71,19 @@ class FFQJobEditAdvPopup: public wxDialog
 		wxStaticText* ST2;
 		wxStaticText* ST3;
 		wxStaticText* ST4;
+		wxStaticText* ST5;
+		wxStaticText* ST6;
 		wxTextCtrl* FrameRate;
-		wxTextCtrl* ItsOffset;
 		//*)
 
 	protected:
 
 		//(*Identifiers(FFQJobEditAdvPopup)
 		static const long ID_PANEL1;
+		static const long ID_ITSOFFSET;
+		static const long ID_STATICTEXT1;
+		static const long ID_LOOPSTREAMS;
+		static const long ID_STATICTEXT2;
 		static const long ID_STATICLINE1;
 		static const long ID_CLEARBTN;
 		static const long ID_OKBTN;

@@ -63,7 +63,7 @@ typedef struct FFQ_INPUT_FILE
                  height; //Height of video (internal use)
 
     int itsoffset; //-itsoffset
-
+    int loop; //-stream_loop, 0=unused
     wxString framerate; //-framerate
 
     //fflags to add
@@ -123,7 +123,7 @@ typedef struct FFQ_QUEUE_ITEM
     FFQ_INPUT_FILE& GetInput(unsigned int index); //Return an input file from "inputs"
     virtual QUEUE_ITEM_TYPE GetItemType() = 0; //Returns the type of item
     virtual bool GetLogFileName(wxString &name); //Return true if log should be saved and sets name accordingly
-    bool GetNextCommand(wxString &command); //Called to get the next command for the item
+    bool GetNextCommand(wxString &command, bool for_encode = true); //Called to get the next command for the item
     wxString GetValue(wxString name, wxString default_value = wxEmptyString); //Get value from m_Values
     bool IsActive(); //Return true if status is one of the active ones
     static FFQ_QUEUE_ITEM* Parse(wxString from); //Static function to create items from a string
@@ -135,7 +135,7 @@ typedef struct FFQ_QUEUE_ITEM
 protected:
 
     bool CpFileTime(void* pst, wxString to_file);
-    virtual wxString GetCommandAtIndex(int index) = 0; //Virtual abstract void to get command at index
+    virtual wxString GetCommandAtIndex(int index, bool for_encode) = 0; //Virtual abstract void to get command at index
 
 private:
 
