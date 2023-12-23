@@ -50,13 +50,13 @@ class FilterBasePanel : public wxPanel
 
     public:
 
-        FilterBasePanel(wxWindow* parent);
+        FilterBasePanel(wxWindow* parent, void *data = nullptr);
         virtual ~FilterBasePanel();
 
         virtual void SetFilter(LPFFMPEG_FILTER fltr) = 0; //Abstract
         virtual bool GetFilter(LPFFMPEG_FILTER fltr) = 0; //Abstract
 
-        static FilterBasePanel* GetFilterPanel(wxWindow* parent, FILTER_TYPE ft);
+        static FilterBasePanel* GetFilterPanel(wxWindow* parent, FILTER_TYPE ft, void *data = nullptr);
 
     protected:
 

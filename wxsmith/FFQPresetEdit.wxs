@@ -3,7 +3,7 @@
 	<object class="wxDialog" name="FFQPresetEdit">
 		<id_arg>0</id_arg>
 		<handler function="OnClose" entry="EVT_CLOSE" />
-		<object class="wxFlexGridSizer" variable="FlexGridSizer1" member="no">
+		<object class="wxFlexGridSizer" variable="MainSizer" member="yes">
 			<cols>1</cols>
 			<rows>3</rows>
 			<growablecols>0</growablecols>

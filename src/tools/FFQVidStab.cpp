@@ -721,7 +721,7 @@ void FFQVidStab::OnIdle(wxIdleEvent &event)
                     else if (si->codec_type == CODEC_TYPE_VIDEO) vid = si;
 
                     sm.codec_type = si->codec_type;
-                    sm.codec_id = si->codec_name;
+                    sm.codec_name = si->codec_name;
                     sm.stream_id = i;
                     if (m_StreamMap.Len() > 0) m_StreamMap += STREAM_MAPPING_SEPERATOR;
 

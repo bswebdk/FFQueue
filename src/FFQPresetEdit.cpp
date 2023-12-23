@@ -208,6 +208,7 @@ const wxString VSYNC_FORMAT = "%s (%s)";
 
 const int DISPOSITION_MENU_ID_COUNT = 30;
 const int FILTER_MENU_BASE_ID = 1000;
+const int FILTER_MENU_FULLSPEC_BASE_ID = 2000;
 
 //---------------------------------------------------------------------------------------
 
@@ -217,6 +218,38 @@ void GetCodecNameAndID(wxString src, wxString &name, wxString &id)
     src = src.AfterLast('(');
     if (src.StartsWith("codec ") && src.EndsWith(')')) id = src.AfterFirst(SPACE).BeforeLast(')');
     else id = name;
+}
+
+//---------------------------------------------------------------------------------------
+
+wxMenuItem* SortedMenuAdd(wxMenu *add_to, wxString new_text, int new_id, size_t skip_items = 0)
+{
+    wxMenuItemList &ml = add_to->GetMenuItems();
+    int pos = -1;
+    for (size_t i = skip_items; i < ml.GetCount(); i++)
+    {
+        wxMenuItem *mi = ml[i];
+        if (mi->GetKind() == wxITEM_SEPARATOR) continue;
+        if (new_text.CmpNoCase(mi->GetItemLabelText()) < 0)
+        {
+             pos = (int)i;
+             break;
+        }
+    }
+    if (pos < 0) return add_to->Append(new_id, new_text);
+    return add_to->Insert(pos, new_id, new_text);
+}
+
+//---------------------------------------------------------------------------------------
+
+void RemoveFullSpecMenus(wxMenu *from_menu)
+{
+    size_t pos = from_menu->GetMenuItemCount();
+    while (pos > 0)
+    {
+        wxMenuItem *mi = from_menu->FindItemByPosition(--pos);
+        if ((mi->GetId() >= FILTER_MENU_FULLSPEC_BASE_ID) || (mi->GetKind() == wxITEM_SEPARATOR)) from_menu->Delete(mi);
+    }
 }
 
 //---------------------------------------------------------------------------------------
@@ -237,7 +270,6 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 	wxFlexGridSizer* FlexGridSizer17;
 	wxFlexGridSizer* FlexGridSizer18;
 	wxFlexGridSizer* FlexGridSizer19;
-	wxFlexGridSizer* FlexGridSizer1;
 	wxFlexGridSizer* FlexGridSizer20;
 	wxFlexGridSizer* FlexGridSizer21;
 	wxFlexGridSizer* FlexGridSizer22;
@@ -267,9 +299,9 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 	wxStaticBoxSizer* VSBS1;
 
 	Create(parent, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE, _T("wxID_ANY"));
-	FlexGridSizer1 = new wxFlexGridSizer(3, 1, 0, 0);
-	FlexGridSizer1->AddGrowableCol(0);
-	FlexGridSizer1->AddGrowableRow(1);
+	MainSizer = new wxFlexGridSizer(3, 1, 0, 0);
+	MainSizer->AddGrowableCol(0);
+	MainSizer->AddGrowableRow(1);
 	SBS1 = new wxStaticBoxSizer(wxVERTICAL, this, _T("PstN"));
 	PresetName = new wxTextCtrl(this, ID_PRESETNAME, wxEmptyString, wxDefaultPosition, wxSize(550,-1), 0, wxDefaultValidator, _T("ID_PRESETNAME"));
 	SBS1->Add(PresetName, 1, wxALL|wxEXPAND, 2);
@@ -278,7 +310,7 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 	PresetTemp->SetLabel(FFQS(SID_PRESET_TEMPORARY_PRESET));
 	SBS1->GetStaticBox()->SetLabel(FFQS(SID_PRESET_PRESET_NAME));
 	SBS1->Add(PresetTemp, 1, wxLEFT|wxALIGN_LEFT, 2);
-	FlexGridSizer1->Add(SBS1, 1, wxALL|wxEXPAND, 5);
+	MainSizer->Add(SBS1, 1, wxALL|wxEXPAND, 5);
 	Pages = new wxNotebook(this, ID_PAGES, wxDefaultPosition, wxDefaultSize, 0, _T("ID_PAGES"));
 	VideoPage = new wxPanel(Pages, ID_VIDEOPAGE, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL, _T("ID_VIDEOPAGE"));
 	FlexGridSizer13 = new wxFlexGridSizer(2, 1, 0, 0);
@@ -952,7 +984,7 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 	Pages->AddPage(MetaDataPage, _T("MD"), false);
 	Pages->AddPage(ThumbsPage, _T("Tbs"), false);
 	Pages->AddPage(MiscPage, _T("Msc"), false);
-	FlexGridSizer1->Add(Pages, 1, wxALL|wxEXPAND, 5);
+	MainSizer->Add(Pages, 1, wxALL|wxEXPAND, 5);
 	BoxSizer1 = new wxBoxSizer(wxHORIZONTAL);
 	BoxSizer1->Add(-1,-1,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	BoxSizer1->Add(-1,-1,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
@@ -963,12 +995,12 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 	CancelButton = new wxButton(this, ID_CANCELBUTTON, _T("C"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CANCELBUTTON"));
 	CancelButton->SetLabel(FFQS(SID_COMMON_CANCEL));
 	BoxSizer1->Add(CancelButton, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-	FlexGridSizer1->Add(BoxSizer1, 1, wxALL|wxEXPAND, 5);
-	SetSizer(FlexGridSizer1);
+	MainSizer->Add(BoxSizer1, 1, wxALL|wxEXPAND, 5);
+	SetSizer(MainSizer);
 	OpenFileDlg = new wxFileDialog(this, wxEmptyString, wxEmptyString, wxEmptyString, wxFileSelectorDefaultWildcardStr, wxFD_DEFAULT_STYLE|wxFD_OPEN|wxFD_FILE_MUST_EXIST, wxDefaultPosition, wxDefaultSize, _T("wxFileDialog"));
 	OpenFileDlg->SetMessage(FFQS(SID_PRESET_SELECT_PREVIEW_FILE));
-	FlexGridSizer1->Fit(this);
-	FlexGridSizer1->SetSizeHints(this);
+	MainSizer->Fit(this);
+	MainSizer->SetSizeHints(this);
 
 	Connect(ID_VIDEOCODEC,wxEVT_COMMAND_CHOICE_SELECTED,(wxObjectEventFunction)&FFQPresetEdit::OnChoiceChange);
 	Connect(ID_FULLSPECVIDBUTTON,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&FFQPresetEdit::OnButtonClick);
@@ -1018,6 +1050,7 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 	Connect(wxID_ANY,wxEVT_CLOSE_WINDOW,(wxObjectEventFunction)&FFQPresetEdit::OnClose);
 	//*)
 
+    debug_fullspec_user = false;
 	SetTitle(FFQS(SID_PRESET_TITLE));
 
 	//EXPERIMENTAL START
@@ -1041,35 +1074,65 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 	VideoPages->SetPageText(VideoPages->FindPage(OtherPage), FFQS(SID_PRESET_OTHER));
 	VideoPages->SetPageText(VideoPages->FindPage(HWDecodePage), FFQS(SID_PRESET_HWDECODE));
 
-	wxMenu *vid = new wxMenu(), *aud = new wxMenu(), *cur = vid;
+	//Create the filter menu
+	m_VidFilterMenu = new wxMenu();
+	m_AudFilterMenu = new wxMenu();
+	wxMenu *cur = m_VidFilterMenu;
 
-	AddFilterMenu.Append(wxID_ANY, FFQS(SID_COMMON_VIDEO), vid);
-	AddFilterMenu.Append(wxID_ANY, FFQS(SID_COMMON_AUDIO), aud);
+	AddFilterMenu.Append(wxID_ANY, FFQS(SID_COMMON_VIDEO), m_VidFilterMenu);
+	AddFilterMenu.Append(wxID_ANY, FFQS(SID_COMMON_AUDIO), m_AudFilterMenu);
 
 	int sep = 0;
-
 	for (unsigned int i = 0; i < FILTER_ORDER_COUNT; i++)
     {
-
         int f = FILTER_ORDER[i];
-
         if (f == -1)
         {
-
-            if (sep++ == 0) cur = aud;
+            if (sep++ == 0) cur = m_AudFilterMenu;
             else cur = &AddFilterMenu;
-
         }
-
-        else
-        {
-
-            wxMenuItem *mi = new wxMenuItem(cur, FILTER_MENU_BASE_ID + f, FFQL()->FILTER_NAMES[f], wxEmptyString, wxITEM_NORMAL);
-            cur->Append(mi);
-
-        }
-
+        else if (cur == &AddFilterMenu) SortedMenuAdd(cur, FFQL()->FILTER_NAMES[f], FILTER_MENU_BASE_ID + f, 2);
+        else SortedMenuAdd(cur, FFQL()->FILTER_NAMES[f], FILTER_MENU_BASE_ID + f);//  cur->Append(new wxMenuItem(cur, FILTER_MENU_BASE_ID + f, FFQL()->FILTER_NAMES[f], wxEmptyString, wxITEM_NORMAL));
     }
+
+    //Prepare full spec for release build
+    m_FullSpecPreset = nullptr;
+    #ifndef DEBUG
+    FFQFullSpec::Initialize(this);
+    HandleFullSpecUI(true);
+    //m_FullSpecPreset = FFQFullSpec::FindFullSpecID(FULLSPEC_PRESET);
+    #endif
+
+    //Add FullSpec filter implementations
+    /*int fs_filter = FFQFullSpec::FindFullSpecFilter(0);
+    size_t add_pos = 0;
+    bool aud_sep = true, vid_sep = true, *cur_sep;
+    while (fs_filter >= 0)
+    {
+        FULLSPEC_FILE *file = FFQFullSpec::GetFullSpec(fs_filter);
+        #ifdef DEBUG
+        FFQConsole::Get()->AppendLine(file->display, COLOR_BLUE);
+        #endif // DEBUG
+        if (file->matches.StartsWith('a'))
+        {
+            cur = aud;
+            cur_sep = &aud_sep;
+        }
+        else// if (file.matches.StartsWith('v'))
+        {
+            cur = vid;
+            cur_sep = &vid_sep;
+        }
+        if (*cur_sep)
+        {
+            *cur_sep = false;
+            cur->AppendSeparator();//(new wxMenuItem(cur, wxID_ANY, wxEmptyString, wxEmptyString, wxITEM_SEPARATOR));
+            add_pos = cur->GetMenuItemCount();
+        }
+        SortedMenuAdd(cur, file->display, FILTER_MENU_FULLSPEC_BASE_ID + fs_filter, add_pos);
+        //cur->Append(new wxMenuItem(cur, FILTER_MENU_FULLSPEC_BASE_ID + fs_filter, file->display, wxEmptyString, wxITEM_NORMAL));
+        fs_filter = FFQFullSpec::FindFullSpecFilter(fs_filter + 1);
+    }*/
 
     //Get items for B- and P-frame definition
     wxString *as = FFQL()->GetStringArray(SID_PRESET_KEYFRAME_MAX_B_FRAME_ITEMS, 4);
@@ -1110,10 +1173,11 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 
     //Bind menu handler for both filters and dispositions
     Bind(wxEVT_COMMAND_MENU_SELECTED, &FFQPresetEdit::OnMenuSelected, this);
+    Bind(wxEVT_IDLE, &FFQPresetEdit::OnIdle, this);
 
 	FFQCFG()->SetBrowseRootFor(OpenFileDlg);
 
-    FilterEditor = NULL;
+    FilterEditor = nullptr;
 
 	m_UIntVal.SetRange(0, 99999);
 	m_UIntVal.SetStyle(wxNUM_VAL_ZERO_AS_BLANK);
@@ -1139,11 +1203,6 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
     for (unsigned int i = 0; i < 5; i++) SegmentListType->Append(as[i]);
     delete[] as;
 
-    //Prepare the full spec editor
-    #ifndef DEBUG
-    FFQFullSpec::Initialize(this);
-    #endif
-
 }
 
 //---------------------------------------------------------------------------------------
@@ -1152,22 +1211,31 @@ FFQPresetEdit::~FFQPresetEdit()
 {
 	//(*Destroy(FFQPresetEdit)
 	//*)
-	if (FilterEditor != NULL)
+    HandleFullSpecUI(false);
+	if (FilterEditor != nullptr)
     {
         delete FilterEditor;
-        FilterEditor = NULL;
+        FilterEditor = nullptr;
     }
 }
 
 //---------------------------------------------------------------------------------------
 
-bool FFQPresetEdit::Execute(LPFFQ_PRESET preset)
+bool FFQPresetEdit::Execute(LPFFQ_PRESET preset, int selected_page)
 {
 
     #ifdef DEBUG
+    HandleFullSpecUI(false);
     FFQFullSpec::Finalize();
     FFQFullSpec::Initialize(this);
+    HandleFullSpecUI(true);
     #endif // DEBUG
+
+    /*if (m_FullSpecPreset != nullptr)
+    {
+        wxSize smax = VideoPage->GetSize();
+        m_FullSpecPreset->evt_handler->GetParent()->SetMaxSize(smax);
+    }*/
 
     //Store pointer to preset
     m_Preset = preset;
@@ -1343,6 +1411,10 @@ bool FFQPresetEdit::Execute(LPFFQ_PRESET preset)
     //MetaData->SetColSize(1, MetaData->GetClientRect().GetWidth() - MetaData->GetColLabelSize() - 130);
 
 
+    //Thumbs settings
+    ThumbsPanel->SetValues(preset->thumbs);
+
+
     //Miscellaneous settings
     FOURCC_Vid->SetValue(preset->fourcc.vids);
     FOURCC_Aud->SetValue(preset->fourcc.auds);
@@ -1379,12 +1451,13 @@ bool FFQPresetEdit::Execute(LPFFQ_PRESET preset)
     SegmentStreaming->SetValue(preset->segmenting.streaming);
     SegmentResetTS->SetValue(preset->segmenting.reset_ts);
 
-    //Thumbs settings
-    ThumbsPanel->SetValues(preset->thumbs);
+
+    //Full spec for user UI
+    if (m_FullSpecPreset != nullptr) FFQFullSpec::SetCommandLine(*m_FullSpecPreset, preset->fullspec_user);
 
 
     //Select initial pages
-    Pages->SetSelection(0);
+    Pages->SetSelection(debug_fullspec_user ? Pages->GetPageCount() - 1 : selected_page);
     VideoPages->SetSelection(0);
     PresetName->SetFocus();
 
@@ -1531,6 +1604,9 @@ bool FFQPresetEdit::Execute(LPFFQ_PRESET preset)
         preset->segmenting.streaming = SegmentStreaming->GetValue();
         preset->segmenting.reset_ts = SegmentResetTS->GetValue();
 
+        //Full spec user UI
+        if (m_FullSpecPreset != nullptr) FFQFullSpec::GetCommandLine(*m_FullSpecPreset, preset->fullspec_user);
+
     }
 
     //Clear video filters
@@ -1590,6 +1666,88 @@ int FFQPresetEdit::FindFilter(FILTER_TYPE ft)
         if (fltr.type == ft) return (int)i;
     }
     return -1;
+}
+
+//---------------------------------------------------------------------------------------
+
+void FFQPresetEdit::HandleFullSpecUI(bool make)
+{
+    if (make && (m_FullSpecPreset == nullptr))
+    {
+
+        //Add any full spec UI to the tabs
+        int idx = FFQFullSpec::FindFullSpecID(FULLSPEC_PRESET);
+        if (idx >= 0)
+        {
+
+            m_FullSpecPreset = FFQFullSpec::GetFullSpec(idx);
+            wxSize smax = FilterPage->GetSize();
+
+            //FFQFullSpec::MakeControlsFor(*m_FullSpecPreset, Pages, &smax);
+            //Pages->AddPage(m_FullSpecPreset->evt_handler->GetParent(), m_FullSpecPreset->display, false);
+            //Pages->Layout();
+
+            wxPanel *pan = new wxPanel(Pages, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL);
+            FFQFullSpec::MakeControlsFor(*m_FullSpecPreset, pan, &smax);
+            //wxBoxSizer *sizer = new wxBoxSizer(wxVERTICAL);
+            wxFlexGridSizer *sizer = new wxFlexGridSizer(1, 1, 0, 0);
+            sizer->AddGrowableCol(0);
+            sizer->AddGrowableRow(0);
+            //m_FullSpecPreset->evt_handler->GetParent()->SetBackgroundColour(*wxRED);
+            sizer->Add(m_FullSpecPreset->evt_handler->GetParent(), 1, wxALL|wxEXPAND, 3);//ALIGN_CENTER_HORIZONTAL|wxALIGN_TOP, 0);
+            pan->SetSizer(sizer);
+            sizer->Fit(pan);
+            sizer->SetSizeHints(pan);
+            Pages->AddPage(pan, m_FullSpecPreset->display, false);
+            //pan->Layout();
+
+            MainSizer->Fit(this);
+            //MainSizer->SetSizeHints(this);
+        }
+
+        //Create menu items for filters
+        int fs_filter = FFQFullSpec::FindFullSpecFilter(0);
+        size_t add_pos = 0;
+        bool aud_sep = true, vid_sep = true, *cur_sep;
+        wxMenu *menu;
+        while (fs_filter >= 0)
+        {
+            FULLSPEC_FILE *file = FFQFullSpec::GetFullSpec(fs_filter);
+            if (file->matches.StartsWith('a'))
+            {
+                menu = m_AudFilterMenu;
+                cur_sep = &aud_sep;
+            }
+            else// if (file.matches.StartsWith('v'))
+            {
+                menu = m_VidFilterMenu;
+                cur_sep = &vid_sep;
+            }
+            if (*cur_sep)
+            {
+                *cur_sep = false;
+                menu->AppendSeparator();
+                add_pos = menu->GetMenuItemCount();
+            }
+            SortedMenuAdd(menu, file->display, FILTER_MENU_FULLSPEC_BASE_ID + fs_filter, add_pos);
+            fs_filter = FFQFullSpec::FindFullSpecFilter(fs_filter + 1);
+        }
+
+    }
+    else if ((!make) && (m_FullSpecPreset != nullptr))
+    {
+
+        //Release any bindings from full spec to UI
+        FFQFullSpec::ClearControlsFor(*m_FullSpecPreset, true);
+        #ifdef DEBUG
+        Pages->DeletePage(Pages->GetPageCount() - 1);
+        RemoveFullSpecMenus(m_AudFilterMenu);
+        RemoveFullSpecMenus(m_VidFilterMenu);
+        #endif
+        m_FullSpecPreset = nullptr;
+        //m_FullSpecPage = nullptr;
+
+    }
 }
 
 //---------------------------------------------------------------------------------------
@@ -1895,6 +2053,7 @@ void FFQPresetEdit::UpdateCodecInfo()
 void FFQPresetEdit::UpdateControls(bool sizers)
 {
 
+    if (m_FullSpecPreset != nullptr) m_FullSpecPreset->evt_handler->UpdateControls();
     UpdateVideoPages(sizers);
     UpdateSliderLabels(-1);
 
@@ -2178,20 +2337,57 @@ void FFQPresetEdit::UpdateVideoPages(bool sizers)
 
 //---------------------------------------------------------------------------------------
 
+void FFQPresetEdit::OnIdle(wxIdleEvent &event)
+{
+
+    //Create any user specified additions to the UI after the
+    //dialog has been realized
+    HandleFullSpecUI(true);
+    //Unbind?
+
+}
+
+//---------------------------------------------------------------------------------------
+
+void InsertFilterAndSelect(wxListBox *lbox, FFMPEG_FILTER &fltr)
+{
+    int idx;
+    wxString *fs = new wxString(fltr.ToString());
+    if (fltr.type == ftDEINTERLACE) idx = lbox->Insert(fltr.friendly, 0, (void*)fs);
+    else idx = lbox->Append(fltr.friendly, (void*)fs);
+    lbox->Deselect(-1);
+    lbox->SetSelection(idx);
+    lbox->SetFocus();
+}
+
 void FFQPresetEdit::OnMenuSelected(wxCommandEvent &event)
 {
-    int mid = event.GetId(), idx = 0;
+    int mid = event.GetId();//, idx = 0;
 
-    if (mid >= FILTER_MENU_BASE_ID)
+    if (mid >= FILTER_MENU_FULLSPEC_BASE_ID)
+    {
+
+        //FullSpec filter menu selected
+        FULLSPEC_FILE *fs = FFQFullSpec::GetFullSpec(mid - FILTER_MENU_FULLSPEC_BASE_ID);
+        if (fs)
+        {
+            FFMPEG_FILTER fltr;
+            fltr.type = ftFULLSPEC;
+            fltr.ff_filter = FILTER_VIDEO_IN + fs->composite + EQUAL;
+            if (EditFilter(&fltr)) InsertFilterAndSelect(FilterList, fltr);
+        }
+
+    }
+    else if (mid >= FILTER_MENU_BASE_ID)
     {
 
         //Filter menu selected
         FFMPEG_FILTER fltr;
         fltr.type = (FILTER_TYPE)(mid - FILTER_MENU_BASE_ID);
-        idx = FindFilter(fltr.type);
-        wxString *fs;
+        //idx = FindFilter(fltr.type);
+        //wxString *fs;
 
-        if ((fltr.type == ftDEINTERLACE) && (idx != -1)) ShowInfo(FFQS(SID_PRESET_ONLY_ONE_DEINTERLACE));
+        if ((fltr.type == ftDEINTERLACE) && (FindFilter(fltr.type) != -1)) ShowInfo(FFQS(SID_PRESET_ONLY_ONE_DEINTERLACE));
 
         else if (!fltr.IsEditable())
         {
@@ -2212,28 +2408,32 @@ void FFQPresetEdit::OnMenuSelected(wxCommandEvent &event)
             fltr.ff_filter = a + FILTER_NAMES[fltr.type] + b;
             fltr.friendly = FFQS(SID_FILTER_NAME_BASE + fltr.type);
 
-            fs = new wxString(fltr.ToString());
-            idx = FilterList->Append(fltr.friendly, (void*)fs);
+            InsertFilterAndSelect(FilterList, fltr);
+
+            //fs = new wxString(fltr.ToString());
+            //idx = FilterList->Append(fltr.friendly, (void*)fs);
 
         }
 
         else if (EditFilter(&fltr))
         {
 
-            fs = new wxString(fltr.ToString());
-            if (fltr.type == ftDEINTERLACE) idx = FilterList->Insert(fltr.friendly, 0, (void*)fs);
-            else idx = FilterList->Append(fltr.friendly, (void*)fs);
+            InsertFilterAndSelect(FilterList, fltr);
+            //fs = new wxString(fltr.ToString());
+            //if (fltr.type == ftDEINTERLACE) idx = FilterList->Insert(fltr.friendly, 0, (void*)fs);
+            //else idx = FilterList->Append(fltr.friendly, (void*)fs);
 
         }
 
-        FilterList->Deselect(-1);
-        FilterList->SetSelection(idx);
-        FilterList->SetFocus();
+        //FilterList->Deselect(-1);
+        //FilterList->SetSelection(idx);
+        //FilterList->SetFocus();
 
     }
     else
     {
         //Dispositions menu selected
+        int idx = 0;
         while (mid >= DISPOSITION_MENU_ID_COUNT)
         {
             mid -= DISPOSITION_MENU_ID_COUNT;
@@ -2520,6 +2720,31 @@ void FFQPresetEdit::OnButtonClick(wxCommandEvent& event)
 
                 Pages->SetSelection(Pages->FindPage(SubtitlesPage));
                 ShowError(SubsWidth, FFQS(SID_PRESET_INVALID_SUBTITLE_SIZE));
+                return;
+
+            }
+
+        }
+
+        //Validate full spec user UI
+        if (m_FullSpecPreset != nullptr)
+        {
+
+            int pid = Pages->GetPageCount() - 1; //The page with user UI
+            bool psel = pid == Pages->GetSelection(); //Is the user UI page selected?
+
+            if (!FFQFullSpec::ValidateCtrls(*m_FullSpecPreset, psel)) //If user UI is selected, show error message here
+            {
+
+                if (!psel)
+                {
+
+                    //Elsehow, select the page and show the message here
+                    Pages->SetSelection(pid);
+                    FFQFullSpec::ValidateCtrls(*m_FullSpecPreset);
+
+                }
+
                 return;
 
             }

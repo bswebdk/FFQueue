@@ -517,6 +517,7 @@ void FFQBatchMake::GetStreamsFromParser(FFProbeInfoParser *pip, unsigned int fil
 
         STREAM_MAPPING smap;
         smap.codec_type = si->codec_type;
+        smap.codec_name = si->codec_name;
         smap.file_id    = file_id;
         smap.stream_id  = si->index;
         smap.checked    = false;

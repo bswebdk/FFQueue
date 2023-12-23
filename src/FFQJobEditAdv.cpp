@@ -778,7 +778,7 @@ wxString FFQJobEditAdv::GetStreamMapping()
         s = "";
         for (unsigned int pi = 0; pi < sd->presets.Count(); pi++) s += sd->presets[pi] + SPACE;
         smap.preset_list = s.BeforeLast(SPACE);
-        smap.codec_id = sd->si->codec_name;
+        smap.codec_name  = sd->si->codec_name;
         if (res.Len() > 0) res += STREAM_MAPPING_SEPERATOR;
         res += smap.ToString();
 

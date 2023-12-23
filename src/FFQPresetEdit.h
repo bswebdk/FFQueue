@@ -53,6 +53,7 @@
 
 #include "FFQFilterEdit.h"
 #include "utils/FFQPreset.h"
+#include "FFQFullSpec.h"
 //#include <wx/valnum.h>
 //#include <wx/menu.h>
 
@@ -60,10 +61,12 @@ class FFQPresetEdit: public wxDialog
 {
 	public:
 
+	    bool debug_fullspec_user;
+
 		FFQPresetEdit(wxWindow* parent);
 		virtual ~FFQPresetEdit();
 
-		bool Execute(LPFFQ_PRESET preset);
+		bool Execute(LPFFQ_PRESET preset, int selected_page = 0);
 
 		//(*Declarations(FFQPresetEdit)
 		FFQBitRatePanel* AudioBitRate;
@@ -128,6 +131,7 @@ class FFQPresetEdit: public wxDialog
 		wxFlexGridSizer* AudioQScaleSizer;
 		wxFlexGridSizer* FilterSizer;
 		wxFlexGridSizer* KeyFrameSizer;
+		wxFlexGridSizer* MainSizer;
 		wxFlexGridSizer* PresetTuneSizer;
 		wxFlexGridSizer* SceneChangeSizer;
 		wxFlexGridSizer* SubsSizer2;
@@ -404,14 +408,19 @@ class FFQPresetEdit: public wxDialog
 		bool m_ShowPreviewDlg, m_CanSegment, m_CanSSegment;
 		LPFFQ_PRESET m_Preset;
 	    wxIntegerValidator<unsigned int> m_UIntVal;
-	    wxMenu *m_DispositionMenus[3];
+	    wxMenu *m_DispositionMenus[3], *m_VidFilterMenu, *m_AudFilterMenu;
 	    int m_DispositionSelection[3];
+
+	    //User extended UI
+	    FULLSPEC_FILE *m_FullSpecPreset;
+	    //wxPanel * m_FullSpecPage;
 
 
 
 		bool EditFilter(LPFFMPEG_FILTER filter);
 		void EditFullSpec(wxString selected_codec, int fs_idx, wxString &for_codec, wxString &spec);
 		int FindFilter(FILTER_TYPE ft);
+		void HandleFullSpecUI(bool make);
 		void PreviewFilters();
 		//void SwapFilters(size_t idx1, size_t idx2);
 
@@ -429,6 +438,7 @@ class FFQPresetEdit: public wxDialog
 		void UpdateSubtitleFilter();
 		void UpdateVideoPages(bool sizers = false);
 
+		void OnIdle(wxIdleEvent &event);
 		void OnMenuSelected(wxCommandEvent &event);
 
 		DECLARE_EVENT_TABLE()

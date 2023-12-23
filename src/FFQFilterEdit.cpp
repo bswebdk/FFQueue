@@ -22,6 +22,7 @@
 *************************************************************************/
 
 #include "FFQFilterEdit.h"
+#include "FFQFullSpec.h"
 
 #ifndef WX_PRECOMP
 	//(*InternalHeadersPCH(FFQFilterEdit)
@@ -90,7 +91,16 @@ bool FFQFilterEdit::Execute(LPFFMPEG_FILTER filter)
 
     //Create properties panel
     m_Filter = filter;
-    m_FilterPanel =  FilterBasePanel::GetFilterPanel(this, m_Filter->type);
+
+    FULLSPEC_FILE *fs = nullptr;
+    if (m_Filter->type == ftFULLSPEC)
+    {
+        int fsidx = FFQFullSpec::FindFullSpecFilter(m_Filter->ff_filter.AfterFirst(FILTER_VIDEO_IN.Last()).BeforeFirst(EQUAL));
+        if (fsidx < 0) return false;
+        fs = FFQFullSpec::GetFullSpec(fsidx);
+    }
+
+    m_FilterPanel = FilterBasePanel::GetFilterPanel(this, m_Filter->type, fs);
     if (m_FilterPanel == NULL) return ShowError(FFQSF(SID_FILTER_INVALID_ID, (unsigned int)m_Filter->type));
 
     //Add to container and fit window
@@ -100,7 +110,7 @@ bool FFQFilterEdit::Execute(LPFFMPEG_FILTER filter)
 	//GridSizer->SetSizeHints(this);
 
     //Set title of dialog
-	SetTitle(FFQL()->FILTER_NAMES[m_Filter->type]);
+	SetTitle(fs == nullptr ? FFQL()->FILTER_NAMES[m_Filter->type] : fs->display);
 
     //Set property values
     m_FilterPanel->SetFilter(m_Filter);

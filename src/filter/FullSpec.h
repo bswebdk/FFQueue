@@ -1,8 +1,8 @@
 /*************************************************************************
 *                                                                        *
-*  Copyright (c) 2014 Torben Bruchhaus                                   *
+*  Copyright (c) 2023 Torben Bruchhaus                                   *
 *  http://ffqueue.bruchhaus.dk/                                          *
-*  File: FFQStreamMapping.h                                              *
+*  File: FullSpec.h                                                    *
 *                                                                        *
 *  This file is part of FFQueue.                                         *
 *                                                                        *
@@ -21,32 +21,29 @@
 *                                                                        *
 *************************************************************************/
 
-#ifndef FFQSTREAMMAPPING_H
-#define FFQSTREAMMAPPING_H
+#ifndef FULLSPEC_H
+#define FULLSPEC_H
 
-#include <wx/string.h>
+#include "FilterBasePanel.h"
+#include "../FFQFullSpec.h"
 
-//Char used to separate multiple stream mappings
-const wxUniChar STREAM_MAPPING_SEPERATOR = '|';
-
-//The STREAM_MAPPINT structure
-typedef struct STREAM_MAPPING
+class FullSpec : public FilterBasePanel
 {
 
-    bool checked; //True if the stream is "checked" in the job editor and thus must be included in the output file
-    int file_id, //The index of the file used with -map (starting from 1, must be decremented when used in the ffmpeg command)
-        stream_id; //The index of the stream in the file (starting from 0 - unlike file_id)
-    wxString codec_type, //The codec type of the stream (video, audio or subtitle)
-             preset_list, //A list of space-separated preset id's to be used with this stream
-             codec_name; //The identifier (short name) of the codec used in this stream
+    public:
 
-    STREAM_MAPPING();
-    STREAM_MAPPING(bool checked, int file_id, int stream_id, wxString codec_type, wxString preset_list, wxString codec_name);
-    STREAM_MAPPING(wxString &from);
+        FullSpec(wxWindow* parent, void *data);
+        virtual ~FullSpec();
 
-    bool Parse(wxString &from);
-    wxString ToString(wxString long_codec_name = "");
+        virtual void SetFilter(LPFFMPEG_FILTER fltr);
+        virtual bool GetFilter(LPFFMPEG_FILTER fltr);
 
-} STREAM_MAPPING, *LPSTREAM_MAPPING;
+    protected:
 
-#endif // FFQSTREAMMAPPING_H
+    private:
+        FULLSPEC_FILE *m_FullSpec;
+        bool m_HasTime;
+
+};
+
+#endif // AUDIODELAY_H

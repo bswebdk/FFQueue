@@ -72,6 +72,7 @@ const wxString PRESET_FILTER = "filter";
 const wxString PRESET_FINGER_PRINT = "finger_print";
 const wxString PRESET_FULLSPEC_VID = "fullspec_vid";
 const wxString PRESET_FULLSPEC_AUD = "fullspec_aud";
+const wxString PRESET_FULLSPEC_USER = "fullspec_user";
 const wxString PRESET_SEGMENTING = "segmenting";
 
 
@@ -159,6 +160,7 @@ FFQ_PRESET::FFQ_PRESET(wxString &preset)
         else if (n == PRESET_FINGER_PRINT) finger_print = v;
         else if (n == PRESET_FULLSPEC_VID) fullspec_vid = v;
         else if (n == PRESET_FULLSPEC_AUD) fullspec_aud = v;
+        else if (n == PRESET_FULLSPEC_USER) fullspec_user = v;
         else if (n == PRESET_SUBTITLE)
         {
 
@@ -299,6 +301,7 @@ void FFQ_PRESET::Reset(bool new_preset)
     finger_print = "";
     fullspec_vid = "";
     fullspec_aud = "";
+    fullspec_user = "";
 
     fourcc.vids = "";
     fourcc.auds = "";
@@ -411,6 +414,7 @@ wxString FFQ_PRESET::ToString()
     if (finger_print.Len() > 0) res += PRESET_FINGER_PRINT + EQUAL + finger_print + CRLF;
     if (fullspec_vid.Len() > 0) res += PRESET_FULLSPEC_VID + EQUAL + fullspec_vid + CRLF;
     if (fullspec_aud.Len() > 0) res += PRESET_FULLSPEC_AUD + EQUAL + fullspec_aud + CRLF;
+    if (fullspec_user.Len() > 0) res += PRESET_FULLSPEC_USER + EQUAL + fullspec_user + CRLF;
     if (subs.Len() > 0) res += PRESET_SUBTITLE + EQUAL + subs + CRLF;
     if (segm.Len() > 0) res += PRESET_SEGMENTING + EQUAL + segm + CRLF;
     if (fourcc.vids.Len() + fourcc.auds.Len() > 0) res += PRESET_FOURCC + EQUAL + fourcc.vids + COMMA + fourcc.auds + CRLF;

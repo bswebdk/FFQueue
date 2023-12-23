@@ -64,17 +64,18 @@
 #include "Transpose.h"
 #include "DynAudNorm.h"
 #include "Deflicker.h"
+#include "FullSpec.h"
 
-FilterBasePanel::FilterBasePanel(wxWindow* parent) : wxPanel(parent)
+FilterBasePanel::FilterBasePanel(wxWindow* parent, void *data) : wxPanel(parent)
 {
     m_FilterUID = 0;
     m_Padding = 3;
-    m_TimeEditor = NULL;
-    m_TimeSizer = NULL;
-    m_PosSizer = NULL;
-    m_DimSizer = NULL;
-    m_FileDlg = NULL;
     m_CtrlParent = this;
+    m_FileDlg = nullptr;
+    m_TimeEditor = nullptr;
+    m_TimeSizer = nullptr;
+    m_PosSizer = nullptr;
+    m_DimSizer = nullptr;
 }
 
 //---------------------------------------------------------------------------------------
@@ -95,7 +96,7 @@ FilterBasePanel::~FilterBasePanel()
 
 //---------------------------------------------------------------------------------------
 
-FilterBasePanel* FilterBasePanel::GetFilterPanel(wxWindow* parent, FILTER_TYPE ft)
+FilterBasePanel* FilterBasePanel::GetFilterPanel(wxWindow* parent, FILTER_TYPE ft, void *data)
 {
 
     switch (ft)
@@ -145,6 +146,7 @@ FilterBasePanel* FilterBasePanel::GetFilterPanel(wxWindow* parent, FILTER_TYPE f
         case (ftTRANSPOSE) : return new Transpose(parent); break;
         case (ftDYNAUDNORM) : return new DynAudNorm(parent); break;
         case (ftDEFLICKER) : return new Deflicker(parent); break;
+        case (ftFULLSPEC) : return new FullSpec(parent, data); break;
         default: return NULL;
     }
 
@@ -408,7 +410,7 @@ void FilterBasePanel::SetTimeLimitValues(uint64_t &from, uint64_t &to, bool isSe
 void FilterBasePanel::SetTimeLimitValues(wxString &str, bool isSeconds)
 {
 
-    uint64_t t1 = Str2LongLong(GetToken(str, ','), 0), t2 = Str2LongLong(GetToken(str, ','), 0);
+    uint64_t t1 = Str2LongLong(GetToken(str, COMMA), 0), t2 = Str2LongLong(GetToken(str, COMMA), 0);
     SetTimeLimitValues(t1, t2, isSeconds);
 
 }
@@ -571,3 +573,4 @@ void FilterBasePanel::SetWidthAndHeightValues(wxString width, wxString height)
     m_Width->SetValue(width);
     m_Height->SetValue(height);
 }
+

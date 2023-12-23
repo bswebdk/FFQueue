@@ -101,8 +101,10 @@ void EncBuf(uint8_t *buf, uint32_t len, STR_HASH &key)
 
     for (uint32_t i = 0; i < len; i++)
     {
-        buf[i] = buf[i] ^ key[key_idx];
-        key_idx++;
+        //buf[i] = buf[i] ^ key[key_idx];
+        //key_idx++;
+        //if (key_idx == sizeof(key)) key_idx = 0;
+        buf[i] ^= key[key_idx++];
         if (key_idx == sizeof(key)) key_idx = 0;
     }
 

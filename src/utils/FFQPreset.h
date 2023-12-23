@@ -76,7 +76,8 @@ typedef struct FFQ_PRESET
              disposition, //Video,Audio,Subtitle disposition
              finger_print, //Used to auto detect preset (see FFQJobEditAdv::GetPresetFingerPrint)
              fullspec_vid, //Storing any full spec settings for video
-             fullspec_aud; //Storing any full spec settings for audio
+             fullspec_aud, //Storing any full spec settings for audio
+             fullspec_user; //Storing any full spec setting from the user UI
 
     wxArrayString filters; //The video and audio filters
 

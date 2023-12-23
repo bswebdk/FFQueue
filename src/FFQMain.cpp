@@ -2302,17 +2302,25 @@ void FFQMain::OnIdle(wxIdleEvent &event)
     {
 
         m_FirstIdle = false; //This should only be done once after the window is shown..
+        wxString arg;
         int fs_idx = -1;
+        bool filter = false;
 
         //Check command line for important messages from the local submarine
         for (int i = 1; i < wxTheApp->argc; i++)
         {
-            wxString arg = wxTheApp->argv[i];
+            arg = wxTheApp->argv[i];
             if (arg.StartsWith("--test-fs="))
             {
                 arg = arg.AfterFirst(EQUAL);
                 FFQFullSpec::Initialize(this);
-                fs_idx = FFQFullSpec::FindFullSpecID(arg);
+                filter = arg.StartsWith(FULLSPEC_FILTER + EQUAL);
+                if (filter)
+                {
+                    arg = arg.AfterFirst(EQUAL);
+                    fs_idx = FFQFullSpec::FindFullSpecFilter(arg);
+                }
+                else fs_idx = FFQFullSpec::FindFullSpecID(arg);
                 if (fs_idx < 0) Console->AppendLine(FFQSF(SID_FULLSPEC_BAD_ID, arg), COLOR_RED);
             }
             else Console->AppendLine(FFQSF(SID_BAD_COMMAND_LINE_ARG, arg), COLOR_RED);
@@ -2324,27 +2332,63 @@ void FFQMain::OnIdle(wxIdleEvent &event)
 
             bool fs_ok = true;
             wxString cmd;
+            FFMPEG_FILTER fltr;
+            FFQFilterEdit *fe = filter ? new FFQFilterEdit(this) : nullptr;
+            //FFQ_PRESET pst;
+            //pst.preset_name = FULLSPEC_PRESET;
 
             while (fs_ok)
             {
 
-                //Run the spec's UI
-                FFQFullSpec *fs = new FFQFullSpec(this);
-                fs_ok = fs->Execute(fs_idx, cmd);
-                delete fs;
+                if (filter)
+                {
 
-                //Show the result
-                Console->AppendLine(cmd, COLOR_BLUE);
-                wxTheApp->Yield(true);
+                    //Run the filter editor
+                    if (fltr.ff_filter.Len() == 0)
+                    {
+                        fltr.type = ftFULLSPEC;
+                        fltr.ff_filter = FILTER_VIDEO_IN + FFQFullSpec::GetFullSpec(fs_idx)->composite + EQUAL;
+                    }
+                    fs_ok = fe->Execute(&fltr);
+                    cmd = fltr.friendly;
+
+                }
+                /*if (arg == FULLSPEC_PRESET)
+                {
+
+                    //Execute the preset editor for the UI
+                    FFQPresetEdit *pe = new FFQPresetEdit(this);
+                    pe->debug_fullspec_user = true;
+                    fs_ok = pe->Execute(&pst);
+                    delete pe;
+                    cmd = pst.fullspec_user;
+
+                }*/
+                else
+                {
+
+                    //Run the spec's default UI
+                    FFQFullSpec *fs = new FFQFullSpec(this);
+                    fs_ok = fs->Execute(fs_idx, cmd);
+                    delete fs;
+
+                }
 
                 if (fs_ok)
                 {
+                    //Show the result
+                    Console->AppendLine(cmd, COLOR_BLUE);
+                    wxTheApp->Yield(true);
+
                     //Forcefully reload Full Specs for next iteration
                     FFQFullSpec::Finalize();
                     FFQFullSpec::Initialize(this);
                 }
 
             }
+
+            if (fe) delete fe;
+
 
         }
 
@@ -2403,6 +2447,8 @@ void FFQMain::OnShow(wxShowEvent &event)
             LoadItems();
             if (FFQCFG()->validate_on_load) ValidateItems();
             UpdateControls();
+
+            //Console->AppendLine(wxLocale::GetLanguageCanonicalName(wxLocale::GetSystemLanguage()), COLOR_RED);
 
             //wxString path;
             //if (wxGetEnv("PATH", &path)) Console->AppendLine(path, 0);

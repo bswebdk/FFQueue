@@ -40,6 +40,8 @@
 //  *)
 
 extern const wxString FULLSPEC_FILE_EXTENSION;
+extern const wxString FULLSPEC_PRESET;
+extern const wxString FULLSPEC_FILTER;
 enum FULLSPEC_FIELD_TYPE { ftHEADER, ftCHECK, ftCHOICE, ftSTRING, ftINTEGER, ftFLOAT, ftCOMBO, ftCHECKLIST };
 class FFQFullSpecEvtHandler; //Forward declaration
 
@@ -47,24 +49,32 @@ class FFQFullSpecEvtHandler; //Forward declaration
 //---------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------------
 
+#define DEFIDX 0
+//#define NEEDED 0
+
 struct FULLSPEC_FIELD
 {
     FULLSPEC_FIELD_TYPE type;
     wxString name, text, value, range, def, require;
     int defidx;
-    bool hide, required;
+    //uint8_t needed;
+    bool hide;
     wxCheckBox *check;
     wxWindow *ctrl;
+    wxStaticText *label;
     FULLSPEC_FIELD *req_field;
 
     FULLSPEC_FIELD():
-         type(ftHEADER), name(""), text(""), value(""), range(""), def(""), defidx(0), hide(false), required(false), check(nullptr), ctrl(nullptr), req_field(nullptr) {};
+         type(ftHEADER), name(""), text(""), value(""), range(""), def(""), require(""), defidx(DEFIDX), /*needed(NEEDED),*/ hide(false), check(nullptr), ctrl(nullptr), label(nullptr), req_field(nullptr) {}
 
-    FULLSPEC_FIELD(FULLSPEC_FIELD_TYPE t, wxString n, wxString x, wxString v, wxString r, wxString d, wxString q, bool h, bool rq):
-         type(t), name(n), text(x), value(v), range(r), def(d), require(q), defidx(0), hide(h), required(rq), check(nullptr), ctrl(nullptr), req_field(nullptr) {};
+    FULLSPEC_FIELD(FULLSPEC_FIELD_TYPE _type, wxString _name, wxString _text, wxString _value, wxString _range, wxString _def, wxString _require, /*uint8_t _needed,*/ bool _hide):
+         type(_type), name(_name), text(_text), value(_value), range(_range), def(_def), require(_require), defidx(DEFIDX), /*needed(_needed),*/ hide(_hide), check(nullptr), ctrl(nullptr), label(nullptr), req_field(nullptr) {}
 
-    FULLSPEC_FIELD(wxString x):
-         type(ftHEADER), name(""), text(x), value(""), range(""), def(""), require(""), defidx(0), hide(false), required(false), check(nullptr), ctrl(nullptr), req_field(nullptr) {};
+    FULLSPEC_FIELD(wxString _text):
+         type(ftHEADER), name(""), text(_text), value(""), range(""), def(""), require(""), defidx(DEFIDX), /*needed(NEEDED),*/ hide(false), check(nullptr), ctrl(nullptr), label(nullptr), req_field(nullptr) {}
+
+    bool is_enabled() { return (check == nullptr) ? label->IsEnabled() : check->IsEnabled(); }
+    bool is_checked() { return (check == nullptr) || check->IsChecked(); }
 };
 
 //---------------------------------------------------------------------------------------
@@ -75,7 +85,7 @@ struct FULLSPEC_FILE
 {
     uint8_t version;
     bool notebook;
-    wxString id, checkval, composite, display, matches, prefix, separator;
+    wxString id, checkval, composite, display, extra, matches, prefix, separator;
     wxString *body;
     wxRegEx *rx_match;
     FFQFullSpecEvtHandler *evt_handler;
@@ -115,12 +125,16 @@ class FFQFullSpec: public wxDialog
 
 		static void ClearControlsFor(FULLSPEC_FILE &file, bool delete_evt_handler = true);
 		static int FindFullSpec(wxString for_codec);
-		static int FindFullSpecID(wxString for_codec);
+		static int FindFullSpecFilter(int from_index);
+		static int FindFullSpecFilter(wxString filter_name);
+		static int FindFullSpecID(wxString for_id);
 		static void Finalize();
-		static bool GetCommandLine(FULLSPEC_FILE &file, wxString &cmd);
+		static bool GetCommandLine(FULLSPEC_FILE &file, wxString &cmd, wxUniChar command_quote = DQUOTE, wxUniChar value_quote = DQUOTE);
+		static FULLSPEC_FILE* GetFullSpec(int index);
 		static void Initialize(wxWindow *wnd);
-		static bool MakeControlsFor(FULLSPEC_FILE &file, wxWindow *parent);
+		static bool MakeControlsFor(FULLSPEC_FILE &file, wxWindow *parent, wxSize *max_size = nullptr);
 		static void SetCommandLine(FULLSPEC_FILE &file, wxString cmd);
+		static bool ValidateCtrls(FULLSPEC_FILE &file, bool show_message = true);
 
 		FFQFullSpec(wxWindow* parent, wxWindowID id = wxID_ANY);
 		virtual ~FFQFullSpec();

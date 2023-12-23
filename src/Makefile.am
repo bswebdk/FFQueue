@@ -44,6 +44,7 @@ ffqueue_SOURCES=FFQAbout.cpp\
 	filter/Flanger.cpp\
 	filter/Flip.cpp\
 	filter/FrameStep.cpp\
+	filter/FullSpec.cpp\
 	filter/HighLowBandPass.cpp\
 	filter/Hqdn3d.cpp\
 	filter/Hue.cpp\

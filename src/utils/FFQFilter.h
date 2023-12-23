@@ -90,6 +90,7 @@ typedef enum FILTER_TYPE { ftCOLOROVERLAY,
                            ftTRANSPOSE,
                            ftDYNAUDNORM,
                            ftDEFLICKER,
+                           ftFULLSPEC=0xfffe,
                            ftUNKNOWN=0xffff } FILTER_TYPE;
 
 

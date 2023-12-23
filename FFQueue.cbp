@@ -139,7 +139,7 @@
 				<Option object_output="obj/Debug/" />
 				<Option type="0" />
 				<Option compiler="gcc" />
-				<Option parameters="--test-fs=x264s" />
+				<Option parameters="--test-fs=#filter=fps8" />
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
 					<Add option="-g" />
@@ -265,6 +265,8 @@
 		<Unit filename="src/filter/Flip.h" />
 		<Unit filename="src/filter/FrameStep.cpp" />
 		<Unit filename="src/filter/FrameStep.h" />
+		<Unit filename="src/filter/FullSpec.cpp" />
+		<Unit filename="src/filter/FullSpec.h" />
 		<Unit filename="src/filter/HighLowBandPass.cpp" />
 		<Unit filename="src/filter/HighLowBandPass.h" />
 		<Unit filename="src/filter/Hqdn3d.cpp" />

@@ -61,20 +61,24 @@ const long FFQFullSpec::ID_CANCELBTN = wxNewId();
 //---------------------------------------------------------------------------------------
 
 const wxString FULLSPEC_FILE_EXTENSION = ".ffqs";
+const wxString FULLSPEC_PRESET = "#preset";
+const wxString FULLSPEC_FILTER = "#filter";
 const wxString RANGE_MIN = "min";
 const wxString RANGE_MAX = "max";
 const wxString FFQ_FULLSPEC_HEADER_1 = "FFQ_FULLSPEC_HEADER_1";
 const wxString NUM_VAL_DEFAULT = "-10000 10000";
 const wxString FS_INVALID_SPEC = "FFQFullSpec: The specification is missing information";
-const wxString FS_INVALID = "FFQFullSpec: Invalid %s in line \"%s\"";
+const wxString FS_INVALID = "FFQFullSpec: Invalid %s in \"%s\"";
 const wxString FS_CYCLIC_REQUIRE = "FFQFullSpec: Cyclic require in field \"%s\"";
-const wxString FS_LOG_TYPE[] = {"type", "field", "value", "header", "regex", "property"};
+const wxString FS_LOG_TYPE[] = {"type", "field", "value", "header", "regex", "property", "augment"};
+const wxString LFLF = "\n\n";
 const uint8_t  FS_LOG_BAD_TYPE = 0;
 const uint8_t  FS_LOG_BAD_FIELD = 1;
 const uint8_t  FS_LOG_BAD_VALUE = 2;
 const uint8_t  FS_LOG_BAD_HEADER = 3;
 const uint8_t  FS_LOG_BAD_REGEX = 4;
 const uint8_t  FS_LOG_BAD_PROPERTY = 5;
+const uint8_t  FS_LOG_BAD_AUGMENT = 6;
 
 //---------------------------------------------------------------------------------------
 
@@ -280,69 +284,82 @@ void FFQFullSpecEvtHandler::UpdateField(FULLSPEC_FIELD &field)
     if (m_UpdateStack.Index(field.name) >= 0)
     {
 
-        //WARNING: Cyclic field requirements for: field.name
-        //#ifdef DEBUG
         FFQConsole::Get()->AppendLine(wxString::Format(FS_CYCLIC_REQUIRE, field.name), COLOR_RED);
-        //#endif // DEBUG
         return;
 
     }
-    m_UpdateStack.Add(field.name);
-
-    bool enable = true;
-    FFQTokenParser tp(field.require, m_File->separator);
-    while (enable && tp.has_more())
+    else if (field.require == EXCLAM)
     {
 
-        //Get required field name and value
-        wxString v = tp.next(), n = GetToken(v, EQUAL, true);
+        //Required field
+        //field.label.Enable(true);
+        //field.ctrl.Enable(true);
 
-        //Get required check state
-        bool inverse = n.StartsWith(EXCLAM);
-        if (inverse) n = n.AfterFirst(EXCLAM);
+    }
+    else
+    {
 
-        //Get index of field
-        int idx = IndexOfField(*m_File, n);
+        //Prevent circles..
+        m_UpdateStack.Add(field.name);
 
-        //If the field is not found, it is ignored
-        if (idx < 0) continue;
+        bool enable = true;
+        FFQTokenParser tp(field.require, m_File->separator);
 
-        FULLSPEC_FIELD &ff = m_File->fields[idx];
-
-        //Make sure that the required field has its requirements met
-        UpdateField(ff);
-
-        if (ff.check->IsEnabled())
+        while (enable && tp.has_more())
         {
 
-            //Validate the field value if applied
-            if (v.Len() > 0)
+            //Get required field name and value
+            wxString v = tp.next(), n = GetToken(v, EQUAL, true);
+
+            //Get required check state
+            bool inverse = n.StartsWith(EXCLAM);
+            if (inverse) n = n.AfterFirst(EXCLAM);
+
+            //Get index of field
+            int idx = IndexOfField(*m_File, n);
+
+            //If the field is not found, it is ignored
+            if (idx < 0) continue;
+
+            FULLSPEC_FIELD &ff = m_File->fields[idx];
+
+            //Make sure that the required field has its requirements met
+            UpdateField(ff);
+
+            if (ff.is_enabled()) //ff.check->IsEnabled())
             {
 
-                if (ff.check->IsChecked())
+                //Validate the field value if applied
+                if (v.Len() > 0)
                 {
-                    if (!LogicCompare(GetFieldValue(*m_File, ff), v)) enable = false;
-                    //if (inverse == (v == GetFieldValue(ff))) enable = false;
+
+                    if (ff.is_checked()) //ff.check->IsChecked())
+                    {
+                        if (!LogicCompare(GetFieldValue(*m_File, ff), v)) enable = false;
+                        //if (inverse == (v == GetFieldValue(ff))) enable = false;
+                    }
+                    else enable = false;
+
                 }
-                else enable = false;
+
+                //Else validate checkbox state
+                else if (ff.is_checked() /*check->IsChecked()*/ == inverse) enable = false;
 
             }
 
-            //Else validate checkbox state
-            else if (ff.check->IsChecked() == inverse) enable = false;
+            //Field is not available
+            else enable = false;
 
         }
 
-        //Field is not available
-        else enable = false;
+        if (field.check == nullptr) field.label->Enable(enable);
+        else field.check->Enable(enable);
+        if (field.ctrl) field.ctrl->Enable(enable && field.is_checked()); //field.check->IsChecked());
+
+        //Remove field from update stack
+        m_UpdateStack.RemoveAt(m_UpdateStack.Count() - 1);
 
     }
-
-    field.check->Enable(enable);
-    if (field.ctrl) field.ctrl->Enable(enable && field.check->IsChecked());
-
-    //Remove field from update stack
-    m_UpdateStack.RemoveAt(m_UpdateStack.Count() - 1);
 
 }
 
@@ -359,6 +376,7 @@ void FFQFullSpec::ClearControlsFor(FULLSPEC_FILE &file, bool delete_evt_handler)
         FULLSPEC_FIELD &field = file.fields[idx];
         field.check = nullptr;
         field.ctrl = nullptr;
+        field.label = nullptr;
     }
 
     //Delete the event handler as well?
@@ -374,19 +392,42 @@ void FFQFullSpec::ClearControlsFor(FULLSPEC_FILE &file, bool delete_evt_handler)
 
 int FFQFullSpec::FindFullSpec(wxString for_codec)
 {
+    //Find codec full spec by regex match
     for (size_t i = 0; i < s_Files.size(); i++)
     {
         FULLSPEC_FILE &file = s_Files[i];
-        if (file.rx_match->Matches(for_codec)) return (int)i;
+        if ((file.rx_match != nullptr) && file.rx_match->Matches(for_codec)) return (int)i;
     }
     return wxNOT_FOUND;
 }
 
 //---------------------------------------------------------------------------------------
 
-int FFQFullSpec::FindFullSpecID(wxString id)
+int FFQFullSpec::FindFullSpecFilter(int from_index)
 {
-    for (size_t i = 0; i < s_Files.size(); i++) if (s_Files[i].id == id) return (int)i;
+    //Find the next full spec filter
+    for (size_t i = from_index; i < s_Files.size(); i++) if (s_Files[i].id == FULLSPEC_FILTER) return (int)i;
+    return wxNOT_FOUND;
+}
+
+//---------------------------------------------------------------------------------------
+
+int FFQFullSpec::FindFullSpecFilter(wxString filter_name)
+{
+    //Find full spec for a filter name
+    for (size_t i = 0; i < s_Files.size(); i++)
+    {
+        FULLSPEC_FILE &file = s_Files[i];
+        if ((file.id == FULLSPEC_FILTER) && (file.composite == filter_name)) return (int)i;
+    }
+    return wxNOT_FOUND;
+}
+
+//---------------------------------------------------------------------------------------
+
+int FFQFullSpec::FindFullSpecID(wxString for_id)
+{
+    for (size_t i = 0; i < s_Files.size(); i++) if (s_Files[i].id == for_id) return (int)i;
     return wxNOT_FOUND;
 }
 
@@ -415,7 +456,7 @@ void FFQFullSpec::Finalize()
 
 //---------------------------------------------------------------------------------------
 
-bool FFQFullSpec::GetCommandLine(FULLSPEC_FILE &file, wxString &cmd)
+bool FFQFullSpec::GetCommandLine(FULLSPEC_FILE &file, wxString &cmd, wxUniChar command_quote, wxUniChar value_quote)
 {
 
     //Build a command line from the fields..
@@ -427,7 +468,7 @@ bool FFQFullSpec::GetCommandLine(FULLSPEC_FILE &file, wxString &cmd)
     {
         //Get a reference to the field and continue if the field is a header or un-checked
         FULLSPEC_FIELD &field = file.fields[i];
-        if ((field.type == ftHEADER) || (!field.check->IsEnabled()) || (!field.check->IsChecked())) continue;
+        if ((field.type == ftHEADER) || (!field.is_enabled()/* check->IsEnabled()*/) || (!field.is_checked() /*check->IsChecked()*/)) continue;
 
         //Get the value from the field, set to checkbox value if no control
         wxString val = field.ctrl ? GetFieldValue(file, field) : file.checkval;
@@ -451,8 +492,7 @@ bool FFQFullSpec::GetCommandLine(FULLSPEC_FILE &file, wxString &cmd)
 
                 //If a value exists, add the formatted value and the proper separators
                 cmd += composite ? EQUAL : SPACE;
-                //val.Replace(COLON, COMMA);
-                if (val.Find(SPACE) >= 0) cmd += '"' + val + '"';
+                if ((value_quote != 0) && (val.Find(SPACE) >= 0)) cmd += value_quote + val + value_quote;
                 else cmd += val;
 
             }
@@ -471,12 +511,23 @@ bool FFQFullSpec::GetCommandLine(FULLSPEC_FILE &file, wxString &cmd)
         cmd.RemoveLast();
 
         //Add the composite argument and the value list
-        if (composite) cmd = file.composite + SPACE + '"' + cmd + '"';
+        if (composite)
+        {
+            if (command_quote == 0) cmd = file.composite + SPACE + cmd;
+            else cmd = file.composite + SPACE + command_quote + cmd + command_quote;
+        }
 
     }
 
     return true;
 
+}
+
+//---------------------------------------------------------------------------------------
+
+FULLSPEC_FILE* FFQFullSpec::GetFullSpec(int index)
+{
+    return ((index < 0) || (index >= (int)s_Files.size())) ? nullptr : &s_Files[index];
 }
 
 //---------------------------------------------------------------------------------------
@@ -571,11 +622,16 @@ void FFQFullSpec::Initialize(wxWindow *wnd)
 
 */
 
-bool FFQFullSpec::MakeControlsFor(FULLSPEC_FILE &file, wxWindow *parent)
+bool FFQFullSpec::MakeControlsFor(FULLSPEC_FILE &file, wxWindow *parent, wxSize *max_size)
 {
 
     //Do not create controls if an event handler is already bound
     if (file.evt_handler) return false;
+
+    //Make sure that the body has been parsed
+    ParseSpecBody(file);
+
+    //FFQConsole::Get()->AppendLine(ToStr(file.fields.size()), 0);
 
     //Common controls
     wxFlexGridSizer *fgs = nullptr;
@@ -585,13 +641,14 @@ bool FFQFullSpec::MakeControlsFor(FULLSPEC_FILE &file, wxWindow *parent)
     //Used to adjust sizes
 	wxDisplay d(wxDisplay::GetFromWindow(parent));
 	wxRect sz = d.GetClientArea();
-	wxSize swmax(int(float(sz.GetWidth()) * 0.75), int(float(sz.GetHeight()) * (file.notebook ? 0.65 : 0.75)));
+	wxSize swmax = max_size ? *max_size : wxSize(int(float(sz.GetWidth()) * 0.75), int(float(sz.GetHeight()) * (file.notebook ? 0.65 : 0.75)));
 
-    auto new_swin = [&swin, &nbook, swmax]()
+    auto new_swin = [&swin, /*&nbook,*/ swmax](wxWindow *parent)
     {
         //Used to uniformly create a ScrolledWindow
-        swin = new wxScrolledWindow(nbook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxVSCROLL);
+        swin = new wxScrolledWindow(parent);//, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxVSCROLL|wxHSCROLL);
         swin->SetMaxSize(swmax);
+        //swin->ShowScrollbars(wxSHOW_SB_DEFAULT, wxSHOW_SB_ALWAYS);
         swin->SetScrollbars(25, 25, 3, 3, 0, 0); ///TODO: Use height of a checkbox!
     };
 
@@ -622,6 +679,7 @@ bool FFQFullSpec::MakeControlsFor(FULLSPEC_FILE &file, wxWindow *parent)
         {
             //Add the current page to the notebook control
             swin->SetSizerAndFit(fgs);
+            fgs->SetSizeHints(swin);
             nbook->AddPage(swin, page_name.Len() == 0 ? "???" : page_name);
             fgs = nullptr;
         };
@@ -645,10 +703,7 @@ bool FFQFullSpec::MakeControlsFor(FULLSPEC_FILE &file, wxWindow *parent)
                 if (fgs == nullptr)
                 {
 
-                    new_swin();
-                    /*swin = new wxScrolledWindow(nbook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxVSCROLL);
-                    swin->SetMaxSize(swmax);
-                    swin->SetScrollbars(25, 25, 3, 3, 0, 0);*/
+                    new_swin(nbook);
                     fgs = new wxFlexGridSizer(page_sizes[page_idx++], 1, 0, 0);
                     fgs->AddGrowableCol(0);
 
@@ -668,10 +723,7 @@ bool FFQFullSpec::MakeControlsFor(FULLSPEC_FILE &file, wxWindow *parent)
     else
     {
 
-        new_swin();
-        /*swin = new wxScrolledWindow(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxVSCROLL);
-        swin->SetMaxSize(swmax);
-        swin->SetScrollbars(25, 25, 3, 3, 0, 0);*/
+        new_swin(parent);
 
         fgs = new wxFlexGridSizer(file.fields.size(), 1, 0, 0);
         fgs->AddGrowableCol(0);
@@ -684,6 +736,7 @@ bool FFQFullSpec::MakeControlsFor(FULLSPEC_FILE &file, wxWindow *parent)
         }
 
         swin->SetSizerAndFit(fgs);
+        fgs->SetSizeHints(swin);
         file.evt_handler = new FFQFullSpecEvtHandler(swin, &file);
 
     }
@@ -721,6 +774,7 @@ int FFQFullSpec::FullSpecFileFromString(wxString &spec)
                 else if (k == "checkval") file.checkval = v;
                 else if (k == "composite") file.composite = v;
                 else if (k == "display") file.display = v;
+                else if (k == "extra") file.extra = v;
                 else if (k == "id") file.id = v;
                 else if (k == "matches") file.matches = v;
                 else if (k == "prefix") file.prefix = v;
@@ -732,27 +786,50 @@ int FFQFullSpec::FullSpecFileFromString(wxString &spec)
         }
     }
 
-    if (!done) return -1; //End of header not found
+    if (!done)
+    {
+        FFQConsole::Get()->AppendLine(FS_INVALID_SPEC, COLOR_RED);
+        return -1; //End of header not found
+    }
 
-    //We must either have an ID match for an existing specification
-    //or a specification with valid required fields
-    int idx = (augment.Len() > 0) ? FindFullSpecID(augment) : -1;
-    bool spec_ok = (file.id.Len() > 0) && (file.display.Len() > 0) && (file.matches.Len() > 0);
+    //Prepare for special ID's
+    bool filter = (file.id == FULLSPEC_FILTER);
+    bool preset = filter ? false : (file.id == FULLSPEC_PRESET);
+
+    if (filter) file.prefix = file.separator = wxEmptyString;
+    else if (preset) file.matches = wxEmptyString;
+
+    //Find the index of a full spec that must be augmented
+    int idx = wxNOT_FOUND;
+    if (augment.Len() > 0)
+    {
+        if (filter) idx = FindFullSpecFilter(augment);
+        else idx = FindFullSpecID(augment);
+        if (idx == wxNOT_FOUND)
+        {
+            LogSpecError(FS_LOG_BAD_AUGMENT, augment);
+            return wxNOT_FOUND;
+        }
+    }
+
+    //We must either have an ID match for an existing specification to
+    //augment or a specification with valid required fields
+    bool spec_ok = (file.id.Len() > 0) && (file.display.Len() > 0) && (preset || (file.matches.Len() > 0));
 
     if ((idx >= 0) || spec_ok)
     {
 
-        //Validate RegEx for matching
-        if (file.matches.Len() > 0)
+        if ((!filter) && (file.matches.Len() > 0))
         {
 
+            //Validate RegEx for matching if not filter
             file.rx_match = new wxRegEx(file.matches, wxRE_EXTENDED);
 
             if (!file.rx_match->IsValid())
             {
                 LogSpecError(FS_LOG_BAD_REGEX, file.matches);
                 delete file.rx_match;
-                return -1;
+                return wxNOT_FOUND;
             }
 
         }
@@ -766,8 +843,9 @@ int FFQFullSpec::FullSpecFileFromString(wxString &spec)
             //Override existing spec
             FULLSPEC_FILE &ff = s_Files[idx];
             if (file.checkval.Len() > 0) ff.checkval = file.checkval;
-            if (file.composite.Len() > 0) ff.composite = file.composite;
+            if ((!filter) && (file.composite.Len() > 0)) ff.composite = file.composite;
             if (file.display.Len() > 0) ff.display = file.display;
+            if (file.extra.Len() > 0) ff.extra = file.extra;
             if (file.matches.Len() > 0)
             {
                 if (ff.rx_match) delete ff.rx_match;
@@ -778,7 +856,7 @@ int FFQFullSpec::FullSpecFileFromString(wxString &spec)
             ff.separator = file.separator;
 
             //Append the remaining spec to existing body
-            *ff.body += "\n\n" + lp.rest() + "\n\n";
+            *ff.body += LFLF + lp.rest() + LFLF + LFLF;
             return idx;
 
         }
@@ -786,18 +864,18 @@ int FFQFullSpec::FullSpecFileFromString(wxString &spec)
         {
 
             //Check if we need to replace an existing spec
-            idx = FindFullSpecID(file.id);
+            idx = filter ? FindFullSpecFilter(file.composite) : FindFullSpecID(file.id);
             if (idx >= 0)
             {
                 FULLSPEC_FILE &del = s_Files[idx];
                 delete del.body;
-                delete del.rx_match;
+                if (del.rx_match) delete del.rx_match;
                 del.fields.clear();
                 s_Files.erase(s_Files.begin() + idx);
             }
 
             //Add the new spec
-            file.body = new wxString(lp.rest()); //Save the rest for later
+            file.body = new wxString(lp.rest() + LFLF + LFLF); //Save the rest for later
             file.evt_handler = nullptr;
             s_Files.push_back(file);
             return (int)s_Files.size() - 1;
@@ -817,8 +895,16 @@ void FFQFullSpec::FullSpecsFromDir(wxString dir)
     wxArrayString files;
     wxDir::GetAllFiles(dir, &files, "*" + FULLSPEC_FILE_EXTENSION, wxDIR_FILES);
 
+    #ifdef DEBUG
+    //FFQConsole::Get()->AppendLine("FullSpecsFromDir:", COLOR_BLUE);
+    #endif // DEBUG
+
     for (size_t i = 0; i < files.Count(); i++)
     {
+
+        #ifdef DEBUG
+        //FFQConsole::Get()->AppendLine(files[i], COLOR_BLUE);
+        #endif // DEBUG
 
         wxString spec;
         wxFFile ff;
@@ -852,21 +938,34 @@ void FFQFullSpec::MakeControlFor(FULLSPEC_FILE &file, FULLSPEC_FIELD &field, wxW
         //Header
         wxStaticText *st = new wxStaticText(parent, wxID_ANY, field.text);
         st->SetFont(s_HeaderFont);
-        sizer->Add(st, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
+        //sizer->Add(st, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
+        sizer->Add(st, 1, wxALL|wxEXPAND, 5);
         field.ctrl = st;
 
     }
     else
     {
 
-        //Field always have a checketty checkbox
-        field.check = new wxCheckBox(parent, wxID_ANY, field.text);
+        //Create a tool tip for the check / label
         wxString tt = field.name;
         if (field.range.Len() > 0) tt += ", range: " + field.range.BeforeFirst(SPACE) + ".." + field.range.AfterFirst(SPACE);
         if (field.def.Len() > 0) tt += ", default: " + field.def;
-        field.check->SetToolTip(tt);
 
-        //if (field.hide) field.check->SetForegroundColour(*wxRED);
+        if ((field.type == ftCHECK) || (field.require != EXCLAM))
+        {
+            //Type is check or field is not required
+            field.check = new wxCheckBox(parent, wxID_ANY, field.text);
+            field.check->SetToolTip(tt);
+            //if (field.hide) field.check->SetForegroundColour(*wxRED);
+        }
+        else
+        {
+            //Field is not check and required
+            field.label = new wxStaticText(parent, wxID_ANY, field.text);
+            field.label->SetToolTip(tt);
+            //if (field.hide) field.label->SetForegroundColour(*wxRED);
+        }
+
 
         if (field.type == ftCHECK)
         {
@@ -967,8 +1066,10 @@ void FFQFullSpec::MakeControlFor(FULLSPEC_FILE &file, FULLSPEC_FIELD &field, wxW
         //Create a sizer and add the control before adding the sizer to the control sizer..
         wxFlexGridSizer *fgs = new wxFlexGridSizer(1, 2, 0, 0);
         fgs->AddGrowableCol(0);
-        fgs->Add(field.check, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 0);
-        fgs->Add(field.ctrl, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 0);
+        if (field.check == nullptr) fgs->Add(field.label, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 0);
+        else fgs->Add(field.check, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 0);
+        fgs->Add(field.ctrl, 1, wxALL|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 0);
+        //fgs->Add(field.ctrl, wxALL|wxEXPAND, 0);
         sizer->Add(fgs, 1, wxALL|wxEXPAND, 3);
 
     }
@@ -983,10 +1084,12 @@ void FFQFullSpec::ParseSpecBody(FULLSPEC_FILE &file)
     //This will parse the body of the specification text
     //and convert it to a list of fields
 
-    if (file.body == NULL) return;
+    if (file.body == nullptr) return;
+
+    //FFQConsole::Get()->AppendLine(*file.body, 0);
 
     FULLSPEC_FIELD_TYPE type = ftHEADER;
-    wxString key, val, name, text, value, range, def, require, required, hide;
+    wxString key, val, name, text, value, range, def, require, needed, hide;
 
     FFQLineParser lp(*file.body);
 
@@ -1034,7 +1137,7 @@ void FFQFullSpec::ParseSpecBody(FULLSPEC_FILE &file)
                     else if (key == "range") range = val;
                     else if (key == "default") def = val;
                     else if (key == "require") require = val;
-                    else if (key == "required") required = val;
+                    else if (key == "needed") needed = val;
                     else if (key == "hide") hide = val;
                     else LogSpecError(FS_LOG_BAD_FIELD, lp.last());
 
@@ -1066,7 +1169,7 @@ void FFQFullSpec::ParseSpecBody(FULLSPEC_FILE &file)
                 if (range.Len() > 0) field.range = range;
                 if (def.Len() > 0) field.def = def;
                 if (require.Len() > 0) field.require = require;
-                if (required.Len() > 0) field.required = (require == STR_YES);
+                //if (needed.Len() > 0) field.needed = Str2Long(needed, field.needed);
                 if (hide.Len() > 0) field.hide = (hide == STR_YES);
 
             }
@@ -1074,12 +1177,12 @@ void FFQFullSpec::ParseSpecBody(FULLSPEC_FILE &file)
             {
 
                 //Creating a new field
-                file.fields.push_back(FULLSPEC_FIELD(type, name, text, value, range, def, require, hide == STR_YES, required == STR_YES));
+                file.fields.push_back(FULLSPEC_FIELD(type, name, text, value, range, def, require, /*Str2Long(needed, NEEDED),*/ hide == STR_YES));
 
             }
 
             //Prepare next field
-            name = text = value = range = def = require = hide = required = wxEmptyString;
+            name = text = value = range = def = require = /*needed =*/ hide = wxEmptyString;
             type = ftHEADER;
 
         }
@@ -1110,11 +1213,17 @@ void FFQFullSpec::SetCommandLine(FULLSPEC_FILE &file, wxString cmd)
     if ((file.composite.Len() > 0) && cmd.StartsWith(file.composite))
     {
 
-        //Remove composite + SPACE + QUOTE
-        cmd.Remove(0, file.composite.Len() + 2);
+        //Remove composite + SPACE
+        cmd.Remove(0, file.composite.Len() + 1);
 
-        //Ending QUOTE
-        cmd.Remove(cmd.Len() - 1, 1);
+        //Remove quotes, if present
+        wxUniChar c = cmd.Len() > 0 ? cmd[0] : 0;
+        if ((c == QUOTE) || (c == DQUOTE))
+        {
+            //Ending QUOTE
+            cmd.Remove(0, 1);
+            cmd.RemoveLast();
+        }
 
     }
 
@@ -1134,7 +1243,7 @@ void FFQFullSpec::SetCommandLine(FULLSPEC_FILE &file, wxString cmd)
             if (field.type == ftHEADER) continue;
 
             //The checkbox must always be checked for fields in the command line
-            field.check->SetValue(true);
+            if (field.check != nullptr) field.check->SetValue(true);
 
             if (field.type != ftCHECK)
             {
@@ -1181,6 +1290,63 @@ void FFQFullSpec::SetCommandLine(FULLSPEC_FILE &file, wxString cmd)
         //else LOG ROUGE FIELD?
 
     }
+
+}
+
+//---------------------------------------------------------------------------------------
+
+bool FFQFullSpec::ValidateCtrls(FULLSPEC_FILE &file, bool show_message)
+{
+
+    int section = 0; //Used to detect the section / notebook page in which the control exists
+    wxNotebook *nbook = file.notebook ? dynamic_cast<wxNotebook*>(file.evt_handler->GetParent()) : nullptr;
+
+    //Qualidate da textos controles!
+    for (size_t i = 0; i < file.fields.size(); i++)
+    {
+
+        FULLSPEC_FIELD &field = file.fields[i];
+        if (field.type == ftHEADER)
+        {
+            if (i > 0) section++;
+            continue;
+        }
+        else if ((!field.is_enabled()) || (!field.is_checked())) continue; //((field.check == NULL) || (!field.check->IsChecked())) continue;
+
+        wxTextEntry *te = dynamic_cast<wxTextEntry*>(field.ctrl);
+
+        if (te != NULL)
+        {
+
+            if (te->GetValue().Len() == 0)
+            {
+
+                if (show_message)
+                {
+                    if (nbook) nbook->SetSelection(section);
+                    ShowError(field.ctrl, FFQSF(SID_FULLSPEC_REQUIRED_FIELD, field.text));
+                }
+                return false;
+
+            }
+
+            else if (te->GetValue().Find(COLON) != wxNOT_FOUND)
+            {
+
+                if (show_message)
+                {
+                    if (nbook) nbook->SetSelection(section);
+                    ShowError(field.ctrl, FFQS(SID_FULLSPEC_COLON_NOT_ALLOWED));
+                }
+                return false;
+
+            }
+
+        }
+
+    }
+
+    return true;
 
 }
 
@@ -1269,7 +1435,7 @@ bool FFQFullSpec::Execute(int full_spec_index, wxString &cmd)
     m_File = &s_Files[full_spec_index];
     m_CmdLine = cmd;
     m_TestFile = wxEmptyString;
-    ParseSpecBody(*m_File);
+    //ParseSpecBody(*m_File);
     MakeControlsFor(*m_File, this);
 	MainSizer->Insert(0, m_File->evt_handler->GetParent(), 1, wxALL|wxEXPAND, 5);
 	MainSizer->Fit(this);
@@ -1965,35 +2131,6 @@ void FFQFullSpec::ActionClick(wxCommandEvent& event)
     //A button was clicked..
     int evtId = event.GetId();
     if (evtId == ID_CANCELBTN) EndModal(wxID_CANCEL);
-    else if (evtId == ID_OKBTN)
-    {
-
-        //Qualidate da textos controles!
-        for (size_t i = 0; i < m_File->fields.size(); i++)
-        {
-
-            FULLSPEC_FIELD &field = m_File->fields[i];
-            if ((field.check == NULL) || (!field.check->IsChecked())) continue;
-            wxTextEntry *te = dynamic_cast<wxTextEntry*>(field.ctrl);
-
-            if (te != NULL)
-            {
-                if (te->GetValue().Len() == 0)
-                {
-                    ShowError(field.ctrl, FFQSF(SID_FULLSPEC_REQUIRED_FIELD, field.text));
-                    return;
-                }
-                else if (te->GetValue().Find(COLON) != wxNOT_FOUND)
-                {
-                    ShowError(field.ctrl, FFQS(SID_FULLSPEC_COLON_NOT_ALLOWED));
-                    return;
-                }
-            }
-
-        }
-
-        EndModal(wxID_OK);
-
-    }
+    else if ((evtId == ID_OKBTN) && ValidateCtrls(*m_File)) EndModal(wxID_OK);
 
 }

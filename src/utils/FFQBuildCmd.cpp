@@ -1038,7 +1038,7 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
                 {
 
                     //Add stream
-                    streams.Add(new SBINFO(0, map_id, smap.stream_id, ++cur_vid_idx, "[" + smcur + "]", inf.cuts, inf.duration, smap.codec_id));
+                    streams.Add(new SBINFO(0, map_id, smap.stream_id, ++cur_vid_idx, "[" + smcur + "]", inf.cuts, inf.duration, smap.codec_name));
 
                     //Set index of first video stream
                     if (first_vid_idx < 0) first_vid_idx = cur_vid_idx;
@@ -1052,7 +1052,7 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
                 {
 
                     //As with video
-                    LPSBINFO sbi = new SBINFO(1, map_id, smap.stream_id, ++cur_aud_idx, "[" + smcur + "]", inf.cuts, inf.duration, smap.codec_id);
+                    LPSBINFO sbi = new SBINFO(1, map_id, smap.stream_id, ++cur_aud_idx, "[" + smcur + "]", inf.cuts, inf.duration, smap.codec_name);
                     streams.Add(sbi);
                     if (first_aud_idx < 0) first_aud_idx = cur_aud_idx;
 
@@ -1069,7 +1069,7 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
                         {
 
                             //Make sure that we do not re-encode to same format if this is unwanted
-                            if (((skip_encode_same & 1) == 0) || (p->audio_codec_id != smap.codec_id))
+                            if (((skip_encode_same & 1) == 0) || (p->audio_codec_id != smap.codec_name))
                             {
 
                                 if ((inf.cuts.cuts.Len() == 0) && ((pst == NULL) || (pst->GetFilters().Find(FILTER_AUDIO_IN) == wxNOT_FOUND)))
@@ -1552,6 +1552,9 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
         //End after shortest stream ends?
         if (pst->shortest) preset += "-shortest ";
 
+        //Append FullSpec from user extended GUI
+        if (pst->fullspec_user.Len() > 0) preset += pst->fullspec_user + SPACE;
+
         //Append the proper custom arguments
         if (for_preview && (pst->custom_args_1.Len() > 0)) s = pst->custom_args_1;
         else if ((encoding_pass < 2) && (pst->custom_args_1.Len() > 0)) s = pst->custom_args_1;
@@ -1567,7 +1570,7 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
             s.Remove(0, p + 2);
         }
 
-        preset += s + " ";
+        preset += s + SPACE;
 
     }
 
