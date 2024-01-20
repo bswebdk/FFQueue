@@ -937,35 +937,8 @@ wxString FFQ_CONCAT_JOB::MakeSlideshowCmd(bool for_encode)
 
     //Ensure that the destination is available and preset is compatible
     int img1st = img_first;
-    wxString res, tmp, imgptn = img_pattern;
+    wxString res, tmp, imgptn = img_pattern, filter_tag = "[0:v]" + CONCAT_FLTR_KEY1;
     LPFFQ_PRESET pst = (LPFFQ_PRESET)m_PresetPtr;
-
-    /*if ((!file_is_list) && scale_pad)
-    {
-
-        //Create the first command used for creating uniform dimensions
-        res = CONCAT_FIT_AND_PAD;
-        res.Replace("$W", ToStr(GetInput(0).width));
-        res.Replace("$H", ToStr(GetInput(0).height));
-        res.Replace("$C", wxColour((unsigned long)pad_color).GetAsString(wxC2S_HTML_SYNTAX));
-
-        //Create a temporary folder for the fitted images
-        m_TempPath = FFQCFG()->GetTmpPath(out.BeforeLast(wxFileName::GetPathSeparator()), true);
-        if (m_TempPath.Len() == 0)
-        {
-            FFQConsole::Get()->AppendLine(FFQS(SID_CONCAT_TEMP_FOLDER_ERROR), COLOR_RED);
-            return wxEmptyString;
-        }
-
-        tmp = m_TempPath + wxFileName::GetPathSeparator() + imgptn.AfterLast(wxFileName::GetPathSeparator());
-        res = ToStr(img_count) + ",-hide_banner -start_number " + ToStr(img1st) + " -i \"" + FormatFileName(imgptn) +
-              "\" -vf \"" + res + "\" -qscale:v 1 \"" + FormatFileName(tmp) + "\"" + CRLF;
-
-        imgptn = tmp;
-        img1st = 1;
-
-    }
-    else res = "";*/
 
     wxString aud = GetInput(1).path;
     TIME_VALUE aud_len = (aud.Len() > 0) ? GetInput(1).duration : TIME_VALUE(0);
@@ -976,7 +949,7 @@ wxString FFQ_CONCAT_JOB::MakeSlideshowCmd(bool for_encode)
     job.preset_ptr = pst;
 
     //job.preset_id = pst->preset_id;
-    job.stream_map = "[0:v]" + CONCAT_FLTR_KEY1;
+    job.stream_map = filter_tag;
     job.out = out;
     if (aud.Len() > 0)
     {
@@ -1040,8 +1013,25 @@ wxString FFQ_CONCAT_JOB::MakeSlideshowCmd(bool for_encode)
     if ((tmp.Find(CONCAT_FLTR_KEY1) < 0) && (fltr.Len() > 0)) dst = "-vf \"" + fltr + "\" " + dst;
     else
     {
-        if (fltr.Len() > 0) fltr += ",";
-        tmp.Replace(CONCAT_FLTR_KEY1, fltr);
+        #ifdef DEBUG
+        //FFQConsole::Get()->AppendLine(tmp, COLOR_BLUE);
+        #endif // DEBUG
+
+        //if (fltr.Len() > 0) fltr += ",";
+        //tmp.Replace(CONCAT_FLTR_KEY1, fltr);
+
+        if (fltr.Len() > 0)
+        {
+            int inject = tmp.Find(" -filter_complex ");
+            if (inject < 0) inject = tmp.Find(" -vf ") + 5;
+            else inject += 17;
+            if (tmp[inject] == DQUOTE) inject++;
+            tmp = tmp.substr(0, inject) + "[0:v]" + fltr + "[ssv];" + tmp.substr(inject);
+            tmp.Replace(filter_tag, "[ssv]");
+        }
+        else tmp.Replace(CONCAT_FLTR_KEY1, "");
+
+
     }
 
     tmp.Replace(CMD_OUTPUT, dst);

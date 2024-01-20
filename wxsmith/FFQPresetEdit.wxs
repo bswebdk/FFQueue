@@ -1456,7 +1456,7 @@
 															<object class="wxChoice" name="ID_METADATAFOR" variable="MetaDataFor" member="yes">
 																<handler function="OnChoiceChange" entry="EVT_CHOICE" />
 															</object>
-															<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+															<flag>wxALL|wxEXPAND</flag>
 															<option>1</option>
 														</object>
 													</object>

@@ -413,6 +413,7 @@ class FFQPresetEdit: public wxDialog
 
 	    //User extended UI
 	    FULLSPEC_FILE *m_FullSpecPreset;
+	    bool m_FullSpecInit;
 	    //wxPanel * m_FullSpecPage;
 
 

@@ -1433,16 +1433,21 @@ void FFQConcat::OnAction(wxCommandEvent& event)
     else if (evtId == ID_CCREMOVE)
     {
 
-        unsigned int idx = 0;
-        while (idx < CCSources->GetCount())
+        auto veto_func = [](wxListBox *lb, long index, bool &veto, void *user_data)
         {
-            if (CCSources->IsSelected(idx))
-            {
-                delete (LPCONCAT_DATA)CCSources->GetClientData(idx);
-                CCSources->Delete(idx);
-            }
-            else idx++;
-        }
+            delete (LPCONCAT_DATA)lb->GetClientData(index);
+        };
+
+        ListBoxDeleteSelectedItems(CCSources, veto_func);
+
+        /*wxArrayInt sel;
+        CCSources->GetSelections(sel);
+        for (int idx = sel.Count() - 1; idx >= 0; idx--)
+        {
+            int del = sel[idx];
+            delete (LPCONCAT_DATA)CCSources->GetClientData(del);
+            CCSources->Delete(del);
+        }*/
 
     }
 

@@ -1127,24 +1127,13 @@ void FFQJobEditAdvCuts::ActionClick(wxCommandEvent& event)
     {
 
         //Remove cuts
-        wxArrayInt sel;
+        ListBoxDeleteSelectedItems(CutList);
+
+        /*wxArrayInt sel;
         CutList->GetSelections(sel);
         CutList->Freeze();
         for (long i = (long)sel.Count() - 1; i > -1; i--) CutList->Delete(sel[i]);
-        CutList->Thaw();
-
-        //CutList->Freeze();
-        /*unsigned int idx = 0;
-        while (idx < CutList->GetCount())
-        {
-            if (CutList->IsSelected(idx))
-            {
-                //CutList->Deselect(idx);
-                CutList->Delete(idx);
-            }
-            else idx++;
-        }*/
-        //CutList->Thaw();
+        CutList->Thaw();*/
 
     }
 

@@ -135,12 +135,11 @@
 					</object>
 					<object class="sizeritem">
 						<object class="wxButton" name="ID_CLOSEBUTTON" variable="CloseButton" member="yes">
-							<label>X</label>
-							<default>1</default>
+							<label>C</label>
 							<extra_code>CloseButton-&gt;SetLabel(FFQS(SID__COMMON__CLOSE));</extra_code>
 							<handler function="OnButtonClick" entry="EVT_BUTTON" />
 						</object>
-						<flag>wxALL</flag>
+						<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
 						<border>5</border>
 						<option>1</option>
 					</object>

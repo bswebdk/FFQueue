@@ -110,6 +110,7 @@ wxString MakeLogFileName(wxString &for_file);
 void EnableSizer(wxSizer *sizer, bool enable, const long *skip = NULL, const unsigned int skip_count = 0);
 void ListBoxMoveSelectedItems(wxListBox *lb, bool up, bool is_check_list_box);
 void ListBoxSwapItems(wxListBox *lb, unsigned int a, unsigned int b, bool is_check_list_box);
+long ListBoxDeleteSelectedItems(wxListBox *lb, void(*veto_func)(wxListBox *lb, long index, bool &veto, void *user_data) = nullptr, void* user_data = nullptr);
 
 //File handling
 bool CopyFileTime(wxString from_path, wxString to_path);

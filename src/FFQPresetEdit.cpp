@@ -834,7 +834,7 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 	STMD1->SetLabel(FFQS(SID_PRESET_METADATA_FOR));
 	FlexGridSizer29->Add(STMD1, 1, wxRIGHT|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL, 5);
 	MetaDataFor = new wxChoice(MetaDataPage, ID_METADATAFOR, wxDefaultPosition, wxDefaultSize, 0, 0, 0, wxDefaultValidator, _T("ID_METADATAFOR"));
-	FlexGridSizer29->Add(MetaDataFor, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 0);
+	FlexGridSizer29->Add(MetaDataFor, 1, wxALL|wxEXPAND, 0);
 	FlexGridSizer10->Add(FlexGridSizer29, 1, wxALL|wxEXPAND, 3);
 	SBS31->Add(FlexGridSizer10, 1, wxALL|wxEXPAND, 3);
 	FlexGridSizer9->Add(SBS31, 1, wxALL|wxEXPAND, 5);
@@ -1097,6 +1097,7 @@ FFQPresetEdit::FFQPresetEdit(wxWindow* parent)
 
     //Prepare full spec for release build
     m_FullSpecPreset = nullptr;
+    m_FullSpecInit = false;
     #ifndef DEBUG
     FFQFullSpec::Initialize(this);
     HandleFullSpecUI(true);
@@ -1672,8 +1673,10 @@ int FFQPresetEdit::FindFilter(FILTER_TYPE ft)
 
 void FFQPresetEdit::HandleFullSpecUI(bool make)
 {
-    if (make && (m_FullSpecPreset == nullptr))
+    if (make && (!m_FullSpecInit))
     {
+
+        m_FullSpecInit = true;
 
         //Add any full spec UI to the tabs
         int idx = FFQFullSpec::FindFullSpecID(FULLSPEC_PRESET);
@@ -1713,6 +1716,9 @@ void FFQPresetEdit::HandleFullSpecUI(bool make)
         while (fs_filter >= 0)
         {
             FULLSPEC_FILE *file = FFQFullSpec::GetFullSpec(fs_filter);
+            #ifdef DEBUG
+            FFQConsole::Get()->AppendLine(ToStr(fs_filter) + " " + file->display, COLOR_BLUE);
+            #endif // DEBUG
             if (file->matches.StartsWith('a'))
             {
                 menu = m_AudFilterMenu;
@@ -1734,18 +1740,22 @@ void FFQPresetEdit::HandleFullSpecUI(bool make)
         }
 
     }
-    else if ((!make) && (m_FullSpecPreset != nullptr))
+    else if ((!make) && m_FullSpecInit)
     {
 
+        m_FullSpecInit = false;
+
         //Release any bindings from full spec to UI
-        FFQFullSpec::ClearControlsFor(*m_FullSpecPreset, true);
+        if (m_FullSpecPreset != nullptr)
+        {
+            FFQFullSpec::ClearControlsFor(*m_FullSpecPreset, true);
+            Pages->DeletePage(Pages->GetPageCount() - 1);
+            m_FullSpecPreset = nullptr;
+        }
         #ifdef DEBUG
-        Pages->DeletePage(Pages->GetPageCount() - 1);
         RemoveFullSpecMenus(m_AudFilterMenu);
         RemoveFullSpecMenus(m_VidFilterMenu);
         #endif
-        m_FullSpecPreset = nullptr;
-        //m_FullSpecPage = nullptr;
 
     }
 }
@@ -2517,27 +2527,46 @@ void FFQPresetEdit::OnButtonClick(wxCommandEvent& event)
         if (DoConfirm(FFQS(SID_PRESET_DELETE_FILTERS)))
         {
 
-            FilterList->Freeze();
-
-            unsigned int idx = 0;
-            while (idx < FilterList->GetCount()) if (FilterList->IsSelected(idx))
+            auto veto_func = [](wxListBox *lb, long index, bool &veto, void *user_data)
             {
-                fs = (wxString*)FilterList->GetClientData(idx);
-                fltr = FFMPEG_FILTER(*fs);
+                wxString *fs = (wxString*)lb->GetClientData(index);
+                FFMPEG_FILTER fltr(*fs);
                 if (fltr.type == ftSUBSBURNIN)
                 {
                     ShowInfo(FFQS(SID_SUBSBURNIN_EDIT_DEL_INFO));
-                    idx++;
+                    veto = true;
                 }
+                else delete fs;
+            };
+
+
+            ListBoxDeleteSelectedItems(FilterList, veto_func);
+
+            /*
+            FilterList->Freeze();
+
+            wxArrayInt sel;
+            FilterList->GetSelections(sel);
+
+            for (int idx = sel.Count() - 1; idx >= 0; idx--)
+            {
+
+                int del = sel[idx];
+                fs = (wxString*)FilterList->GetClientData(del);
+                fltr = FFMPEG_FILTER(*fs);
+
+                if (fltr.type == ftSUBSBURNIN) ShowInfo(FFQS(SID_SUBSBURNIN_EDIT_DEL_INFO));
                 else
                 {
                     delete fs;
-                    FilterList->Delete(idx);
+                    FilterList->Delete(del);
                 }
+
             }
-            else idx++;
 
             FilterList->Thaw();
+            */
+
 
         }
 

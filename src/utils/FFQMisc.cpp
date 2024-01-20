@@ -758,6 +758,39 @@ void ListBoxSwapItems(wxListBox *lb, unsigned int a, unsigned int b, bool is_che
 }
 
 //---------------------------------------------------------------------------------------
+
+long ListBoxDeleteSelectedItems(wxListBox *lb, void(*veto_func)(wxListBox *lb, long index, bool &veto, void *user_data), void *user_data)
+{
+
+    //Delete all the selected items from a list box and return how many was deleted
+    long res = 0;
+
+    lb->Freeze();
+
+    wxArrayInt sel;
+    lb->GetSelections(sel);
+
+    for (long idx = sel.Count() - 1; idx >= 0; idx--)
+    {
+        int del = sel[idx];
+        if (veto_func != nullptr)
+        {
+            bool veto = false;
+            veto_func(lb, del, veto, user_data);
+            if (veto) continue;
+        }
+        lb->Delete(del);
+        res++;
+    }
+
+    lb->Deselect(-1);
+    lb->Thaw();
+
+    return res;
+
+}
+
+//---------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------------

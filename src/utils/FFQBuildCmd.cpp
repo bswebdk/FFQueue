@@ -832,7 +832,7 @@ wxString MakeStreamSplits(wxArrayPtrVoid &streams, int &filter_id)
 
 //---------------------------------------------------------------------------------------
 
-void TerminateOutputTags(wxArrayPtrVoid &streams, wxString &filters)
+/*void TerminateFilterTags(wxArrayPtrVoid &streams, wxString &filters)
 {
 
     //This will make sure that here are no output tags in the filters
@@ -869,20 +869,35 @@ void TerminateOutputTags(wxArrayPtrVoid &streams, wxString &filters)
 
     }
 
-}
+}*/
 
 //---------------------------------------------------------------------------------------
 
-/*wxString MakeOutputMapping(wxArrayPtrVoid &streams)
+wxString MakeOutputMapping(wxArrayPtrVoid &streams)
 {
     wxString res;
     for (size_t i = 0; i < streams.Count(); i++)
     {
-        wxString tags = ((LPSBINFO)streams[i])->tag;
-        while (tags.Len() > 0) res += "-map \"" + GetToken(tags, SPACE) + "\" ";
+        LPSBINFO sbi = (LPSBINFO)streams[i];
+
+        #ifdef DEBUG
+        //FFQConsole::Get()->AppendLine(wxString::Format("%u:%u = %s", sbi->file_id, sbi->stream_id, sbi->tag), COLOR_BLUE);
+        #endif // DEBUG
+
+        if (sbi->tag.Len() == 0) res += wxString::Format("-map %u:%u ", sbi->file_id, sbi->stream_id);
+        else
+        {
+            wxString tags = sbi->tag;
+            while (tags.Len() > 0)
+            {
+                wxString tag = GetToken(tags, SPACE);
+                if (tag.Find(COLON) > 0) res += "-map " + tag.AfterFirst('[').BeforeLast(']') + " ";
+                else res += "-map \"" + tag + "\" ";
+            }
+        }
     }
     return res;
-}*/
+}
 
 //---------------------------------------------------------------------------------------
 
@@ -945,8 +960,12 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
         streams.Add(new SBINFO(0, 0, 0, 0, GetToken(sm, COMMA), FFQ_CUTS(), 0, wxEmptyString));
         first_vid_idx = 0;
 
-        streams.Add(new SBINFO(1, 0, 0, 0, GetToken(sm, COMMA), FFQ_CUTS(), 0, wxEmptyString));
-        first_aud_idx = 1;
+        if (sm.Len() > 0)
+        {
+            streams.Add(new SBINFO(1, 0, 0, 0, GetToken(sm, COMMA), FFQ_CUTS(), 0, wxEmptyString));
+            first_aud_idx = 1;
+        }
+
 
         //vid_in = GetToken(sm, ',');
         //aud_in = GetToken(sm, ',');
@@ -1174,14 +1193,15 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
          has_subs = (sub_in.Len() > 0) && ( (encoding_pass != 1) || (sub_filter.Len() > 0) ),
 
          //Are we performing a pass in a multi-pass encoding?
-         two_pass = (!preset_only) && (!for_preview) && (encoding_pass > 0),
-
-         //Used to prevent switches that are useless for stream copy
-         copy_vid = (pst->video_codec == CODEC_COPY), copy_aud = (pst->audio_codec == CODEC_COPY);
+         two_pass = (!preset_only) && (!for_preview) && (encoding_pass > 0);
 
     //Format preset if available and required by the command line
     if ((pst != NULL) && (job->cmd_line.Find(CMD_PRESET) >= 0))
     {
+
+        //Used to prevent switches that are useless for stream copy
+        bool copy_vid = (pst->video_codec == CODEC_COPY),
+             copy_aud = (pst->audio_codec == CODEC_COPY);
 
         //Used to prevent cuts from being added if they cannot be performed
         bool can_cut  = cuts_allowed /*(!mapped_subs)*/ && ((!has_video) || (!copy_vid)) && ((!has_audio) || (!copy_aud));
@@ -1369,24 +1389,42 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
 
         }
 
-        if (audio_filters_complex)
-        {
+        //Adding filters with -af is currently borked, so audio filters must be passed as complex
+        //if (audio_filters_complex)
+        //{
+
+            //If audio filters are to be added to -filter_complex they are appended to the video filters
             vf += af;
             af.Clear();
-        }
+
+        //}
 
         //Make cuts that are placed last in the filtergraph
         if (can_cut) vf += MakeCutsForStreams(streams, filter_id, false, &cutted_files);
 
-        vf += MakeStreamSplits(streams, filter_id); ///PLACE AUDIO SPLITS HERE!!
+        vf += MakeStreamSplits(streams, filter_id);
 
         //Terminate output tags
-        TerminateOutputTags(streams, vf);
-        TerminateOutputTags(streams, af);
+        //TerminateFilterTags(streams, vf);
+        //TerminateFilterTags(streams, af);
 
         //Now we need to add the filters to the preset
         if (vf.Len() > 0)
         {
+
+            //Remove last ";" and add as complex filters
+            vf.RemoveLast();
+            preset += "-filter_complex \"" + vf + "\" ";
+
+            //Since -filter_complex is used, we must map the pads / tags to the output
+            preset += MakeOutputMapping(streams);
+
+            //And prevent the input mapping from being used
+            mapping.Clear();
+
+            /*
+
+            ALL THIS JUNK is not necessary anymore, is it? Better ask Sherlock..
 
             //Remove any output tags
             //RemoveOutputTags(streams, vf);
@@ -1408,28 +1446,29 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
             //Remove trailing ";" and close filter_complex
             preset.RemoveLast();
             preset += "\" ";
+            */
 
         }
 
-        //Add audio filters (if not already done above)
-        if (af.Len() > 0) preset += " -af \"" + af.RemoveLast() + "\" ";
-        /*{
+        if (af.Len() > 0)
+        {
 
-            //Remove any output tags
-            //RemoveOutputTags(streams, af);
+            //Audio filters have not been added using complex filters,
+            //so we must remove the beginning and ending pads / tags
+            af = af.AfterFirst(']').BeforeLast('[');
 
-            //Remove trailing ";"
-            af.RemoveLast();
+            //And all the tags within the chain must be replaced with comma
+            int pp = af.Find("];[");
+            while (pp >= 0)
+            {
+                af = af.substr(0, pp).BeforeLast('[') + COMMA + af.substr(pp+3).AfterFirst(']');
+                pp = af.Find("];[");
+            }
 
-            //Figure out the correct argument
-            preset += audio_filters_complex ? "-filter_complex" : "-af";
+            //Add filter(s) with -af - note that input mapping is preserved
+            preset += "-af \"" + af + "\" ";
 
-            //Add filters to preset
-            preset += " \"" + af + "\" ";
-
-        }*/
-
-        //preset += MakeOutputMapping(streams);
+        }
 
         //Release memory, this cannot be done in the loop above, since it might
         //result in first_vid and / or first_aud as being bad memory

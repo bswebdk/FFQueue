@@ -137,10 +137,9 @@ FFQPresetMgr::FFQPresetMgr(wxWindow* parent,wxWindowID id)
 	FlexGridSizer1->Add(FlexGridSizer3, 1, wxALL|wxEXPAND, 5);
 	BoxSizer2 = new wxBoxSizer(wxHORIZONTAL);
 	BoxSizer2->Add(-1,-1,1, wxALL|wxEXPAND, 5);
-	CloseButton = new wxButton(this, ID_CLOSEBUTTON, _T("X"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CLOSEBUTTON"));
-	CloseButton->SetDefault();
+	CloseButton = new wxButton(this, ID_CLOSEBUTTON, _T("C"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_CLOSEBUTTON"));
 	CloseButton->SetLabel(FFQS(SID_COMMON_CLOSE));
-	BoxSizer2->Add(CloseButton, 1, wxALL, 5);
+	BoxSizer2->Add(CloseButton, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	BoxSizer2->Add(-1,-1,1, wxALL|wxEXPAND, 5);
 	FlexGridSizer1->Add(BoxSizer2, 1, wxALL|wxEXPAND, 5);
 	SetSizer(FlexGridSizer1);
@@ -562,19 +561,42 @@ void FFQPresetMgr::OnButtonClick(wxCommandEvent& event)
         if (DoConfirm(Presets, FFQS(SID_CONFIRM_DELETE_PRESETS)))
         {
 
-            unsigned int i = 0, ch = m_Changes;
+            unsigned int /*i = 0,*/ ch = m_Changes;
 
-            while (i < Presets->GetCount())
+            auto veto_func = [](wxListBox *lb, long index, bool &veto, void *user_data)
             {
 
+                FFQPresetMgr *mgr = (FFQPresetMgr*)user_data;
+
+                //Only delete the preset if it is not in use
+                if (!((FFQMain*)mgr->GetParent())->IsPresetActive((LPFFQ_PRESET)mgr->Presets->GetClientData(index)))
+                    mgr->DeletePreset(index);
+
+                //Always veto to prevent deletion of the same index twice..
+                veto = true;
+
+            };
+
+            ListBoxDeleteSelectedItems(Presets, veto_func, this);
+
+            /*wxArrayInt sel;
+            Presets->GetSelections(sel);
+
+            Presets->Freeze();
+            for (int idx = sel.Count() - 1; idx >= 0; idx--)
+            {
+
+                int del = sel[idx];
+
                 //Check if preset can be deleted
-                bool can_del = !((FFQMain*)GetParent())->IsPresetActive((LPFFQ_PRESET)Presets->GetClientData(i));
+                bool can_del = !((FFQMain*)GetParent())->IsPresetActive((LPFFQ_PRESET)Presets->GetClientData(del));
 
                 //Delete if possible
-                if (can_del && Presets->IsSelected(i)) DeletePreset(i);
+                if (can_del) DeletePreset(del);
                 else i++;
 
             }
+            Presets->Thaw();*/
 
             //Inform main frame about changes or alert no changes to user
             if (ch != m_Changes) ((FFQMain*)GetParent())->PresetChanged(NULL);
