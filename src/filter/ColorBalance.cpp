@@ -74,7 +74,7 @@ ColorBalance::ColorBalance(wxWindow* parent) : FilterBasePanel(parent)
 
     SetSizer(fgs);
     fgs->Fit(this);
-    fgs->SetSizeHints(this);
+    //fgs->SetSizeHints(this);
 
 	Connect(wxID_ANY, wxEVT_SLIDER, (wxObjectEventFunction)&ColorBalance::OnCtrlChange);
 	Connect(wxID_ANY, wxEVT_CHECKBOX,(wxObjectEventFunction)&ColorBalance::OnCtrlChange);

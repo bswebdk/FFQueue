@@ -694,6 +694,67 @@ void EnableSizer(wxSizer *sizer, bool enable, const long *skip, const unsigned i
 
 //---------------------------------------------------------------------------------------
 
+void FixControlSizes(wxWindow *parent)
+{
+
+    //Get height of a button and store it statically to prevent the
+    //height from being re-retreived
+    static int button_height = 0;
+    if (button_height == 0)
+    {
+        #ifdef __WXGTK__
+        wxButton* dummy = new wxButton(parent, wxID_ANY, "W");
+        dummy->GetSize(nullptr, &button_height);
+        delete dummy;
+        #endif
+        if (button_height <= 0) button_height = -1;
+    }
+
+    //If unused, end here
+    if (button_height < 0) return;
+
+    //Counter
+    unsigned int cnt = 0;
+
+    //Get list of children and loop through
+    wxWindowList children = parent->GetChildren();
+    for (size_t i = 0; i < children.GetCount(); i++)
+    {
+
+        wxWindow *child = children[i];
+        if (dynamic_cast<wxChoice*>(child) != nullptr)
+        {
+
+            #ifdef DEBUG
+            FFQConsole::Get()->AppendLine("Fix", COLOR_BLUE);
+            #endif // DEBUG
+            wxSize cs = child->GetMinSize();
+            if ((cs.GetHeight() > 0) || (cs.GetWidth() > 0)) continue;
+            child->SetMinSize(wxSize(-1, button_height));
+            cnt++;
+
+        }
+
+        //Fix nested controls for containers only
+        else if (dynamic_cast<wxControl*>(child) == nullptr) FixControlSizes(child);
+
+    }
+
+    //Do not re-layout if nothing was changed
+    if (cnt == 0) return;
+
+    //Re-layout and fit
+    wxSizer *sz = parent->GetSizer();
+    if (sz)
+    {
+        sz->Layout();
+        sz->Fit(parent);
+    }
+
+}
+
+//---------------------------------------------------------------------------------------
+
 void ListBoxMoveSelectedItems(wxListBox *lb, bool up, bool is_check_list_box)
 {
 

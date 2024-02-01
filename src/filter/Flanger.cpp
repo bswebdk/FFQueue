@@ -102,7 +102,7 @@ Flanger::Flanger(wxWindow* parent) : FilterBasePanel(parent)
         bs->Add(m_ShapeTri, 1, wxALL|wxALIGN_CENTER_VERTICAL, 3);
         pan->SetSizer(bs);
         bs->Fit(pan);
-        bs->SetSizeHints(pan);
+        //bs->SetSizeHints(pan);
 
     fgs1->Add(pan, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 0);
 
@@ -116,13 +116,13 @@ Flanger::Flanger(wxWindow* parent) : FilterBasePanel(parent)
         bs->Add(m_InterQuad, 1, wxALL|wxALIGN_CENTER_VERTICAL, 3);
         pan->SetSizer(bs);
         bs->Fit(pan);
-        bs->SetSizeHints(pan);
+        //bs->SetSizeHints(pan);
 
     fgs1->Add(pan, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 0);
 
     SetSizer(fgs1);
     fgs1->Fit(this);
-    fgs1->SetSizeHints(this);
+    //fgs1->SetSizeHints(this);
 
 }
 

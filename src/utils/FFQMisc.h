@@ -108,6 +108,7 @@ wxString MakeLogFileName(wxString &for_file);
 
 //UI related function
 void EnableSizer(wxSizer *sizer, bool enable, const long *skip = NULL, const unsigned int skip_count = 0);
+void FixControlSizes(wxWindow *parent);
 void ListBoxMoveSelectedItems(wxListBox *lb, bool up, bool is_check_list_box);
 void ListBoxSwapItems(wxListBox *lb, unsigned int a, unsigned int b, bool is_check_list_box);
 long ListBoxDeleteSelectedItems(wxListBox *lb, void(*veto_func)(wxListBox *lb, long index, bool &veto, void *user_data) = nullptr, void* user_data = nullptr);

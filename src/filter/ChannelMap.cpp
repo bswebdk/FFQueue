@@ -199,7 +199,7 @@ ChannelMap::ChannelMap(wxWindow* parent) : FilterBasePanel(parent)
 
     SetSizer(fgs1);
     fgs1->Fit(this);
-    fgs1->SetSizeHints(this);
+    //fgs1->SetSizeHints(this);
 
     Connect(1, wxEVT_CHOICE, (wxObjectEventFunction)&ChannelMap::OnChoiceChange);
     //Connect(2, wxEVT_CHOICE, (wxObjectEventFunction)&Curves::OnChoiceChange);

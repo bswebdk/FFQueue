@@ -679,7 +679,7 @@ bool FFQFullSpec::MakeControlsFor(FULLSPEC_FILE &file, wxWindow *parent, wxSize 
         {
             //Add the current page to the notebook control
             swin->SetSizerAndFit(fgs);
-            fgs->SetSizeHints(swin);
+            //fgs->SetSizeHints(swin);
             nbook->AddPage(swin, page_name.Len() == 0 ? "???" : page_name);
             fgs = nullptr;
         };
@@ -736,7 +736,7 @@ bool FFQFullSpec::MakeControlsFor(FULLSPEC_FILE &file, wxWindow *parent, wxSize 
         }
 
         swin->SetSizerAndFit(fgs);
-        fgs->SetSizeHints(swin);
+        //fgs->SetSizeHints(swin);
         file.evt_handler = new FFQFullSpecEvtHandler(swin, &file);
 
     }

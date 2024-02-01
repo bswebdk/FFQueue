@@ -42,7 +42,7 @@ const wxString FILTER_UNIQUE_ID = "<UID%u>";
 
 //---------------------------------------------------------------------------------------
 
-const unsigned int FILTER_COUNT = 47;
+const unsigned int FILTER_COUNT = 48;
 
 const wxString FILTER_NAMES[FILTER_COUNT] = {
 
@@ -55,7 +55,7 @@ const wxString FILTER_NAMES[FILTER_COUNT] = {
     "-", "aresample", "earwax", "negate", "elbg", "adelay", "atempo",
     "decimate", "interlace,tinterlace", "framestep", "hqdn3d", "hue",
     "lenscorrection", "noise", "swapuv", "perspective", "transpose",
-    "dynaudnorm", "deflicker"
+    "dynaudnorm", "deflicker", "fps"
 
 };
 
@@ -66,7 +66,7 @@ const unsigned int FILTER_ORDER_COUNT = FILTER_COUNT + 1;
 const int FILTER_ORDER[FILTER_ORDER_COUNT] = {
 
     ftBOXBLUR, ftCOLORBALANCE, ftCOLOROVERLAY, ftCURVES, ftCOLORMATRIX, ftCROP, ftDEINTERLACE, ftDEJUDDER,
-    ftDESHAKE, ftDECIMATE, ftFLIP, ftFRAMESTEP, ftHUE, ftHQDN3D, ftINTERLACE, ftLENSCORRECTION,
+    ftDESHAKE, ftDECIMATE, ftFLIP, ftFRAMESPERSECOND, ftFRAMESTEP, ftHUE, ftHQDN3D, ftINTERLACE, ftLENSCORRECTION,
     ftNEGATE, ftNOISE, ftPAD, ftPERSPECTIVE, ftELBG, ftDEFLICKER, ftDELOGO, ftROTATE, ftSCALE, ftUNSHARP,
     ftSWAPUV, ftTRANSPOSE, ftVIGNETTE, ftWATERMARK,
     -1, //Separator

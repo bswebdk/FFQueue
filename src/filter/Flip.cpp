@@ -38,7 +38,7 @@ Flip::Flip(wxWindow* parent) : FilterBasePanel(parent)
 
     SetSizer(bs);
     bs->Fit(this);
-    bs->SetSizeHints(this);
+    //bs->SetSizeHints(this);
 
 }
 

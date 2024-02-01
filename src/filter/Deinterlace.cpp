@@ -91,7 +91,7 @@ Deinterlace::Deinterlace(wxWindow* parent) : FilterBasePanel(parent)
 	bs->Add(m_ParityBottom, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
 	grp->SetSizer(bs);
 	bs->Fit(grp);
-	bs->SetSizeHints(grp);
+	//bs->SetSizeHints(grp);
 	fgs->Add(grp, 1, wxALL|wxEXPAND/*|wxALIGN_CENTER_VERTICAL*/, 3);
 	delete[] as;
 
@@ -107,7 +107,7 @@ Deinterlace::Deinterlace(wxWindow* parent) : FilterBasePanel(parent)
 	bs->Add(-1, -1, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3); //Spacer
 	grp->SetSizer(bs);
 	bs->Fit(grp);
-	bs->SetSizeHints(grp);
+	//bs->SetSizeHints(grp);
 	fgs->Add(grp, 1, wxALL|wxEXPAND/*|wxALIGN_CENTER_VERTICAL*/, 3);
 	delete[] as;
 
@@ -115,7 +115,7 @@ Deinterlace::Deinterlace(wxWindow* parent) : FilterBasePanel(parent)
     m_YadifPan->Hide();
     m_YadifPan->SetSizer(fgs);
     fgs->Fit(m_YadifPan);
-    fgs->SetSizeHints(m_YadifPan);
+    //fgs->SetSizeHints(m_YadifPan);
 	outer->Add(m_YadifPan, 1, wxALL|wxEXPAND/*|wxALIGN_CENTER_VERTICAL*/, 0);
 
 
@@ -164,13 +164,13 @@ Deinterlace::Deinterlace(wxWindow* parent) : FilterBasePanel(parent)
 	//Set size and add
     m_KernDeintPan->SetSizer(fgs);
     fgs->Fit(m_KernDeintPan);
-    fgs->SetSizeHints(m_KernDeintPan);
+    //fgs->SetSizeHints(m_KernDeintPan);
 	outer->Add(m_KernDeintPan, 1, wxALL|wxEXPAND/*|wxALIGN_CENTER_VERTICAL*/, 0);
 
     //Set outer sizer
     SetSizer(outer);
     outer->Fit(this);
-    outer->SetSizeHints(this);
+    //outer->SetSizeHints(this);
 
 }
 

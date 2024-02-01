@@ -1306,6 +1306,15 @@ FFQLang::FFQLang(bool loadFile)
     SetString(SID_DEFLICKER_AVG_MODE,               "Averaging mode");
     SetString(SID_DEFLICKER_AVG_MODES,              "Arithmetic mean|Geometric mean|Harmonic mean|Quadratic mean|Cubic mean|Power mean|Median");
 
+    //FramesPerSecondFilterPanel
+    SetString(SID_FRAMESPERSECOND_USERFRIENDLY,     "%s=%s start:%s round:%s eof:%s");
+    SetString(SID_FRAMESPERSECOND_FPS,              "Frames per second");
+    SetString(SID_FRAMESPERSECOND_STARTTIME,        "Start time in seconds");
+    SetString(SID_FRAMESPERSECOND_RND_METHOD,       "Timestamp rounding method");
+    SetString(SID_FRAMESPERSECOND_RND_METHODS,      "Round to nearest|Round towards zero|Round away from zero|Round towards negative infinity|Round towards positive infinity");
+    SetString(SID_FRAMESPERSECOND_EOF_ACTION,       "Last frame action");
+    SetString(SID_FRAMESPERSECOND_EOF_ACTIONS,      "Round as other frames|Pass through");
+
     //SetString(, "");
 
     //Filter display names
@@ -1356,6 +1365,7 @@ FFQLang::FFQLang(bool loadFile)
     SetString(SID_FILTER_NAME_BASE + ftTRANSPOSE,           "Transpose");
     SetString(SID_FILTER_NAME_BASE + ftDYNAUDNORM,          "Normalization");
     SetString(SID_FILTER_NAME_BASE + ftDEFLICKER,           "Remove flicker");
+    SetString(SID_FILTER_NAME_BASE + ftFRAMESPERSECOND,     "Frames per second");
 
 
     m_Description = "FFQueue integrated English by Torben Bruchhaus";

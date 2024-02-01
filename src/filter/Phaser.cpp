@@ -78,7 +78,7 @@ Phaser::Phaser(wxWindow* parent) : FilterBasePanel(parent)
 
     SetSizer(fgs1);
     fgs1->Fit(this);
-    fgs1->SetSizeHints(this);
+    //fgs1->SetSizeHints(this);
 
 }
 

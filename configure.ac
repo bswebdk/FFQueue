@@ -1,5 +1,5 @@
 AC_PREREQ([2.69])
-AC_INIT([ffqueue], [1.7.64], [https://ffqueue.bruchhaus.dk/])
+AC_INIT([ffqueue], [1.7.66], [https://ffqueue.bruchhaus.dk/])
 AM_INIT_AUTOMAKE([-Wall -Werror foreign subdir-objects])
 AC_CONFIG_SRCDIR([src/FFQApp.cpp])
 AC_PROG_CXX

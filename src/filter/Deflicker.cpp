@@ -46,7 +46,7 @@ Deflicker::Deflicker(wxWindow* parent) : FilterBasePanel(parent)
 
     SetSizer(fgs);
     fgs->Fit(this);
-    fgs->SetSizeHints(this);
+    //fgs->SetSizeHints(this);
 
     m_Size->Bind(wxEVT_SLIDER, &Deflicker::OnSliderChange, this);
 

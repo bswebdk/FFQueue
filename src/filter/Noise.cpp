@@ -113,7 +113,7 @@ Noise::Noise(wxWindow* parent) : FilterBasePanel(parent)
     fgs->Add(GetTimeLimitControls(true), 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 0);
     SetSizer(fgs);
     fgs->Fit(this);
-    fgs->SetSizeHints(this);
+    //fgs->SetSizeHints(this);
 
 }
 

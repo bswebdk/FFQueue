@@ -75,6 +75,7 @@ OBJECTS:=\
 	$(MAKEROOT)/obj/filter/Flanger.o\
 	$(MAKEROOT)/obj/filter/Flip.o\
 	$(MAKEROOT)/obj/filter/FrameStep.o\
+	$(MAKEROOT)/obj/filter/FramesPerSecond.o\
 	$(MAKEROOT)/obj/filter/FullSpec.o\
 	$(MAKEROOT)/obj/filter/HighLowBandPass.o\
 	$(MAKEROOT)/obj/filter/Hqdn3d.o\
@@ -274,6 +275,9 @@ $(MAKEROOT)/obj/filter/Flip.o:
 
 $(MAKEROOT)/obj/filter/FrameStep.o:
 	$(CXX) $(COMPVARS) $(COMPDIRS) -c "src/filter/FrameStep.cpp" -o $@
+
+$(MAKEROOT)/obj/filter/FramesPerSecond.o:
+	$(CXX) $(COMPVARS) $(COMPDIRS) -c "src/filter/FramesPerSecond.cpp" -o $@
 
 $(MAKEROOT)/obj/filter/FullSpec.o:
 	$(CXX) $(COMPVARS) $(COMPDIRS) -c "src/filter/FullSpec.cpp" -o $@

@@ -32,23 +32,21 @@ Vignette::Vignette(wxWindow* parent) : FilterBasePanel(parent)
     wxIntegerValidator<unsigned int> iVal;
     fVal.SetRange(0, 99999);
 
-    wxFlexGridSizer *fgs = new wxFlexGridSizer(7, 2, 0, 0);
-    wxBoxSizer *bs;
+    wxFlexGridSizer *fgs = new wxFlexGridSizer(8, 2, 0, 0);
+    //wxBoxSizer *bs;
     fgs->AddGrowableCol(1);
 
     MakeLabel(FFQS(SID_VIGNETTE_ANGLE), fgs);
     m_Angle = new wxTextCtrl(this, wxID_ANY); //, wxEmptyString, wxDefaultPosition, wxSize(-1, -1), 0
     m_Angle->SetValidator(fVal);
-    fgs->Add(m_Angle, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 5);
+    fgs->Add(m_Angle, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
 
     MakeLabel(FFQS(SID_VIGNETTE_ORIGIN), fgs);
+    m_Centered = new wxCheckBox(this, wxID_ANY, FFQS(SID_VIGNETTE_CALC_CENTER_COORDS));
+    fgs->Add(m_Centered, 1, wxALL|wxALIGN_LEFT, 3);
 
-        bs = new wxBoxSizer(wxVERTICAL);
-        m_Centered = new wxCheckBox(this, wxID_ANY, FFQS(SID_VIGNETTE_CALC_CENTER_COORDS));
-        bs->Add(m_Centered, 1, wxALL|wxALIGN_LEFT, 3);
-        bs->Add(GetLeftAndTopControls(iVal), 1, wxALL|wxALIGN_LEFT, 3);
-
-    fgs->Add(bs, 1, wxALL|wxEXPAND/*|wxALIGN_CENTER_VERTICAL*/, 3);
+    fgs->Add(-1, -1, 1, wxALL|wxEXPAND/*|wxALIGN_CENTER_VERTICAL*/, 3);
+    fgs->Add(GetLeftAndTopControls(iVal), 1, wxALL|wxALIGN_LEFT, 3);
 
     fgs->Add(-1, -1, 1, wxALL|wxEXPAND/*|wxALIGN_CENTER_VERTICAL*/, 3);
     m_Forward = new wxCheckBox(this, wxID_ANY, FFQS(SID_VIGNETTE_FORWARD));
@@ -66,12 +64,15 @@ Vignette::Vignette(wxWindow* parent) : FilterBasePanel(parent)
     m_Dither = new wxCheckBox(this, wxID_ANY, FFQS(SID_VIGNETTE_REDUCE_BANDING));
     fgs->Add(m_Dither, 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
 
+    //fgs->Add(-1, -1, 1, wxALL|wxEXPAND/*|wxALIGN_CENTER_VERTICAL*/, 3);
     MakeLabel(FFQS(SID_FILTER_TIME_LIMIT), fgs);
     fgs->Add(GetTimeLimitControls(), 1, wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL, 3);
 
     SetSizer(fgs);
     fgs->Fit(this);
-    fgs->SetSizeHints(this);
+    //fgs->SetSizeHints(this);
+
+	Bind(wxEVT_CHECKBOX, &Vignette::OnCommand, this);
 
 }
 
@@ -118,6 +119,7 @@ void Vignette::SetFilter(LPFFMPEG_FILTER fltr)
     }
 
     SetTimeLimitValues(fs, true);
+    UpdateControls();
 
 }
 
@@ -170,3 +172,19 @@ bool Vignette::GetFilter(LPFFMPEG_FILTER fltr)
     return true;
 
 }
+
+//---------------------------------------------------------------------------------------
+
+void Vignette::OnCommand(wxCommandEvent &event)
+{
+    UpdateControls();
+}
+
+//---------------------------------------------------------------------------------------
+
+void Vignette::UpdateControls()
+{
+    EnableLeftAndTop(!m_Centered->GetValue());
+    m_Flicker->Enable(m_PerFrame->GetValue());
+}
+

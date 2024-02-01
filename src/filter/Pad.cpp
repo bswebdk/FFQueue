@@ -58,7 +58,7 @@ Pad::Pad(wxWindow* parent) : FilterBasePanel(parent)
 
     SetSizer(fgs);
     fgs->Fit(this);
-    fgs->SetSizeHints(this);
+    //fgs->SetSizeHints(this);
 
     Connect(wxID_ANY, wxEVT_RADIOBUTTON, (wxObjectEventFunction)&Pad::OnRadioClick);
     m_BlurOK = FFQCFG()->AreFiltersAvailable("split,scale,boxblur,overlay");

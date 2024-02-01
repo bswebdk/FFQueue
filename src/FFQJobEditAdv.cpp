@@ -538,7 +538,7 @@ void FFQJobEditAdv::AddInputFile(LPFFQ_INPUT_FILE in_file, bool select)
 
 	ctrls->panel->SetSizer(ctrls->sizer);
 	ctrls->sizer->Fit(ctrls->panel);
-	ctrls->sizer->SetSizeHints(ctrls->panel);
+	//ctrls->sizer->SetSizeHints(ctrls->panel);
 
     //Create a name for the tab
     wxString pn = wxString::Format("#%u", SIZEFMT(Inputs->GetPageCount()) + 1);
@@ -1223,8 +1223,8 @@ bool FFQJobEditAdv::ValidateCuts()
                 ok = ((sm.codec_type == CODEC_TYPE_VIDEO) && (pst->video_codec != CODEC_COPY))
                       ||
                      ((sm.codec_type == CODEC_TYPE_AUDIO) && (pst->audio_codec != CODEC_COPY))
-                      ||
-                     ((sm.codec_type == CODEC_TYPE_SUBTITLE) && (pst->subtitles.codec != CODEC_COPY));
+                     /* ||
+                     ((sm.codec_type == CODEC_TYPE_SUBTITLE) && (pst->subtitles.codec != CODEC_COPY))*/;
             }
 
         }

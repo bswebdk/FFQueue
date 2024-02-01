@@ -37,7 +37,7 @@ FullSpec::FullSpec(wxWindow* parent, void *data) : FilterBasePanel(parent)
 
     SetSizer(fgs);
     fgs->Fit(this);
-    fgs->SetSizeHints(this);
+    //fgs->SetSizeHints(this);
 
 }
 

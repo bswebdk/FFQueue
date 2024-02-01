@@ -45,7 +45,7 @@ AudioTempo::AudioTempo(wxWindow* parent) : FilterBasePanel(parent)
 
     SetSizer(fgs);
     fgs->Fit(this);
-    fgs->SetSizeHints(this);
+    //fgs->SetSizeHints(this);
 
     Connect(1000, wxEVT_SLIDER, (wxObjectEventFunction)&AudioTempo::OnSliderChange);
 

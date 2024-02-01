@@ -73,7 +73,7 @@ Interlace::Interlace(wxWindow* parent) : FilterBasePanel(parent)
 
     m_DefaultPan->SetSizer(fgs);
     fgs->Fit(m_DefaultPan);
-    fgs->SetSizeHints(m_DefaultPan);
+    //fgs->SetSizeHints(m_DefaultPan);
 	outer->Add(m_DefaultPan, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 0);
 
 	//Temporal interlace
@@ -91,7 +91,7 @@ Interlace::Interlace(wxWindow* parent) : FilterBasePanel(parent)
 
     m_TemporalPan->SetSizer(fgs);
     fgs->Fit(m_TemporalPan);
-    fgs->SetSizeHints(m_TemporalPan);
+    //fgs->SetSizeHints(m_TemporalPan);
 	outer->Add(m_TemporalPan, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 0);
 
 	//Spacer
@@ -110,7 +110,7 @@ Interlace::Interlace(wxWindow* parent) : FilterBasePanel(parent)
 
     SetSizer(outer);
     outer->Fit(this);
-    outer->SetSizeHints(this);
+    //outer->SetSizeHints(this);
 
 }
 

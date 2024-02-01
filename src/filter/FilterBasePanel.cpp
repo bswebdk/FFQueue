@@ -64,6 +64,7 @@
 #include "Transpose.h"
 #include "DynAudNorm.h"
 #include "Deflicker.h"
+#include "FramesPerSecond.h"
 #include "FullSpec.h"
 
 FilterBasePanel::FilterBasePanel(wxWindow* parent, void *data) : wxPanel(parent)
@@ -146,6 +147,7 @@ FilterBasePanel* FilterBasePanel::GetFilterPanel(wxWindow* parent, FILTER_TYPE f
         case (ftTRANSPOSE) : return new Transpose(parent); break;
         case (ftDYNAUDNORM) : return new DynAudNorm(parent); break;
         case (ftDEFLICKER) : return new Deflicker(parent); break;
+        case (ftFRAMESPERSECOND) : return new FramesPerSecond(parent); break;
         case (ftFULLSPEC) : return new FullSpec(parent, data); break;
         default: return NULL;
     }
@@ -311,7 +313,7 @@ wxSizer* FilterBasePanel::GetTimeLimitControls(wxSizer *AppendToSizer, int AddSi
     {
         m_CtrlParent->SetSizer(fgs);
         fgs->Fit(m_CtrlParent);
-        fgs->SetSizeHints(m_CtrlParent);
+        //fgs->SetSizeHints(m_CtrlParent);
     }
 
     return m_TimeSizer;

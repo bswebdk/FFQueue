@@ -265,6 +265,8 @@
 		<Unit filename="src/filter/Flip.h" />
 		<Unit filename="src/filter/FrameStep.cpp" />
 		<Unit filename="src/filter/FrameStep.h" />
+		<Unit filename="src/filter/FramesPerSecond.cpp" />
+		<Unit filename="src/filter/FramesPerSecond.h" />
 		<Unit filename="src/filter/FullSpec.cpp" />
 		<Unit filename="src/filter/FullSpec.h" />
 		<Unit filename="src/filter/HighLowBandPass.cpp" />

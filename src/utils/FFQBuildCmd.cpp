@@ -732,18 +732,12 @@ typedef struct SBINFO
     FFQ_CUTS cuts; //A list of cuts to perform
 
     SBINFO(int type, int file_id, int stream_id, int type_id, wxString tag, FFQ_CUTS cuts, TIME_VALUE dur, wxString codec)
-    {
-        this->type = type;
-        this->file_id = file_id;
-        this->stream_id = stream_id;
-        this->type_id = type_id;
-        this->split = 0;
-        this->tag = tag;
-        //this->data = wxEmptyString;
-        this->codec = codec;
-        this->dur = dur;
-        this->cuts = cuts;
-    }
+    : type(type), file_id(file_id), stream_id(stream_id), type_id(type_id), split(0), tag(tag), data(wxEmptyString), codec(codec), dur(dur), cuts(cuts)
+    {};
+
+    SBINFO(wxString tag, const int no_value = std::numeric_limits<int>::max()) //This constructor is used as a placeholder for stream mappings / tags only
+    : type(no_value), file_id(no_value), stream_id(no_value), type_id(no_value), split(0), tag(tag), data(wxEmptyString), codec(wxEmptyString), dur(TIME_VALUE(0)), cuts(FFQ_CUTS())
+    {};
 
 } SBINFO, *LPSBINFO;
 
@@ -891,7 +885,7 @@ wxString MakeOutputMapping(wxArrayPtrVoid &streams)
             while (tags.Len() > 0)
             {
                 wxString tag = GetToken(tags, SPACE);
-                if (tag.Find(COLON) > 0) res += "-map " + tag.AfterFirst('[').BeforeLast(']') + " ";
+                if (tag.StartsWith('[') && (tag.Find(COLON) > 0)) res += "-map " + tag.AfterFirst('[').BeforeLast(']') + " ";
                 else res += "-map \"" + tag + "\" ";
             }
         }
@@ -1038,12 +1032,20 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
                 FFQ_INPUT_FILE inf = job->GetInput(smap.file_id);
 
                 //Make stream tag(s)
-                wxString smcur = wxString::Format("%d:%d", map_id, smap.stream_id), smxtra;
+                wxString smcur = wxString::Format("%d:%d", map_id, smap.stream_id), smxtra = "";
+
+                //Stream info for the current stream
+                LPSBINFO sbi = nullptr;
+
+                //What type of stream is it?
+                bool is_video    = smap.codec_type == CODEC_TYPE_VIDEO,
+                     is_audio    = smap.codec_type == CODEC_TYPE_AUDIO,
+                     is_subtitle = smap.codec_type == CODEC_TYPE_SUBTITLE;
 
                 //If a file is added more than once to the command line (for quick
-                //cutting etc.) there must be added extra mappings
+                //cutting etc.) there must be added extra mappings for audio and video
                 int num_keep_parts = 0;
-                if (cuts_allowed)
+                if (cuts_allowed && (is_video || is_audio))
                 {
 
                     num_keep_parts = GetKeepParts(inf);
@@ -1053,11 +1055,12 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
 
                 }
 
-                if (smap.codec_type == CODEC_TYPE_VIDEO)
+                if (is_video)
                 {
 
                     //Add stream
-                    streams.Add(new SBINFO(0, map_id, smap.stream_id, ++cur_vid_idx, "[" + smcur + "]", inf.cuts, inf.duration, smap.codec_name));
+                    sbi = new SBINFO(0, map_id, smap.stream_id, ++cur_vid_idx, "[" + smcur + "]", inf.cuts, inf.duration, smap.codec_name);
+                    streams.Add(sbi);
 
                     //Set index of first video stream
                     if (first_vid_idx < 0) first_vid_idx = cur_vid_idx;
@@ -1067,11 +1070,11 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
 
                 }
 
-                else if (smap.codec_type == CODEC_TYPE_AUDIO)
+                else if (is_audio)
                 {
 
                     //As with video
-                    LPSBINFO sbi = new SBINFO(1, map_id, smap.stream_id, ++cur_aud_idx, "[" + smcur + "]", inf.cuts, inf.duration, smap.codec_name);
+                    sbi = new SBINFO(1, map_id, smap.stream_id, ++cur_aud_idx, "[" + smcur + "]", inf.cuts, inf.duration, smap.codec_name);
                     streams.Add(sbi);
                     if (first_aud_idx < 0) first_aud_idx = cur_aud_idx;
 
@@ -1118,7 +1121,7 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
 
                 }
 
-                else if (smap.codec_type == CODEC_TYPE_SUBTITLE)
+                else if (is_subtitle)
                 {
 
                     if (sub_in.Len() == 0)
@@ -1153,25 +1156,28 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
                     {
 
                         LPFFQ_PRESET p = FFQPresetMgr::Get()->GetPreset(GetToken(smap.preset_list, SPACE));
-                        if (p)// && (p->subtitles.codec != CODEC_SUBS_BURNIN))
+                        if (p != nullptr)// && (p->subtitles.codec != CODEC_SUBS_BURNIN))
                         {
-                            smcur += wxString::Format(" %d:%d", map_id, smap.stream_id);
+                            smxtra += wxString::Format(" %d:%d", map_id, smap.stream_id);
                             s = wxString::Format("s:%d", ++cur_sub_idx);
                             subs_extra += wxString::Format("-c:%s %s ", s, p->subtitles.codec);
                             metadata_extra += MakeMetaData(p->meta_data_s, s);
                             disposition += MakeDisposition(p->disposition, 2, s);
                         }
-                        //Else handle invalid preset error
+                        //else handle invalid preset error
 
                     }
-
 
                     //Prevent cuts if subtitles are mapped
                     //mapped_subs = true;
 
                 }
 
-                //Add stream(s) to mapping
+                //If the stream has not been added, it must be added here to ensure a valid
+                //output stream mapping for subtitles and attachments
+                if (sbi == nullptr) streams.Add(new SBINFO(smcur + smxtra));
+
+                //Add stream(s) to (input) mapping: Obsolete?
                 smcur += smxtra;
                 while (smcur.Len() > 0) mapping += "-map " + GetToken(smcur, SPACE) + SPACE;
 

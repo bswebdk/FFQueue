@@ -103,6 +103,8 @@ bool FFQFilterEdit::Execute(LPFFMPEG_FILTER filter)
     m_FilterPanel = FilterBasePanel::GetFilterPanel(this, m_Filter->type, fs);
     if (m_FilterPanel == NULL) return ShowError(FFQSF(SID_FILTER_INVALID_ID, (unsigned int)m_Filter->type));
 
+    FixControlSizes(m_FilterPanel);
+
     //Add to container and fit window
     FilterContainer->Add(m_FilterPanel, 1, wxALL|wxEXPAND, 3);
     FilterContainer->Layout();

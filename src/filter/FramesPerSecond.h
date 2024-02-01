@@ -2,7 +2,7 @@
 *                                                                        *
 *  Copyright (c) 2014 Torben Bruchhaus                                   *
 *  http://ffqueue.bruchhaus.dk/                                          *
-*  File: Vignette.h                                                      *
+*  File: FramesPerSecond.h                                               *
 *                                                                        *
 *  This file is part of FFQueue.                                         *
 *                                                                        *
@@ -21,18 +21,18 @@
 *                                                                        *
 *************************************************************************/
 
-#ifndef VIGNETTE_H
-#define VIGNETTE_H
+#ifndef FRAMESPERSECOND_H
+#define FRAMESPERSECOND_H
 
 #include "FilterBasePanel.h"
 
-class Vignette : public FilterBasePanel
+class FramesPerSecond : public FilterBasePanel
 {
 
     public:
 
-        Vignette(wxWindow* parent);
-        virtual ~Vignette();
+        FramesPerSecond(wxWindow* parent);
+        virtual ~FramesPerSecond();
 
         virtual void SetFilter(LPFFMPEG_FILTER fltr);
         virtual bool GetFilter(LPFFMPEG_FILTER fltr);
@@ -41,12 +41,10 @@ class Vignette : public FilterBasePanel
 
     private:
 
-        wxTextCtrl *m_Angle;
-        wxCheckBox *m_Centered, *m_Forward, *m_PerFrame, *m_Dither, *m_Flicker;
-
-        void OnCommand(wxCommandEvent &event);
-        void UpdateControls();
+        wxChoice *m_Round, *m_EOF;
+        wxTextCtrl *m_FPS, *m_Start;
+        wxFlexGridSizer *m_Sizer;
 
 };
 
-#endif // VIGNETTE_H
+#endif // FRAMESPERSECOND_H

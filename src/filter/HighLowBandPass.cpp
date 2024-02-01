@@ -70,7 +70,7 @@ HighLowBandPass::HighLowBandPass(wxWindow* parent) : FilterBasePanel(parent)
 
     SetSizer(m_Sizer);
     m_Sizer->Fit(this);
-    m_Sizer->SetSizeHints(this);
+    //m_Sizer->SetSizeHints(this);
 
 	Connect(wxID_ANY, wxEVT_CHOICE, (wxObjectEventFunction)&HighLowBandPass::OnChoiceChange);
 
@@ -97,11 +97,12 @@ void HighLowBandPass::SetFilter(LPFFMPEG_FILTER fltr)
     m_Sizer->Show(m_CSG, bp);
     m_Sizer->Show(m_PolesLab, (!bp) && (!br));
     m_Sizer->Show(m_Poles, (!bp) && (!br));
+    m_Sizer->Layout();
     m_Sizer->Fit(this);
-    m_Sizer->SetSizeHints(this);
+    //m_Sizer->SetSizeHints(this);
 
-    wxWindow *pw = GetParent();
-    while (pw != NULL) { pw->Fit(); pw = pw->GetParent(); }
+    //wxWindow *pw = GetParent();
+    //while (pw != NULL) { pw->Fit(); pw = pw->GetParent(); }
 
     if (m_FilterType == ftLOWPASS) t = "500";
     else if ( (m_FilterType == ftHIGHPASS) || (m_FilterType == ftBANDPASS) || (m_FilterType == ftBANDREJECT) ) t = "3000";

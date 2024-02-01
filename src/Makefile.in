@@ -132,6 +132,7 @@ am_ffqueue_OBJECTS = ffqueue-FFQAbout.$(OBJEXT) \
 	filter/ffqueue-FilterBasePanel.$(OBJEXT) \
 	filter/ffqueue-Flanger.$(OBJEXT) filter/ffqueue-Flip.$(OBJEXT) \
 	filter/ffqueue-FrameStep.$(OBJEXT) \
+	filter/ffqueue-FramesPerSecond.$(OBJEXT) \
 	filter/ffqueue-FullSpec.$(OBJEXT) \
 	filter/ffqueue-HighLowBandPass.$(OBJEXT) \
 	filter/ffqueue-Hqdn3d.$(OBJEXT) filter/ffqueue-Hue.$(OBJEXT) \
@@ -237,6 +238,7 @@ am__depfiles_remade = ./$(DEPDIR)/ffqueue-FFQAbout.Po \
 	filter/$(DEPDIR)/ffqueue-Flanger.Po \
 	filter/$(DEPDIR)/ffqueue-Flip.Po \
 	filter/$(DEPDIR)/ffqueue-FrameStep.Po \
+	filter/$(DEPDIR)/ffqueue-FramesPerSecond.Po \
 	filter/$(DEPDIR)/ffqueue-FullSpec.Po \
 	filter/$(DEPDIR)/ffqueue-HighLowBandPass.Po \
 	filter/$(DEPDIR)/ffqueue-Hqdn3d.Po \
@@ -466,6 +468,7 @@ ffqueue_SOURCES = FFQAbout.cpp\
 	filter/Flanger.cpp\
 	filter/Flip.cpp\
 	filter/FrameStep.cpp\
+	filter/FramesPerSecond.cpp\
 	filter/FullSpec.cpp\
 	filter/HighLowBandPass.cpp\
 	filter/Hqdn3d.cpp\
@@ -644,6 +647,8 @@ filter/ffqueue-Flip.$(OBJEXT): filter/$(am__dirstamp) \
 	filter/$(DEPDIR)/$(am__dirstamp)
 filter/ffqueue-FrameStep.$(OBJEXT): filter/$(am__dirstamp) \
 	filter/$(DEPDIR)/$(am__dirstamp)
+filter/ffqueue-FramesPerSecond.$(OBJEXT): filter/$(am__dirstamp) \
+	filter/$(DEPDIR)/$(am__dirstamp)
 filter/ffqueue-FullSpec.$(OBJEXT): filter/$(am__dirstamp) \
 	filter/$(DEPDIR)/$(am__dirstamp)
 filter/ffqueue-HighLowBandPass.$(OBJEXT): filter/$(am__dirstamp) \
@@ -808,6 +813,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@filter/$(DEPDIR)/ffqueue-Flanger.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@filter/$(DEPDIR)/ffqueue-Flip.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@filter/$(DEPDIR)/ffqueue-FrameStep.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@filter/$(DEPDIR)/ffqueue-FramesPerSecond.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@filter/$(DEPDIR)/ffqueue-FullSpec.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@filter/$(DEPDIR)/ffqueue-HighLowBandPass.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@filter/$(DEPDIR)/ffqueue-Hqdn3d.Po@am__quote@ # am--include-marker
@@ -1466,6 +1472,20 @@ filter/ffqueue-FrameStep.obj: filter/FrameStep.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='filter/FrameStep.cpp' object='filter/ffqueue-FrameStep.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ffqueue_CXXFLAGS) $(CXXFLAGS) -c -o filter/ffqueue-FrameStep.obj `if test -f 'filter/FrameStep.cpp'; then $(CYGPATH_W) 'filter/FrameStep.cpp'; else $(CYGPATH_W) '$(srcdir)/filter/FrameStep.cpp'; fi`
+
+filter/ffqueue-FramesPerSecond.o: filter/FramesPerSecond.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ffqueue_CXXFLAGS) $(CXXFLAGS) -MT filter/ffqueue-FramesPerSecond.o -MD -MP -MF filter/$(DEPDIR)/ffqueue-FramesPerSecond.Tpo -c -o filter/ffqueue-FramesPerSecond.o `test -f 'filter/FramesPerSecond.cpp' || echo '$(srcdir)/'`filter/FramesPerSecond.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) filter/$(DEPDIR)/ffqueue-FramesPerSecond.Tpo filter/$(DEPDIR)/ffqueue-FramesPerSecond.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='filter/FramesPerSecond.cpp' object='filter/ffqueue-FramesPerSecond.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ffqueue_CXXFLAGS) $(CXXFLAGS) -c -o filter/ffqueue-FramesPerSecond.o `test -f 'filter/FramesPerSecond.cpp' || echo '$(srcdir)/'`filter/FramesPerSecond.cpp
+
+filter/ffqueue-FramesPerSecond.obj: filter/FramesPerSecond.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ffqueue_CXXFLAGS) $(CXXFLAGS) -MT filter/ffqueue-FramesPerSecond.obj -MD -MP -MF filter/$(DEPDIR)/ffqueue-FramesPerSecond.Tpo -c -o filter/ffqueue-FramesPerSecond.obj `if test -f 'filter/FramesPerSecond.cpp'; then $(CYGPATH_W) 'filter/FramesPerSecond.cpp'; else $(CYGPATH_W) '$(srcdir)/filter/FramesPerSecond.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) filter/$(DEPDIR)/ffqueue-FramesPerSecond.Tpo filter/$(DEPDIR)/ffqueue-FramesPerSecond.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='filter/FramesPerSecond.cpp' object='filter/ffqueue-FramesPerSecond.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ffqueue_CXXFLAGS) $(CXXFLAGS) -c -o filter/ffqueue-FramesPerSecond.obj `if test -f 'filter/FramesPerSecond.cpp'; then $(CYGPATH_W) 'filter/FramesPerSecond.cpp'; else $(CYGPATH_W) '$(srcdir)/filter/FramesPerSecond.cpp'; fi`
 
 filter/ffqueue-FullSpec.o: filter/FullSpec.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ffqueue_CXXFLAGS) $(CXXFLAGS) -MT filter/ffqueue-FullSpec.o -MD -MP -MF filter/$(DEPDIR)/ffqueue-FullSpec.Tpo -c -o filter/ffqueue-FullSpec.o `test -f 'filter/FullSpec.cpp' || echo '$(srcdir)/'`filter/FullSpec.cpp
@@ -2313,6 +2333,7 @@ distclean: distclean-am
 	-rm -f filter/$(DEPDIR)/ffqueue-Flanger.Po
 	-rm -f filter/$(DEPDIR)/ffqueue-Flip.Po
 	-rm -f filter/$(DEPDIR)/ffqueue-FrameStep.Po
+	-rm -f filter/$(DEPDIR)/ffqueue-FramesPerSecond.Po
 	-rm -f filter/$(DEPDIR)/ffqueue-FullSpec.Po
 	-rm -f filter/$(DEPDIR)/ffqueue-HighLowBandPass.Po
 	-rm -f filter/$(DEPDIR)/ffqueue-Hqdn3d.Po
@@ -2448,6 +2469,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f filter/$(DEPDIR)/ffqueue-Flanger.Po
 	-rm -f filter/$(DEPDIR)/ffqueue-Flip.Po
 	-rm -f filter/$(DEPDIR)/ffqueue-FrameStep.Po
+	-rm -f filter/$(DEPDIR)/ffqueue-FramesPerSecond.Po
 	-rm -f filter/$(DEPDIR)/ffqueue-FullSpec.Po
 	-rm -f filter/$(DEPDIR)/ffqueue-HighLowBandPass.Po
 	-rm -f filter/$(DEPDIR)/ffqueue-Hqdn3d.Po

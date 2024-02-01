@@ -754,7 +754,7 @@ void FFQMain::InitEncodingSlots()
                 fgs->Add(slot->gauge, 1, wxALL|wxEXPAND, 0);
                 pan->SetSizer(fgs);
                 fgs->Fit(pan);
-                fgs->SetSizeHints(pan);
+                //fgs->SetSizeHints(pan);
                 Consoles->AddPage(pan, FFQSF(SID_MAINFRAME_NB_FOR_JOB, (i+1)), false);
                 Consoles->SetPageImage(i + 1, CONSOLE_IMAGE_OFF);//i == 0 ? CONSOLE_IMAGE_OFF : CONSOLE_IMAGE_ON);
                 slot->console.SetTextCtrl(tc);
@@ -2876,7 +2876,7 @@ void FFQMain::OnToolBarButtonClick(wxCommandEvent& event)
 
         //profile=main:keyint=25:no-cabac:vbv-init=0.99000:psy-rd=1.0,0.1
         //profile=main:preset=veryslow:tune=animation:keyint=25:b-pyramid=strict:no-cabac:pulldown=64:vbv-init=0.99000:aq-mode=1:direct=auto:weightp=1:me=umh:subme=5:psy-rd=1.0,0.1:trellis=1:overscan=show:videoformat=secam:fullrange=off:colorprim=bt470bg:transfer=linear:colormatrix=bt470bg:nal-hdr=vbr
-        wxString cmd = "asm=SSE4,SSE4.1,SSE4.2";//-x264opts \"no-fast-intra:profile=main:preset=veryslow:tune=animation:keyint=25:b-pyramid=strict:no-cabac:pulldown=64:vbv-init=0.99000:aq-mode=1:direct=auto:weightp=1:me=umh:subme=5:psy-rd=1.0,0.1:trellis=1:overscan=show:videoformat=secam:fullrange=off:colorprim=bt470bg:transfer=linear:colormatrix=bt470bg:nal-hdr=vbr\"", spec;
+        /*wxString cmd = "asm=SSE4,SSE4.1,SSE4.2";//-x264opts \"no-fast-intra:profile=main:preset=veryslow:tune=animation:keyint=25:b-pyramid=strict:no-cabac:pulldown=64:vbv-init=0.99000:aq-mode=1:direct=auto:weightp=1:me=umh:subme=5:psy-rd=1.0,0.1:trellis=1:overscan=show:videoformat=secam:fullrange=off:colorprim=bt470bg:transfer=linear:colormatrix=bt470bg:nal-hdr=vbr\"", spec;
 
         FFQFullSpec::Finalize();
         FFQFullSpec::Initialize(this);
@@ -2889,7 +2889,7 @@ void FFQMain::OnToolBarButtonClick(wxCommandEvent& event)
             FFQFullSpec *fs = new FFQFullSpec(this);
             if (fs->Execute(idx, cmd)) Console->AppendLine(cmd, 0);
             delete fs;
-        }
+        }*/
 
 
         /*wxRect rct = m_RestoredRect;// GetScreenRect();
@@ -2969,16 +2969,16 @@ void FFQMain::OnToolBarButtonClick(wxCommandEvent& event)
         */
 
 
-        /*FFQFilterEdit *fe = new FFQFilterEdit(this);
+        FFQFilterEdit *fe = new FFQFilterEdit(this);
         FFMPEG_FILTER fltr = FFMPEG_FILTER();
-        fltr.type = ftVOLUME_AND_TONE;
+        fltr.type = ftVIGNETTE;
         bool ok = true;
         while (ok)
         {
             ok = fe->Execute(&fltr);
             if (ok) ok = (wxMessageBox(fltr.ToString(), "Info", wxYES_NO) == wxYES);
         }
-        delete fe;*/
+        delete fe;
 
 
     }

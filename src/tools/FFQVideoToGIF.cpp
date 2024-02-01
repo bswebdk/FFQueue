@@ -258,6 +258,9 @@ bool FFQVideoToGIF::Execute(LPFFQ_VID2GIF_JOB job)
 	m_ProbeFPS = 0;
 	FileInfo->SetLabel(FFQS(SID_VIDEO2GIF_NO_VIDEO));
 
+    //Center
+    CenterOnParent();
+
     //Update time links
     UpdateLinks();
 

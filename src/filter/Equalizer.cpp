@@ -129,7 +129,7 @@ Equalizer::Equalizer(wxWindow* parent) : FilterBasePanel(parent)
     //Set main sizer
     SetSizer(fgs);
     fgs->Fit(this);
-    fgs->SetSizeHints(this);
+    //fgs->SetSizeHints(this);
 
     Connect(wxID_ANY, wxEVT_SLIDER, (wxObjectEventFunction)&Equalizer::OnSliderChange);
 

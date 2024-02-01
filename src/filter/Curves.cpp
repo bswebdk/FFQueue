@@ -60,7 +60,7 @@ Curves::Curves(wxWindow* parent) : FilterBasePanel(parent)
 
     SetSizer(m_Sizer);
     m_Sizer->Fit(this);
-    m_Sizer->SetSizeHints(this);
+    //m_Sizer->SetSizeHints(this);
 
 	Connect(1, wxEVT_CHOICE, (wxObjectEventFunction)&Curves::OnChoiceChange);
 }

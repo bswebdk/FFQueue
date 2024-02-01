@@ -107,7 +107,7 @@ Delogo::Delogo(wxWindow* parent) : FilterBasePanel(parent)
 
     SetSizer(fgsx);
     fgsx->Fit(this);
-    fgsx->SetSizeHints(this);
+    //fgsx->SetSizeHints(this);
 
 }
 
