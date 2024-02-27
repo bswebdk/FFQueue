@@ -723,7 +723,6 @@ typedef struct SBINFO
     int type, //Stream type 0=vid, 1=aud, 2=subs
         file_id, //The mapped file id to which the stream belongs
         stream_id, //The index of the stream in the file
-        type_id, //The index of the stream "per type"
         split; //How many times the stream must be split
     wxString tag; //The stream tag used for filtering [X:Y]
     wxString data; //Used by FormatCuts
@@ -731,12 +730,12 @@ typedef struct SBINFO
     TIME_VALUE dur; //Stream duration
     FFQ_CUTS cuts; //A list of cuts to perform
 
-    SBINFO(int type, int file_id, int stream_id, int type_id, wxString tag, FFQ_CUTS cuts, TIME_VALUE dur, wxString codec)
-    : type(type), file_id(file_id), stream_id(stream_id), type_id(type_id), split(0), tag(tag), data(wxEmptyString), codec(codec), dur(dur), cuts(cuts)
+    SBINFO(int type, int file_id, int stream_id, wxString tag, FFQ_CUTS cuts, TIME_VALUE dur, wxString codec)
+    : type(type), file_id(file_id), stream_id(stream_id), split(0), tag(tag), data(wxEmptyString), codec(codec), dur(dur), cuts(cuts)
     {};
 
     SBINFO(wxString tag, const int no_value = std::numeric_limits<int>::max()) //This constructor is used as a placeholder for stream mappings / tags only
-    : type(no_value), file_id(no_value), stream_id(no_value), type_id(no_value), split(0), tag(tag), data(wxEmptyString), codec(wxEmptyString), dur(TIME_VALUE(0)), cuts(FFQ_CUTS())
+    : type(no_value), file_id(no_value), stream_id(no_value), split(0), tag(tag), data(wxEmptyString), codec(wxEmptyString), dur(TIME_VALUE(0)), cuts(FFQ_CUTS())
     {};
 
 } SBINFO, *LPSBINFO;
@@ -895,6 +894,33 @@ wxString MakeOutputMapping(wxArrayPtrVoid &streams)
 
 //---------------------------------------------------------------------------------------
 
+int IndexOfStreamByType(wxString stream_map, wxString codec_type, int file_id, int stream_id)
+{
+
+    //Used to find the index of the stream "stream_id" in file "file_id" based
+    //on the codec type (aud, vis, subs etc).
+    //This may seem klonky but the user may have changed the order of the streams,
+    //so this is the only reliable way of getting the per-type index of a stream
+
+    STREAM_MAPPING smap;
+    wxArrayInt sids;
+    while (stream_map.Len() > 0)
+    {
+        smap.Parse(stream_map);
+        //Subtract 1 from file_id since they start by 1 and not 0
+        if ((smap.file_id - 1 == file_id) && (smap.codec_type == codec_type)) sids.Add(smap.stream_id);
+    }
+
+    //Restore the correct stream order
+    sids.Sort([](int a, int b) { return a - b; });
+
+    //Return the per-type index or wxNOT_FOUND
+    return sids.Index(stream_id);
+
+}
+
+//---------------------------------------------------------------------------------------
+
 wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, bool audio_filters_complex)
 {
 
@@ -951,12 +977,12 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
         //When preset only is being build the streamMap only contains a
         //simple [VIDID],[AUDID] mapping
 
-        streams.Add(new SBINFO(0, 0, 0, 0, GetToken(sm, COMMA), FFQ_CUTS(), 0, wxEmptyString));
+        streams.Add(new SBINFO(0, 0, 0, /*0,*/ GetToken(sm, COMMA), FFQ_CUTS(), 0, wxEmptyString));
         first_vid_idx = 0;
 
         if (sm.Len() > 0)
         {
-            streams.Add(new SBINFO(1, 0, 0, 0, GetToken(sm, COMMA), FFQ_CUTS(), 0, wxEmptyString));
+            streams.Add(new SBINFO(1, 0, 0, /*0,*/ GetToken(sm, COMMA), FFQ_CUTS(), 0, wxEmptyString));
             first_aud_idx = 1;
         }
 
@@ -980,7 +1006,7 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
 
         //Create stream mapping for command line
         STREAM_MAPPING smap;
-        int sub_stream_idx = -1;//, file_id_add = 0;
+        //int sub_stream_idx = -1;//, file_id_add = 0;
 
         //Before we can convert the stream mapping to a stream list, we need to know whether there are
         //any mapped subtitles, which would disable cuts, and whether there are any cuts, which would
@@ -1059,8 +1085,9 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
                 {
 
                     //Add stream
-                    sbi = new SBINFO(0, map_id, smap.stream_id, ++cur_vid_idx, "[" + smcur + "]", inf.cuts, inf.duration, smap.codec_name);
+                    sbi = new SBINFO(0, map_id, smap.stream_id, /*++cur_vid_idx,*/ "[" + smcur + "]", inf.cuts, inf.duration, smap.codec_name);
                     streams.Add(sbi);
+                    cur_vid_idx++;
 
                     //Set index of first video stream
                     if (first_vid_idx < 0) first_vid_idx = cur_vid_idx;
@@ -1074,8 +1101,9 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
                 {
 
                     //As with video
-                    sbi = new SBINFO(1, map_id, smap.stream_id, ++cur_aud_idx, "[" + smcur + "]", inf.cuts, inf.duration, smap.codec_name);
+                    sbi = new SBINFO(1, map_id, smap.stream_id, /*++cur_aud_idx,*/ "[" + smcur + "]", inf.cuts, inf.duration, smap.codec_name);
                     streams.Add(sbi);
+                    cur_aud_idx++;
                     if (first_aud_idx < 0) first_aud_idx = cur_aud_idx;
 
                     //Prevent audio from being mapped into two pass encode
@@ -1130,14 +1158,17 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
                         //We are only interested in the first subtitle stream since
                         //that is the one required for subtitle burn in
                         sub_in = "[" + smcur + "]";
-                        sub_stream_idx++;
+                        //sub_stream_idx++;
 
                         //Map or burn-in?
                         if (subs_burn_in)// (pst != NULL) && (pst->subtitles.codec == CODEC_SUBS_BURNIN))
                         {
 
+                            //Get the index of the subtitle stream within the source file based on type
+                            int subs_idx = IndexOfStreamByType(job->stream_map, smap.codec_type, smap.file_id, smap.stream_id);
+
                             //Create the subtitle burn in filter
-                            sub_filter = MakeSubtitleBurninFilter(sub_in, smap.stream_id /*sub_stream_idx*/, job->GetInput(smap.file_id).path, pst);
+                            sub_filter = MakeSubtitleBurninFilter(sub_in, subs_idx, job->GetInput(smap.file_id).path, pst);
 
                             //Prevent burned-in subtitles from being mapped
                             continue;
@@ -1183,7 +1214,7 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
 
             }
 
-            else if (smap.codec_type == CODEC_TYPE_SUBTITLE) sub_stream_idx++; //Beware of teletext!
+            //else if (smap.codec_type == CODEC_TYPE_SUBTITLE) sub_stream_idx++; //Beware of teletext!
 
         }
 
@@ -1224,7 +1255,7 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
         //Make filters for all streams
         wxString vf, af; //Video filters and audio filters
         wxArrayString acodecs; //Used to keep track of which audio codecs have been added to the output
-        SBINFO dummy(0, 0, 0, 0, "", FFQ_CUTS(), 0, wxEmptyString); //Dummy used as empty pointer
+        SBINFO dummy(0, 0, 0, /*0,*/ "", FFQ_CUTS(), 0, wxEmptyString); //Dummy used as empty pointer
         LPSBINFO first_vid = (has_video ? (LPSBINFO)streams[first_vid_idx] : &dummy),
                  first_aud = (has_audio ? (LPSBINFO)streams[first_aud_idx] : &dummy);
 

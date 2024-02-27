@@ -54,6 +54,7 @@ extern bool IsPreviewSafe;
 
 //Function interfaces
 void CommandLineReplace(wxString &cmd, const wxString old_str, const wxString new_str);
+//int IndexOfStreamByType(wxString stream_map, wxString codec_type, int file_id, int stream_id);
 wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview = false, bool audio_filters_complex = false);
 void CleanupFinishedJob(LPFFQ_JOB job);
 wxString EscapeFilterString(wxString s, bool un_escape = false);

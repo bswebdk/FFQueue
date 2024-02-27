@@ -2788,6 +2788,34 @@ void FFQMain::OnToolBarButtonClick(wxCommandEvent& event)
 
         //Handler used to test all sorts of madness
 
+        /*STREAM_MAPPING smap;
+        smap.file_id = 1;
+        smap.stream_id = 4;
+        smap.codec_type = CODEC_TYPE_SUBTITLE;
+        wxString smstr = smap.ToString() + STREAM_MAPPING_SEPERATOR;
+        smap.stream_id = 3;
+        smap.codec_type = CODEC_TYPE_SUBTITLE;
+        smstr += smap.ToString() + STREAM_MAPPING_SEPERATOR;
+        smap.stream_id = 2;
+        smap.codec_type = CODEC_TYPE_VIDEO;
+        smstr += smap.ToString() + STREAM_MAPPING_SEPERATOR;
+        smap.stream_id = 1;
+        smap.codec_type = CODEC_TYPE_AUDIO;
+        smstr += smap.ToString() + STREAM_MAPPING_SEPERATOR;
+        smap.stream_id = 0;
+        smap.codec_type = CODEC_TYPE_SUBTITLE;
+        smstr += smap.ToString();
+
+        int idx = IndexOfStreamByType(smstr, CODEC_TYPE_SUBTITLE, 0, 0);
+        Console->AppendLine(ToStr(idx), COLOR_BLUE);
+        idx = IndexOfStreamByType(smstr, CODEC_TYPE_SUBTITLE, 0, 3);
+        Console->AppendLine(ToStr(idx), COLOR_BLUE);
+        idx = IndexOfStreamByType(smstr, CODEC_TYPE_SUBTITLE, 0, 4);
+        Console->AppendLine(ToStr(idx), COLOR_BLUE);
+        idx = IndexOfStreamByType(smstr, CODEC_TYPE_SUBTITLE, 0, 1);
+        Console->AppendLine(ToStr(idx), COLOR_BLUE);
+        return;*/
+
         /*const int ITEM_COUNT = 9;
         wxString DISPLAY[ITEM_COUNT] = {
             "Vacation 2023.mpg", //Job - preset
