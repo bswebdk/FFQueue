@@ -110,7 +110,6 @@ FFQTimeEdit::FFQTimeEdit(wxWindow* parent)
 	BoxSizer1->Add(CancelButton, 1, wxALL|wxEXPAND, 5);
 	MainSizer->Add(BoxSizer1, 1, wxALL|wxEXPAND, 5);
 	SetSizer(MainSizer);
-	MainSizer->Fit(this);
 	MainSizer->SetSizeHints(this);
 
 	Connect(ID_CLEARBUTTON,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&FFQTimeEdit::OnButtonClick);

@@ -102,6 +102,7 @@ am__dirstamp = $(am__leading_dot)dirstamp
 am_ffqueue_OBJECTS = ffqueue-FFQAbout.$(OBJEXT) \
 	ffqueue-FFQApp.$(OBJEXT) ffqueue-FFQBatchMake.$(OBJEXT) \
 	ffqueue-FFQBitRatePanel.$(OBJEXT) \
+	ffqueue-FFQCodecInfoEdit.$(OBJEXT) \
 	ffqueue-FFQConfigEdit.$(OBJEXT) \
 	ffqueue-FFQFilterEdit.$(OBJEXT) ffqueue-FFQFullSpec.$(OBJEXT) \
 	ffqueue-FFQJobEditAdv.$(OBJEXT) \
@@ -200,6 +201,7 @@ am__depfiles_remade = ./$(DEPDIR)/ffqueue-FFQAbout.Po \
 	./$(DEPDIR)/ffqueue-FFQApp.Po \
 	./$(DEPDIR)/ffqueue-FFQBatchMake.Po \
 	./$(DEPDIR)/ffqueue-FFQBitRatePanel.Po \
+	./$(DEPDIR)/ffqueue-FFQCodecInfoEdit.Po \
 	./$(DEPDIR)/ffqueue-FFQConfigEdit.Po \
 	./$(DEPDIR)/ffqueue-FFQFilterEdit.Po \
 	./$(DEPDIR)/ffqueue-FFQFullSpec.Po \
@@ -430,6 +432,7 @@ ffqueue_SOURCES = FFQAbout.cpp\
 	FFQApp.cpp\
 	FFQBatchMake.cpp\
 	FFQBitRatePanel.cpp\
+	FFQCodecInfoEdit.cpp\
 	FFQConfigEdit.cpp\
 	FFQFilterEdit.cpp\
 	FFQFullSpec.cpp\
@@ -775,6 +778,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ffqueue-FFQApp.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ffqueue-FFQBatchMake.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ffqueue-FFQBitRatePanel.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ffqueue-FFQCodecInfoEdit.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ffqueue-FFQConfigEdit.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ffqueue-FFQFilterEdit.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ffqueue-FFQFullSpec.Po@am__quote@ # am--include-marker
@@ -940,6 +944,20 @@ ffqueue-FFQBitRatePanel.obj: FFQBitRatePanel.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='FFQBitRatePanel.cpp' object='ffqueue-FFQBitRatePanel.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ffqueue_CXXFLAGS) $(CXXFLAGS) -c -o ffqueue-FFQBitRatePanel.obj `if test -f 'FFQBitRatePanel.cpp'; then $(CYGPATH_W) 'FFQBitRatePanel.cpp'; else $(CYGPATH_W) '$(srcdir)/FFQBitRatePanel.cpp'; fi`
+
+ffqueue-FFQCodecInfoEdit.o: FFQCodecInfoEdit.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ffqueue_CXXFLAGS) $(CXXFLAGS) -MT ffqueue-FFQCodecInfoEdit.o -MD -MP -MF $(DEPDIR)/ffqueue-FFQCodecInfoEdit.Tpo -c -o ffqueue-FFQCodecInfoEdit.o `test -f 'FFQCodecInfoEdit.cpp' || echo '$(srcdir)/'`FFQCodecInfoEdit.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/ffqueue-FFQCodecInfoEdit.Tpo $(DEPDIR)/ffqueue-FFQCodecInfoEdit.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='FFQCodecInfoEdit.cpp' object='ffqueue-FFQCodecInfoEdit.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ffqueue_CXXFLAGS) $(CXXFLAGS) -c -o ffqueue-FFQCodecInfoEdit.o `test -f 'FFQCodecInfoEdit.cpp' || echo '$(srcdir)/'`FFQCodecInfoEdit.cpp
+
+ffqueue-FFQCodecInfoEdit.obj: FFQCodecInfoEdit.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ffqueue_CXXFLAGS) $(CXXFLAGS) -MT ffqueue-FFQCodecInfoEdit.obj -MD -MP -MF $(DEPDIR)/ffqueue-FFQCodecInfoEdit.Tpo -c -o ffqueue-FFQCodecInfoEdit.obj `if test -f 'FFQCodecInfoEdit.cpp'; then $(CYGPATH_W) 'FFQCodecInfoEdit.cpp'; else $(CYGPATH_W) '$(srcdir)/FFQCodecInfoEdit.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/ffqueue-FFQCodecInfoEdit.Tpo $(DEPDIR)/ffqueue-FFQCodecInfoEdit.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='FFQCodecInfoEdit.cpp' object='ffqueue-FFQCodecInfoEdit.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ffqueue_CXXFLAGS) $(CXXFLAGS) -c -o ffqueue-FFQCodecInfoEdit.obj `if test -f 'FFQCodecInfoEdit.cpp'; then $(CYGPATH_W) 'FFQCodecInfoEdit.cpp'; else $(CYGPATH_W) '$(srcdir)/FFQCodecInfoEdit.cpp'; fi`
 
 ffqueue-FFQConfigEdit.o: FFQConfigEdit.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(ffqueue_CXXFLAGS) $(CXXFLAGS) -MT ffqueue-FFQConfigEdit.o -MD -MP -MF $(DEPDIR)/ffqueue-FFQConfigEdit.Tpo -c -o ffqueue-FFQConfigEdit.o `test -f 'FFQConfigEdit.cpp' || echo '$(srcdir)/'`FFQConfigEdit.cpp
@@ -2295,6 +2313,7 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/ffqueue-FFQApp.Po
 	-rm -f ./$(DEPDIR)/ffqueue-FFQBatchMake.Po
 	-rm -f ./$(DEPDIR)/ffqueue-FFQBitRatePanel.Po
+	-rm -f ./$(DEPDIR)/ffqueue-FFQCodecInfoEdit.Po
 	-rm -f ./$(DEPDIR)/ffqueue-FFQConfigEdit.Po
 	-rm -f ./$(DEPDIR)/ffqueue-FFQFilterEdit.Po
 	-rm -f ./$(DEPDIR)/ffqueue-FFQFullSpec.Po
@@ -2431,6 +2450,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/ffqueue-FFQApp.Po
 	-rm -f ./$(DEPDIR)/ffqueue-FFQBatchMake.Po
 	-rm -f ./$(DEPDIR)/ffqueue-FFQBitRatePanel.Po
+	-rm -f ./$(DEPDIR)/ffqueue-FFQCodecInfoEdit.Po
 	-rm -f ./$(DEPDIR)/ffqueue-FFQConfigEdit.Po
 	-rm -f ./$(DEPDIR)/ffqueue-FFQFilterEdit.Po
 	-rm -f ./$(DEPDIR)/ffqueue-FFQFullSpec.Po

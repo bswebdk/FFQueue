@@ -156,7 +156,7 @@
 											<object class="wxPanel" name="ID_QUALITYPAGE" variable="QualityPage" member="yes">
 												<object class="wxFlexGridSizer" variable="VideoQualitySizer" member="yes">
 													<cols>3</cols>
-													<rows>7</rows>
+													<rows>8</rows>
 													<growablecols>1</growablecols>
 													<object class="spacer">
 														<flag>wxALL|wxEXPAND</flag>
@@ -351,6 +351,24 @@
 														<border>3</border>
 														<option>1</option>
 													</object>
+													<object class="spacer">
+														<flag>wxALL|wxEXPAND</flag>
+														<option>1</option>
+													</object>
+													<object class="sizeritem">
+														<object class="wxButton" name="ID_CHANGEVIDQLBTN" variable="ChangeVidQLBtn" member="yes">
+															<label>VQ</label>
+															<extra_code>ChangeVidQLBtn-&gt;SetLabel(FFQS(SID__PRESET__CHANGE__QUALITY__LIMITS));</extra_code>
+															<handler function="OnButtonClick" entry="EVT_BUTTON" />
+														</object>
+														<flag>wxTOP|wxBOTTOM|wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL</flag>
+														<border>5</border>
+														<option>1</option>
+													</object>
+													<object class="spacer">
+														<flag>wxALL|wxEXPAND</flag>
+														<option>1</option>
+													</object>
 												</object>
 											</object>
 											<label>Q</label>
@@ -423,8 +441,12 @@
 																<option>1</option>
 															</object>
 															<object class="sizeritem">
-																<object class="wxChoice" name="ID_KEYFRAMEMAXB" variable="KeyFrameMaxB" member="yes" />
-																<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+																<object class="wxChoice" name="ID_KEYFRAMEMAXB" variable="KeyFrameMaxB" member="yes">
+																	<content>
+																		<item>0</item>
+																	</content>
+																</object>
+																<flag>wxALL|wxEXPAND</flag>
 																<border>3</border>
 																<option>1</option>
 															</object>
@@ -442,8 +464,12 @@
 																<option>1</option>
 															</object>
 															<object class="sizeritem">
-																<object class="wxChoice" name="ID_KEYFRAMEMAXP" variable="KeyFrameMaxP" member="yes" />
-																<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+																<object class="wxChoice" name="ID_KEYFRAMEMAXP" variable="KeyFrameMaxP" member="yes">
+																	<content>
+																		<item>0</item>
+																	</content>
+																</object>
+																<flag>wxALL|wxEXPAND</flag>
 																<border>3</border>
 																<option>1</option>
 															</object>
@@ -486,7 +512,7 @@
 																		<item>iter</item>
 																	</content>
 																</object>
-																<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+																<flag>wxALL|wxEXPAND</flag>
 																<border>3</border>
 																<option>1</option>
 															</object>
@@ -920,7 +946,7 @@
 												</object>
 												<object class="sizeritem">
 													<object class="wxFlexGridSizer" variable="AudioQScaleSizer" member="yes">
-														<cols>4</cols>
+														<cols>5</cols>
 														<rows>1</rows>
 														<growablecols>1</growablecols>
 														<object class="sizeritem">
@@ -954,6 +980,16 @@
 																<label>XXXXXX</label>
 															</object>
 															<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+															<border>3</border>
+															<option>1</option>
+														</object>
+														<object class="sizeritem">
+															<object class="wxButton" name="ID_CHANGEAUDQLBTN" variable="ChangeAudQLBtn" member="yes">
+																<label>QE</label>
+																<extra_code>ChangeAudQLBtn-&gt;SetLabel(FFQS(SID__PRESET__CHANGE__QUALITY__LIMITS));</extra_code>
+																<handler function="OnButtonClick" entry="EVT_BUTTON" />
+															</object>
+															<flag>wxLEFT|wxRIGHT|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
 															<border>3</border>
 															<option>1</option>
 														</object>
@@ -1644,8 +1680,8 @@
 													<object class="wxChoice" name="ID_SEGMENTLENTYPE" variable="SegmentLenType" member="yes">
 														<selection>0</selection>
 													</object>
-													<flag>wxRIGHT|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
-													<border>10</border>
+													<flag>wxALL|wxEXPAND</flag>
+													<border>3</border>
 													<option>1</option>
 												</object>
 												<object class="sizeritem">
@@ -1661,7 +1697,7 @@
 													<object class="wxChoice" name="ID_SEGMENTLISTTYPE" variable="SegmentListType" member="yes">
 														<selection>0</selection>
 													</object>
-													<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+													<flag>wxALL|wxEXPAND</flag>
 													<border>3</border>
 													<option>1</option>
 												</object>
@@ -1734,7 +1770,7 @@
 														<rows>2</rows>
 														<growablecols>1</growablecols>
 														<object class="sizeritem">
-															<object class="wxStaticText" name="ID_STATICTEXT13" variable="ST55" member="yes">
+															<object class="wxStaticText" name="wxID_ANY" variable="ST55" member="yes">
 																<label>Ar</label>
 																<extra_code>SBS51-&gt;GetStaticBox()-&gt;SetLabel(FFQS(SID__PRESET__OTHER));&#x0A;ST55-&gt;SetLabel(FFQS(SID__PRESET__ASPECT__RATIO));</extra_code>
 															</object>
@@ -1744,9 +1780,9 @@
 														</object>
 														<object class="sizeritem">
 															<object class="wxFlexGridSizer" variable="FlexGridSizer33" member="no">
-																<cols>2</cols>
+																<cols>5</cols>
 																<rows>1</rows>
-																<growablecols>1</growablecols>
+																<growablecols>3,4</growablecols>
 																<object class="sizeritem">
 																	<object class="wxComboBox" name="ID_ASPECT" variable="Aspect" member="yes">
 																		<content>
@@ -1760,6 +1796,30 @@
 																		<minsize>100,-1</minsize>
 																	</object>
 																	<flag>wxALL|wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL</flag>
+																	<option>1</option>
+																</object>
+																<object class="spacer">
+																	<flag>wxALL|wxEXPAND</flag>
+																	<option>1</option>
+																	<size>15,-1</size>
+																</object>
+																<object class="sizeritem">
+																	<object class="wxStaticText" name="wxID_ANY" variable="ST57" member="yes">
+																		<label>Err</label>
+																		<extra_code>ST57-&gt;SetLabel(FFQS(SID__PRESET__ERROR__DETECT));</extra_code>
+																	</object>
+																	<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
+																	<border>3</border>
+																	<option>1</option>
+																</object>
+																<object class="sizeritem">
+																	<object class="wxChoice" name="ID_ERRDETECT" variable="ErrDetect" member="yes">
+																		<content>
+																			<item>W</item>
+																		</content>
+																		<selection>0</selection>
+																	</object>
+																	<flag>wxALL|wxEXPAND</flag>
 																	<option>1</option>
 																</object>
 																<object class="sizeritem">

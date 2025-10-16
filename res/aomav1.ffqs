@@ -1,0 +1,511 @@
+FFQ_FULLSPEC_HEADER_1
+#source https://gist.github.com/nico-lab/a6508f283a77696e79a131e07abd86b9
+#source https://aomedia.org/docs/aomenc-command-line-parameters-draft.pdf
+checkval=1
+composite=-aom-params
+display=LibAOM AV1
+id=aomav1
+matches=[[:blank:]]libaom AV1[[:blank:]]
+notebook=0
+prefix=
+separator=:
+
+cpu-used
+text=Speed setting (0..6 in good mode, 5..11 in realtime mode, 0..9 in all intra mode)
+type=integer
+range=0 11
+
+auto-alt-ref
+text=Enable automatic alt reference frames
+
+sharpness
+text=Bias towards block sharpness in rate-distortion optimization(..)
+type=integer
+range=0 7
+default=0
+
+static-thresh
+text=Motion detection threshold [TEST!]
+type=integer
+range=0 max
+
+row-mt
+text=Enable row based multi-threading
+default=1
+
+fp-mt
+text=Enable frame parallel multi-threading
+default=1
+
+tile-columns
+text=Number of tile columns to use
+type=integer
+range=0 6
+default=0
+
+tile-rows
+text=Number of tile rows to use
+type=integer
+range=0 6
+default=0
+
+enable-tpl-model
+text=RDO based on frame temporal dependency (required for deltaq mode)
+default=0
+
+enable-keyframe-filtering
+text=Apply temporal filtering on key frame
+type=choice
+value=0=No filter:1=Filter without overlay:2=Filter with overlay
+default=1
+
+arnr-maxframes
+text=AltRef max frames
+type=integer
+range=0 15
+#default=0
+
+arnr-strength
+text=AltRef filter strength
+type=integer
+range=0 6
+
+#tune
+#text=Distortion metric tuned with
+#type=choice
+#value=psnr:ssim:vmaf_with_preprocessing:vmaf_without_preprocessing:vmaf:vmaf_neg:butteraugli:vmaf_saliency_map:iq
+
+cq-level
+text=Constant/Constrained Quality level
+type=integer
+range=0 63
+
+max-intra-rate
+text=Max I-frame bitrate (pct)
+type=integer
+range=0 max
+
+max-inter-rate
+text=Max P-frame bitrate (pct)
+type=integer
+range=0 max
+
+gf-cbr-boost
+text=Boost for Golden Frame in CBR mode (pct)
+type=integer
+range=0 max
+
+lossless
+text=Lossless mode
+
+enable-cdef
+text=Constrained directional enhancement filter
+type=choice
+value=0=Disable:1=Enable:2=Disable for non-reference frames:3=Enable adaptively based on frame qindex
+default=1
+
+enable-restoration
+text=Loop restoration filter
+type=choice
+value=0=Disable (default in realtime mode):1=Enable (default in non-realtime mode)
+
+enable-rect-partitions
+text=Enable rectangular partitions
+default=1
+
+enable-ab-partitions
+text=Enable ab partitions
+default=1
+
+enable-1to4-partitions
+text=Enable 1:4 and 4:1 partitions
+default=1
+
+min-partition-size
+text=Set min partition size
+type=choice
+value=4=4x4:8=8x8:16=16x16:32=32x32:64=64x64:128=128x128
+
+max-partition-size
+text=Set max partition size
+type=choice
+value=4=4x4:8=8x8:16=16x16:32=32x32:64=64x64:128=128x128
+
+enable-dual-filter
+text=Enable dual filter
+default=1
+
+enable-chroma-deltaq
+text=Enable chroma delta quant
+
+enable-intra-edge-filter
+text=Enable chroma delta quant
+
+enable-order-hint
+text=Enable order hint
+default=1
+
+enable-tx64
+text=Enable 64-pt transform
+default=1
+
+enable-flip-idtx
+text=Enable extended transform type
+default=1
+
+enable-rect-tx
+text=Enable rectangular transform
+default=1
+
+enable-dist-wtd-comp
+text=Enable distance-weighted compound
+default=1
+
+enable-masked-comp
+text=Enable masked (wedge/diff-wtd) compound
+default=1
+
+enable-onesided-comp
+text=Enable one sided compound
+default=1
+
+enable-interintra-comp
+text=Enable interintra compound
+default=1
+
+enable-smooth-interintra
+text=Enable smooth interintra mode
+default=1
+
+enable-diff-wtd-comp
+text=Enable difference-weighted compound
+default=1
+
+enable-interinter-wedge
+text=Enable interinter wedge compound
+default=1
+
+enable-interintra-wedge
+text=Enable interintra wedge compound
+default=1
+
+enable-global-motion
+text=Enable global motion
+default=1
+
+enable-warped-motion
+text=Enable local warped motion
+default=1
+
+enable-filter-intra
+text=Enable filter intra prediction mode
+default=1
+
+enable-smooth-intra
+text=Enable smooth intra prediction modes
+default=1
+
+enable-paeth-intra
+text=Enable Paeth intra prediction mode
+default=1
+
+enable-cfl-intra
+text=Enable chroma from luma intra prediction mode
+default=1
+
+enable-diagonal-intra
+text=Enable diagonal (D45 to D203) intra prediction modes(..)
+default=1
+
+force-video-mode
+text=Force video mode even for a single frame
+
+enable-obmc
+text=Enable OBMC
+default=1
+
+enable-overlay
+text=Enable coding overlay frames
+default=1
+
+enable-palette
+text=Enable palette prediction mode
+default=1
+
+enable-intrabc
+text=Enable intra block copy prediction mode
+default=1
+
+enable-angle-delta
+text=Enable intra angle delta
+default=1
+
+disable-trellis-quant
+text=Disable trellis optimization of quantized coefficients
+type=choice
+value=0=Yes:1=No:2=Yes, if rd search 3:3=Yes, if estimate yrd search
+default=3
+
+enable-qm
+text=Enable quantisation matrices
+
+qm-min
+text=Min quant matrix flatness (0..15)
+type=integer
+default=5
+
+qm-max
+text=Max quant matrix flatness (0..15)
+type=integer
+default=9
+
+reduced-tx-type-set
+text=Use reduced set of transform types
+
+use-intra-dct-only
+text=Use DCT only for INTRA modes
+
+use-inter-dct-only
+text=Use DCT only for INTER modes
+
+use-intra-default-tx-only
+text=Use Default-transform only for INTRA modes
+
+quant-b-adapt
+text=Use adaptive quantize_b
+
+coeff-cost-upd-freq
+text=Update freq for coeff costs
+type=choice
+value=0=SB:1=SB Row per Tile:2=Tile:3=Off
+
+mode-cost-upd-freq
+text=Update freq for mode costs
+type=choice
+value=0=SB:1=SB Row per Tile:2=Tile:3=Off
+
+mv-cost-upd-freq
+text=Update freq for mv costs
+type=choice
+value=0=SB:1=SB Row per Tile:2=Tile:3=Off
+
+frame-parallel
+text=Enable frame parallel decodability features
+
+error-resilient
+text=Enable error resilient features
+
+aq-mode
+text=Adaptive quantization mode
+type=choice
+value=0=Off:1=Variance:2=Complexity:3=Cyclic refresh
+default=0
+
+deltaq-mode
+text=Delta qindex mode
+type=choice
+value=0=Off:1=Deltaq objective:2=Deltaq placeholder:3=Key frame visual quality:4=User rating based visual quality optimization:5=HDR video:6=Variance Boost all intra
+default=1
+require=enable-tpl-model
+
+deltaq-strength
+text=Deltaq strength (Delta qindex mode = User rating based visual quality optimization)
+type=integer
+range=0 100
+require=deltaq-mode==4
+
+delta-lf-mode
+text=Enable delta-lf-mode
+
+frame-boost
+text=Enable frame periodic boost
+default=1
+
+noise-sensitivity
+text=Noise sensitivity (frames to blur)
+type=integer
+range=0 6
+
+tune-content
+text=Tune content type
+type=choice
+value=default:screen:film
+default=default
+
+cdf-update-mode
+text=CDF update mode for entropy coding
+type=choice
+value=0=No CDF update:1=Update CDF on all frames:2=Selectively update CDF on some frames
+default=1
+
+color-primaries
+text=Color primaries (CICP) of input content
+type=choice
+value=bt709:unspecified:bt601:bt470m:bt470bg:smpte240:film:bt2020:xyz:smpte431:smpte432:ebu3213
+
+transfer-characteristics
+text=Transfer characteristics (CICP) of input content
+type=choice
+value=unspecified:bt709:bt470m:bt470bg:bt601:smpte240:lin:log100:log100sq10:iec61966:bt1361:srgb:bt2020-10bit:bt2020-12bit:smpte2084:hlg:smpte428
+
+matrix-coefficients
+text=Matrix coefficients (CICP) of input content
+type=choice
+value=identity:bt709:unspecified:fcc73:bt470bg:bt601:smpte240:ycgco:bt2020ncl:bt2020cl:smpte2085:chromncl:chromcl:ictcp
+
+chroma-sample-position
+text=The chroma sample position when chroma 4:2:0 is signaled
+type=choice
+value=unknown:vertical:colocated
+
+min-gf-interval
+text=Min gf/arf frame interval
+type=integer
+range=0 100
+default=0
+
+max-gf-interval
+text=Max gf/arf frame interval
+type=integer
+range=0 100
+default=0
+
+gf-min-pyr-height
+text=Min height for GF group pyramid structure
+type=integer
+range=0 5
+default=0
+
+gf-max-pyr-height
+text=Max height for GF group pyramid structure
+type=integer
+range=0 5
+default=5
+
+sb-size
+text=Superblock size to use
+type=choice
+value=dynamic:64:128
+
+num-tile-groups
+text=Maximum number of tile groups
+type=integer
+range=1 max
+default=1
+
+mtu-size
+text=MTU size for a tile group, overrides maximum number of tile groups
+type=integer
+default=0
+
+timing-info
+text=Signal timing info in the bitstream (model only works for no hidden frames, no super-res yet)
+type=choice
+value=unspecified:constant:model
+
+film-grain-test
+text=Film grain test vectors (0: none (default), 1: test-1 ... 16: test-16)
+type=integer
+range=0 16
+default=0
+
+film-grain-table
+text=Path to file containing film grain parameters
+type=string
+
+denoise-noise-level
+text=Amount of noise (0 = don't denoise, to 50)
+type=integer
+range=0 50
+
+denoise-block-size
+text=Denoise block size
+type=choice
+value=8:16:32
+default=32
+
+enable-dnl-denoising
+text=Apply denoising to the frame being encoded when denoise-noise-level is enabled
+default=1
+
+max-reference-frames
+text=Maximum number of reference frames allowed per frame
+type=integer
+range=3 7
+default=7
+
+reduced-reference-set
+text=Use reduced set of single and compound references
+
+enable-ref-frame-mvs
+text=Enable temporal mv prediction
+default=1
+
+target-seq-level-idx
+text=Target sequence level index, possible values are in the form of "ABxy"(..)
+type=integer
+range=0 9999
+
+set-tier-mask
+text=Set bit mask to specify which tier each of the 32 possible operating points conforms to
+type=string
+
+min-cr
+text=Set minimum compression ratio [TEST range]
+type=integer
+range=0 10000
+default=0
+
+vbr-corpus-complexity-lap
+text=Set average corpus complexity per mb for single pass VBR using lap
+type=integer
+range=0 10000
+default=0
+
+input-chroma-subsampling-x
+text=Chroma subsampling X value
+type=integer
+range=0 1
+
+input-chroma-subsampling-y
+text=Chroma subsampling Y value
+type=integer
+range=0 1
+
+dv-cost-upd-freq
+text=Update freq for dv costs
+type=choice
+value=0=SB:1=SB Row per Tile:2=Tile:3=Off
+
+partition-info-path
+text=Partition information read and write path
+type=string
+
+enable-directional-intra
+text=Enable directional intra prediction modes
+default=1
+
+#enable-tx-size-search
+#text=Enable transform size search to find the best size for each block
+#default=1
+
+loopfilter-control
+text=Control loop filtering
+type=choice
+value=0=Loopfilter disabled for all frames:1=Enable loopfilter for all frames:2=Disable loopfilter for non-reference frames:3=Disable loopfilter for frames with low motion)
+default=1
+
+auto-intra-tools-off
+text=Automatically turn off several intra coding tools for all intra mode
+require=deltaq-mode==3
+
+enable-rate-guide-deltaq
+text=Enable rate guide deltaq
+require=deltaq-mode==3:rate-distribution-info
+
+rate-distribution-info
+text=Rate distribution information input
+type=string
+
+#enable-low-complexity-decode
+#text=Enable low complexity decode

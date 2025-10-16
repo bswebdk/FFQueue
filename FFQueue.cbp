@@ -139,7 +139,7 @@
 				<Option object_output="obj/Debug/" />
 				<Option type="0" />
 				<Option compiler="gcc" />
-				<Option parameters="--test-fs=#filter=fps8" />
+				<Option parameters="--t-est-fs=rav1e --std-paths" />
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
 					<Add option="-g" />
@@ -157,6 +157,7 @@
 				<Option object_output="obj/Release/" />
 				<Option type="0" />
 				<Option compiler="gcc" />
+				<Option parameters="--std-paths" />
 				<Option projectLinkerOptionsRelation="2" />
 				<Compiler>
 					<Add option="-O2" />
@@ -189,6 +190,8 @@
 		<Unit filename="src/FFQBatchMake.h" />
 		<Unit filename="src/FFQBitRatePanel.cpp" />
 		<Unit filename="src/FFQBitRatePanel.h" />
+		<Unit filename="src/FFQCodecInfoEdit.cpp" />
+		<Unit filename="src/FFQCodecInfoEdit.h" />
 		<Unit filename="src/FFQConfigEdit.cpp" />
 		<Unit filename="src/FFQConfigEdit.h" />
 		<Unit filename="src/FFQFilterEdit.cpp" />
@@ -387,6 +390,7 @@
 		<Unit filename="wxsmith/FFQAbout.wxs" />
 		<Unit filename="wxsmith/FFQBatchMake.wxs" />
 		<Unit filename="wxsmith/FFQBitRatePanel.wxs" />
+		<Unit filename="wxsmith/FFQCodecInfoEdit.wxs" />
 		<Unit filename="wxsmith/FFQConcat.wxs" />
 		<Unit filename="wxsmith/FFQConfigEdit.wxs" />
 		<Unit filename="wxsmith/FFQFilterEdit.wxs" />
@@ -438,6 +442,7 @@
 					<wxDialog wxs="wxsmith/FFQJobEditAdvCuts.wxs" src="src/FFQJobEditAdvCuts.cpp" hdr="src/FFQJobEditAdvCuts.h" fwddecl="0" i18n="0" name="FFQJobEditAdvCuts" language="CPP" />
 					<wxDialog wxs="wxsmith/FFQVideoToGIF.wxs" src="src/tools/FFQVideoToGIF.cpp" hdr="src/tools/FFQVideoToGIF.h" fwddecl="0" i18n="1" name="FFQVideoToGIF" language="CPP" />
 					<wxPanel wxs="wxsmith/DummyPanel.wxs" src="src/DummyPanel.cpp" hdr="src/DummyPanel.h" fwddecl="0" i18n="1" name="DummyPanel" language="CPP" />
+					<wxDialog wxs="wxsmith/FFQCodecInfoEdit.wxs" src="src/FFQCodecInfoEdit.cpp" hdr="src/FFQCodecInfoEdit.h" fwddecl="0" i18n="0" name="FFQCodecInfoEdit" language="CPP" />
 				</resources>
 			</wxsmith>
 		</Extensions>

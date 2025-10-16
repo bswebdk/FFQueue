@@ -169,7 +169,9 @@
 									<growablecols>0</growablecols>
 									<growablerows>0</growablerows>
 									<object class="sizeritem">
-										<object class="wxTextCtrl" name="ID_CUSTOMTEMP" variable="CustomTemp" member="yes" />
+										<object class="wxTextCtrl" name="ID_CUSTOMTEMP" variable="CustomTemp" member="yes">
+											<handler function="OnCustomTempText" entry="EVT_TEXT" />
+										</object>
 										<flag>wxALL|wxEXPAND</flag>
 										<option>1</option>
 									</object>

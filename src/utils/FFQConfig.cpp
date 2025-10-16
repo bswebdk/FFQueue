@@ -277,7 +277,14 @@ bool test_file_create(wxString file_name, wxString write_text)
             res = true;
         }
     }
-    catch (std::exception &err) {}
+    #ifdef DEBUG
+    catch (std::exception &err)
+    {
+        fprintf(stderr, "Test create file '%s' error '%s'\n", file_name.c_str().AsChar(), err.what());
+    }
+    #else
+    catch (...) {}
+    #endif
     return res;
 }
 
@@ -829,34 +836,47 @@ wxString FFQConfig::GetFFMpegVersion(bool short_version)
 wxString FFQConfig::GetHelpPath()
 {
     //Try to locate the help file / documentation
-    const wxString FFQ = "FFQueue";
+    //const wxString FFQ = "ffqueue"; //Issues with Camel Case
     const wxString HTM = ".htm";
     wxString res;
-    if (is_snap)
+    if (is_snap || is_flat)
     {
 
         //Nothing works in a snap :-(
         //return wxEmptyString;
 
-        //res = GetConfigPath(FFQ.Lower() + HTM);
-        res = wxFileName(wxStandardPaths::Get().GetDocumentsDir(), FFQ.Lower() + HTM).GetFullPath();
-        wxString doc = m_SnapRoot + "usr/share/doc/" + FFQ.Lower() + "/" + FFQ.Lower() + HTM;
-        if ((!wxFileExists(res)) || (wxFileName(res).GetSize() != wxFileName(doc).GetSize())) wxCopyFile(doc, res, true);
 
-        //FFQConsole::Get()->AppendLine(res, COLOR_BLUE);
-        //FFQConsole::Get()->AppendLine(doc, COLOR_BLUE);
+        //wxString doc = m_SnapRoot + "usr/share/doc/" + FFQ.Lower() + "/" + FFQ.Lower() + HTM;
+        wxString doc = (is_snap ? m_SnapRoot + "usr" : "/app") + "/share/doc/" + app_name + "/" + app_name + HTM;
 
-        if (!wxFileExists(res)) res = wxEmptyString;
+        if (wxFileExists(doc))
+        {
+
+            res = wxFileName(wxStandardPaths::Get().GetDocumentsDir(), app_name + HTM).GetFullPath();
+            if ((!wxFileExists(res)) || (wxFileName(res).GetSize() != wxFileName(doc).GetSize()))
+            {
+
+                if (!wxCopyFile(doc, res, true)) res = wxEmptyString;
+
+            }
+
+        }
+
+        //if (!wxFileExists(res)) res = wxEmptyString;
 
     }
     else
     {
+
         res = wxFileName(wxStandardPaths::Get().GetExecutablePath()).GetPath() + wxFileName::GetPathSeparator();
-        if (wxFileExists(res + FFQ + HTM)) res += FFQ + HTM;
-        else if (wxFileExists(res + FFQ.Lower() + HTM)) res += FFQ.Lower() + HTM;
+        if (wxFileExists(res + app_name + HTM)) res += app_name + HTM;
+        else if (wxFileExists(res + app_name.Lower() + HTM)) res += app_name.Lower() + HTM;
         else res = wxEmptyString;
+
     }
+
     return res;
+
 }
 
 //---------------------------------------------------------------------------------------
@@ -951,7 +971,11 @@ wxString FFQConfig::GetTmpPath(wxString dest_path, bool make_sub_folder, wxStrin
 
     //Get the path defined in options
     wxString res;
-    if (temp_path == TEMP_PATH_SYST) res = wxStandardPaths::Get().GetTempDir();
+    if (temp_path == TEMP_PATH_SYST)
+    {
+        if (is_flat && wxGetEnv("XDG_CACHE_HOME", &res)) res = wxFileName(res, "tmp").GetFullPath();
+        else res = wxStandardPaths::Get().GetTempDir();
+    }
     else if (temp_path == TEMP_PATH_DEST) res = dest_path;
     else res = temp_path;
 
@@ -1410,6 +1434,14 @@ void FFQConfig::SetCtrlColors(wxGenericHyperlinkCtrl *ctrl)
 
 //---------------------------------------------------------------------------------------
 
+void FFQConfig::SetCodecInfo(LPCODEC_INFO root, bool save_config)
+{
+    m_CodecInfo = root;
+    if (save_config) SaveConfig();
+}
+
+//---------------------------------------------------------------------------------------
+
 void FFQConfig::SetBrowseRootFor(wxFileDialog *dlg)
 {
 
@@ -1516,11 +1548,21 @@ bool FFQConfig::ValidateFFMpegPath(wxString path, bool set_config_path_if_valid)
     //Version information is valid, make short version
     wxString short_ver = st + " " + t;
 
+    #ifdef DEBUG
+    //short_ver = "N-120620-gd6fe3786cd-20250809 Copyright (c) 2000-2025 the FFmpeg developers built with gcc 15.1.0 (crosstool-NG 1.27.0.42_35c1e72)";
+    #endif
+
     //Create file extension for capabilities
     const wxString VERSION_CHARS = "0123456789.-";
     size_t vl = 0;
-    while ((vl < st.Len()) && (VERSION_CHARS.Find(st.GetChar(vl)) >= 0)) vl++;
-    m_CapsFile = m_ConfigPath + wxFileName::GetPathSeparator() + "ffmpeg-caps." + st.SubString(0, vl - 1);
+    s = GetToken(short_ver, SPACE, false);
+    while ((vl < s.Len()) && (VERSION_CHARS.Find(s.GetChar(vl)) >= 0)) vl++;
+    if (vl == 0)
+    {
+        if (s.StartsWith("N-")) s = s.Right(s.Len() - 2);
+        vl = s.Len();
+    }
+    m_CapsFile = m_ConfigPath + wxFileName::GetPathSeparator() + "ffmpeg-caps." + s.SubString(0, vl - 1);
 
     //Variables used to store ffmpeg capabilities
     wxString a_codecs = "", v_codecs = "", s_codecs = "", filters = "", hwacl = "", hwdec = "", muxers = "", pixfmtstr = "";
@@ -1705,6 +1747,13 @@ FFQConfig::FFQConfig()
     //Check if we are using AVlib (avconv, avprobe, avplay)
     use_libav = app_name.Lower().Find("avqueue") >= 0;
 
+    //Is this a snap?
+    is_snap = wxGetEnv("SNAP", &m_SnapRoot);
+    if (is_snap && (!m_SnapRoot.EndsWith(wxFileName::GetPathSeparator()))) m_SnapRoot += wxFileName::GetPathSeparator();
+
+    //Is this a flatpak?
+    is_flat = wxGetEnv("FLATPAK_ID", nullptr);
+
     //Check if config exists in the same location as the program file
     wxString fn_cfg = app_name.Lower() + ".cfg";
     m_ConfigPath = app_dir;
@@ -1715,17 +1764,25 @@ FFQConfig::FFQConfig()
     {
 
         //Check if config exists in the typical config location
-        #ifdef __LINUX__
-            //On Linux we honor the ~/.config/appname way of life if available
-            wxString cfg_dir = wxStandardPaths::Get().GetUserConfigDir() + wxFileName::GetPathSeparator() + ".config";
-            if (wxFileName::DirExists(cfg_dir)) cfg_dir += wxFileName::GetPathSeparator() + app_name.Lower();
-            else cfg_dir = wxStandardPaths::Get().GetUserDataDir();
-        #else
-            //For backwards compatibility we must check if ConfigDir exists and
-            //if not, we use UserDataDir in order to support per-user config
-            wxString cfg_dir = wxStandardPaths::Get().GetConfigDir();
-            if (!wxFileName::DirExists(cfg_dir)) cfg_dir = wxStandardPaths::Get().GetUserDataDir();
-        #endif // __LINUX__
+        wxString cfg_dir;
+        if ((is_flat || is_snap) && wxGetEnv("XDG_CONFIG_HOME", &cfg_dir))
+        {
+            //if (is_snap) cfg_dir = wxFileName(cfg_dir, app_name.Lower()).GetFullPath();
+        }
+        else
+        {
+            #ifdef __LINUX__
+                //On Linux we honor the ~/.config/appname way of life if available
+                cfg_dir = wxStandardPaths::Get().GetUserConfigDir() + wxFileName::GetPathSeparator() + ".config";
+                if (wxFileName::DirExists(cfg_dir)) cfg_dir += wxFileName::GetPathSeparator() + app_name.Lower();
+                else cfg_dir = wxStandardPaths::Get().GetUserDataDir();
+            #else
+                //For backwards compatibility we must check if ConfigDir exists and
+                //if not, we use UserDataDir in order to support per-user config
+                cfg_dir = wxStandardPaths::Get().GetConfigDir();
+                if (!wxFileName::DirExists(cfg_dir)) cfg_dir = wxStandardPaths::Get().GetUserDataDir();
+            #endif // __LINUX__
+        }
 
         m_ConfigPath = cfg_dir;
         m_ConfigFile = GetConfigPath(fn_cfg);
@@ -1773,10 +1830,6 @@ FFQConfig::FFQConfig()
     m_PresetManager = NULL;
     m_CodecInfo = NULL;
     m_PixelFormats = NULL;
-
-    //Is this a snap?
-    is_snap = wxGetEnv("SNAP", &m_SnapRoot);
-    if (is_snap && (!m_SnapRoot.EndsWith(wxFileName::GetPathSeparator()))) m_SnapRoot += wxFileName::GetPathSeparator();
 
     //Create task bar object
     m_TaskBar = new FFQTaskBar();

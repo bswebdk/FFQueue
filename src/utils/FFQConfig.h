@@ -91,6 +91,7 @@ class FFQConfig
 	    bool preview_map_subs;
 	    bool dont_save_ffmpeg;
 
+	    bool is_flat;
 	    bool is_snap;
 
 	    wxString app_name;
@@ -147,6 +148,7 @@ class FFQConfig
 	    bool            SaveArrayString(wxString filename, wxArrayString* array_string);
 	    void            SaveConfig();
         void            SetBrowseRootFor(wxFileDialog *dlg);
+        void            SetCodecInfo(LPCODEC_INFO root, bool save_config = true);
 	    void            SetCtrlColors(wxGenericHyperlinkCtrl *ctrl);
 	    bool            SetSaveLog(bool log, bool save_config = true);
 	    void            SetPreferredAndSave(wxString format, wxString path, bool save_always = false);

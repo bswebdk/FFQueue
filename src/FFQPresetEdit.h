@@ -74,6 +74,8 @@ class FFQPresetEdit: public wxDialog
 		FFQThumbPanel* ThumbsPanel;
 		wxButton* AddFilterButton;
 		wxButton* CancelButton;
+		wxButton* ChangeAudQLBtn;
+		wxButton* ChangeVidQLBtn;
 		wxButton* ClearMetaDataBtn;
 		wxButton* DispositionsBtn;
 		wxButton* EditFilterButton;
@@ -107,6 +109,7 @@ class FFQPresetEdit: public wxDialog
 		wxCheckBox* UseSceneChangeSens;
 		wxCheckBox* UseVideoQScale;
 		wxChoice* AudioCodec;
+		wxChoice* ErrDetect;
 		wxChoice* HWD_Accel;
 		wxChoice* KeyFrameMaxB;
 		wxChoice* KeyFrameMaxP;
@@ -221,6 +224,7 @@ class FFQPresetEdit: public wxDialog
 		wxStaticText* ST53;
 		wxStaticText* ST55;
 		wxStaticText* ST56;
+		wxStaticText* ST57;
 		wxStaticText* STMD1;
 		wxStaticText* ScSensInfo;
 		wxStaticText* SegST1;
@@ -279,6 +283,7 @@ class FFQPresetEdit: public wxDialog
 		static const long ID_USEQDIFF;
 		static const long ID_QDIFF;
 		static const long ID_QDIFFVAL;
+		static const long ID_CHANGEVIDQLBTN;
 		static const long ID_QUALITYPAGE;
 		static const long ID_KEYFRAMEMIN;
 		static const long ID_KEYFRAMEMAX;
@@ -321,6 +326,7 @@ class FFQPresetEdit: public wxDialog
 		static const long ID_AUDIOQSCALE;
 		static const long ID_AST2;
 		static const long ID_AUDIOQSCALEVAL;
+		static const long ID_CHANGEAUDQLBTN;
 		static const long ID_AST4;
 		static const long ID_AUDIOCHANNELS;
 		static const long ID_AST5;
@@ -376,8 +382,8 @@ class FFQPresetEdit: public wxDialog
 		static const long ID_SEGMENTINCTIME;
 		static const long ID_SEGMENTSTREAMING;
 		static const long ID_SEGMENTBREAKB;
-		static const long ID_STATICTEXT13;
 		static const long ID_ASPECT;
+		static const long ID_ERRDETECT;
 		static const long ID_DISPOSITIONSBTN;
 		static const long ID_OUTPUTFORMAT;
 		static const long ID_MF_FASTSTART;
@@ -441,6 +447,7 @@ class FFQPresetEdit: public wxDialog
 
 		void OnIdle(wxIdleEvent &event);
 		void OnMenuSelected(wxCommandEvent &event);
+		void OnShow(wxShowEvent &event);
 
 		DECLARE_EVENT_TABLE()
 };

@@ -46,6 +46,7 @@
     #include <zlib.h>
     //#include "utils/FFQNvpList.h"
     //#include "FFQFilterEdit.h"
+    //using namespace std;
 #endif // DEBUG
 
 #include <wx/stdpaths.h>
@@ -164,6 +165,28 @@ void PtrToBitmap(void* ptr, unsigned int len, wxBitmap &bmp, wxBitmapType type, 
     if ((fit.GetHeight() > 0) && (fit.GetWidth() > 0)) img = img.Scale(fit.GetWidth(), fit.GetHeight());
 	bmp = wxBitmap(img);
 	delete ms;
+}
+
+//---------------------------------------------------------------------------------------
+
+void ShowStandardPaths()
+{
+    uint32_t color = 0;
+    FFQConsole *cs = FFQConsole::Get();
+    wxStandardPaths &p = wxStandardPaths::Get();
+    cs->AppendLine("[STANDARD PATHS]", color);
+    cs->AppendLine("AppDocuments=" + p.GetAppDocumentsDir(), color);
+    cs->AppendLine("Config=" + p.GetConfigDir(), color);
+    cs->AppendLine("Data=" + p.GetDataDir(), color);
+    cs->AppendLine("Documents=" + p.GetDocumentsDir(), color);
+    cs->AppendLine("Executable=" + p.GetExecutablePath(), color);
+    cs->AppendLine("LocalData=" + p.GetLocalDataDir(), color);
+    cs->AppendLine("Plugins=" + p.GetPluginsDir(), color);
+    cs->AppendLine("Resources=" + p.GetResourcesDir(), color);
+    cs->AppendLine("Temp=" + p.GetTempDir(), color);
+    cs->AppendLine("UserConfig=" + p.GetUserConfigDir(), color);
+    cs->AppendLine("UserData=" + p.GetUserDataDir(), color);
+    cs->AppendLine("UserLocalData=" + p.GetUserLocalDataDir(), color);
 }
 
 //---------------------------------------------------------------------------------------
@@ -430,10 +453,12 @@ FFQMain::FFQMain(wxWindow* parent, wxWindowID id)
 	FFQCFG()->SetBrowseRootFor(OpenFilesDlg);
 
     m_JobsFileName = FFQCFG()->app_name.Lower() + ".job";
+
+    wxString title = wxString(FFQCFG()->use_libav ? "AV" : "FF") + "Queue";
     #ifdef DEBUG
-    SetTitle(FFQCFG()->app_name + " - DEBUG");
+    SetTitle(title + " - DEBUG");
     #else
-    SetTitle(FFQCFG()->app_name);
+    SetTitle(title);
     #endif // DEBUG
 
     FFQMain::m_Instance = this;
@@ -1986,6 +2011,7 @@ void FFQMain::ShowFFMpegVersion(bool langInfo)
     {
 
         Console->AppendLine(FFQSF(SID_LOG_FFMPEG_FOUND, FFQCFG()->GetFFMpegVersion(true)), COLOR_BLUE);//, true);
+        //Console->AppendLine(FFQSF(SID_LOG_FFMPEG_FOUND, FFQCFG()->GetFFMpegVersion(false)), COLOR_BLUE);//, true);
 
         //Enable supported tools
         ThumbsItem->Enable(FFQCFG()->AreFiltersAvailable("select,fps,scale,tile"));
@@ -2323,6 +2349,7 @@ void FFQMain::OnIdle(wxIdleEvent &event)
                 else fs_idx = FFQFullSpec::FindFullSpecID(arg);
                 if (fs_idx < 0) Console->AppendLine(FFQSF(SID_FULLSPEC_BAD_ID, arg), COLOR_RED);
             }
+            else if (arg == "--std-paths") ShowStandardPaths();
             else Console->AppendLine(FFQSF(SID_BAD_COMMAND_LINE_ARG, arg), COLOR_RED);
         }
 
@@ -2453,36 +2480,6 @@ void FFQMain::OnShow(wxShowEvent &event)
             //wxString path;
             //if (wxGetEnv("PATH", &path)) Console->AppendLine(path, 0);
 
-            /*Console->AppendLine("AppDocumentsDir    = " + wxStandardPaths::Get().GetAppDocumentsDir(), 0);
-            Console->AppendLine("ConfigDir          = " + wxStandardPaths::Get().GetConfigDir(), 0);
-            Console->AppendLine("DataDir            = " + wxStandardPaths::Get().GetDataDir(), 0);
-            Console->AppendLine("DocumentsDir       = " + wxStandardPaths::Get().GetDocumentsDir(), 0);
-            Console->AppendLine("ExecutablePath     = " + wxStandardPaths::Get().GetExecutablePath(), 0);
-            Console->AppendLine("LocalDataDir       = " + wxStandardPaths::Get().GetLocalDataDir(), 0);
-            Console->AppendLine("PluginsDir         = " + wxStandardPaths::Get().GetPluginsDir(), 0);
-            Console->AppendLine("ResourcesDir       = " + wxStandardPaths::Get().GetResourcesDir(), 0);
-            Console->AppendLine("TempDir            = " + wxStandardPaths::Get().GetTempDir(), 0);
-            Console->AppendLine("UserConfigDir      = " + wxStandardPaths::Get().GetUserConfigDir(), 0);
-            Console->AppendLine("UserDataDir        = " + wxStandardPaths::Get().GetUserDataDir(), 0);
-            Console->AppendLine("UserLocalDataDir   = " + wxStandardPaths::Get().GetUserLocalDataDir(), 0);
-            */
-
-            /* SNAP
-                AppDocumentsDir    = /home/tnb/
-                ConfigDir          = /etc
-                DataDir            = /snap/ffqueue/x2/usr/local/share/ffqueue
-                DocumentsDir       = /home/tnb/
-                ExecutablePath     = /snap/ffqueue/x2/usr/local/bin/ffqueue
-                LocalDataDir       = /etc/ffqueue
-                PluginsDir         = /snap/ffqueue/x2/usr/local/lib/ffqueue
-                ResourcesDir       = /snap/ffqueue/x2/usr/local/share/ffqueue
-                TempDir            = /tmp
-                UserConfigDir      = /home/tnb/snap/ffqueue/x2
-                UserDataDir        = /home/tnb/snap/ffqueue/x2/.ffqueue
-                UserLocalDataDir   = /home/tnb/snap/ffqueue/x2/.ffqueue
-            */
-
-
             //Console->AppendLine("MakeConfigFileName = " + wxStandardPaths::Get().MakeConfigFileName("cfg-file-name"), 0);
 
         #ifdef NO_GETTEXTEXTENT
@@ -2522,9 +2519,16 @@ void FFQMain::OnShow(wxShowEvent &event)
             if (FFQCFG()->save_window_pos) SetWindowPos(FFQCFG()->window_position);
             else ResizeColumns();
         }
+        #ifdef DEBUG
+        catch (std::exception &err)
+        {
+            fprintf(stderr, "OnShow error: %s\n", err.what());
+        }
+        #else
         catch (...)
         {
         }
+        #endif
 
         //Make sure this is only done once
         m_FirstShow = false;

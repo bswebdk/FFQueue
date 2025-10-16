@@ -87,6 +87,9 @@ extern const unsigned char FLAG_ANIM[];
 extern const uint32_t MAIN_LOGO_SIZE;
 extern const unsigned char MAIN_LOGO[];
 
+extern const uint32_t MAD_CLIPPY_SIZE;
+extern const unsigned char MAD_CLIPPY[];
+
 extern const uint32_t FONTS_CONF_SIZE;
 extern const unsigned char FONTS_CONF[];
 
@@ -98,5 +101,11 @@ extern const unsigned char STR_X264[];
 
 extern const uint32_t STR_X265_SIZE;
 extern const unsigned char STR_X265[];
+
+extern const uint32_t STR_AOMAV1_SIZE;
+extern const unsigned char STR_AOMAV1[];
+
+extern const uint32_t STR_RAV1E_SIZE;
+extern const unsigned char STR_RAV1E[];
 
 #endif //BIN_RES_H

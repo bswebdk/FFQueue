@@ -58,20 +58,20 @@ struct FULLSPEC_FIELD
     wxString name, text, value, range, def, require;
     int defidx;
     //uint8_t needed;
-    bool hide;
+    bool hide, checked;
     wxCheckBox *check;
     wxWindow *ctrl;
     wxStaticText *label;
     FULLSPEC_FIELD *req_field;
 
     FULLSPEC_FIELD():
-         type(ftHEADER), name(""), text(""), value(""), range(""), def(""), require(""), defidx(DEFIDX), /*needed(NEEDED),*/ hide(false), check(nullptr), ctrl(nullptr), label(nullptr), req_field(nullptr) {}
+         type(ftHEADER), name(""), text(""), value(""), range(""), def(""), require(""), defidx(DEFIDX), hide(false), checked(false), check(nullptr), ctrl(nullptr), label(nullptr), req_field(nullptr) {}
 
-    FULLSPEC_FIELD(FULLSPEC_FIELD_TYPE _type, wxString _name, wxString _text, wxString _value, wxString _range, wxString _def, wxString _require, /*uint8_t _needed,*/ bool _hide):
-         type(_type), name(_name), text(_text), value(_value), range(_range), def(_def), require(_require), defidx(DEFIDX), /*needed(_needed),*/ hide(_hide), check(nullptr), ctrl(nullptr), label(nullptr), req_field(nullptr) {}
+    FULLSPEC_FIELD(FULLSPEC_FIELD_TYPE _type, wxString _name, wxString _text, wxString _value, wxString _range, wxString _def, wxString _require, bool _hide, bool _checked):
+         type(_type), name(_name), text(_text), value(_value), range(_range), def(_def), require(_require), defidx(DEFIDX), hide(_hide), checked(_checked), check(nullptr), ctrl(nullptr), label(nullptr), req_field(nullptr) {}
 
     FULLSPEC_FIELD(wxString _text):
-         type(ftHEADER), name(""), text(_text), value(""), range(""), def(""), require(""), defidx(DEFIDX), /*needed(NEEDED),*/ hide(false), check(nullptr), ctrl(nullptr), label(nullptr), req_field(nullptr) {}
+         type(ftHEADER), name(""), text(_text), value(""), range(""), def(""), require(""), defidx(DEFIDX), hide(false), checked(false), check(nullptr), ctrl(nullptr), label(nullptr), req_field(nullptr) {}
 
     bool is_enabled() { return (check == nullptr) ? label->IsEnabled() : check->IsEnabled(); }
     bool is_checked() { return (check == nullptr) || check->IsChecked(); }
@@ -133,6 +133,7 @@ class FFQFullSpec: public wxDialog
 		static FULLSPEC_FILE* GetFullSpec(int index);
 		static void Initialize(wxWindow *wnd);
 		static bool MakeControlsFor(FULLSPEC_FILE &file, wxWindow *parent, wxSize *max_size = nullptr);
+		static void ResetControls(FULLSPEC_FILE &file);
 		static void SetCommandLine(FULLSPEC_FILE &file, wxString cmd);
 		static bool ValidateCtrls(FULLSPEC_FILE &file, bool show_message = true);
 
@@ -146,6 +147,7 @@ class FFQFullSpec: public wxDialog
 		wxBoxSizer* BtnSizer;
 		wxButton* CancelBtn;
 		wxButton* OkBtn;
+		wxButton* ResetBtn;
 		wxFlexGridSizer* MainSizer;
 		//  *)
 
@@ -154,6 +156,7 @@ class FFQFullSpec: public wxDialog
 		//  (*Identifiers(FFQFullSpec)
 		static const long ID_OKBTN;
 		static const long ID_CANCELBTN;
+		static const long ID_RESETBTN;
 		//  *)
 
 	private:
@@ -199,6 +202,6 @@ class FFQFullSpec: public wxDialog
 		//DECLARE_EVENT_TABLE()
 };
 
-wxString GetCmdToken(wxString &from);
+wxString GetCmdToken(wxString &from, bool is_name, bool is_composite, wxUniChar *sep = nullptr);
 
 #endif

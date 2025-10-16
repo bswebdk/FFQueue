@@ -233,10 +233,13 @@ bool MakeBinaryResources()
     s += MakeArrayName("ICON_TAB_OFF", 0, true) + CRLF;
     s += MakeArrayName("FLAG_ANIM", 0, true) + CRLF;
     s += MakeArrayName("MAIN_LOGO", 0, true) + CRLF;
+    s += MakeArrayName("MAD_CLIPPY", 0, true) + CRLF;
     s += MakeArrayName("FONTS_CONF", 0, true) + CRLF;
     s += MakeArrayName("STR_ABOUT", 0, true) + CRLF;
     s += MakeArrayName("STR_X264", 0, true) + CRLF;
     s += MakeArrayName("STR_X265", 0, true) + CRLF;
+    s += MakeArrayName("STR_AOMAV1", 0, true) + CRLF;
+    s += MakeArrayName("STR_RAV1E", 0, true) + CRLF;
     s += "#endif //BIN_RES_H";
 
     //Update the header as required
@@ -280,6 +283,7 @@ bool MakeBinaryResources()
     s += FileToArray("res/tab_off.png", "ICON_TAB_OFF") + CRLF + CRLF;
     s += FileToArray("res/DK_Flag_Anim_Hjerte.gif", "FLAG_ANIM") + CRLF + CRLF;
     s += FileToArray("res/MainLogo.png", "MAIN_LOGO") + CRLF + CRLF;
+    s += FileToArray("res/mad_clippy.png", "MAD_CLIPPY") + CRLF + CRLF;
     s += FileToArray("res/fonts.conf", "FONTS_CONF") + CRLF + CRLF;
     s += BufToArray((unsigned char*)about, about_len, "STR_ABOUT") + CRLF + CRLF;
 
@@ -295,6 +299,20 @@ bool MakeBinaryResources()
     fs_len = 0;
     fs_buf = CompressString(fs, &fs_len);
     s += BufToArray((unsigned char*)fs_buf, fs_len /*x264size + sizeof(x264len)*/, "STR_X265") + CRLF + CRLF;
+    delete[] fs_buf;
+
+    //Compress AOM AV1 full spec
+    fs = LoadString("res/aomav1" + FULLSPEC_FILE_EXTENSION);
+    fs_len = 0;
+    fs_buf = CompressString(fs, &fs_len);
+    s += BufToArray((unsigned char*)fs_buf, fs_len /*x264size + sizeof(x264len)*/, "STR_AOMAV1") + CRLF + CRLF;
+    delete[] fs_buf;
+
+    //Compress Rust AV1 Encoder full spec
+    fs = LoadString("res/rav1e" + FULLSPEC_FILE_EXTENSION);
+    fs_len = 0;
+    fs_buf = CompressString(fs, &fs_len);
+    s += BufToArray((unsigned char*)fs_buf, fs_len /*x264size + sizeof(x264len)*/, "STR_RAV1E") + CRLF + CRLF;
     delete[] fs_buf;
 
     //Update the implementation as required

@@ -28,8 +28,9 @@
 
 //---------------------------------------------------------------------------------------
 
-const int QUANTIZER_BEST_QUALITY = 1;
+const int QUANTIZER_BEST_QUALITY = 0;
 const int QUANTIZER_WORST_QUALITY = 63;
+
 const wxString DEFAULT_VIDEO_CODEC_INFO = "*v";
 const wxString DEFAULT_AUDIO_CODEC_INFO = "*a";
 
@@ -50,6 +51,7 @@ const wxString DEFAULT_AUDIO_CODEC_INFO = "*a";
 const wxString DEFAULT_CODEC_INFO = "*v=0,31,1,0,0\n" //Values used for any video codecs without info
                                     "*a=0,31,1,0,0\n" //Values used for any audio codecs without info
                                     "libx264=1,0,0,63,0\n"  //Might be 51..0 for 8bit
+                                    "libopenh264=1,0,0,63,0\n"
                                     "libx264rgb=1,0,0,63,0\n"  //Untested
                                     "mpeg4=1,31,1,0,0\n"
                                     "flv=1,31,1,0,0\n"
@@ -58,6 +60,9 @@ const wxString DEFAULT_CODEC_INFO = "*v=0,31,1,0,0\n" //Values used for any vide
                                     "mjpeg=1,31,1,0,0\n"
                                     "libvpx=1,0,0,63,0\n" //Was before V1.7.62: "libvpx=1,0,0,63,4\n"
                                     "libvpx-vp9=1,0,0,63,0\n" //As above "libvpx-vp9=1,0,0,63,4\n"
+                                    "libaom-av1=1,0,0,63,0\n"
+                                    //"librav1e=1,0,0,255,0\n"
+                                    "libsvtav1=1,0,0,63,0\n"
                                     "wmv1=1,31,1,0,0\n"
                                     "wmv2=1,31,1,0,0\n"
                                     "libmp3lame=1,9,0,0,0\n"
@@ -95,6 +100,30 @@ float GetNumericPart(wxString &from, bool &is_float, float def)
 }
 
 //---------------------------------------------------------------------------------------
+
+bool GetPctValue(int &pct, float &low, float &high, bool &as_float, float *result)
+{
+    //Return false if values are equal
+    if (CmpFloats(low, high)) return false;
+
+    //If a result is wanted, convert a percentage (0..100) to the range of low..high
+    if (result) *result = as_float ? ConvertPctToMinMaxFloat(pct, low, high) : ConvertPctToMinMaxInt(pct, low, high);
+
+    //Return values differ
+    return true;
+}
+
+//---------------------------------------------------------------------------------------
+
+wxString GetPctString(int &pct, float &low, float &high, bool &as_float)
+{
+    //Returns a string representation of GetPctValue
+    float f = 0;
+    if (!GetPctValue(pct, low, high, as_float, &f)) return wxEmptyString;
+    return as_float ? wxString::Format("%.2f", f) : wxString::Format("%i", (int)f);
+}
+
+//---------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------------
 
@@ -124,7 +153,7 @@ CODEC_INFO::~CODEC_INFO()
 
     //Destructor that releases memory used
     if (next) delete next;
-    next = NULL;
+    next = nullptr;
 
 }
 
@@ -170,54 +199,36 @@ CODEC_INFO* CODEC_INFO::Find(const wxString find_codec)
     if (next) return next->Find(find_codec);
 
     //Not found - return NULL
-    return NULL;
+    return nullptr;
 
 }
 
 //---------------------------------------------------------------------------------------
 
-float CODEC_INFO::GetConstRate(int pct)
+bool CODEC_INFO::GetConstRate(int pct, float *result)
 {
-
-    //Convert a percent (0..100) to the range of min_crf..max_crf
-    if (min_crf == max_crf) return -1;
-
-    //Return the value
-    return crf_float ? ConvertPctToMinMaxFloat(pct, min_crf, max_crf) : ConvertPctToMinMaxInt(pct, min_crf, max_crf);
-
+    return GetPctValue(pct, min_crf, max_crf, crf_float, result);
 }
 
 //---------------------------------------------------------------------------------------
 
 wxString CODEC_INFO::GetConstRateStr(int pct)
 {
-
-    //Return string representation of QScale
-    return crf_float ? wxString::Format("%.2f", GetConstRate(pct)) : wxString::Format("%i", (int)GetConstRate(pct));
-
+    return GetPctString(pct, min_crf, max_crf, crf_float);
 }
 
 //---------------------------------------------------------------------------------------
 
-float CODEC_INFO::GetQScale(int pct)
+bool CODEC_INFO::GetQScale(int pct, float *result)
 {
-
-    //Convert a percent (0..100) to the range of min_qscale..max_qscale
-    if (min_qscale == max_qscale) return -1;
-
-    //Return the value
-    return qscale_float ? ConvertPctToMinMaxFloat(pct, min_qscale, max_qscale) : ConvertPctToMinMaxInt(pct, min_qscale, max_qscale);
-
+    return GetPctValue(pct, min_qscale, max_qscale, qscale_float, result);
 }
 
 //---------------------------------------------------------------------------------------
 
 wxString CODEC_INFO::GetQScaleStr(int pct)
 {
-
-    //Return string representation of QScale
-    return qscale_float ? wxString::Format("%.2f", GetQScale(pct)) : wxString::Format("%i", (int)GetQScale(pct));
-
+    return GetPctString(pct, min_qscale, max_qscale, qscale_float);
 }
 
 //---------------------------------------------------------------------------------------
@@ -258,13 +269,13 @@ void CODEC_INFO::Reset()
 {
 
     //Reset values to default values
-    friendly=true;
-    codec="";
-    min_qscale=0;
-    max_qscale=0;
-    min_crf=0;
-    max_crf=0;
-    next=NULL;
+    friendly = true;
+    codec = "";
+    min_qscale = 0;
+    max_qscale = 0;
+    min_crf = 0;
+    max_crf = 0;
+    next = nullptr;
     crf_float = false;
     qscale_float = false;
 
@@ -293,7 +304,33 @@ wxString CODEC_INFO::ToString()
 
 //---------------------------------------------------------------------------------------
 
-CODEC_INFO* MakeDefaultCodecInfo(CODEC_INFO *root)
+LPCODEC_INFO DeleteCodecInfo(LPCODEC_INFO root, LPCODEC_INFO del)
+{
+    LPCODEC_INFO ci;
+    if (del && (root == del))
+    {
+       ci = root->next;
+       root->next = nullptr;
+       delete root;
+       root = ci;
+    }
+    else
+    {
+        ci = root;
+        while (ci && (ci->next != del)) ci = ci->next;
+        if (ci)
+        {
+            ci->next = del->next;
+            del->next = nullptr;
+            delete del;
+        }
+    }
+    return root;
+}
+
+//---------------------------------------------------------------------------------------
+
+LPCODEC_INFO MakeDefaultCodecInfo(LPCODEC_INFO root)
 {
 
     //Create a list of CODEC_INFO's based on DEFAULT_CODEC_INFO above.

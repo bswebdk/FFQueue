@@ -100,6 +100,9 @@ int ConvertPctToMinMaxInt(float pct, float min, float max, float pct_base = 100)
 int froundi(float n);
 int64_t droundi(double n);
 
+//Comparing
+bool CmpFloats(float f1, float f2, float epsilon = std::numeric_limits<float>::epsilon());
+
 //Validation of frame rate (might not belong here)
 bool IsValidFrameRate(wxString frame_rate);
 

@@ -370,7 +370,8 @@ FFQLang::FFQLang(bool loadFile)
     SetString(SID_INLINE_SHELL_CODE_WARNING,    "The command you are about to execute seems to contain inline shell code which may be harmful for your system. Are you sure that you want to take the risk?");
     SetString(SID_ADVANCED_CUTS_WARNING,        "You have combined advanced cuts with remapping (copy codec) and this will cause the job to fail. Continue anyway?");
     SetString(SID_CONFIRM_SORT_PRESETS,         "This will re-arrange all presets alphabetically, do you want to continue?");
-    SetString(SID_BAD_COMMAND_LINE_ARG,         "The following command line argument argument is invalid: %s");
+    SetString(SID_BAD_COMMAND_LINE_ARG,         "The following command line argument is invalid: %s");
+    SetString(SID_RESET_TO_DEFAULT,             "This will reset all specified values to default, do you want to continue?");
 
 
     //Log related messages
@@ -445,6 +446,7 @@ FFQLang::FFQLang(bool loadFile)
     SetString(SID_COMMON_ATTACHMENT,            "Attachment");
     SetString(SID_COMMON_DATA,                  "Data");
     SetString(SID_COMMON_HELP,                  "Help");
+    SetString(SID_COMMON_RESET,                 "Reset");
 
 
     //Main frame UI strings
@@ -711,6 +713,10 @@ FFQLang::FFQLang(bool loadFile)
     SetString(SID_PRESET_SKIP_ENCODE_SAME,              "If possible, do not re-encode to same codec");
     SetString(SID_PRESET_STOP_ENCODE_SHORTEST,          "Stop encoding when shortest stream ends");
     SetString(SID_PRESET_NO_QUALITY_DEFINED,            "You have not defined bit rate or quality for audio and/or video which will cause FFmpeg to either fail or use a default value. Do you want this?");
+    SetString(SID_PRESET_CHANGE_QUALITY_LIMITS,         "Change limits..");
+    SetString(SID_PRESET_FLOATING_POINT,                "Floating point");
+    SetString(SID_PRESET_CONSTANT_QUALITY,              "Constant quality:");
+    SetString(SID_PRESET_ERROR_DETECT,                  "Error detection:");
 
 
     //Video sync mode strings

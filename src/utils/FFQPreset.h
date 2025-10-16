@@ -70,6 +70,7 @@ typedef struct FFQ_PRESET
              speed_preset, //The video speed preset (x264)
              video_tuning, //The tuning to be used (x264)
              aspect_ratio, //Video aspect ratio
+             error_detect, //Error detect video + audio
              output_format, //Output format
              custom_args_1, //Custom command line arguments for 1st pass
              custom_args_2, //As "custom_args_1" but for second pass

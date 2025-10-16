@@ -50,9 +50,9 @@ typedef struct CODEC_INFO
     void Append(wxString &from);
     void CopyTo(CODEC_INFO &dst);
     CODEC_INFO* Find(const wxString find_codec);
-    float GetConstRate(int pct);
+    bool GetConstRate(int pct, float *result);
     wxString GetConstRateStr(int pct);
-    float GetQScale(int pct);
+    bool GetQScale(int pct, float *result);
     wxString GetQScaleStr(int pct);
     bool IsDefault(wxString *packed = NULL);
     void Parse(wxString &from);
@@ -64,7 +64,8 @@ typedef struct CODEC_INFO
 //---------------------------------------------------------------------------------------
 
 //Helper functions
-CODEC_INFO* MakeDefaultCodecInfo(CODEC_INFO *root = NULL);
+LPCODEC_INFO DeleteCodecInfo(LPCODEC_INFO root, LPCODEC_INFO del);
+LPCODEC_INFO MakeDefaultCodecInfo(LPCODEC_INFO root = nullptr);
 
 //---------------------------------------------------------------------------------------
 

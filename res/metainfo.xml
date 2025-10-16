@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>dk.bruchhaus.FFQueue</id>
+  <name>FFQueue</name>
+  <summary>Graphical user interface for FFmpeg</summary>
+  <metadata_license>FSFAP</metadata_license>
+  <project_license>GPL-3.0</project_license>
+  <developer id="dk.bruchhaus"><name>Torben Bruchhaus</name></developer>
+  <url type="homepage">https://ffqueue.bruchhaus.dk/</url>
+  <url type="contact">https://ffqueue.bruchhaus.dk/Contact.aspx</url>
+  <url type="faq">https://ffqueue.bruchhaus.dk/Documentation.aspx</url>
+  <content_rating type="oars-1.1" />
+  <description>
+    <p>
+      FFQueue is (yet another) graphical user interface for FFmpeg with comprehensive
+      support for both the basic features but also the more advanced features like filtergraphs.
+      FFQueue makes it easy to create multiple jobs and process them as a single queue.
+    </p>
+    <ul>
+      <li>Run multiple jobs in parallel</li>
+      <li>User extensible "Full Specification" support for codecs</li>
+      <li>Baked in "Full Specification" support for H.264 + H.265 (HEVC)</li>
+    </ul>
+  </description>
+  <launchable type="desktop-id">ffqueue.desktop</launchable>
+  <screenshots>
+    <screenshot type="default">
+      <image>https://ffqueue.bruchhaus.dk/gfx/Screen1.png</image>
+      <caption>Screenshot 1</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://ffqueue.bruchhaus.dk/gfx/Screen2.png</image>
+      <caption>Screenshot 2</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://ffqueue.bruchhaus.dk/gfx/Screen4_1_1.png</image>
+      <caption>Screenshot 3</caption>
+    </screenshot>
+  </screenshots>
+  <releases>
+    <release version="1.7.67" date="2024-02-27">
+      <description>
+        <p>V1.7.67 of February 27th 2024</p>
+        <ul>
+          <li>BUG FIX: Burn-in of embedded subtitles fails due to wrong stream index used (thanks to yehaku + ken8).</li>
+        </ul>
+      </description>
+    </release>
+  </releases>
+</component>

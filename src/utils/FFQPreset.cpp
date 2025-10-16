@@ -61,6 +61,7 @@ const wxString PRESET_METADATA_A = "metadata_a";
 const wxString PRESET_METADATA_S = "metadata_s";
 const wxString PRESET_PIXEL_FMT = "pixel_fmt";
 const wxString PRESET_ASPECT = "aspect_ratio";
+const wxString PRESET_ERROR_DETECT = "error_detect";
 const wxString PRESET_OUTPUT_FORMAT = "output_format";
 const wxString PRESET_CUSTOM_ARGS = "custom_args";
 const wxString PRESET_CUSTOM_ARGS_2 = "custom_args_2";
@@ -153,6 +154,7 @@ FFQ_PRESET::FFQ_PRESET(wxString &preset)
         else if (n == PRESET_SPEED_PRESET) speed_preset = v;
         else if (n == PRESET_VIDEO_TUNING) video_tuning = v;
         else if (n == PRESET_ASPECT) aspect_ratio = v;
+        else if (n == PRESET_ERROR_DETECT) error_detect = v;
         else if (n == PRESET_OUTPUT_FORMAT) output_format = v;
         else if (n == PRESET_CUSTOM_ARGS) custom_args_1 = v;
         else if (n == PRESET_CUSTOM_ARGS_2) custom_args_2 = v;
@@ -294,6 +296,7 @@ void FFQ_PRESET::Reset(bool new_preset)
     speed_preset = "";
     video_tuning = "";
     aspect_ratio = "";
+    error_detect = "";
     output_format = "";
     custom_args_1 = "";
     custom_args_2 = "";
@@ -407,6 +410,7 @@ wxString FFQ_PRESET::ToString()
     if (speed_preset.Len() > 0) res += PRESET_SPEED_PRESET + EQUAL + speed_preset + CRLF;
     if (video_tuning.Len() > 0) res += PRESET_VIDEO_TUNING + EQUAL + video_tuning + CRLF;
     if (aspect_ratio.Len() > 0) res += PRESET_ASPECT + EQUAL + aspect_ratio + CRLF;
+    if (error_detect.Len() > 0) res += PRESET_ERROR_DETECT + EQUAL + error_detect + CRLF;
     if (output_format.Len() > 0) res += PRESET_OUTPUT_FORMAT + EQUAL + output_format + CRLF;
     if (custom_args_1.Len() > 0) res += PRESET_CUSTOM_ARGS + EQUAL + custom_args_1 + CRLF;
     if (custom_args_2.Len() > 0) res += PRESET_CUSTOM_ARGS_2 + EQUAL + custom_args_2 + CRLF;

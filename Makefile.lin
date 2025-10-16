@@ -37,6 +37,7 @@ OBJECTS:=\
 	$(MAKEROOT)/obj/FFQApp.o\
 	$(MAKEROOT)/obj/FFQBatchMake.o\
 	$(MAKEROOT)/obj/FFQBitRatePanel.o\
+	$(MAKEROOT)/obj/FFQCodecInfoEdit.o\
 	$(MAKEROOT)/obj/FFQConfigEdit.o\
 	$(MAKEROOT)/obj/FFQFilterEdit.o\
 	$(MAKEROOT)/obj/FFQFullSpec.o\
@@ -161,6 +162,9 @@ $(MAKEROOT)/obj/FFQBatchMake.o:
 
 $(MAKEROOT)/obj/FFQBitRatePanel.o:
 	$(CXX) $(COMPVARS) $(COMPDIRS) -c "src/FFQBitRatePanel.cpp" -o $@
+
+$(MAKEROOT)/obj/FFQCodecInfoEdit.o:
+	$(CXX) $(COMPVARS) $(COMPDIRS) -c "src/FFQCodecInfoEdit.cpp" -o $@
 
 $(MAKEROOT)/obj/FFQConfigEdit.o:
 	$(CXX) $(COMPVARS) $(COMPDIRS) -c "src/FFQConfigEdit.cpp" -o $@

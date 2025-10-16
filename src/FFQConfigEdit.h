@@ -105,9 +105,13 @@ class FFQConfigEdit: public wxDialog
 		//(*Handlers(FFQConfigEdit)
 		void OnButtonClick(wxCommandEvent& event);
 		void OnCheckListToggled(wxCommandEvent& event);
+		void OnCustomTempText(wxCommandEvent& event);
 		//*)
 
+		wxString m_CustTemp;
+
 		void UpdateControls();
+		void UpdateTempPath();
 
 		DECLARE_EVENT_TABLE()
 };

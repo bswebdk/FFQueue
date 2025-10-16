@@ -1625,6 +1625,9 @@ wxString BuildCommandLine(LPFFQ_JOB job, long &encoding_pass, bool for_preview, 
         //Aspect ratio - does not need encoding - just video
         if (has_video && (pst->aspect_ratio.Len() > 0)) preset += "-aspect " + pst->aspect_ratio + SPACE;
 
+        //Error detection
+        if (pst->error_detect.Len() > 0) preset += "-err_detect " + pst->error_detect + SPACE;
+
         //End after shortest stream ends?
         if (pst->shortest) preset += "-shortest ";
 

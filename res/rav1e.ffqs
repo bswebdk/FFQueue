@@ -1,0 +1,108 @@
+FFQ_FULLSPEC_HEADER_1
+#source=https://docs.rs/rav1e/latest/rav1e/all.html
+#source=https://docs.rs/rav1e/latest/rav1e/struct.EncoderConfig.html
+checkval=true
+composite=-rav1e-params
+display=Rust AV1 Encoder
+id=rav1e
+matches=^librav1e[[:blank:]]-[[:blank:]]
+notebook=0
+prefix=
+separator=:
+
+:Threading
+
+threads
+text=Number of CPU to use
+type=integer
+range=0 1024
+default=0
+
+tile_rows
+text=Number of tile rows, must be a power of 2
+type=integer
+range=0 max
+default=0
+
+tile_cols
+text=Number of tile columns, must be a power of 2
+type=integer
+range=0 max
+default=0
+
+tiles
+text=Number of tiles
+type=integer
+range=0 max
+default=0
+
+:Encode settings
+
+bitrate
+text=Bitrate in kbps
+type=integer
+range=1 max
+default=0
+
+quantizer
+text=Quantizer, smaller values are higher quality
+type=integer
+range=0 255
+default=100
+
+min_quantizer
+text=Minimum quantizer to use in bitrate mode
+type=integer
+range=0 255
+default=0
+
+low_latency
+text=Low latency mode; disables frame reordering.
+type=check
+default=0
+
+min_key_frame_interval
+text=Minimum interval between keyframes
+type=integer
+range=0 max
+default=12
+
+switch_frame_interval
+text=Maximum interval between switch frames (0=disable switch frames)
+type=integer
+range=0 max
+default=0
+
+reservoir_frame_delay
+text=Frames used for rate control reservoir
+type=integer
+range=12 max
+default=240
+
+#still_picture
+#text=Still picture mode
+#type=check
+
+tune
+text=Quality tuning
+type=choice
+value=psnr:psychovisual
+default=psychovisual
+
+speed
+text=Speed level (0=best quality, 10=fastest)
+type=integer
+range=0 10
+default=6
+
+rdo_lookahead_frames
+text=Number of frames encoder should lookahead for RDO purposes
+type=integer
+range=0 100
+default=40
+
+:Level
+
+level
+text=AV1 level to target in the form <major>.<minor>
+type=string

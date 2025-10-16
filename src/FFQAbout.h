@@ -57,7 +57,8 @@ class FFQAbout: public wxDialog
 		wxButton* CloseButton;
 		wxButton* HelpButton;
 		wxPanel* AnimPanel;
-		wxStaticBitmap* StaticBitmap;
+		wxStaticBitmap* MadClippy;
+		wxStaticBitmap* MainLogo;
 		wxStaticText* Bacon;
 		wxStaticText* Hdr;
 		wxStaticText* Info;
@@ -67,8 +68,9 @@ class FFQAbout: public wxDialog
 	protected:
 
 		//(*Identifiers(FFQAbout)
-		static const long ID_STATICBITMAP;
+		static const long ID_MAINLOGO;
 		static const long ID_ANIMPANEL;
+		static const long ID_MADCLIPPY;
 		static const long ID_TEXTCTRL;
 		static const long ID_HELPBUTTON;
 		static const long ID_CLOSEBUTTON;

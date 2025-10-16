@@ -65,6 +65,17 @@ END_EVENT_TABLE()
 
 //---------------------------------------------------------------------------------------
 
+wxString GetSysTemp()
+{
+    wxString save = FFQCFG()->temp_path;
+    FFQCFG()->temp_path = TEMP_PATH_SYST;
+    wxString res = FFQCFG()->GetTmpPath("");
+    FFQCFG()->temp_path = save;
+    return res;
+}
+
+//---------------------------------------------------------------------------------------
+
 FFQConfigEdit::FFQConfigEdit(wxWindow* parent,wxWindowID id)
 {
 	//(*Initialize(FFQConfigEdit)
@@ -136,8 +147,6 @@ FFQConfigEdit::FFQConfigEdit(wxWindow* parent,wxWindowID id)
 	TP_Custom->SetLabel(FFQS(SID_OPTIONS_TEMP_CUSTOM));
 	BoxSizer1->Add(TP_Custom, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	TempPathRadioPanel->SetSizer(BoxSizer1);
-	BoxSizer1->Fit(TempPathRadioPanel);
-	BoxSizer1->SetSizeHints(TempPathRadioPanel);
 	FlexGridSizer4->Add(TempPathRadioPanel, 1, wxALL|wxEXPAND, 3);
 	FlexGridSizer6 = new wxFlexGridSizer(1, 3, 0, 0);
 	FlexGridSizer6->AddGrowableCol(0);
@@ -199,7 +208,6 @@ FFQConfigEdit::FFQConfigEdit(wxWindow* parent,wxWindowID id)
 	SetSizer(FlexGridSizer1);
 	OpenDialog = new wxFileDialog(this, wxEmptyString, wxEmptyString, wxEmptyString, wxFileSelectorDefaultWildcardStr, wxFD_DEFAULT_STYLE|wxFD_OPEN|wxFD_FILE_MUST_EXIST, wxDefaultPosition, wxDefaultSize, _T("wxFileDialog"));
 	DirDlg = new wxDirDialog(this, _("Select path"), wxEmptyString, wxDD_DEFAULT_STYLE|wxDD_DIR_MUST_EXIST, wxDefaultPosition, wxDefaultSize, _T("wxDirDialog"));
-	FlexGridSizer1->Fit(this);
 	FlexGridSizer1->SetSizeHints(this);
 	Center();
 
@@ -208,6 +216,7 @@ FFQConfigEdit::FFQConfigEdit(wxWindow* parent,wxWindowID id)
 	Connect(ID_TP_SYSTEM,wxEVT_COMMAND_RADIOBUTTON_SELECTED,(wxObjectEventFunction)&FFQConfigEdit::OnButtonClick);
 	Connect(ID_TP_DEST,wxEVT_COMMAND_RADIOBUTTON_SELECTED,(wxObjectEventFunction)&FFQConfigEdit::OnButtonClick);
 	Connect(ID_TP_CUSTOM,wxEVT_COMMAND_RADIOBUTTON_SELECTED,(wxObjectEventFunction)&FFQConfigEdit::OnButtonClick);
+	Connect(ID_CUSTOMTEMP,wxEVT_COMMAND_TEXT_UPDATED,(wxObjectEventFunction)&FFQConfigEdit::OnCustomTempText);
 	Connect(ID_BROWSETEMP,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&FFQConfigEdit::OnButtonClick);
 	Connect(ID_LANGBUTTON,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&FFQConfigEdit::OnButtonClick);
 	Connect(ID_OKBUTTON,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&FFQConfigEdit::OnButtonClick);
@@ -231,6 +240,8 @@ FFQConfigEdit::FFQConfigEdit(wxWindow* parent,wxWindowID id)
 FFQConfigEdit::~FFQConfigEdit()
 {
 	//(*Destroy(FFQConfigEdit)
+	OpenDialog->Destroy();
+	DirDlg->Destroy();
 	//*)
 }
 
@@ -247,8 +258,11 @@ bool FFQConfigEdit::Execute()
     wxString s = FFQCFG()->temp_path;
     TP_System->SetValue(s == TEMP_PATH_SYST);
     TP_Dest->SetValue(s == TEMP_PATH_DEST);
-    TP_Custom->SetValue( (!TP_System->GetValue()) && (!TP_Dest->GetValue()) );
-    CustomTemp->SetValue( TP_Custom->GetValue() ? s : "");
+    TP_Custom->SetValue( !(TP_System->GetValue() || TP_Dest->GetValue()) );
+    //TP_Custom->SetValue( (!TP_System->GetValue()) && (!TP_Dest->GetValue()) );
+    m_CustTemp = TP_Custom->GetValue() ? s : "";
+    UpdateTempPath();
+    //CustomTemp->SetValue( TP_Custom->GetValue() ? s : "");
 
     SecondFileExts->SetValue(FFQCFG()->second_file_extensions);
     OutputNamePattern->SetValue(FFQCFG()->output_name_pattern);
@@ -350,6 +364,8 @@ void FFQConfigEdit::OnButtonClick(wxCommandEvent& event)
 
     }
 
+    else if ((evtId == ID_TP_SYSTEM) || (evtId == ID_TP_DEST) || (evtId == ID_TP_CUSTOM)) UpdateTempPath();
+
     else if (evtId == ID_BROWSETEMP)
     {
 
@@ -443,4 +459,20 @@ void FFQConfigEdit::UpdateControls()
     //Update controls
     CustomTemp->Enable(TP_Custom->GetValue());
     BrowseTemp->Enable(TP_Custom->GetValue());
+}
+
+//---------------------------------------------------------------------------------------
+
+void FFQConfigEdit::UpdateTempPath()
+{
+    if (TP_System->GetValue()) CustomTemp->ChangeValue(GetSysTemp());
+    else if (TP_Custom->GetValue()) CustomTemp->ChangeValue(m_CustTemp);
+    else CustomTemp->ChangeValue("");
+}
+
+//---------------------------------------------------------------------------------------
+
+void FFQConfigEdit::OnCustomTempText(wxCommandEvent& event)
+{
+    if (TP_Custom->GetValue()) m_CustTemp = CustomTemp->GetValue();
 }

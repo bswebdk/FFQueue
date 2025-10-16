@@ -6,6 +6,7 @@ ffqueue_SOURCES=FFQAbout.cpp\
 	FFQApp.cpp\
 	FFQBatchMake.cpp\
 	FFQBitRatePanel.cpp\
+	FFQCodecInfoEdit.cpp\
 	FFQConfigEdit.cpp\
 	FFQFilterEdit.cpp\
 	FFQFullSpec.cpp\
