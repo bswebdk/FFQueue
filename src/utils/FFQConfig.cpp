@@ -121,8 +121,8 @@ wxString find_file_using_PATH(wxString file_name)
 const wxString FilterDescriptionChars = ".TSC";
 bool IsFilterDescription(wxString &s)
 {
-    if (s.Len() != 3) return false;
-    for (int i = 0; i < 3; i++) if (FilterDescriptionChars.Find(s.at(i)) < 0) return false;
+    if ((s.Len() < 2) || (s.Len() > 4)) return false;
+    for (int i = 0; i < (int)s.Len(); i++) if (FilterDescriptionChars.Find(s.at(i)) < 0) return false;
     return true;
 }
 

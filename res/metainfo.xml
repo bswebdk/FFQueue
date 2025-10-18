@@ -38,6 +38,14 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release version="1.7.69" date="2025-10-18">
+      <description>
+        <p>V1.7.69 of October 18th 2025</p>
+        <ul>
+          <li>With recent versions of FFmpeg, all filters where grayed out / inacessible (thanks to Mano).</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.7.68" date="2025-10-16">
       <description>
         <p>V1.7.68 of October 16th 2025</p>
