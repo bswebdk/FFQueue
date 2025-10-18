@@ -17,9 +17,9 @@
       FFQueue makes it easy to create multiple jobs and process them as a single queue.
     </p>
     <ul>
-      <li>Run multiple jobs in parallel</li>
-      <li>User extensible "Full Specification" support for codecs</li>
-      <li>Baked in "Full Specification" support for H.264 + H.265 (HEVC)</li>
+      <li>Run multiple jobs in parallel.</li>
+      <li>User extensible "Full Specification" support for codecs and presets.</li>
+      <li>Baked in "Full Specification" support for H.264, H.265 (HEVC) and more.</li>
     </ul>
   </description>
   <launchable type="desktop-id">ffqueue.desktop</launchable>
@@ -38,11 +38,24 @@
     </screenshot>
   </screenshots>
   <releases>
-    <release version="1.7.67" date="2024-02-27">
+    <release version="1.7.68" date="2025-10-16">
       <description>
-        <p>V1.7.67 of February 27th 2024</p>
+        <p>V1.7.68 of October 16th 2025</p>
         <ul>
-          <li>BUG FIX: Burn-in of embedded subtitles fails due to wrong stream index used (thanks to yehaku + ken8).</li>
+          <li>Various, but minor, cosmetic fixes and modifications.</li>
+          <li>Added choice for "-err_detect" to preset (thanks to Jerome).</li>
+          <li>FullSpec strings with spaces not handled properly.</li>
+          <li>FullSpec checkboxes not always checked as expected.</li>
+          <li>Changed range of quantization (qmin, qmax) from 1..63 to 0..63.</li>
+          <li>Full Specification support for AV1 (libaom-av1, rav1e) added.</li>
+          <li>Quality settings for AV1 (libaom-av1, librav1e, libsvtav1) added.</li>
+          <li>Added "libopenh264" to CodecInfo.</li>
+          <li>Added button to edit CodecInfo from the Preset Editor.</li>
+          <li>Full Specification: Fields of type "check" may now be checked as default.</li>
+          <li>Full Specification: Added reset button to dialog.</li>
+          <li>wxWidgets updated to 3.2.8.</li>
+          <li>BUG FIX: File extension for stored FFmpeg capabilities was empty/borked for builds downloaded from ffmpeg.org.</li>
+          <li>BUG FIX: Full Specification: Having the "type" field before the "text" field, or augmenting a field without specifying "type", would reset type to "check".</li>
         </ul>
       </description>
     </release>
