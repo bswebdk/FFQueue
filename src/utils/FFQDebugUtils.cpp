@@ -25,6 +25,7 @@
 #include "../FFQAbout.h"
 #include "../utils/FFQLang.h"
 #include "FFQConst.h"
+#include "FFQMisc.h"
 #include "FFQConsole.h"
 #include "FFQCompress.h"
 #include "../FFQFullSpec.h"
@@ -540,11 +541,14 @@ void AddSubDir(wxString path, wxArrayString &dirs, wxUniChar PSEP)
 
 const wxString MKDIR_WIN = "if not exist \"$(MAKEROOT)%s\" mkdir \"$(MAKEROOT)%s\"";
 const wxString MKDIR_LIN = "mkdir -p \"$(MAKEROOT)%s\"";
-const wxString RCP_ALL = "all: paths $(MAKEBINARY)";
+const wxString PHONY = ".PHONY: ";
+const wxString RCP_ALL = PHONY + "all%sall: paths $(MAKEBINARY)";
+
 
 //---------------------------------------------------------------------------------------
 
 #define CHEXT(fn, ext) ( fn.BeforeLast('.') + "." + ext )
+#define ADD_ICONS(tostr) for(uint8_t i = 0; i < ICON_COUNT; i++) tostr += StrReplace(tmp, "#", ICON_SIZES[i])
 
 //---------------------------------------------------------------------------------------
 
@@ -552,6 +556,9 @@ wxString CreateMakefiles(wxString cbp_path)
 {
 
     //This method converts the FFQueue.cbp to makefiles for Windows and Linux
+
+    const uint8_t ICON_COUNT = 6;
+    const wxString ICON_SIZES[ICON_COUNT] = {"16","32","64","128","256","512"};
 
     wxString wxver = wxString::Format("%d%d", wxMAJOR_VERSION,  wxMINOR_VERSION);
     wxUniChar WSEP = '\\', LSEP = '/', CSEP = wxFileName::GetPathSeparator();
@@ -641,20 +648,15 @@ wxString CreateMakefiles(wxString cbp_path)
 
     makefile_am += "SUBDIRS=src" + LBR;
     makefile_am += "FFQ_BINARY=ffqueue" + LBR;
-    //TEST SNAP
-    makefile_am += "FFQ_XDGVER=`xdg-icon-resource --version`" + LBR;
-    //END TEST SNAP
+    makefile_am += "FFQ_XDGVER=`xdg-icon-resource --version 2> /dev/null`" + LBR;
     makefile_am += "if FFQ_BASE_DIR" + LBR;
     makefile_am += "FFQ_RES=res" + LBR;
     makefile_am += "else" + LBR;
     makefile_am += "FFQ_RES=../res" + LBR;
     makefile_am += "endif" + LBR;
-    makefile_am += "FFQ_DEST=$(DESTDIR)/usr/share" + LBR;
-    //makefile_am += "if FFQ_AS_ROOT #eq ($(shell whoami),root)" + LBR;
-    //makefile_am += "FFQ_DEST=$(DESTDIR)/usr/share" + LBR;
-    //makefile_am += "else" + LBR;
-    //makefile_am += "FFQ_DEST=$(DESTDIR)`realpath ~`/.local/share" + LBR;
-    //makefile_am += "endif" + LBR;
+
+    makefile_am += "ifeq $($(DESTDIR),)" + LBR + "FFQ_DEST=$(prefix)/share" + LBR + "else" + LBR + "FFQ_DEST=$(DESTDIR)/share" + LBR + "endif" + LBR;
+    //makefile_am += "FFQ_DEST=$(DESTDIR)$(prefix)/share" + LBR;
     makefile_am += "FFQ_ICONDEST=$(FFQ_DEST)/icons/hicolor" + LBR;
     //makefile_am += "FFQ_LOCALE=../locale" + LBR;
 
@@ -663,61 +665,28 @@ wxString CreateMakefiles(wxString cbp_path)
     //makefile_am += "\t @if [ \"$$(whoami)\" != \"root\" ]; then FFQ_DEST=`realpath ~/`/.local/share; fi" + LBR;
     //makefile_am += "\t @if [ ! -d \"$(FFQ_RES)\" ]; then FFQ_RES=res; fi" + LBR;
     makefile_am += "\t @if [ -z \"$(FFQ_XDGVER)\" ]; then" + LBR;
-    makefile_am += "\t   @FFQ_ID=$(FFQ_ICONDEST)/16x16/apps" + LBR;
-    makefile_am += "\t   @mkdir -p $$FFQ_ID" + LBR;
-    makefile_am += "\t   @cp $(FFQ_RES)/MainLogo16.png $$FFQ_ID/$(FFQ_BINARY).png" + LBR;
-    makefile_am += "\t   @FFQ_ID=$(FFQ_ICONDEST)/32x32/apps" + LBR;
-    makefile_am += "\t   @mkdir -p $$FFQ_ID" + LBR;
-    makefile_am += "\t   @cp $(FFQ_RES)/MainLogo32.png $$FFQ_ID/$(FFQ_BINARY).png" + LBR;
-    makefile_am += "\t   @FFQ_ID=$(FFQ_ICONDEST)/64x64/apps" + LBR;
-    makefile_am += "\t   @mkdir -p $$FFQ_ID" + LBR;
-    makefile_am += "\t   @cp $(FFQ_RES)/MainLogo64.png $$FFQ_ID/$(FFQ_BINARY).png" + LBR;
-    makefile_am += "\t   @mkdir -p $(FFQ_DEST)/applications" + LBR;
-    makefile_am += "\t   @cp $(FFQ_RES)/$(FFQ_BINARY).desktop $(FFQ_DEST)/applications/" + LBR;
+    tmp = "\t   @install -Dm644 $(FFQ_RES)/MainLogo#.png $(FFQ_ICONDEST)/#x#/apps/$(FFQ_BINARY).png" + LBR;
+    ADD_ICONS(makefile_am);
+    makefile_am += "\t   @install -Dm755 $(FFQ_RES)/$(FFQ_BINARY).desktop $(FFQ_DEST)/applications/$(FFQ_BINARY).desktop" + LBR;
     makefile_am += "\t @else" + LBR;
-    makefile_am += "\t   @xdg-icon-resource install --novendor --size 16 $(FFQ_RES)/MainLogo16.png $(FFQ_BINARY)" + LBR;
-    makefile_am += "\t   @xdg-icon-resource install --novendor --size 32 $(FFQ_RES)/MainLogo32.png $(FFQ_BINARY)" + LBR;
-    makefile_am += "\t   @xdg-icon-resource install --novendor --size 64 $(FFQ_RES)/MainLogo64.png $(FFQ_BINARY)" + LBR;
-    //makefile_am += "\t   xdg-desktop-icon install --novendor $(FFQ_RES)/$(FFQ_EXENAME).desktop" + LBR;
+    tmp = "\t   @xdg-icon-resource install --novendor --size # $(FFQ_RES)/MainLogo#.png $(FFQ_BINARY)" + LBR;
+    ADD_ICONS(makefile_am);
     makefile_am += "\t   @xdg-desktop-menu install --novendor $(FFQ_RES)/$(FFQ_BINARY).desktop" + LBR;
+    makefile_am += "\t   @FFQ_DF=$(FFQ_DEST)/applications/$(FFQ_BINARY).desktop" + LBR;
+    makefile_am += "\t   @if [ -f \"$$FFQ_DF\" ]; then chmod 755 \"$$FFQ_DF\"; fi" + LBR;
     makefile_am += "\t @fi" + LBR;
-    makefile_am += "\t @FFQ_DF=$(FFQ_DEST)/applications/$(FFQ_BINARY).desktop" + LBR;
-    makefile_am += "\t @if [ -f \"$$FFQ_DF\" ]; then chmod a+r \"$$FFQ_DF\"; fi" + LBR;
-    //makefile_am += "\t @fi" + LBR + LBR;
-    //makefile_am += "\t @FFQ_DF=/usr/share/applications/$(FFQ_EXENAME).desktop" + LBR;
-    //makefile_am += "\t @if test -e $$FFQ_DF; then chmod a+r $$FFQ_DF; fi" + LBR + LBR;
-    //makefile_am += "\t if test -d $(FFQ_LOCALE) ; then" + LBR;
-    //makefile_am += "\t mkdir -p $(FFQ_DESTDIR)/$(FFQ_EXENAME)" + LBR;
-    //makefile_am += "\t cp -r $(FFQ_LOCALE)/* $(FFQ_DESTDIR)/$(FFQ_EXENAME)/" + LBR + LBR;
-    //makefile_am += "\t fi" + LBR + LBR;
 
     makefile_am += LBR + ".ONESHELL:" + LBR;
     makefile_am += "uninstall-hook:" + LBR;
-    //makefile_am += "\t @if [ -n \"$(SNAP)\" ]; then" + LBR;
-    //makefile_am += "\t @echo \"No makefile remove in snap\"" + LBR;
-    //makefile_am += "\t @else" + LBR;
-    //makefile_am += "\t @FFQ_DST=/usr/share" + LBR;
-    //makefile_am += "\t @if [ \"$(USER)\" != \"root\" ]; then FFQ_DEST=`realpath ~/`/.local/share; fi" + LBR;
     makefile_am += "\t @if [ -z \"$(FFQ_XDGVER)\" ]; then" + LBR;
-    //makefile_am += "\t   @FFQ_IR=$(FFQ_DEST)/icons/hicolor" + LBR;
-    //makefile_am += "\t   @FFQ_ID=$(FFQ_ICONDEST)/16x16/apps" + LBR;
-    makefile_am += "\t   @rm -f $(FFQ_ICONDEST)/16x16/apps/$(FFQ_BINARY).png" + LBR;
-    //makefile_am += "\t   @FFQ_ID=$(FFQ_IR)/32x32/apps" + LBR;
-    makefile_am += "\t   @rm -f $(FFQ_ICONDEST)/32x32/apps/$(FFQ_BINARY).png" + LBR;
-    //makefile_am += "\t   @FFQ_ID=$(FFQ_IR)/64x64/apps" + LBR;
-    makefile_am += "\t   @rm -f $(FFQ_ICONDEST)/64x64/apps/$(FFQ_BINARY).png" + LBR;
+    tmp = "\t   @rm -f $(FFQ_ICONDEST)/#x#/apps/$(FFQ_BINARY).png" + LBR;
+    ADD_ICONS(makefile_am);
     makefile_am += "\t   @rm -f $(FFQ_DEST)/applications/$(FFQ_BINARY).desktop" + LBR;
     makefile_am += "\t @else" + LBR;
-    makefile_am += "\t   @xdg-icon-resource uninstall --novendor --size 16 $(FFQ_BINARY)" + LBR;
-    makefile_am += "\t   @xdg-icon-resource uninstall --novendor --size 32 $(FFQ_BINARY)" + LBR;
-    makefile_am += "\t   @xdg-icon-resource uninstall --novendor --size 64 $(FFQ_BINARY)" + LBR;
-    //makefile_am += "\t   xdg-desktop-icon uninstall --novendor $(FFQ_EXENAME).desktop" + LBR;
+    tmp = "\t   @xdg-icon-resource uninstall --novendor --size # $(FFQ_BINARY)" + LBR;
+    ADD_ICONS(makefile_am);
     makefile_am += "\t   @xdg-desktop-menu uninstall --novendor $(FFQ_BINARY).desktop" + LBR;
     makefile_am += "\t @fi" + LBR;
-    //makefile_am += "\t @fi" + LBR;
-    //makefile_am += "\t if test -d $(FFQ_DESTDIR)/$(FFQ_EXENAME) ; then" + LBR;
-    //makefile_am += "\t rm -ir $(FFQ_DESTDIR)/$(FFQ_EXENAME)" + LBR;
-    //makefile_am += "\t fi" + LBR + LBR;
 
     src_makefile_am += "bin_PROGRAMS=ffqueue" + LBR;
     src_makefile_am += "ffqueue_CXXFLAGS=`wx-config --debug=no --cxxflags` -std=c++11 -include ../wx_pch.h" + LBR;
@@ -774,7 +743,7 @@ wxString CreateMakefiles(wxString cbp_path)
 
     //Binary name
     wmf += tmp + WBR + "MAKEBINARY:=$(MAKEROOT)\\FFQueue.exe" + WBR + WBR;
-    lmf += tmp + LBR + "MAKEBINARY:=$(MAKEROOT)/FFQueue" + LBR + LBR;
+    lmf += tmp + LBR + "FFQ_BINARY:=FFQueue" + LBR + "MAKEBINARY:=$(MAKEROOT)/$(FFQ_BINARY)" + LBR + LBR;
 
     //Message
     tmp = "# Compiler settings";
@@ -896,29 +865,28 @@ wxString CreateMakefiles(wxString cbp_path)
     //Create the clean and paths recipes
     wxString wdel = "\tdel \"" + wmrs, ldel = "\trm \"" + lmrs;
 
-    wxString wclean = "clean:" + WBR + wdel + "*.o\"" + WBR + wdel + "*.res\"" + WBR,
-             lclean = "clean:" + LBR + ldel + "*.o\"" + LBR;
+    tmp2 = ".PHONY: clean";
+    wxString wclean = tmp2 + WBR + "clean:" + WBR + wdel + "*.o\"" + WBR + wdel + "*.res\"" + WBR,
+             lclean = tmp2 + LBR + "clean:" + LBR + ldel + "*.o\"" + LBR;
 
     //Message
     tmp = "# The all recipe for a complete make";
 
     //All recipes
-    wmf += WBR + WBR + tmp + WBR + RCP_ALL + WBR + WBR;
-    lmf += LBR + LBR + tmp + LBR + RCP_ALL + LBR + LBR;
+    wmf += WBR + WBR + tmp + WBR + wxString::Format(RCP_ALL, WBR) + WBR + WBR;
+    lmf += LBR + LBR + tmp + LBR + wxString::Format(RCP_ALL, LBR) + LBR + LBR;
 
     //Message
     tmp = "# Recipe for creating required paths";
 
     //Paths recipe
-    wmf += tmp + WBR + "paths:" + WBR + "\t" + wxString::Format(MKDIR_WIN, "", "") + WBR;
-    lmf += tmp + WBR + "paths:" + LBR + "\t" + wxString::Format(MKDIR_LIN, "") + LBR;
+    tmp2 = PHONY + "paths";
+    wmf += tmp + WBR + tmp2 + WBR + "paths:" + WBR + "\t" + wxString::Format(MKDIR_WIN, "", "") + WBR;
+    lmf += tmp + LBR + tmp2 + LBR + "paths:" + LBR + "\t" + wxString::Format(MKDIR_LIN, "") + LBR;
 
     //Clean recipes
     for (unsigned int sid = 0; sid < subdirs.Count(); sid++)
     {
-
-        //wmf += "\t" + wxString::Format(MKDIR_WIN, WSEP + subdirs[sid], WSEP + subdirs[sid]) + WBR;
-        //lmf += "\t" + wxString::Format(MKDIR_LIN, LSEP + subdirs[sid]) + LBR;
 
         tmp = subdirs[sid];
         tmp.Replace("src", "obj");
@@ -941,6 +909,25 @@ wxString CreateMakefiles(wxString cbp_path)
     //Add to makefiles
     wmf += WBR + tmp + WBR + wclean;
     lmf += LBR + tmp + LBR + lclean;
+
+    //Install and uninstall, Linux only
+    lmf += LBR + "# Install & uninstall targets" + LBR;
+    lmf += "ifeq $($(DESTDIR),)" + LBR + "DESTDIR:=/usr" + LBR + "endif" + LBR + LBR;
+    lmf += PHONY + "install" + LBR + "install:" + LBR;
+    lmf += "\t@echo Installing to $(DESTDIR)" + LBR;
+    lmf += "\t@install -Dm755 $(MAKEBINARY) $(DESTDIR)/bin/$(FFQ_BINARY)" + LBR;
+    lmf += "\t@install -Dm755 res/ffqueue.desktop $(DESTDIR)/share/applications/$(FFQ_BINARY).desktop" + LBR;
+    lmf += "\t@sed -ie 's/^Exec=.*$/Exec='\"$(FFQ_BINARY)\"'/' $(DESTDIR)/share/applications/$(FFQ_BINARY).desktop" + LBR;
+    lmf += "\t@sed -ie 's/^Icon=.*$/Icon='\"$(FFQ_BINARY)\"'/' $(DESTDIR)/share/applications/$(FFQ_BINARY).desktop" + LBR;
+    tmp = "\t@install -Dm644 res/MainLogo#.png $(DESTDIR)/share/icons/hicolor/#x#/apps/$(FFQ_BINARY).png" + LBR;
+    ADD_ICONS(lmf);
+
+    lmf += LBR + PHONY + "uninstall" + LBR + "uninstall:" + LBR;
+    lmf += "\t@echo Uninstalling from $(DESTDIR)" + LBR;
+    lmf += "\t@rm -f $(DESTDIR)/bin/$(FFQ_BINARY)" + LBR;
+    lmf += "\t@rm -f $(DESTDIR)/share/applications/$(FFQ_BINARY).desktop" + LBR;
+    tmp = "\t@rm -f $(DESTDIR)/share/icons/hicolor/#x#/apps/$(FFQ_BINARY).png" + LBR;
+    ADD_ICONS(lmf);
 
     //Message
     tmp = "# Receipe to compile the objects and link the binary";

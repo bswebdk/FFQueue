@@ -163,9 +163,11 @@ OBJECTS:=\
 	$(MAKEROOT)\obj\utils\FFQToolJobs.o
 
 # The all recipe for a complete make
+.PHONY: all
 all: paths $(MAKEBINARY)
 
 # Recipe for creating required paths
+.PHONY: paths
 paths:
 	if not exist "$(MAKEROOT)" mkdir "$(MAKEROOT)"
 	if not exist "$(MAKEROOT)\obj" mkdir "$(MAKEROOT)\obj"
@@ -174,6 +176,7 @@ paths:
 	if not exist "$(MAKEROOT)\obj\utils" mkdir "$(MAKEROOT)\obj\utils"
 
 # Recipes used for cleanup
+.PHONY: clean
 clean:
 	del "$(MAKEROOT)\*.o"
 	del "$(MAKEROOT)\*.res"

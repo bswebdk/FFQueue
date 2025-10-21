@@ -491,6 +491,14 @@ wxString GetToken(wxString &from, const wxString delim, bool del_token)
 
 //---------------------------------------------------------------------------------------
 
+wxString StrReplace(wxString where, wxString old_str, wxString new_str)
+{
+    where.Replace(old_str, new_str);
+    return where;
+}
+
+//---------------------------------------------------------------------------------------
+
 bool StrSplit(wxString &value, wxString &key, wxUniChar separator, bool trim)
 {
     if (value.Find(separator) < 0) return false;

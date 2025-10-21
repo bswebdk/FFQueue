@@ -1,4 +1,3 @@
-#include "wx_pch.h"
 #include "FFQCodecInfoEdit.h"
 #include "utils/FFQLang.h"
 #include "utils/FFQMisc.h"

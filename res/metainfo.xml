@@ -42,7 +42,8 @@
       <description>
         <p>V1.7.69 of October 18th 2025</p>
         <ul>
-          <li>With recent versions of FFmpeg, all filters where grayed out / inacessible (thanks to Mano).</li>
+          <li>BUG FIX: With recent versions of FFmpeg all filters where grayed out / inacessible. You may need to delete any "ffmpeg-caps.*" file(s)
+              from the config directory, found via the about box, for this fix to take effect (thanks to Mano).</li>
         </ul>
       </description>
     </release>

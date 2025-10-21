@@ -14,7 +14,8 @@ WXVER:=32
 MAKEROOT:=build
 
 # If you want to change the name of the linked binary, you can do it in the following line:
-MAKEBINARY:=$(MAKEROOT)/FFQueue
+FFQ_BINARY:=FFQueue
+MAKEBINARY:=$(MAKEROOT)/$(FFQ_BINARY)
 
 # Compiler settings
 COMPVARS:=-O2 `$(WX)/wx-config --static=yes --unicode=yes --debug=no --cflags` -DNDEBUG -Wall -fPIC -std=gnu++11 -Winvalid-pch -include wx_pch.h
@@ -127,9 +128,11 @@ OBJECTS:=\
 	$(MAKEROOT)/obj/utils/FFQToolJobs.o
 
 # The all recipe for a complete make
+.PHONY: all
 all: paths $(MAKEBINARY)
 
 # Recipe for creating required paths
+.PHONY: paths
 paths:
 	mkdir -p "$(MAKEROOT)"
 	mkdir -p "$(MAKEROOT)/obj"
@@ -138,12 +141,44 @@ paths:
 	mkdir -p "$(MAKEROOT)/obj/utils"
 
 # Recipes used for cleanup
+.PHONY: clean
 clean:
 	rm "$(MAKEROOT)/*.o"
 	rm "$(MAKEROOT)/obj/*.o"
 	rm "$(MAKEROOT)/obj/filter/*.o"
 	rm "$(MAKEROOT)/obj/tools/*.o"
 	rm "$(MAKEROOT)/obj/utils/*.o"
+
+# Install & uninstall targets
+ifeq $($(DESTDIR),)
+DESTDIR:=/usr
+endif
+
+.PHONY: install
+install:
+	@echo Installing to $(DESTDIR)
+	@install -Dm755 $(MAKEBINARY) $(DESTDIR)/bin/$(FFQ_BINARY)
+	@install -Dm755 res/ffqueue.desktop $(DESTDIR)/share/applications/$(FFQ_BINARY).desktop
+	@sed -ie 's/^Exec=.*$/Exec='"$(FFQ_BINARY)"'/' $(DESTDIR)/share/applications/$(FFQ_BINARY).desktop
+	@sed -ie 's/^Icon=.*$/Icon='"$(FFQ_BINARY)"'/' $(DESTDIR)/share/applications/$(FFQ_BINARY).desktop
+	@install -Dm644 res/MainLogo16.png $(DESTDIR)/share/icons/hicolor/16x16/apps/$(FFQ_BINARY).png
+	@install -Dm644 res/MainLogo32.png $(DESTDIR)/share/icons/hicolor/32x32/apps/$(FFQ_BINARY).png
+	@install -Dm644 res/MainLogo64.png $(DESTDIR)/share/icons/hicolor/64x64/apps/$(FFQ_BINARY).png
+	@install -Dm644 res/MainLogo128.png $(DESTDIR)/share/icons/hicolor/128x128/apps/$(FFQ_BINARY).png
+	@install -Dm644 res/MainLogo256.png $(DESTDIR)/share/icons/hicolor/256x256/apps/$(FFQ_BINARY).png
+	@install -Dm644 res/MainLogo512.png $(DESTDIR)/share/icons/hicolor/512x512/apps/$(FFQ_BINARY).png
+
+.PHONY: uninstall
+uninstall:
+	@echo Uninstalling from $(DESTDIR)
+	@rm -f $(DESTDIR)/bin/$(FFQ_BINARY)
+	@rm -f $(DESTDIR)/share/applications/$(FFQ_BINARY).desktop
+	@rm -f $(DESTDIR)/share/icons/hicolor/16x16/apps/$(FFQ_BINARY).png
+	@rm -f $(DESTDIR)/share/icons/hicolor/32x32/apps/$(FFQ_BINARY).png
+	@rm -f $(DESTDIR)/share/icons/hicolor/64x64/apps/$(FFQ_BINARY).png
+	@rm -f $(DESTDIR)/share/icons/hicolor/128x128/apps/$(FFQ_BINARY).png
+	@rm -f $(DESTDIR)/share/icons/hicolor/256x256/apps/$(FFQ_BINARY).png
+	@rm -f $(DESTDIR)/share/icons/hicolor/512x512/apps/$(FFQ_BINARY).png
 
 
 # Receipe to compile the objects and link the binary

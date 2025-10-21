@@ -10,7 +10,7 @@ Config: %s
 
 %u%% internal, %u%%
 
-wxWidgets ver. %s (static build) - http://www.wxwidgets.org/
+wxWidgets ver. %s - http://www.wxwidgets.org/
 GnuC / MinGW compiler, ver. %s
 
 Utilizing FFmpeg command line tool: %s

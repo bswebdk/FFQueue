@@ -87,6 +87,7 @@ wxString GetLastToken(wxString &from, const wxString delim, bool del_token = tru
 wxString GetLine(wxString &from, bool del_line = true);
 wxString GetSubLine(wxString &from, size_t &offset);
 wxString GetToken(wxString &from, const wxString delim, bool del_token = true);
+wxString StrReplace(wxString where, wxString old_str, wxString new_str);
 bool     StrSplit(wxString &value, wxString &key, wxUniChar separator, bool trim = true);
 wxString StrTrim(wxString str);
 wxString Unescape(wxString str);
