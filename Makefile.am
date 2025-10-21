@@ -6,11 +6,7 @@ FFQ_RES:=res
 else
 FFQ_RES:=../res
 endif
-if DESTDIR
-FFQ_DEST:=$(DESTDIR)/share
-else
-FFQ_DEST:=$(prefix)/share
-endif
+FFQ_DEST=$(DESTDIR)$(prefix)/share
 FFQ_ICONDEST:=$(FFQ_DEST)/icons/hicolor
 
 .ONESHELL:

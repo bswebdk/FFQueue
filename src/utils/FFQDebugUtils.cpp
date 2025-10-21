@@ -655,8 +655,8 @@ wxString CreateMakefiles(wxString cbp_path)
     makefile_am += "FFQ_RES:=../res" + LBR;
     makefile_am += "endif" + LBR;
 
-    makefile_am += "if DESTDIR" + LBR + "FFQ_DEST:=$(DESTDIR)/share" + LBR + "else" + LBR + "FFQ_DEST:=$(prefix)/share" + LBR + "endif" + LBR;
-    //makefile_am += "FFQ_DEST=$(DESTDIR)$(prefix)/share" + LBR;
+    //makefile_am += "if DESTDIR" + LBR + "FFQ_DEST:=$(DESTDIR)/share" + LBR + "else" + LBR + "FFQ_DEST:=$(prefix)/share" + LBR + "endif" + LBR;
+    makefile_am += "FFQ_DEST=$(DESTDIR)$(prefix)/share" + LBR;
     makefile_am += "FFQ_ICONDEST:=$(FFQ_DEST)/icons/hicolor" + LBR;
     //makefile_am += "FFQ_LOCALE=../locale" + LBR;
 
