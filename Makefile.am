@@ -6,7 +6,7 @@ FFQ_RES=res
 else
 FFQ_RES=../res
 endif
-ifeq $($(DESTDIR),)
+ifeq ($(DESTDIR),)
 FFQ_DEST=$(prefix)/share
 else
 FFQ_DEST=$(DESTDIR)/share

@@ -150,7 +150,7 @@ clean:
 	rm "$(MAKEROOT)/obj/utils/*.o"
 
 # Install & uninstall targets
-ifeq $($(DESTDIR),)
+ifeq ($(DESTDIR),)
 DESTDIR:=/usr
 endif
 

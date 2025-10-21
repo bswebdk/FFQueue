@@ -655,7 +655,7 @@ wxString CreateMakefiles(wxString cbp_path)
     makefile_am += "FFQ_RES=../res" + LBR;
     makefile_am += "endif" + LBR;
 
-    makefile_am += "ifeq $($(DESTDIR),)" + LBR + "FFQ_DEST=$(prefix)/share" + LBR + "else" + LBR + "FFQ_DEST=$(DESTDIR)/share" + LBR + "endif" + LBR;
+    makefile_am += "ifeq ($(DESTDIR),)" + LBR + "FFQ_DEST=$(prefix)/share" + LBR + "else" + LBR + "FFQ_DEST=$(DESTDIR)/share" + LBR + "endif" + LBR;
     //makefile_am += "FFQ_DEST=$(DESTDIR)$(prefix)/share" + LBR;
     makefile_am += "FFQ_ICONDEST=$(FFQ_DEST)/icons/hicolor" + LBR;
     //makefile_am += "FFQ_LOCALE=../locale" + LBR;
@@ -912,7 +912,7 @@ wxString CreateMakefiles(wxString cbp_path)
 
     //Install and uninstall, Linux only
     lmf += LBR + "# Install & uninstall targets" + LBR;
-    lmf += "ifeq $($(DESTDIR),)" + LBR + "DESTDIR:=/usr" + LBR + "endif" + LBR + LBR;
+    lmf += "ifeq ($(DESTDIR),)" + LBR + "DESTDIR:=/usr" + LBR + "endif" + LBR + LBR;
     lmf += PHONY + "install" + LBR + "install:" + LBR;
     lmf += "\t@echo Installing to $(DESTDIR)" + LBR;
     lmf += "\t@install -Dm755 $(MAKEBINARY) $(DESTDIR)/bin/$(FFQ_BINARY)" + LBR;
