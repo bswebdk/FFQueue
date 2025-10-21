@@ -646,18 +646,18 @@ wxString CreateMakefiles(wxString cbp_path)
     autoconf_ac += "LIBS=\"$LIBS `wx-config --libs` -lz\"" + LBR;
     autoconf_ac += "AC_OUTPUT" + LBR;
 
-    makefile_am += "SUBDIRS=src" + LBR;
-    makefile_am += "FFQ_BINARY=ffqueue" + LBR;
-    makefile_am += "FFQ_XDGVER=`xdg-icon-resource --version 2> /dev/null`" + LBR;
+    makefile_am += "SUBDIRS:=src" + LBR;
+    makefile_am += "FFQ_BINARY:=ffqueue" + LBR;
+    makefile_am += "FFQ_XDGVER:=`xdg-icon-resource --version 2> /dev/null`" + LBR;
     makefile_am += "if FFQ_BASE_DIR" + LBR;
-    makefile_am += "FFQ_RES=res" + LBR;
+    makefile_am += "FFQ_RES:=res" + LBR;
     makefile_am += "else" + LBR;
-    makefile_am += "FFQ_RES=../res" + LBR;
+    makefile_am += "FFQ_RES:=../res" + LBR;
     makefile_am += "endif" + LBR;
 
-    makefile_am += "ifeq ($(DESTDIR),)" + LBR + "FFQ_DEST=$(prefix)/share" + LBR + "else" + LBR + "FFQ_DEST=$(DESTDIR)/share" + LBR + "endif" + LBR;
+    makefile_am += "if DESTDIR" + LBR + "FFQ_DEST:=$(DESTDIR)/share" + LBR + "else" + LBR + "FFQ_DEST:=$(prefix)/share" + LBR + "endif" + LBR;
     //makefile_am += "FFQ_DEST=$(DESTDIR)$(prefix)/share" + LBR;
-    makefile_am += "FFQ_ICONDEST=$(FFQ_DEST)/icons/hicolor" + LBR;
+    makefile_am += "FFQ_ICONDEST:=$(FFQ_DEST)/icons/hicolor" + LBR;
     //makefile_am += "FFQ_LOCALE=../locale" + LBR;
 
     makefile_am += LBR + ".ONESHELL:" + LBR;

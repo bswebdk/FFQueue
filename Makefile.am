@@ -1,17 +1,17 @@
-SUBDIRS=src
-FFQ_BINARY=ffqueue
-FFQ_XDGVER=`xdg-icon-resource --version 2> /dev/null`
+SUBDIRS:=src
+FFQ_BINARY:=ffqueue
+FFQ_XDGVER:=`xdg-icon-resource --version 2> /dev/null`
 if FFQ_BASE_DIR
-FFQ_RES=res
+FFQ_RES:=res
 else
-FFQ_RES=../res
+FFQ_RES:=../res
 endif
-ifeq ($(DESTDIR),)
-FFQ_DEST=$(prefix)/share
+if DESTDIR
+FFQ_DEST:=$(DESTDIR)/share
 else
-FFQ_DEST=$(DESTDIR)/share
+FFQ_DEST:=$(prefix)/share
 endif
-FFQ_ICONDEST=$(FFQ_DEST)/icons/hicolor
+FFQ_ICONDEST:=$(FFQ_DEST)/icons/hicolor
 
 .ONESHELL:
 install-data-hook:
