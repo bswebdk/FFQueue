@@ -895,9 +895,6 @@ int FFQFullSpec::FullSpecFileFromString(wxString &spec)
 
         }
 
-        //Check separator
-        if (file.separator.Len() == 0) file.separator = COLON;
-
         if (idx >= 0)
         {
 
@@ -914,7 +911,7 @@ int FFQFullSpec::FullSpecFileFromString(wxString &spec)
                 ff.rx_match = file.rx_match;
             }
             if (file.prefix.Len() > 0) ff.prefix = file.prefix;
-            ff.separator = file.separator;
+            if (file.separator.Len() > 0) ff.separator = file.separator;
 
             //Append the remaining spec to existing body
             *ff.body += LFLF + lp.rest() + LFLF + LFLF;
@@ -934,6 +931,10 @@ int FFQFullSpec::FullSpecFileFromString(wxString &spec)
                 del.fields.clear();
                 s_Files.erase(s_Files.begin() + idx);
             }
+
+            //Set default values where required
+            if (file.checkval.Len() == 0) file.checkval = STR_YES;
+            if (file.separator.Len() == 0) file.separator = COLON;
 
             //Add the new spec
             file.body = new wxString(lp.rest() + LFLF + LFLF); //Save the rest for later

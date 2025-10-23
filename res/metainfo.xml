@@ -38,6 +38,15 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release version="1.7.70" date="2025-10-23">
+      <description>
+        <p>V1.7.70 of October 23rd 2025</p>
+        <ul>
+          <li>BUG-FIX: Some FullSpec checkbox fields defaulted to a wrong value (thanks to Mano).</li>
+          <li>Makefiles improved.</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.7.69" date="2025-10-18">
       <description>
         <p>V1.7.69 of October 18th 2025</p>
